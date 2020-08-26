@@ -2,7 +2,7 @@
 // @name        Stadia Enhanced
 // @namespace   christopherklay
 // @description Various new features for Google Stadia
-// @version     0.3.3
+// @version     0.3.4
 // @author      ChristopherKlay
 // @match       https://stadia.google.com/*
 // @noframes
@@ -200,7 +200,7 @@ document.querySelectorAll(".cOj4he")[0].prepend(setCapt);
 
 // Settings - Grid
 var gridSize = parseInt(localStorage.getItem("GridSize") || 0);
-setGridSize(gridSize)
+callGridSize(gridSize)
 addGlobalStyle('.z1P2me { width: 90rem; }');
 addGlobalStyle('.iadg4b { width: 90rem; }');
 
@@ -213,11 +213,11 @@ setGrid.style.userSelect = "none";
 setGrid.addEventListener("click", function() {
     gridSize = (gridSize + 1) % 5;
     localStorage.setItem("GridSize", gridSize);
-    setGridSize(gridSize)
+    callGridSize(gridSize)
 });
 document.querySelectorAll(".cOj4he")[0].prepend(setGrid);
 
-function setGridSize(size) {
+function callGridSize(size) {
     switch (size) {
         case 0:
             addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto); }');
@@ -253,82 +253,79 @@ function setGridSize(size) {
     console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (gridSize + 2) + ".");
 }
 
-// Settings - 4K
-var set4K = document.createElement("div");
-set4K.className = "bl2XYb soKQKc";
-set4K.id = "set4K";
-set4K.innerHTML = "4K";
-if (localStorage.getItem("Enable4K") == "1") {
-    set4K.style.color = "#00e0ba";
-    console.log("[Stadia Enhanced] ⚙️ - Resolution: 3840x2160");
-} else {
-    set4K.style.color = "#ff773d";
-    console.log("[Stadia Enhanced] ⚙️ - Resolution: Default");
-}
-set4K.style.cursor = "pointer";
-set4K.style.userSelect = "none";
-set4K.addEventListener("click", function() {
-    if (localStorage.getItem("Enable4K") == "1") {
-        localStorage.setItem("Enable4K", "0");
-        set4K.style.color = "#ff773d";
-        console.log("[Stadia Enhanced] ⚙️ - Resolution: Default");
-    } else {
-        localStorage.setItem("Enable4K", "1");
-        set4K.style.color = "#00e0ba";
-        console.log("[Stadia Enhanced] ⚙️ - Resolution: 3840x2160");
-    }
+// Settings - Resolution
+localStorage.setItem("NativeX", window.screen.width);
+localStorage.setItem("NativeY", window.screen.height);
+
+var setReso = document.createElement("div");
+setReso.className = "bl2XYb soKQKc";
+setReso.id = "setReso";
+setReso.innerHTML = "Native";
+var curReso = parseInt(localStorage.getItem("ForceResolution") || 0);
+callReso(curReso);
+setReso.style.cursor = "pointer";
+setReso.style.userSelect = "none";
+setReso.addEventListener("click", function() {
+    curReso = (curReso + 1) % 3;
+    localStorage.setItem("ForceResolution", curReso);
+    callReso(curReso);
 });
-document.querySelectorAll(".cOj4he")[0].prepend(set4K);
+document.querySelectorAll(".cOj4he")[0].prepend(setReso);
+
+function callReso(res) {
+    switch (res) {
+        case 0:
+            setReso.style.color = "#ff773d";
+            setReso.innerHTML = "Native";
+            console.log("[Stadia Enhanced] ⚙️ - Resolution: Native");
+            break
+        case 1:
+            setReso.style.color = "#00e0ba";
+            setReso.innerHTML = "2K";
+            console.log("[Stadia Enhanced] ⚙️ - Resolution: 2560x1440");
+            break
+        case 2:
+            setReso.style.color = "#00e0ba";
+            setReso.innerHTML = "4K";
+            console.log("[Stadia Enhanced] ⚙️ - Resolution: 3840x2160");
+            break
+    }
+}
 
 // Settings - VP9
 var setCodec = document.createElement("div");
 setCodec.className = "bl2XYb soKQKc";
 setCodec.id = "setCodec";
 var curCodec = parseInt(localStorage.getItem("UseCodec") || 0);
-switch (curCodec) {
-    case 0:
-        setCodec.style.color = "#ff773d";
-        setCodec.innerHTML = "Default";
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default");
-        break
-    case 1:
-        setCodec.style.color = "#00e0ba";
-        setCodec.innerHTML = "VP9";
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
-        break
-    case 2:
-        setCodec.style.color = "#00e0ba";
-        setCodec.innerHTML = "H264";
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264");
-        break
-}
+callCodec(curCodec);
 setCodec.style.cursor = "pointer";
 setCodec.style.userSelect = "none";
 setCodec.addEventListener("click", function() {
     curCodec = (curCodec + 1) % 3;
     localStorage.setItem("UseCodec", curCodec);
-    switch (curCodec) {
+    callCodec(curCodec);
+});
+document.querySelectorAll(".cOj4he")[0].prepend(setCodec);
+
+function callCodec(cod) {
+    switch (cod) {
         case 0:
-            localStorage.setItem("UseCodec", "0");
             setCodec.style.color = "#ff773d";
             setCodec.innerHTML = "Default";
             console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default");
             break
         case 1:
-            localStorage.setItem("UseCodec", "1");
             setCodec.style.color = "#00e0ba";
             setCodec.innerHTML = "VP9";
             console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
             break
         case 2:
-            localStorage.setItem("UseCodec", "2");
             setCodec.style.color = "#00e0ba";
             setCodec.innerHTML = "H264";
-            console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264")
+            console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264");
             break
     }
-});
-document.querySelectorAll(".cOj4he")[0].prepend(setCodec);
+}
 
 
 // Settings - Monitor
@@ -395,32 +392,52 @@ const interval = setInterval(function() {
             break
         case 2:
             localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"FFmpeg"}');
-            console.log("CHECK");
             break
     }
 
-    // 4K when supported
+    // Force Resolution
     // Source: https://superuser.com/questions/712461/how-to-customize-screen-resolution-reported-to-a-javascript-application-by-a-web
-    if (localStorage.getItem("Enable4K") == "1") {
-        Object.defineProperty(window.screen, "availWidth", {
-            value: 3840
-        });
-        Object.defineProperty(window.screen, "width", {
-            value: 3840
-        });
-        Object.defineProperty(window.screen, "availHeight", {
-            value: 2160
-        });
-        Object.defineProperty(window.screen, "height", {
-            value: 2160
-        });
+    var curRes = parseInt(localStorage.getItem("ForceResolution") || 0);
+    switch (curRes) {
+        case 0:
+            x = parseInt(localStorage.getItem("NativeX") || 1920);
+            y = parseInt(localStorage.getItem("NativeY") || 1920);
+            break
+        case 1:
+            x = 2560
+            y = 1440
+            break
+        case 2:
+            x = 3840
+            y = 2160
+            break
     }
+    Object.defineProperty(window.screen, "availWidth", {
+        value: x,
+        configurable: true
+    });
+    Object.defineProperty(window.screen, "width", {
+        value: x,
+        configurable: true
+    });
+    Object.defineProperty(window.screen, "availHeight", {
+        value: y,
+        configurable: true
+    });
+    Object.defineProperty(window.screen, "height", {
+        value: y,
+        configurable: true
+    });
 
     // Re-prepend control after refresh
     var check = document.getElementById("setMon");
     if (check === null) {
         document.querySelectorAll(".VCcUVc")[0].prepend(setMon);
     }
+
+    // Force allow 4K in settings
+    document.querySelectorAll(".WTddpc")[0].firstChild.setAttribute("data-disabled", "false");
+    document.querySelectorAll(".WTddpc")[0].firstChild.classList.remove("OWB6Me");
 }, 1000);
 
 // Source: https://somethingididnotknow.wordpress.com/2013/07/01/change-page-styles-with-greasemonkeytampermonkey/
