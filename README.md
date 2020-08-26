@@ -1,14 +1,15 @@
 # Stadia Enhanced
 
-![](https://preview.redd.it/5l7q5rjg0bj51.png?width=1916&format=png&auto=webp&s=76e902ecf132a8b5991c927d25b5a8537aff293d)
+![](https://i.imgur.com/7X5ijnA.png)
 
 ## Features
 
-* Set VP9 as the preferred codec.
+* Set VP9 or H264 as the preferred codec.
 * Enable 4K (requires GPU with support for VP9 decoding).
 * Stream Monitor (Displays frame/package loss among other things), via the group menu.
 * Changeable library size on the home screen, toggle between 2 up to 6 items per row.
 * Settings for codec, resolution and library size are saved between sessions.
+* Access screenshots and video captures quickly.
 
 ## Known Issues
 
