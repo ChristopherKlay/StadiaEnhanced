@@ -10,6 +10,7 @@
 * Changeable library size on the home screen, toggle between 2 up to 6 items per row.
 * Settings for codec, resolution and library size are saved between sessions.
 * Access screenshots and video captures quickly.
+* Automatic updates available via userscript manager.
 
 ## Known Issues
 
