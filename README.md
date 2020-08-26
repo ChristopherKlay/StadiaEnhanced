@@ -19,6 +19,3 @@
 * Click the extension at the top right of your browser to open it's menu.
 * Select "+" or "Create new script" depending on the extension you use.
 * Copy and paste the content of the script into the new window and save it.
-
-## License
-[GNU_GPL3](https://www.gnu.org/licenses/gpl-3.0.de.html)
