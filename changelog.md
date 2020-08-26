@@ -6,6 +6,6 @@
 * Added start up timer to the console output.
 * Beautified code structure.
 
-## Version 0.3
+## Version 0.3.0
 
 * First GitHub Release
