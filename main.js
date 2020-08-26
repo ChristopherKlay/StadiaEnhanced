@@ -2,10 +2,13 @@
 // @name        Stadia Enhanced
 // @namespace   christopherklay
 // @description Various new features for Google Stadia
-// @version     0.3.2
+// @version     0.3.3
 // @author      ChristopherKlay
-// @match       https://stadia.google.com/*home
+// @match       https://stadia.google.com/*
+// @noframes
 // @grant       none
+// @downloadURL https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/main.js
+// @homepageURL https://github.com/ChristopherKlay/StadiaEnhanced
 // ==/UserScript==
 
 // Start Up
@@ -180,6 +183,20 @@ var timerStart = new Date().getTime();
         }
     }, 1000);
 })();
+
+// Settings - Captures
+var setCapt = document.createElement("div");
+setCapt.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+setCapt.id = "setCapt";
+// Source: https://www.flaticon.com/authors/freepik
+setCapt.innerHTML = '<svg width="21" height="20" viewBox="0 0 307.31 307.31"><path fill="#E8EAED" d="M284.9 66.15h-81.34l-16.42-27.6a8.9 8.9 0 00-7.66-4.35h-51.66a8.9 8.9 0 00-7.65 4.35l-16.43 27.6h-26.7v-6.09a8.9 8.9 0 00-8.9-8.9H35.2a8.9 8.9 0 00-8.91 8.9v6.09H22.4A22.4 22.4 0 000 88.55V250.7a22.4 22.4 0 0022.4 22.4h262.5a22.4 22.4 0 0022.4-22.4V88.54a22.4 22.4 0 00-22.4-22.4zM153.66 233.38a63.75 63.75 0 110-127.5 63.75 63.75 0 010 127.5zm117.28-121.06h-27.9a8.9 8.9 0 010-17.81h27.9a8.9 8.9 0 110 17.81z"/><circle cx="153.65" cy="169.63" r="44.54"/></svg>';
+setCapt.style.cursor = "pointer";
+setCapt.style.userSelect = "none";
+setCapt.addEventListener("click", function() {
+    //window.open("https://stadia.google.com/captures","_self");
+    document.querySelectorAll(".axWdCb")[0].click();
+});
+document.querySelectorAll(".cOj4he")[0].prepend(setCapt);
 
 // Settings - Grid
 var gridSize = parseInt(localStorage.getItem("GridSize") || 0);
