@@ -18,4 +18,4 @@
 * Install a userscript manager for chrome like [Violentmonkey](https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag) | [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=de).
 * Click the extension at the top right of your browser to open it's menu.
 * Select "+" or "Create new script" depending on the extension you use.
-* Copy and paste the content of the script into the new window and save it.
+* Copy and paste the content of [the script](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/main.js) into the new window and save it.
