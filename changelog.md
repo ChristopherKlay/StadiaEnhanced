@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.3.4
+* Force enabled "4K" option in settings.
+* Enabled 2K option
+* Code optimisation
+
 ## Version 0.3.3
 * Added missing metadata.
 * Enabled updating script via userscript manager.
