@@ -237,14 +237,13 @@ function setGridSize(size) {
 var setVP9 = document.createElement("div");
 setVP9.className = "bl2XYb soKQKc";
 setVP9.id = "setVP9";
+setVP9.innerHTML = "VP9";
 if (localStorage.getItem("UseVP9") == "1") {
     setVP9.style.color = "#00e0ba";
-    setVP9.innerHTML = "VP9";
     console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
 } else {
     setVP9.style.color = "#ff773d";
-    setVP9.innerHTML = "H264";
-    console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264")
+    console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default")
 }
 setVP9.style.cursor = "pointer";
 setVP9.style.userSelect = "none";
@@ -252,12 +251,10 @@ setVP9.addEventListener("click", function() {
     if (localStorage.getItem("UseVP9") == "1") {
         localStorage.setItem("UseVP9", "0");
         setVP9.style.color = "#ff773d";
-        setVP9.innerHTML = "H264";
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264")
+        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default")
     } else {
         localStorage.setItem("UseVP9", "1");
         setVP9.style.color = "#00e0ba";
-        setVP9.innerHTML = "VP9";
         console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
     }
 });
@@ -342,7 +339,7 @@ const interval = setInterval(function() {
     if (localStorage.getItem("UseVP9") == "1") {
         localStorage.setItem("video_codec_implementation_by_codec_key", '{"vp9":"ExternalDecoder"}');
     } else {
-        localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"FFmpeg"}');
+        localStorage.setItem("video_codec_implementation_by_codec_key", '');
     }
 
     // 4K when supported
