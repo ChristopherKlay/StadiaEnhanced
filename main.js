@@ -2,11 +2,14 @@
 // @name        Stadia Enhanced
 // @namespace   christopherklay
 // @description Various new features for Google Stadia
-// @version     0.3
+// @version     0.3.2
 // @author      ChristopherKlay
 // @match       https://stadia.google.com/*home
 // @grant       none
 // ==/UserScript==
+
+// Start Up
+var timerStart = new Date().getTime();
 
 // Overlay (Credits to AquaRegia)
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -33,7 +36,7 @@
     }
 
     var peerConnections = [];
-  
+
     // ==> ISSUE: Injection currently blocking voice chat connection
     (function(original) {
         RTCPeerConnection = function() {
@@ -191,74 +194,47 @@ setGrid.innerHTML = '<svg width="21" height="20"><path fill="#E8EAED" fill-rule=
 setGrid.style.cursor = "pointer";
 setGrid.style.userSelect = "none";
 setGrid.addEventListener("click", function() {
-  gridSize = (gridSize + 1) % 5;
-  localStorage.setItem("GridSize", gridSize);
-  setGridSize(gridSize)
+    gridSize = (gridSize + 1) % 5;
+    localStorage.setItem("GridSize", gridSize);
+    setGridSize(gridSize)
 });
 document.querySelectorAll(".cOj4he")[0].prepend(setGrid);
 
 function setGridSize(size) {
-  switch (size) {
-    case 0:
-      addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto); }');
-      addGlobalStyle('.GqLi4d.qu6XL { width: 44.25rem; height: 26.55rem; }');
-      addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem; }');
-      addGlobalStyle('.E3eEyc { grid-gap: 1.5rem; }');
-      break;
-    case 1:
-      addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto); }');
-      addGlobalStyle('.GqLi4d.qu6XL { width: 29rem; height: 17.4rem; }');
-      addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem; }');
-      addGlobalStyle('.E3eEyc { grid-gap: 1.5rem; }');
-      break;
-    case 2:
-      addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto); }');
-      addGlobalStyle('.GqLi4d.qu6XL { width: 22.125rem; height: 13.2rem; }');
-      addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem; }');
-      addGlobalStyle('.E3eEyc { grid-gap: .5rem; }');
-      break;
-    case 3:
-      addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto); }');
-      addGlobalStyle('.GqLi4d.qu6XL { width: 17.6rem; height: 10.5rem; }');
-      addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem; }');
-      addGlobalStyle('.E3eEyc { grid-gap: .5rem; }');
-      break;
-    case 4:
-      addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto); }');
-      addGlobalStyle('.GqLi4d.qu6XL { width: 14.75rem; height: 8.85em; }');
-      addGlobalStyle('.a1l9D { margin: 0 0 .3rem .3rem; }');
-      addGlobalStyle('.E3eEyc { grid-gap: .3rem; }');
-      break;
-  }
-  console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (gridSize+2) + ".");
-}
-
-// Settings - VP9
-var setVP9 = document.createElement("div");
-setVP9.className = "bl2XYb soKQKc";
-setVP9.id = "setVP9";
-setVP9.innerHTML = "VP9";
-if (localStorage.getItem("UseVP9") == "1") {
-    setVP9.style.color = "#00e0ba";
-    console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
-} else {
-    setVP9.style.color = "#ff773d";
-    console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default")
-}
-setVP9.style.cursor = "pointer";
-setVP9.style.userSelect = "none";
-setVP9.addEventListener("click", function() {
-    if (localStorage.getItem("UseVP9") == "1") {
-        localStorage.setItem("UseVP9", "0");
-        setVP9.style.color = "#ff773d";
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default")
-    } else {
-        localStorage.setItem("UseVP9", "1");
-        setVP9.style.color = "#00e0ba";
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
+    switch (size) {
+        case 0:
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto); }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 44.25rem; height: 26.55rem; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem; }');
+            addGlobalStyle('.E3eEyc { grid-gap: 1.5rem; }');
+            break;
+        case 1:
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto); }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 29rem; height: 17.4rem; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem; }');
+            addGlobalStyle('.E3eEyc { grid-gap: 1.5rem; }');
+            break;
+        case 2:
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto); }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 22.125rem; height: 13.2rem; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem; }');
+            addGlobalStyle('.E3eEyc { grid-gap: .5rem; }');
+            break;
+        case 3:
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto); }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 17.6rem; height: 10.5rem; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem; }');
+            addGlobalStyle('.E3eEyc { grid-gap: .5rem; }');
+            break;
+        case 4:
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto); }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 14.75rem; height: 8.85em; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 .3rem .3rem; }');
+            addGlobalStyle('.E3eEyc { grid-gap: .3rem; }');
+            break;
     }
-});
-document.querySelectorAll(".cOj4he")[0].prepend(setVP9);
+    console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (gridSize + 2) + ".");
+}
 
 // Settings - 4K
 var set4K = document.createElement("div");
@@ -287,6 +263,57 @@ set4K.addEventListener("click", function() {
 });
 document.querySelectorAll(".cOj4he")[0].prepend(set4K);
 
+// Settings - VP9
+var setCodec = document.createElement("div");
+setCodec.className = "bl2XYb soKQKc";
+setCodec.id = "setCodec";
+var curCodec = parseInt(localStorage.getItem("UseCodec") || 0);
+switch (curCodec) {
+    case 0:
+        setCodec.style.color = "#ff773d";
+        setCodec.innerHTML = "Default";
+        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default");
+        break
+    case 1:
+        setCodec.style.color = "#00e0ba";
+        setCodec.innerHTML = "VP9";
+        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
+        break
+    case 2:
+        setCodec.style.color = "#00e0ba";
+        setCodec.innerHTML = "H264";
+        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264");
+        break
+}
+setCodec.style.cursor = "pointer";
+setCodec.style.userSelect = "none";
+setCodec.addEventListener("click", function() {
+    curCodec = (curCodec + 1) % 3;
+    localStorage.setItem("UseCodec", curCodec);
+    switch (curCodec) {
+        case 0:
+            localStorage.setItem("UseCodec", "0");
+            setCodec.style.color = "#ff773d";
+            setCodec.innerHTML = "Default";
+            console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Default");
+            break
+        case 1:
+            localStorage.setItem("UseCodec", "1");
+            setCodec.style.color = "#00e0ba";
+            setCodec.innerHTML = "VP9";
+            console.log("[Stadia Enhanced] ⚙️ - Codec Preference: VP9");
+            break
+        case 2:
+            localStorage.setItem("UseCodec", "2");
+            setCodec.style.color = "#00e0ba";
+            setCodec.innerHTML = "H264";
+            console.log("[Stadia Enhanced] ⚙️ - Codec Preference: H264")
+            break
+    }
+});
+document.querySelectorAll(".cOj4he")[0].prepend(setCodec);
+
+
 // Settings - Monitor
 var setMon = document.createElement("div");
 setMon.className = "CTvDXd QAAyWd Fjy05d ATH3sf wJYinb E6Xpr rpgZzc RkyH1e";
@@ -297,49 +324,62 @@ setMon.style.zIndex = "2000";
 setMon.style.marginRight = "10px";
 setMon.style.userSelect = "none";
 setMon.addEventListener("click", function() {
-  infoBox.location = (infoBox.location + 1) % 5;
-  switch (infoBox.location) {
-    case 0:
-      infoBox.style.display = "none";
-      break;
-    case 1:
-      infoBox.style.top = "1rem";
-      infoBox.style.right = "";
-      infoBox.style.bottom = "";
-      infoBox.style.left = "1rem";
-      infoBox.style.display = "block";
-      break;
-    case 2:
-      infoBox.style.top = "1rem";
-      infoBox.style.right = "1rem";
-      infoBox.style.bottom = "";
-      infoBox.style.left = "";
-      infoBox.style.display = "block";
-      break;
-    case 3:
-      infoBox.style.top = "";
-      infoBox.style.right = "1rem";
-      infoBox.style.bottom = "1rem";
-      infoBox.style.left = "";
-      infoBox.style.display = "block";
-      break;
-    case 4:
-      infoBox.style.top = "";
-      infoBox.style.right = "";
-      infoBox.style.bottom = "1rem";
-      infoBox.style.left = "1rem";
-      infoBox.style.display = "block";
-      break;
-  }
+    infoBox.location = (infoBox.location + 1) % 5;
+    switch (infoBox.location) {
+        case 0:
+            infoBox.style.display = "none";
+            break;
+        case 1:
+            infoBox.style.top = "1rem";
+            infoBox.style.right = "";
+            infoBox.style.bottom = "";
+            infoBox.style.left = "1rem";
+            infoBox.style.display = "block";
+            break;
+        case 2:
+            infoBox.style.top = "1rem";
+            infoBox.style.right = "1rem";
+            infoBox.style.bottom = "";
+            infoBox.style.left = "";
+            infoBox.style.display = "block";
+            break;
+        case 3:
+            infoBox.style.top = "";
+            infoBox.style.right = "1rem";
+            infoBox.style.bottom = "1rem";
+            infoBox.style.left = "";
+            infoBox.style.display = "block";
+            break;
+        case 4:
+            infoBox.style.top = "";
+            infoBox.style.right = "";
+            infoBox.style.bottom = "1rem";
+            infoBox.style.left = "1rem";
+            infoBox.style.display = "block";
+            break;
+    }
 });
+
+// After Setup
+var benchStart = new Date().getTime() - timerStart;
+console.log("[Stadia Enhanced] ⏲️ - Start Up: " + benchStart + "ms.")
+
 
 
 const interval = setInterval(function() {
     // Use VP9 if possible
-    if (localStorage.getItem("UseVP9") == "1") {
-        localStorage.setItem("video_codec_implementation_by_codec_key", '{"vp9":"ExternalDecoder"}');
-    } else {
-        localStorage.setItem("video_codec_implementation_by_codec_key", '');
+    var curCodec = parseInt(localStorage.getItem("UseCodec") || 0);
+    switch (curCodec) {
+        case 0:
+            localStorage.setItem("video_codec_implementation_by_codec_key", "");
+            break
+        case 1:
+            localStorage.setItem("video_codec_implementation_by_codec_key", '{"vp9":"ExternalDecoder"}');
+            break
+        case 2:
+            localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"FFmpeg"}');
+            console.log("CHECK");
+            break
     }
 
     // 4K when supported
@@ -358,11 +398,11 @@ const interval = setInterval(function() {
             value: 2160
         });
     }
-  
+
     // Re-prepend control after refresh
     var check = document.getElementById("setMon");
     if (check === null) {
-      document.querySelectorAll(".VCcUVc")[0].prepend(setMon);
+        document.querySelectorAll(".VCcUVc")[0].prepend(setMon);
     }
 }, 1000);
 
@@ -370,7 +410,9 @@ const interval = setInterval(function() {
 function addGlobalStyle(css) {
     var head, style;
     head = document.getElementsByTagName('head')[0];
-    if (!head) { return; }
+    if (!head) {
+        return;
+    }
     style = document.createElement('style');
     style.type = 'text/css';
     style.innerHTML = css;
