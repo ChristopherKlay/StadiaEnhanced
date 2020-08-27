@@ -2,7 +2,7 @@
 // @name        Stadia Enhanced
 // @namespace   christopherklay
 // @description Various new features for Google Stadia
-// @version     0.3.4
+// @version     0.3.5
 // @author      ChristopherKlay
 // @match       https://stadia.google.com/*
 // @noframes
@@ -184,6 +184,18 @@ var timerStart = new Date().getTime();
     }, 1000);
 })();
 
+// Settings - Pro Games
+var setPro = document.createElement("div");
+setPro.className = "CTvDXd QAAyWd soKQKc wJYinb";
+setPro.id = "setPro";
+setPro.innerHTML = "Pro Games";
+setPro.style.cursor = "pointer";
+setPro.style.userSelect = "none";
+setPro.addEventListener("click", function() {
+    window.open("https://stadia.google.com/store/list/2001", "_self");
+});
+document.querySelectorAll(".yjSb7c")[0].append(setPro);
+
 // Settings - Captures
 var setCapt = document.createElement("div");
 setCapt.className = "NfVFqd cr1oJe QAAyWd wJYinb";
@@ -193,7 +205,6 @@ setCapt.innerHTML = '<svg width="21" height="20" viewBox="0 0 307.31 307.31"><pa
 setCapt.style.cursor = "pointer";
 setCapt.style.userSelect = "none";
 setCapt.addEventListener("click", function() {
-    //window.open("https://stadia.google.com/captures","_self");
     document.querySelectorAll(".axWdCb")[0].click();
 });
 document.querySelectorAll(".cOj4he")[0].prepend(setCapt);
@@ -253,9 +264,10 @@ function callGridSize(size) {
     console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (gridSize + 2) + ".");
 }
 
-// Settings - Resolution
+// Settings - Screen
 localStorage.setItem("NativeX", window.screen.width);
 localStorage.setItem("NativeY", window.screen.height);
+//Object.defineProperty(window.screen, "colorDepth", { value: 48 });
 
 var setReso = document.createElement("div");
 setReso.className = "bl2XYb soKQKc";
@@ -275,21 +287,45 @@ document.querySelectorAll(".cOj4he")[0].prepend(setReso);
 function callReso(res) {
     switch (res) {
         case 0:
+            var x = parseInt(localStorage.getItem("NativeX") || 1920);
+            var y = parseInt(localStorage.getItem("NativeY") || 1920);
             setReso.style.color = "#ff773d";
             setReso.innerHTML = "Native";
             console.log("[Stadia Enhanced] ⚙️ - Resolution: Native");
             break
         case 1:
+            var x = 2560
+            var y = 1440
             setReso.style.color = "#00e0ba";
             setReso.innerHTML = "2K";
             console.log("[Stadia Enhanced] ⚙️ - Resolution: 2560x1440");
             break
         case 2:
+            var x = 3840
+            var y = 2160
             setReso.style.color = "#00e0ba";
             setReso.innerHTML = "4K";
             console.log("[Stadia Enhanced] ⚙️ - Resolution: 3840x2160");
             break
     }
+    // Force Resolution
+    // Source: https://superuser.com/questions/712461/how-to-customize-screen-resolution-reported-to-a-javascript-application-by-a-web
+    Object.defineProperty(window.screen, "availWidth", {
+        value: x,
+        configurable: true
+    });
+    Object.defineProperty(window.screen, "width", {
+        value: x,
+        configurable: true
+    });
+    Object.defineProperty(window.screen, "availHeight", {
+        value: y,
+        configurable: true
+    });
+    Object.defineProperty(window.screen, "height", {
+        value: y,
+        configurable: true
+    });
 }
 
 // Settings - VP9
@@ -378,9 +414,8 @@ setMon.addEventListener("click", function() {
 var benchStart = new Date().getTime() - timerStart;
 console.log("[Stadia Enhanced] ⏲️ - Start Up: " + benchStart + "ms.")
 
-
-
-const interval = setInterval(function() {
+// Main Loop
+setInterval(function() {
     // Use VP9 if possible
     var curCodec = parseInt(localStorage.getItem("UseCodec") || 0);
     switch (curCodec) {
@@ -395,49 +430,18 @@ const interval = setInterval(function() {
             break
     }
 
-    // Force Resolution
-    // Source: https://superuser.com/questions/712461/how-to-customize-screen-resolution-reported-to-a-javascript-application-by-a-web
-    var curRes = parseInt(localStorage.getItem("ForceResolution") || 0);
-    switch (curRes) {
-        case 0:
-            x = parseInt(localStorage.getItem("NativeX") || 1920);
-            y = parseInt(localStorage.getItem("NativeY") || 1920);
-            break
-        case 1:
-            x = 2560
-            y = 1440
-            break
-        case 2:
-            x = 3840
-            y = 2160
-            break
-    }
-    Object.defineProperty(window.screen, "availWidth", {
-        value: x,
-        configurable: true
-    });
-    Object.defineProperty(window.screen, "width", {
-        value: x,
-        configurable: true
-    });
-    Object.defineProperty(window.screen, "availHeight", {
-        value: y,
-        configurable: true
-    });
-    Object.defineProperty(window.screen, "height", {
-        value: y,
-        configurable: true
-    });
-
     // Re-prepend control after refresh
     var check = document.getElementById("setMon");
     if (check === null) {
+        console.log("Check");
         document.querySelectorAll(".VCcUVc")[0].prepend(setMon);
     }
 
     // Force allow 4K in settings
-    document.querySelectorAll(".WTddpc")[0].firstChild.setAttribute("data-disabled", "false");
-    document.querySelectorAll(".WTddpc")[0].firstChild.classList.remove("OWB6Me");
+    if (document.location.href.indexOf("/settings") != -1) {
+        document.querySelectorAll(".WTddpc")[0].firstChild.setAttribute("data-disabled", "false");
+        document.querySelectorAll(".WTddpc")[0].firstChild.classList.remove("OWB6Me");
+    }
 }, 1000);
 
 // Source: https://somethingididnotknow.wordpress.com/2013/07/01/change-page-styles-with-greasemonkeytampermonkey/
