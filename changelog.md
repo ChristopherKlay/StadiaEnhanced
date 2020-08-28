@@ -7,6 +7,9 @@
 ### 0.3.5.1
 * Fixed class handles due to Stadia update
 
+### 0.3.5.2
+* Fixed various bugs with custom grid sizes on navigation
+
 ## Version 0.3.4
 * Force enabled "4K" option in settings.
 * Enabled 2K option
