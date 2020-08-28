@@ -4,6 +4,9 @@
 * Added "Pro Games" shortcut
 * Code optimisation
 
+### 0.3.5.1
+* Fixed class handles due to Stadia update
+
 ## Version 0.3.4
 * Force enabled "4K" option in settings.
 * Enabled 2K option
