@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.3.5
+* Added "Pro Games" shortcut
+* Code optimisation
+
 ## Version 0.3.4
 * Force enabled "4K" option in settings.
 * Enabled 2K option
