@@ -2,7 +2,7 @@
 // @name        Stadia Enhanced
 // @namespace   christopherklay
 // @description Various new features for Google Stadia
-// @version     0.3.5.1
+// @version     0.3.5.2
 // @author      ChristopherKlay
 // @match       https://stadia.google.com/*
 // @noframes
@@ -205,17 +205,13 @@ setCapt.innerHTML = '<svg width="21" height="20" viewBox="0 0 307.31 307.31"><pa
 setCapt.style.cursor = "pointer";
 setCapt.style.userSelect = "none";
 setCapt.addEventListener("click", function() {
-    document.querySelectorAll(".axWdCb")[0].click();
+    window.open("https://stadia.google.com/captures", "_self");
 });
 document.querySelectorAll(".WpnpPe")[0].prepend(setCapt);
-
-console.log("Test");
 
 // Settings - Grid
 var gridSize = parseInt(localStorage.getItem("GridSize") || 0);
 callGridSize(gridSize)
-addGlobalStyle('.z1P2me { width: 90rem; }');
-addGlobalStyle('.iadg4b { width: 90rem; }');
 
 var setGrid = document.createElement("div");
 setGrid.className = "NfVFqd cr1oJe QAAyWd wJYinb";
@@ -230,37 +226,39 @@ setGrid.addEventListener("click", function() {
 });
 document.querySelectorAll(".WpnpPe")[0].prepend(setGrid);
 
-function callGridSize(size) {
+function callGridSize(size) { // document.querySelectorAll(".z1P2me")[0]
+    addGlobalStyle('.z1P2me { width: 90rem !important; }');
+    addGlobalStyle('.iadg4b { width: 90rem !important; }');
     switch (size) {
         case 0:
-            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto); }');
-            addGlobalStyle('.GqLi4d.qu6XL { width: 44.25rem; height: 26.55rem; }');
-            addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem; }');
-            addGlobalStyle('.E3eEyc { grid-gap: 1.5rem; }');
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto) !important; }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 44.25rem !important; height: 26.55rem !important; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
+            addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
             break;
         case 1:
-            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto); }');
-            addGlobalStyle('.GqLi4d.qu6XL { width: 29rem; height: 17.4rem; }');
-            addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem; }');
-            addGlobalStyle('.E3eEyc { grid-gap: 1.5rem; }');
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto) !important; }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 29rem !important; height: 17.4rem !important; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
+            addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
             break;
         case 2:
-            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto); }');
-            addGlobalStyle('.GqLi4d.qu6XL { width: 22.125rem; height: 13.2rem; }');
-            addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem; }');
-            addGlobalStyle('.E3eEyc { grid-gap: .5rem; }');
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto) !important; }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 22.125rem !important; height: 13.2rem !important; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem !important; }');
+            addGlobalStyle('.E3eEyc { grid-gap: .5rem !important; }');
             break;
         case 3:
-            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto); }');
-            addGlobalStyle('.GqLi4d.qu6XL { width: 17.6rem; height: 10.5rem; }');
-            addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem; }');
-            addGlobalStyle('.E3eEyc { grid-gap: .5rem; }');
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto) !important; }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 17.6rem !important; height: 10.5rem !important; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem !important; }');
+            addGlobalStyle('.E3eEyc { grid-gap: .5rem !important; }');
             break;
         case 4:
-            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto); }');
-            addGlobalStyle('.GqLi4d.qu6XL { width: 14.75rem; height: 8.85em; }');
-            addGlobalStyle('.a1l9D { margin: 0 0 .3rem .3rem; }');
-            addGlobalStyle('.E3eEyc { grid-gap: .3rem; }');
+            addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto) !important; }');
+            addGlobalStyle('.GqLi4d.qu6XL { width: 14.75rem !important; height: 8.85em !important; }');
+            addGlobalStyle('.a1l9D { margin: 0 0 .3rem .3rem !important; }');
+            addGlobalStyle('.E3eEyc { grid-gap: .3rem !important; }');
             break;
     }
     console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (gridSize + 2) + ".");
@@ -435,12 +433,11 @@ setInterval(function() {
     // Re-prepend control after refresh
     var check = document.getElementById("setMon");
     if (check === null) {
-        console.log("Check");
         document.querySelectorAll(".VCcUVc")[0].prepend(setMon);
     }
 
     // Force allow 4K in settings
-    if (document.location.href.indexOf("/settings") != -1) {
+    if (document.location.href.indexOf("/settings")) {
         document.querySelectorAll(".WTddpc")[0].firstChild.setAttribute("data-disabled", "false");
         document.querySelectorAll(".WTddpc")[0].firstChild.classList.remove("OWB6Me");
     }
