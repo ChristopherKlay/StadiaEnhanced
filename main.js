@@ -2,7 +2,7 @@
 // @name        Stadia Enhanced
 // @namespace   christopherklay
 // @description Various new features for Google Stadia
-// @version     0.3.5
+// @version     0.3.5.1
 // @author      ChristopherKlay
 // @match       https://stadia.google.com/*
 // @noframes
@@ -194,7 +194,7 @@ setPro.style.userSelect = "none";
 setPro.addEventListener("click", function() {
     window.open("https://stadia.google.com/store/list/2001", "_self");
 });
-document.querySelectorAll(".yjSb7c")[0].append(setPro);
+document.querySelectorAll(".YNlByb")[0].append(setPro);
 
 // Settings - Captures
 var setCapt = document.createElement("div");
@@ -207,7 +207,9 @@ setCapt.style.userSelect = "none";
 setCapt.addEventListener("click", function() {
     document.querySelectorAll(".axWdCb")[0].click();
 });
-document.querySelectorAll(".cOj4he")[0].prepend(setCapt);
+document.querySelectorAll(".WpnpPe")[0].prepend(setCapt);
+
+console.log("Test");
 
 // Settings - Grid
 var gridSize = parseInt(localStorage.getItem("GridSize") || 0);
@@ -226,7 +228,7 @@ setGrid.addEventListener("click", function() {
     localStorage.setItem("GridSize", gridSize);
     callGridSize(gridSize)
 });
-document.querySelectorAll(".cOj4he")[0].prepend(setGrid);
+document.querySelectorAll(".WpnpPe")[0].prepend(setGrid);
 
 function callGridSize(size) {
     switch (size) {
@@ -282,7 +284,7 @@ setReso.addEventListener("click", function() {
     localStorage.setItem("ForceResolution", curReso);
     callReso(curReso);
 });
-document.querySelectorAll(".cOj4he")[0].prepend(setReso);
+document.querySelectorAll(".WpnpPe")[0].prepend(setReso);
 
 function callReso(res) {
     switch (res) {
@@ -341,7 +343,7 @@ setCodec.addEventListener("click", function() {
     localStorage.setItem("UseCodec", curCodec);
     callCodec(curCodec);
 });
-document.querySelectorAll(".cOj4he")[0].prepend(setCodec);
+document.querySelectorAll(".WpnpPe")[0].prepend(setCodec);
 
 function callCodec(cod) {
     switch (cod) {
