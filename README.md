@@ -9,7 +9,7 @@
 * Stream Monitor (Displays frame/package loss among other things), via the group menu.
 * Changeable library size on the home screen, toggle between 2 up to 6 items per row.
 * Settings for codec, resolution and library size are saved between sessions.
-* Access por games, screenshots and video captures quickly.
+* Quick access for screenshots and video captures, as well as current Pro games.
 * Automatic updates available via userscript manager.
 
 ## Known Issues
