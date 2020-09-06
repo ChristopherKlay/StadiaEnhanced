@@ -18,4 +18,4 @@
 
 ## Installation
 
-You can simply install the extension from the [Google Chrome Store](). (Soon)
+You can simply install the extension from the [Google Chrome Store](). (In verification)
