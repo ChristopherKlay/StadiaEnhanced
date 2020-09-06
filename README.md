@@ -18,4 +18,12 @@
 
 ## Installation
 
+### Chrome Store
+
 The userscript has been converted into a chrome extension and is currently in verification for the Google Chrome Store.
+
+### Release file
+
+* Download the [newest release file](https://github.com/ChristopherKlay/StadiaEnhanced/releases) and extract it.
+* Open [your extension settings](chrome://extensions/) and enable the developer mode at the top right.
+* Select 'Load Unpacked' at the top left and chose the folder you extracted previously.
