@@ -14,7 +14,7 @@
 
 ## Known Issues
 
-* -
+* Pro Games counter inaccurate after visiting specific store pages. Will be fixed when the next Pro game becomes available.
 
 ## Installation
 
