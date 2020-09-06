@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+  <title>Stadia Enhanced</title>
+</head>
+<style type="text/css">
+  body {
+    background: #202124;
+    min-width: 300px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  #enhancedpop_content {
+    padding: 0.5rem;
+  }
+
+  #enhancedpop_share {
+    margin-top: 5px;
+    height: 35px;
+  }
+
+  .enhancedpop_button {
+    width: 25%;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    background-size: auto 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .enhancedpop_button:hover {
+    background-color: rgba(255, 255, 255, .06);
+  }
+
+  .enhancedpop_customStadia {
+    background-image: url(/media/svg/stadia.svg);
+  }
+
+  .enhancedpop_customGitHub {
+    background-image: url(/media/svg/github.svg);
+  }
+
+  .enhancedpop_customReddit {
+    background-image: url(/media/svg/reddit.svg);
+  }
+
+  .enhancedpop_customCoffee {
+    background-image: url(/media/svg/coffee.svg);
+  }
+
+  .enhancedpop_accordion {
+    box-sizing: border-box;
+    display: flex;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    border-color: #202124;
+    border-radius: 0px;
+    border-style: solid;
+    border-width: 1px;
+    flex-direction: column;
+  }
+
+  .enhancedpop_accordion-select {
+    cursor: pointer;
+    margin: 0;
+    opacity: 0;
+    z-index: 1;
+    margin-bottom: -65px;
+    margin-right: 0;
+  }
+
+  .enhancedpop_accordion-title {
+    position: relative;
+  }
+
+  .enhancedpop_accordion-title:not(:nth-last-child(2))::after {
+    border: 1px solid transparent;
+    bottom: 0;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-bottom-color: #2d2e31;
+    border-right-color: transparent;
+  }
+
+  .enhancedpop_accordion-title span {
+    bottom: 0px;
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
+    transform: rotate(0deg);
+    -ms-writing-mode: lr-tb;
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+    padding-left: 33px;
+    padding-right: 33px;
+    line-height: 65px;
+  }
+
+  .enhancedpop_accordion-content {
+    box-sizing: border-box;
+    overflow: auto;
+    position: relative;
+    transition: margin 0.3s ease 0.1s;
+    background-color: #e9e9e9;
+    color: #7f8787;
+    height: 280px;
+    margin-bottom: -280px;
+    margin-right: 0;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .enhancedpop_accordion-select:checked+.enhancedpop_accordion-title+.enhancedpop_accordion-content {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+
+  .enhancedpop_accordion-title,
+  .enhancedpop_accordion-select {
+    background-color: #202124;
+    color: #E3E3E3;
+    width: 100%;
+    height: 65px;
+    font-size: 15px;
+  }
+
+  .enhancedpop_accordion-select:hover+.enhancedpop_accordion-title,
+  .enhancedpop_accordion-select:checked+.enhancedpop_accordion-title {
+    background-color: #2d2e31;
+  }
+</style>
+<body>
+  <div id="enhancedpop_content">
+    <img src="media/logo/48.png" alt="Stadia Enhanced Logo">
+    <div class="enhancedpop_accordion">
+      <input type="radio" name="select" class="enhancedpop_accordion-select" />
+      <div class="enhancedpop_accordion-title"><span>Recent Changes</span></div>
+      <div class="enhancedpop_accordion-content">
+        <h2 id="version-1-0-0">Version 1.0.0</h2>
+        <ul>
+          <li>Converted from userscript to chrome extension</li>
+          <li>Fixed the stream monitor blocking voice chat and other features</li>
+          <li>Added a search bar to the store</li>
+          <li>Added a shortcut to the players achievements page</li>
+          <li>Pro Games now shows amount of unclaimed games when visiting (unstable)</li>
+          <li>New popup menu, including changelog, quick start and shortcuts</li>
+          <li>Changed &quot;Pro Games&quot; to &quot;Pro&quot; for the sake of UI space at 720p</li>
+          <li>Fixed multiple issues related to duplicated content ID</li>
+        </ul>
+        <h2 id="version-0-3-5">Version 0.3.5</h2>
+        <ul>
+          <li>Added &quot;Pro Games&quot; shortcut</li>
+          <li>Code optimisation</li>
+        </ul>
+        <h3 id="0-3-5-1">0.3.5.1</h3>
+        <ul>
+          <li>Fixed class handles due to Stadia update</li>
+        </ul>
+        <h3 id="0-3-5-2">0.3.5.2</h3>
+        <ul>
+          <li>Fixed various bugs with custom grid sizes on navigation</li>
+        </ul>
+        <h2 id="version-0-3-4">Version 0.3.4</h2>
+        <ul>
+          <li>Force enabled &quot;4K&quot; option in settings</li>
+          <li>Enabled 2K option</li>
+          <li>Code optimisation</li>
+        </ul>
+        <h2 id="version-0-3-3">Version 0.3.3</h2>
+        <ul>
+          <li>Added missing metadata.</li>
+          <li>Enabled updating script via userscript manager</li>
+          <li>Added quick access for screenshots &amp; video captures</li>
+        </ul>
+        <h2 id="version-0-3-2">Version 0.3.2</h2>
+        <ul>
+          <li>Updated codec function to support switching between H264, VP9 and default</li>
+          <li>Added start up timer to the console output</li>
+          <li>Beautified code structure</li>
+        </ul>
+        <h2 id="version-0-3-0">Version 0.3.0</h2>
+        <ul>
+          <li>First GitHub Release</li>
+        </ul>
+      </div> 
+      <input type="radio" name="select" class="enhancedpop_accordion-select" />
+      <div class="enhancedpop_accordion-title"><span>About Stadia Enhanced</span></div>
+      <div class="enhancedpop_accordion-content">
+        When Google released Stadia in November 2019, it quickly gained my interest. Sadly, due to issues with how the platform works via Chrome, my experience wasn't all that good - lots of other people and myself started working on changing that.<br>
+        <br>
+        Userscripts and helpful browser tweaks quickly started popping up on social media, people were searching for solutions and to simply make the platform more enjoyable. Back then I started my own userscript, allowing me to comfortably use the service by not only developing solutions for my issues, but also collecting solutions from other lovely people.<br>
+        <br>
+        August 2020 I decided to clean the whole thing up and work on a reliable solution to everyday problems fueled not by myself, but the whole community;<br>
+        <br>
+        <h3>Stadia Enhanced.</h3>
+      </div> 
+      <input type="radio" name="select" class="enhancedpop_accordion-select" />
+      <div class="enhancedpop_accordion-title"><span>About the author</span></div>
+      <div class="enhancedpop_accordion-content">
+        <h3>Hey there!</h2>
+        I'm Christopher, from northern Germany.<br>
+        <br>
+        In my free time I'm working on projects surrounding my hobbies, help find solutions for common problems and software related issues, or simply create little snippets that make tasks more convenient.<br>
+        <br>
+        Enjoy.
+      </div> 
+    </div>
+    <div id="enhancedpop_share">
+      <a href="https://stadia.google.com/" class="enhancedpop_button enhancedpop_customStadia" target="_blank"></a>
+      <a href="https://www.reddit.com/r/Stadia/" class="enhancedpop_button enhancedpop_customReddit" target="_blank"></a>
+      <a href="https://github.com/ChristopherKlay/StadiaEnhanced" class="enhancedpop_button enhancedpop_customGitHub" target="_blank"></a>
+      <a href="https://www.buymeacoffee.com/christopherklay" class="enhancedpop_button enhancedpop_customCoffee" target="_blank"></a>
+    </div>
+  </body>
+  </html>
