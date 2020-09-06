@@ -1,6 +1,6 @@
 # Stadia Enhanced
 
-![](blob:https://imgur.com/6f457a85-bb05-45ce-9d6d-4653f1cbce17)
+![](https://i.imgur.com/cKPbaLk.png)
 
 ## Features
 
