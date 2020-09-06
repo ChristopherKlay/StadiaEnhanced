@@ -18,4 +18,4 @@
 
 ## Installation
 
-You can simply install the extension from the [Google Chrome Store](). (In verification)
+The userscript has been converted into a chrome extension and is currently in verification for the Google Chrome Store.
