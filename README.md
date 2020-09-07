@@ -20,7 +20,7 @@
 
 ### Chrome Store
 
-The userscript has been converted into a chrome extension and is currently in verification for the Google Chrome Store.
+* Install the extension from the official chrome web store [here](https://chrome.google.com/webstore/detail/stadia-enhanced/ldeakaihfnkjmelifgmbmjlphdfncbfg).
 
 ### Release file
 
