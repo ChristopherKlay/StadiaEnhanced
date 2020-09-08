@@ -1,6 +1,6 @@
 # Stadia Enhanced
 
-![](https://i.imgur.com/cKPbaLk.png)
+![](https://i.imgur.com/qvXn6xI.png)
 
 ## Features
 
@@ -27,3 +27,8 @@
 * Download the [newest release file](https://github.com/ChristopherKlay/StadiaEnhanced/releases) and extract it.
 * Open [your extension settings](chrome://extensions/) and enable the developer mode at the top right.
 * Select 'Load Unpacked' at the top left and chose the folder you extracted previously.
+
+## More screenshots
+
+![](https://i.imgur.com/H98EF6o.png)
+![](https://i.imgur.com/a5FZIAV.png)
