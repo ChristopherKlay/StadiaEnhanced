@@ -111,7 +111,7 @@ function enhanced_RTCMonitor() {
             lastBytes = 0;
             lastFrames = 0;
             active = false;
-            enhanced_streamMonitor.innerHTML = "Waiting for game launch.";
+            enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
         } else if (peerConnections.length >= 3) {
             if (!active) {
                 sessionStart = new Date();
@@ -209,22 +209,22 @@ function enhanced_RTCMonitor() {
                                 enhanced_streamMonitor.innerHTML = html;
                             }
                         });
-                    }
-                }
-            });
-        }
-    }, 1000);
+}
+}
+});
+}
+}, 1000);
 };
 embed(enhanced_RTCMonitor);
 
 var enhanced_Monitor = document.createElement("div");
-enhanced_Monitor.className = "CTvDXd QAAyWd Fjy05d ATH3sf wJYinb E6Xpr rpgZzc RkyH1e";
+enhanced_Monitor.className = "CTvDXd QAAyWd Fjy05d ivWUhc wJYinb QSDHyc rpgZzc RkyH1e";
 enhanced_Monitor.id = "enhanced_Monitor";
 enhanced_Monitor.innerHTML = "Stream Monitor";
 enhanced_Monitor.style.cursor = "pointer";
-enhanced_Monitor.style.zIndex = "2000";
 enhanced_Monitor.style.marginRight = "10px";
 enhanced_Monitor.style.userSelect = "none";
+enhanced_Monitor.tabIndex = "0";
 enhanced_Monitor.addEventListener("click", function() {
     localStorage.setItem("enhanced_MonitorOption", (parseInt(localStorage.getItem("enhanced_MonitorOption") || 0) + 1) % 5)
 });
@@ -237,8 +237,9 @@ enhanced_ProGames.innerHTML = "Pro";
 enhanced_ProGames.style.marginRight = "20px";
 enhanced_ProGames.style.cursor = "pointer";
 enhanced_ProGames.style.userSelect = "none";
+enhanced_ProGames.tabIndex = "0";
 enhanced_ProGames.addEventListener("click", function() {
-    window.open("https://stadia.google.com/store/list/2001", "_self");
+    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/2001", "_self");
 });
 if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     document.querySelectorAll(".YNlByb")[0].append(enhanced_ProGames);
@@ -252,10 +253,11 @@ enhanced_StoreSearch.placeholder = "Search";
 enhanced_StoreSearch.style.border = "none";
 enhanced_StoreSearch.style.backgroundColor = "rgba(255,255,255,.06)";
 enhanced_StoreSearch.style.outline = "none";
+enhanced_StoreSearch.style.marginRight = "20px";
 enhanced_StoreSearch.style.display = "none";
 enhanced_StoreSearch.addEventListener("keypress", function() {
     if (event.keyCode == 13 && enhanced_StoreSearch.value != "") {
-        window.open("https://stadia.google.com/store/list/3?search=" + enhanced_StoreSearch.value, "_self");
+        window.open(document.querySelector("head > base").getAttribute("href") + "store/list/3?search=" + enhanced_StoreSearch.value, "_self");
     }
 });
 if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
@@ -269,8 +271,9 @@ enhanced_Achievements.id = "enhanced_Achievements";
 enhanced_Achievements.innerHTML = '<i class="material-icons-extended" aria-hidden="true">trophy</i>';
 enhanced_Achievements.style.cursor = "pointer";
 enhanced_Achievements.style.userSelect = "none";
+enhanced_Achievements.tabIndex = "0";
 enhanced_Achievements.addEventListener("click", function() {
-    window.open("https://stadia.google.com/profile/gameactivities/all", "_self");
+    window.open(document.querySelector("head > base").getAttribute("href") + "profile/gameactivities/all", "_self");
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
     document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Achievements);
@@ -283,8 +286,9 @@ enhanced_Captures.id = "enhanced_Captures";
 enhanced_Captures.innerHTML = '<i class="material-icons-extended" aria-hidden="true">camera_alt</i>'
 enhanced_Captures.style.cursor = "pointer";
 enhanced_Captures.style.userSelect = "none";
+enhanced_Captures.tabIndex = "0";
 enhanced_Captures.addEventListener("click", function() {
-    window.open("https://stadia.google.com/captures", "_self");
+    window.open(document.querySelector("head > base").getAttribute("href") + "captures", "_self");
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
     document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Captures);
@@ -293,13 +297,13 @@ if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
 // Settings - Grid
 var enhanced_GridSize = parseInt(localStorage.getItem("enhanced_GridSize") || 0);
 callenhanced_GridSize(enhanced_GridSize)
-
 var enhanced_Grid = document.createElement("div");
 enhanced_Grid.className = "NfVFqd cr1oJe QAAyWd wJYinb";
 enhanced_Grid.id = "enhanced_Grid";
 enhanced_Grid.innerHTML = '<i class="material-icons-extended" aria-hidden="true">view_comfy</i>'
 enhanced_Grid.style.cursor = "pointer";
 enhanced_Grid.style.userSelect = "none";
+enhanced_Grid.tabIndex = "0";
 enhanced_Grid.addEventListener("click", function() {
     enhanced_GridSize = (enhanced_GridSize + 1) % 5;
     localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
@@ -310,38 +314,36 @@ if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
 }
 
 function callenhanced_GridSize(size) {
-    enhanced_addGlobalStyle('.z1P2me { width: 90rem !important; }');
-    enhanced_addGlobalStyle('.iadg4b { width: 90rem !important; }');
     switch (size) {
         case 0:
         enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 44.25rem !important; height: 26.55rem !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: 21.75rem !important; }');
         enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
         enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
         break;
         case 1:
         enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 29rem !important; height: 17.4rem !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.66) !important; }');
         enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
         enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
         break;
         case 2:
         enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 22.125rem !important; height: 13.2rem !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: .5rem !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.5) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1rem 1rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
         break;
         case 3:
         enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 17.6rem !important; height: 10.5rem !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 .5rem .5rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: .5rem !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.4) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1rem 1rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
         break;
         case 4:
         enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 14.75rem !important; height: 8.85em !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 .3rem .3rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: .3rem !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.33) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.2rem 0.2rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
         break;
     }
     console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".");
@@ -399,78 +401,78 @@ function enhanced_changeResolution() {
 embed(enhanced_changeResolution);
 
 var enhanced_Resolution = document.createElement("div");
-enhanced_Resolution.className = "bl2XYb soKQKc";
+enhanced_Resolution.className = "pBvcyf QAAyWd";
 enhanced_Resolution.id = "enhanced_Resolution";
 enhanced_Resolution.innerHTML = "Native";
 var enhanced_currentRes = parseInt(localStorage.getItem("enhanced_ResOption") || 0);
 enhanced_updateResolution(enhanced_currentRes)
 enhanced_Resolution.style.cursor = "pointer";
 enhanced_Resolution.style.userSelect = "none";
-enhanced_Resolution.addEventListener("click", function() {
+enhanced_Resolution.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_Resolution.addEventListener("click", function(evt) {
     enhanced_currentRes = (enhanced_currentRes + 1) % 3;
     localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
     enhanced_updateResolution(enhanced_currentRes)
-    
 });
 
 function enhanced_updateResolution(res) {
     switch (res) {
         case 0:
-        enhanced_Resolution.style.color = "#ff773d";
-        enhanced_Resolution.innerHTML = "Native";
+        enhanced_Resolution.style.color = "white";
+        enhanced_Resolution.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">monitor</i></span><span class="mJVLwb">Native</span>'
         break
         case 1:
         var x = 2560
         var y = 1440
         enhanced_Resolution.style.color = "#00e0ba";
-        enhanced_Resolution.innerHTML = "2K";
+        enhanced_Resolution.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">monitor</i></span><span class="mJVLwb">2K</span>'
         break
         case 2:
         var x = 3840
         var y = 2160
         enhanced_Resolution.style.color = "#00e0ba";
-        enhanced_Resolution.innerHTML = "4K";
+        enhanced_Resolution.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">monitor</i></span><span class="mJVLwb">4K</span>'
         break
     }
 }
 
-if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Resolution);
+if (document.querySelectorAll(".crOn3e")[0] !== undefined) {
+    document.querySelectorAll(".crOn3e")[0].prepend(enhanced_Resolution);
 }
 
 // Settings - VP9
 var enhanced_Codec = document.createElement("div");
-enhanced_Codec.className = "bl2XYb soKQKc";
+enhanced_Codec.className = "pBvcyf QAAyWd";
 enhanced_Codec.id = "enhanced_Codec";
 var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption") || 0);
 enhanced_changeCodec(enhanced_currentCodec);
 enhanced_Codec.style.cursor = "pointer";
 enhanced_Codec.style.userSelect = "none";
-enhanced_Codec.addEventListener("click", function() {
+enhanced_Codec.addEventListener("click", function(evt) {
     enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
     localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
     enhanced_changeCodec(enhanced_currentCodec);
 });
 
-if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Codec);
+if (document.querySelectorAll(".crOn3e")[0] !== undefined) {
+    document.querySelectorAll(".crOn3e")[0].prepend(enhanced_Codec);
 }
 
 function enhanced_changeCodec(c) {
     switch (c) {
         case 0:
-        enhanced_Codec.style.color = "#ff773d";
-        enhanced_Codec.innerHTML = "Default";
+        enhanced_Codec.style.color = "white";
+        enhanced_Codec.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">video_settings</i></span><span class="mJVLwb">Default</span>'
         console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Set to 'Default'.");
         break
         case 1:
         enhanced_Codec.style.color = "#00e0ba";
-        enhanced_Codec.innerHTML = "VP9";
+        enhanced_Codec.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">video_settings</i></span><span class="mJVLwb">VP9</span>'
         console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Set to 'VP9'.");
         break
         case 2:
         enhanced_Codec.style.color = "#00e0ba";
-        enhanced_Codec.innerHTML = "H264";
+        enhanced_Codec.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">video_settings</i></span><span class="mJVLwb">H264</span>'
         console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Set to 'H264'");
         break
     }
@@ -498,10 +500,10 @@ setInterval(function() {
         break
     }
 
-    // Store Search
-    // Example: https://stadia.google.com/store/list/3?search=NBA
+    // Store Features / Search
+    // Example: /store/list/3?search=NBA
     if (document.location.href.indexOf("/store") != -1) {
-        enhanced_StoreSearch.style.display = "block";
+        enhanced_StoreSearch.style.display = "flex";
     } else {
         enhanced_StoreSearch.style.display = "none";
     }
@@ -530,8 +532,14 @@ setInterval(function() {
     }
 
     // Re-prepend monitor control after refresh
-    if (document.getElementById("enhanced_Monitor") === null && document.querySelectorAll(".VCcUVc")[0] !== undefined) {
-        document.querySelectorAll(".VCcUVc")[0].prepend(enhanced_Monitor);
+    if (document.location.href.indexOf("/player") != -1) {
+        enhanced_Monitor.style.display = "flex";
+        if (document.getElementById("enhanced_Monitor") === null && document.querySelectorAll(".VCcUVc")[0] !== undefined) {
+            document.querySelectorAll(".VCcUVc")[0].prepend(enhanced_Monitor);
+        }
+    } else {
+        enhanced_Monitor.style.display = "none";
+        localStorage.setItem("enhanced_MonitorOption", 0);
     }
 
     // Pro Games
