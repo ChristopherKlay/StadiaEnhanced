@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.1.0
+* Fixed quick access issues with multiple logged in users
+* Moved the codec and resolution options to the settings popup menu
+* Stream monitor now hidden outside of games
+* Fixed some UI elements not being reachable via tabbing
+* Added current version number to the popup window
+* Changes to the game library size (hopefully fixing overflows)
+
 ## Version 1.0.0
 * Converted from userscript to chrome extension
 * Fixed the stream monitor blocking voice chat and other features
