@@ -1,6 +1,6 @@
 # Stadia Enhanced
 
-![](https://i.imgur.com/qvXn6xI.png)
+![](https://preview.redd.it/8xnk977lwyl51.png?width=1280&format=png&auto=webp&s=fbfcd9f6f69e28d43ab765c528297c1876cb1bf0)
 
 ## Features
 
@@ -30,5 +30,5 @@
 
 ## More screenshots
 
-![](https://i.imgur.com/H98EF6o.png)
-![](https://i.imgur.com/a5FZIAV.png)
+![](https://preview.redd.it/imthyy7mwyl51.png?width=1280&format=png&auto=webp&s=1e8f9c4bd9b504e75ee29b8783c125e8291f75ae)
+![](https://preview.redd.it/wlpma6gnwyl51.png?width=1280&format=png&auto=webp&s=68f3ce24f07c889f349c3b5342f13baeda2f9d31)
