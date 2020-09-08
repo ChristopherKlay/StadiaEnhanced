@@ -269,54 +269,83 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     document.querySelectorAll(".YNlByb")[0].append(enhanced_StoreSearch);
 }
 
-// Settings - Base Deals
+// Settings - Store Dropdown
+var enhanced_dropContainer = document.createElement("div");
+enhanced_dropContainer.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_dropContainer.id = "enhanced_dropContainer";
+enhanced_dropContainer.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
+enhanced_dropContainer.style.marginRight = "20px";
+enhanced_dropContainer.style.cursor = "pointer";
+enhanced_dropContainer.style.userSelect = "none";
+enhanced_dropContainer.tabIndex = "0";
+enhanced_dropContainer.addEventListener("click", function() {
+    if (enhanced_dropContent.style.display === "none") {
+        enhanced_dropContent.style.display = "block";
+    } else {
+        enhanced_dropContent.style.display = "none";
+    }
+});
+
+window.onclick = function(event) {
+  if (!event.target.matches('#enhanced_dropContainer')) {
+    enhanced_dropContent.style.display = "none";
+}
+}
+
+var enhanced_dropContent = document.createElement("div");
+enhanced_dropContent.id = "enhanced_dropContent";
+enhanced_dropContent.style.position = "absolute";
+enhanced_dropContent.style.width = "15rem";
+enhanced_dropContent.style.top = "4.25rem";
+enhanced_dropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
+enhanced_dropContent.style.background = "#2d2e30";
+enhanced_dropContent.style.borderRadius =  "0.5rem";
+enhanced_dropContent.style.zIndex = "20";
+enhanced_dropContent.style.display = "none";
+
+if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
+    document.querySelectorAll(".YNlByb")[0].append(enhanced_dropContainer);
+    enhanced_dropContainer.append(enhanced_dropContent);
+}
+
+// Settings - Dropdown > Base Deals
 var enhanced_baseDeals = document.createElement("div");
-enhanced_baseDeals.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_baseDeals.className = "pBvcyf QAAyWd";
 enhanced_baseDeals.id = "enhanced_baseDeals";
-enhanced_baseDeals.innerHTML = '<svg class="xduoyf" width="24" height="24" viewBox="0 0 24 24" fill="rgba(255, 255, 255, 0.9)" xmlns="http://www.w3.org/2000/svg"><path d="M21.4 11.6L12.4 2.6C12 2.2 11.5 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.5 2.2 12 2.6 12.4L11.6 21.4C12 21.8 12.5 22 13 22C13.5 22 14 21.8 14.4 21.4L21.4 14.4C21.8 14 22 13.5 22 13C22 12.5 21.8 12 21.4 11.6M13 20L4 11V4H11L20 13M6.5 5C7.3 5 8 5.7 8 6.5S7.3 8 6.5 8 5 7.3 5 6.5 5.7 5 6.5 5M10.1 8.9L11.5 7.5L17 13L15.6 14.4L10.1 8.9M7.6 11.4L9 10L13 14L11.6 15.4L7.6 11.4Z"/></svg>';
-enhanced_baseDeals.style.marginRight = "20px";
+enhanced_baseDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">local_offer</i></span><span class="mJVLwb">Base Deals</span>';
 enhanced_baseDeals.style.cursor = "pointer";
 enhanced_baseDeals.style.userSelect = "none";
 enhanced_baseDeals.tabIndex = "0";
-enhanced_baseDeals.style.display = "none";
 enhanced_baseDeals.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "store/list/86", "_self");
 });
-if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_baseDeals);
-}
+enhanced_dropContent.append(enhanced_baseDeals);
 
-// Settings - Pro Deals
+// Settings - Dropdown > Pro Deals
 var enhanced_proDeals = document.createElement("div");
-enhanced_proDeals.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_proDeals.className = "pBvcyf QAAyWd";
 enhanced_proDeals.id = "enhanced_proDeals";
-enhanced_proDeals.innerHTML = '<svg class="xduoyf" width="24" height="24" viewBox="0 0 24 24" fill="#ff773d" xmlns="http://www.w3.org/2000/svg"><path d="M21.4 11.6L12.4 2.6C12 2.2 11.5 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.5 2.2 12 2.6 12.4L11.6 21.4C12 21.8 12.5 22 13 22C13.5 22 14 21.8 14.4 21.4L21.4 14.4C21.8 14 22 13.5 22 13C22 12.5 21.8 12 21.4 11.6M13 20L4 11V4H11L20 13M6.5 5C7.3 5 8 5.7 8 6.5S7.3 8 6.5 8 5 7.3 5 6.5 5.7 5 6.5 5M10.1 8.9L11.5 7.5L17 13L15.6 14.4L10.1 8.9M7.6 11.4L9 10L13 14L11.6 15.4L7.6 11.4Z"/></svg>';
-enhanced_proDeals.style.marginRight = "20px";
+enhanced_proDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">loyalty</i></span><span class="mJVLwb">Pro Deals</span>';
 enhanced_proDeals.style.cursor = "pointer";
 enhanced_proDeals.style.userSelect = "none";
 enhanced_proDeals.tabIndex = "0";
-enhanced_proDeals.style.display = "none";
 enhanced_proDeals.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "store/list/45", "_self");
 });
-if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_proDeals);
-}
+enhanced_dropContent.append(enhanced_proDeals);
 
-// Setting - Achievements
-var enhanced_Achievements = document.createElement("div");
-enhanced_Achievements.className = "NfVFqd cr1oJe QAAyWd wJYinb";
-enhanced_Achievements.id = "enhanced_Achievements";
-enhanced_Achievements.innerHTML = '<i class="material-icons-extended" aria-hidden="true">trophy</i>';
-enhanced_Achievements.style.cursor = "pointer";
-enhanced_Achievements.style.userSelect = "none";
-enhanced_Achievements.tabIndex = "0";
-enhanced_Achievements.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "profile/gameactivities/all", "_self");
+// Settings - Dropdown > All games
+var enhanced_listAll = document.createElement("div");
+enhanced_listAll.className = "pBvcyf QAAyWd";
+enhanced_listAll.id = "enhanced_listAll";
+enhanced_listAll.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">list</i></span><span class="mJVLwb">All games</span>';
+enhanced_listAll.style.cursor = "pointer";
+enhanced_listAll.style.userSelect = "none";
+enhanced_listAll.tabIndex = "0";
+enhanced_listAll.addEventListener("click", function() {
+    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/3", "_self");
 });
-if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Achievements);
-}
+enhanced_dropContent.append(enhanced_listAll);
 
 // Settings - Captures
 var enhanced_Captures = document.createElement("div");
@@ -327,7 +356,7 @@ enhanced_Captures.style.cursor = "pointer";
 enhanced_Captures.style.userSelect = "none";
 enhanced_Captures.tabIndex = "0";
 enhanced_Captures.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "captures", "_self");
+    window.open("/captures", "_self");
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
     document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Captures);
@@ -518,12 +547,29 @@ function enhanced_changeCodec(c) {
 }
 
 // Settings - Custom Avatar
-enhanced_avatarDefault = document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage;
+if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
+    enhanced_setAvatar(localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
+}
+
 document.querySelector(".PMkDOc").addEventListener("click", function() {
     enhanced_avatarURL = prompt("New avatar URL (empty for default):")
-    console.log(enhanced_avatarURL);
-    localStorage.setItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"), enhanced_avatarURL);
+    if (enhanced_avatarURL.length < 1) {
+        enhanced_setAvatar(document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage.replace(/(url\(|\)|")/g, ''));
+        localStorage.removeItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"));
+    } else {
+        localStorage.setItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"), enhanced_avatarURL);
+        enhanced_setAvatar(enhanced_avatarURL);
+    }
 });
+
+function enhanced_setAvatar(url) {
+    console.log("[Stadia Enhanced] ⚙️ - Avatar changed to: " + url);
+    enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-color: #ff773d !important }');
+    enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.rybUIf { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.Nv1Sab { content: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.dOyvbe { background-image: url("' + url + '") !important; }');
+}
 
 
 // After Setup
@@ -549,28 +595,14 @@ setInterval(function() {
         break
     }
 
-    // Custom Avatar
-    enhanced_avatarURL = localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"));
-    if (enhanced_avatarURL != "" && enhanced_avatarURL !== null && enhanced_avatarURL != "null") {
-        enhanced_avatarList = document.getElementsByClassName("ksZYgc VGZcUb");
-        for(var i = 0; i < enhanced_avatarList.length; i++) {
-            enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-color: #ff773d !important }');
-            enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + enhanced_avatarURL + '") !important; }');
-        }
-    } else {
-        enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: ' + enhanced_avatarDefault + ' !important; }');
-    }
-
     // Store Features / Search
     // Example: /store/list/3?search=NBA
     if (document.location.href.indexOf("/store") != -1) {
         enhanced_StoreSearch.style.display = "flex";
-        enhanced_proDeals.style.display = "flex";
-        enhanced_baseDeals.style.display = "flex";
+        enhanced_dropContainer.style.display = "flex";
     } else {
         enhanced_StoreSearch.style.display = "none";
-        enhanced_proDeals.style.display = "none";
-        enhanced_baseDeals.style.display = "none";
+        enhanced_dropContainer.style.display = "none";
     }
     if (document.location.href.indexOf("/store/list/3?") != -1) {
         var enhanced_searchParams = new URLSearchParams(window.location.search).get('search');
