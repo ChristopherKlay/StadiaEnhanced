@@ -96,6 +96,8 @@ function enhanced_RTCMonitor() {
     enhanced_updateMonitor(0)
     var enhanced_MonitorState = 0;
     localStorage.setItem("enhanced_MonitorOption", enhanced_MonitorState)
+    localStorage.setItem("enhanced_MonitorState", 0)
+
     console.log("[Stadia Enhanced] ⚙️ - Stream Monitor: Successfully injected.");
 
     setInterval(function() {
@@ -112,10 +114,13 @@ function enhanced_RTCMonitor() {
             lastFrames = 0;
             active = false;
             enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
+            localStorage.setItem("enhanced_MonitorState", 0)
+            localStorage.setItem("enhanced_MonitorOption", 0)
         } else if (peerConnections.length >= 3) {
             if (!active) {
                 sessionStart = new Date();
                 active = true;
+                localStorage.setItem("enhanced_MonitorState", 1)
                 console.log("[Stadia Enhanced] ⚙️ - Stream Monitor: Monitoring started.");
             }
 
@@ -262,6 +267,40 @@ enhanced_StoreSearch.addEventListener("keypress", function() {
 });
 if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     document.querySelectorAll(".YNlByb")[0].append(enhanced_StoreSearch);
+}
+
+// Settings - Base Deals
+var enhanced_baseDeals = document.createElement("div");
+enhanced_baseDeals.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_baseDeals.id = "enhanced_baseDeals";
+enhanced_baseDeals.innerHTML = '<svg class="xduoyf" width="24" height="24" viewBox="0 0 24 24" fill="rgba(255, 255, 255, 0.9)" xmlns="http://www.w3.org/2000/svg"><path d="M21.4 11.6L12.4 2.6C12 2.2 11.5 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.5 2.2 12 2.6 12.4L11.6 21.4C12 21.8 12.5 22 13 22C13.5 22 14 21.8 14.4 21.4L21.4 14.4C21.8 14 22 13.5 22 13C22 12.5 21.8 12 21.4 11.6M13 20L4 11V4H11L20 13M6.5 5C7.3 5 8 5.7 8 6.5S7.3 8 6.5 8 5 7.3 5 6.5 5.7 5 6.5 5M10.1 8.9L11.5 7.5L17 13L15.6 14.4L10.1 8.9M7.6 11.4L9 10L13 14L11.6 15.4L7.6 11.4Z"/></svg>';
+enhanced_baseDeals.style.marginRight = "20px";
+enhanced_baseDeals.style.cursor = "pointer";
+enhanced_baseDeals.style.userSelect = "none";
+enhanced_baseDeals.tabIndex = "0";
+enhanced_baseDeals.style.display = "none";
+enhanced_baseDeals.addEventListener("click", function() {
+    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/86", "_self");
+});
+if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
+    document.querySelectorAll(".YNlByb")[0].append(enhanced_baseDeals);
+}
+
+// Settings - Pro Deals
+var enhanced_proDeals = document.createElement("div");
+enhanced_proDeals.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_proDeals.id = "enhanced_proDeals";
+enhanced_proDeals.innerHTML = '<svg class="xduoyf" width="24" height="24" viewBox="0 0 24 24" fill="#ff773d" xmlns="http://www.w3.org/2000/svg"><path d="M21.4 11.6L12.4 2.6C12 2.2 11.5 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.5 2.2 12 2.6 12.4L11.6 21.4C12 21.8 12.5 22 13 22C13.5 22 14 21.8 14.4 21.4L21.4 14.4C21.8 14 22 13.5 22 13C22 12.5 21.8 12 21.4 11.6M13 20L4 11V4H11L20 13M6.5 5C7.3 5 8 5.7 8 6.5S7.3 8 6.5 8 5 7.3 5 6.5 5.7 5 6.5 5M10.1 8.9L11.5 7.5L17 13L15.6 14.4L10.1 8.9M7.6 11.4L9 10L13 14L11.6 15.4L7.6 11.4Z"/></svg>';
+enhanced_proDeals.style.marginRight = "20px";
+enhanced_proDeals.style.cursor = "pointer";
+enhanced_proDeals.style.userSelect = "none";
+enhanced_proDeals.tabIndex = "0";
+enhanced_proDeals.style.display = "none";
+enhanced_proDeals.addEventListener("click", function() {
+    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/45", "_self");
+});
+if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
+    document.querySelectorAll(".YNlByb")[0].append(enhanced_proDeals);
 }
 
 // Setting - Achievements
@@ -448,7 +487,7 @@ var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption"
 enhanced_changeCodec(enhanced_currentCodec);
 enhanced_Codec.style.cursor = "pointer";
 enhanced_Codec.style.userSelect = "none";
-enhanced_Codec.addEventListener("click", function(evt) {
+enhanced_Codec.addEventListener("click", function() {
     enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
     localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
     enhanced_changeCodec(enhanced_currentCodec);
@@ -478,6 +517,15 @@ function enhanced_changeCodec(c) {
     }
 }
 
+// Settings - Custom Avatar
+enhanced_avatarDefault = document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage;
+document.querySelector(".PMkDOc").addEventListener("click", function() {
+    enhanced_avatarURL = prompt("New avatar URL (empty for default):")
+    console.log(enhanced_avatarURL);
+    localStorage.setItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"), enhanced_avatarURL);
+});
+
+
 // After Setup
 console.log("[Stadia Enhanced] ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_startTimer) + "ms.")
 
@@ -487,10 +535,11 @@ setInterval(function() {
     //var enhanced_loopTimer = new Date().getTime();
 
     // Use VP9 if possible
-    var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption") || 0);
-    switch (enhanced_currentCodec) {
+    switch (parseInt(localStorage.getItem("enhanced_CodecOption") || 0)) {
         case 0:
-        localStorage.setItem("video_codec_implementation_by_codec_key", "");
+        if (document.location.href.indexOf("/home") != -1) {
+            localStorage.removeItem("video_codec_implementation_by_codec_key");
+        }
         break
         case 1:
         localStorage.setItem("video_codec_implementation_by_codec_key", '{"vp9":"ExternalDecoder"}');
@@ -500,12 +549,28 @@ setInterval(function() {
         break
     }
 
+    // Custom Avatar
+    enhanced_avatarURL = localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"));
+    if (enhanced_avatarURL != "" && enhanced_avatarURL !== null && enhanced_avatarURL != "null") {
+        enhanced_avatarList = document.getElementsByClassName("ksZYgc VGZcUb");
+        for(var i = 0; i < enhanced_avatarList.length; i++) {
+            enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-color: #ff773d !important }');
+            enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + enhanced_avatarURL + '") !important; }');
+        }
+    } else {
+        enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: ' + enhanced_avatarDefault + ' !important; }');
+    }
+
     // Store Features / Search
     // Example: /store/list/3?search=NBA
     if (document.location.href.indexOf("/store") != -1) {
         enhanced_StoreSearch.style.display = "flex";
+        enhanced_proDeals.style.display = "flex";
+        enhanced_baseDeals.style.display = "flex";
     } else {
         enhanced_StoreSearch.style.display = "none";
+        enhanced_proDeals.style.display = "none";
+        enhanced_baseDeals.style.display = "none";
     }
     if (document.location.href.indexOf("/store/list/3?") != -1) {
         var enhanced_searchParams = new URLSearchParams(window.location.search).get('search');
@@ -532,14 +597,13 @@ setInterval(function() {
     }
 
     // Re-prepend monitor control after refresh
-    if (document.location.href.indexOf("/player") != -1) {
+    if (parseInt(localStorage.getItem("enhanced_MonitorState")) == 1) {
         enhanced_Monitor.style.display = "flex";
         if (document.getElementById("enhanced_Monitor") === null && document.querySelectorAll(".VCcUVc")[0] !== undefined) {
             document.querySelectorAll(".VCcUVc")[0].prepend(enhanced_Monitor);
         }
     } else {
         enhanced_Monitor.style.display = "none";
-        localStorage.setItem("enhanced_MonitorOption", 0);
     }
 
     // Pro Games
