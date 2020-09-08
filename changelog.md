@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.2.0
+* Potential fix for games not starting, due to empty start-up preference
+* Custom avatar option (click your icon)
+* New shortcuts for base/pro deals
+* The stream monitor now only show when available in-game
+
 ## Version 1.1.0
 * Fixed quick access issues with multiple logged in users
 * Moved the codec and resolution options to the settings popup menu
