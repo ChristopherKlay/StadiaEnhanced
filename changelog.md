@@ -4,7 +4,20 @@
 * Potential fix for games not starting, due to empty start-up preference
 * Custom avatar option (click your icon)
 * New shortcuts for base/pro deals
-* The stream monitor now only show when available in-game
+* The stream monitor now only shows when available in-game
+
+### 1.2.1
+* Fixed various avatar issues
+* Removed achievements shortcut for now, due to content request issues
+* Replaced store shortcuts with new menu
+
+### 1.2.2
+* Fixed captures shortcut with multiple accounts
+* Fixed keyboard navigation support for some shop elements
+* Fixed store dropdown menu being unresponsive
+* Changed grid options to only be visible on the homescreen
+* Moved the version number to be visible when hovering the extensions icon
+
 
 ## Version 1.1.0
 * Fixed quick access issues with multiple logged in users
