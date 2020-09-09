@@ -279,6 +279,7 @@ enhanced_dropContainer.style.cursor = "pointer";
 enhanced_dropContainer.style.userSelect = "none";
 enhanced_dropContainer.tabIndex = "0";
 enhanced_dropContainer.addEventListener("click", function() {
+    console.log("Match");
     if (enhanced_dropContent.style.display === "none") {
         enhanced_dropContent.style.display = "block";
     } else {
@@ -286,11 +287,19 @@ enhanced_dropContainer.addEventListener("click", function() {
     }
 });
 
-window.onclick = function(event) {
-  if (!event.target.matches('#enhanced_dropContainer')) {
-    enhanced_dropContent.style.display = "none";
-}
-}
+enhanced_dropContainer.addEventListener("keyup", function(e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        enhanced_dropContainer.click();
+    }
+});
+
+window.addEventListener("click", function(e) {
+    console.log(e.target);
+    if (e.target != enhanced_dropContainer && enhanced_dropContainer.contains(e.target) === false) {
+        enhanced_dropContent.style.display = "none";
+    }
+});
 
 var enhanced_dropContent = document.createElement("div");
 enhanced_dropContent.id = "enhanced_dropContent";
@@ -356,7 +365,7 @@ enhanced_Captures.style.cursor = "pointer";
 enhanced_Captures.style.userSelect = "none";
 enhanced_Captures.tabIndex = "0";
 enhanced_Captures.addEventListener("click", function() {
-    window.open("/captures", "_self");
+    window.open(document.querySelector("head > base").getAttribute("href") + "captures", "_self");
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
     document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Captures);
@@ -597,13 +606,6 @@ setInterval(function() {
 
     // Store Features / Search
     // Example: /store/list/3?search=NBA
-    if (document.location.href.indexOf("/store") != -1) {
-        enhanced_StoreSearch.style.display = "flex";
-        enhanced_dropContainer.style.display = "flex";
-    } else {
-        enhanced_StoreSearch.style.display = "none";
-        enhanced_dropContainer.style.display = "none";
-    }
     if (document.location.href.indexOf("/store/list/3?") != -1) {
         var enhanced_searchParams = new URLSearchParams(window.location.search).get('search');
         if (enhanced_searchParams !== null) {
@@ -656,6 +658,22 @@ setInterval(function() {
         if (enhanced_ProGames.innerHTML != "Pro") {
             enhanced_ProGames.innerHTML = "Pro";
         }
+    }
+
+    // Homescreen only elements
+    if (document.location.href.indexOf("/home") != -1) {
+        enhanced_Grid.style.display = "flex";
+    } else {
+        enhanced_Grid.style.display = "none";
+    }
+
+    // Store only elements
+    if (document.location.href.indexOf("/store") != -1) {
+        enhanced_StoreSearch.style.display = "flex";
+        enhanced_dropContainer.style.display = "flex";
+    } else {
+        enhanced_StoreSearch.style.display = "none";
+        enhanced_dropContainer.style.display = "none";
     }
 
     // Loop End
