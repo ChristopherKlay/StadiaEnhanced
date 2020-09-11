@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.3.0
+* Added a clock widget to the friends menu
+* Added a icon to the search bar
+* Added windowed mode support
+* Fixed account menu hiding when changing options
+* Fixed wrong avatars on friends achievement pages
+
 ## Version 1.2.0
 * Potential fix for games not starting, due to empty start-up preference
 * Custom avatar option (click your icon)
