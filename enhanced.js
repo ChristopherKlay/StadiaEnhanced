@@ -1,7 +1,15 @@
 // Start Up
-var enhanced_startTimer = new Date().getTime();
+var enhanced_StartTimer = new Date().getTime();
+var enhanced_AccountName = document.querySelectorAll(".VY8blf.fSorq")[0].textContent;
+var enhanced_AccountID = document.querySelector(".ksZYgc.VGZcUb").getAttribute("data-player-id");
+console.log("[Stadia Enhanced] ⚙️ - User: " + enhanced_AccountName + " (" + enhanced_AccountID + ")");
 
-// Settings - Stream Monitor (Credits to AquaRegia)
+// CSS Rules - Global styles and overwrites
+enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }"); // Remove padding above avatar
+enhanced_addGlobalStyle(".VCcUVc { flex-wrap: wrap; gap: 10px; } "); // Flex-Wrap in-game options via friends menu
+// enhanced_addGlobalStyle(".X5624d { display: none; } ") // Hide "Pro" Tags
+
+// Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 function enhanced_RTCMonitor() {
     'use strict';
@@ -34,51 +42,51 @@ function enhanced_RTCMonitor() {
         RTCPeerConnection.prototype = original.prototype;
     })(RTCPeerConnection);
 
-    var enhanced_streamMonitor = document.createElement("div");
-    enhanced_streamMonitor.id = "enhanced_streamMonitor";
-    enhanced_streamMonitor.innerHTML = "Stadia Enhanced";
-    enhanced_streamMonitor.style.position = "fixed";
-    enhanced_streamMonitor.style.width = "auto";
-    enhanced_streamMonitor.style.zIndex = 1000;
-    enhanced_streamMonitor.style.borderRadius = "1rem";
-    enhanced_streamMonitor.style.background = "linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%)";
-    enhanced_streamMonitor.style.padding = "0.5rem";
-    enhanced_streamMonitor.style.fontSize = "0.8rem";
-    enhanced_streamMonitor.style.display = "none";
-    document.body.appendChild(enhanced_streamMonitor);
+    var enhanced_StreamMonitor = document.createElement("div");
+    enhanced_StreamMonitor.id = "enhanced_StreamMonitor";
+    enhanced_StreamMonitor.innerHTML = "Stadia Enhanced";
+    enhanced_StreamMonitor.style.position = "fixed";
+    enhanced_StreamMonitor.style.width = "auto";
+    enhanced_StreamMonitor.style.zIndex = 1000;
+    enhanced_StreamMonitor.style.borderRadius = "1rem";
+    enhanced_StreamMonitor.style.background = "linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%)";
+    enhanced_StreamMonitor.style.padding = "0.5rem";
+    enhanced_StreamMonitor.style.fontSize = "0.8rem";
+    enhanced_StreamMonitor.style.display = "none";
+    document.body.appendChild(enhanced_StreamMonitor);
 
     function enhanced_updateMonitor(opt) {
         switch (opt) {
             case 0:
-            enhanced_streamMonitor.style.display = "none";
+            enhanced_StreamMonitor.style.display = "none";
             break
             case 1:
-            enhanced_streamMonitor.style.top = "1rem";
-            enhanced_streamMonitor.style.right = "";
-            enhanced_streamMonitor.style.bottom = "";
-            enhanced_streamMonitor.style.left = "1rem";
-            enhanced_streamMonitor.style.display = "block";
+            enhanced_StreamMonitor.style.top = "1rem";
+            enhanced_StreamMonitor.style.right = "";
+            enhanced_StreamMonitor.style.bottom = "";
+            enhanced_StreamMonitor.style.left = "1rem";
+            enhanced_StreamMonitor.style.display = "block";
             break;
             case 2:
-            enhanced_streamMonitor.style.top = "1rem";
-            enhanced_streamMonitor.style.right = "1rem";
-            enhanced_streamMonitor.style.bottom = "";
-            enhanced_streamMonitor.style.left = "";
-            enhanced_streamMonitor.style.display = "block";
+            enhanced_StreamMonitor.style.top = "1rem";
+            enhanced_StreamMonitor.style.right = "1rem";
+            enhanced_StreamMonitor.style.bottom = "";
+            enhanced_StreamMonitor.style.left = "";
+            enhanced_StreamMonitor.style.display = "block";
             break;
             case 3:
-            enhanced_streamMonitor.style.top = "";
-            enhanced_streamMonitor.style.right = "1rem";
-            enhanced_streamMonitor.style.bottom = "1rem";
-            enhanced_streamMonitor.style.left = "";
-            enhanced_streamMonitor.style.display = "block";
+            enhanced_StreamMonitor.style.top = "";
+            enhanced_StreamMonitor.style.right = "1rem";
+            enhanced_StreamMonitor.style.bottom = "1rem";
+            enhanced_StreamMonitor.style.left = "";
+            enhanced_StreamMonitor.style.display = "block";
             break;
             case 4:
-            enhanced_streamMonitor.style.top = "";
-            enhanced_streamMonitor.style.right = "";
-            enhanced_streamMonitor.style.bottom = "1rem";
-            enhanced_streamMonitor.style.left = "1rem";
-            enhanced_streamMonitor.style.display = "block";
+            enhanced_StreamMonitor.style.top = "";
+            enhanced_StreamMonitor.style.right = "";
+            enhanced_StreamMonitor.style.bottom = "1rem";
+            enhanced_StreamMonitor.style.left = "1rem";
+            enhanced_StreamMonitor.style.display = "block";
             break;
         }
     } 
@@ -113,7 +121,7 @@ function enhanced_RTCMonitor() {
             lastBytes = 0;
             lastFrames = 0;
             active = false;
-            enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
+            enhanced_StreamMonitor.innerHTML = "Waiting for game detection.";
             localStorage.setItem("enhanced_MonitorState", 0)
             localStorage.setItem("enhanced_MonitorOption", 0)
         } else if (peerConnections.length >= 3) {
@@ -211,7 +219,7 @@ function enhanced_RTCMonitor() {
                                     html += "<br/>";
                                 }
 
-                                enhanced_streamMonitor.innerHTML = html;
+                                enhanced_StreamMonitor.innerHTML = html;
                             }
                         });
 }
@@ -227,14 +235,64 @@ enhanced_Monitor.className = "CTvDXd QAAyWd Fjy05d ivWUhc wJYinb QSDHyc rpgZzc R
 enhanced_Monitor.id = "enhanced_Monitor";
 enhanced_Monitor.innerHTML = "Stream Monitor";
 enhanced_Monitor.style.cursor = "pointer";
-enhanced_Monitor.style.marginRight = "10px";
 enhanced_Monitor.style.userSelect = "none";
 enhanced_Monitor.tabIndex = "0";
+enhanced_Monitor.style.flex = "1 1 calc(50% - 5px)";
 enhanced_Monitor.addEventListener("click", function() {
     localStorage.setItem("enhanced_MonitorOption", (parseInt(localStorage.getItem("enhanced_MonitorOption") || 0) + 1) % 5)
 });
 
-// Settings - Pro Games
+// Windowed Mode
+// Source: Mafrans - https://github.com/Mafrans/StadiaPlus
+var enhanced_BlockFullscreen = false;
+var enhanced_Windowed = document.createElement("div");
+enhanced_Windowed.className = "CTvDXd QAAyWd Fjy05d ivWUhc wJYinb QSDHyc rpgZzc RkyH1e";
+enhanced_Windowed.id = "enhanced_Windowed";
+enhanced_Windowed.innerHTML = "Windowed Mode";
+enhanced_Windowed.style.cursor = "pointer";
+enhanced_Windowed.style.userSelect = "none";
+enhanced_Windowed.tabIndex = "0";
+enhanced_Windowed.style.flex = "1 1 calc(50% - 5px)";
+enhanced_Windowed.addEventListener("click", function() {
+    if (enhanced_BlockFullscreen) {
+        enhanced_Windowed.innerHTML = "Windowed Mode";
+        enhanced_BlockFullscreen = false;
+        document.documentElement.requestFullscreen();
+    } else {
+        enhanced_Windowed.innerHTML = "Fullscreen Mode";
+        enhanced_BlockFullscreen = true;
+        document.exitFullscreen();
+    }
+});
+window.addEventListener('fullscreenchange', function (event) {
+    if (enhanced_BlockFullscreen) {
+        event.stopPropagation();
+    }
+}, true);
+
+// Clock Widget - Adds a little clock at the bottom of the friends menu
+var enhanced_ClockMode = parseInt(localStorage.getItem("enhanced_ClockMode") || 0);
+var enhanced_Clock = document.createElement("div");
+enhanced_Clock.id = "enhanced_Clock";
+enhanced_Clock.innerHTML = "00:00:00";
+enhanced_Clock.style.backgroundColor = "rgba(255,255,255,.06)";
+enhanced_Clock.style.fontFamily = "'Google Sans',sans-serif";
+enhanced_Clock.style.fontSize = "0.875rem";
+enhanced_Clock.style.lineHeight = "1.25rem";
+enhanced_Clock.style.fontWeight = "500";
+enhanced_Clock.style.userSelect = "none";
+enhanced_Clock.style.padding = "0.5rem 1rem";
+enhanced_Clock.style.cursor = "pointer";
+enhanced_Clock.style.display = "flex";
+enhanced_Clock.style.alignItems = "center";
+enhanced_Clock.style.justifyContent = "center";
+enhanced_Clock.style.zIndex = "20";
+enhanced_Clock.addEventListener("click", function() {
+    enhanced_ClockMode = (enhanced_ClockMode + 1) % 2;
+    localStorage.setItem("enhanced_ClockMode", enhanced_ClockMode);
+});
+
+// Pro Games - Adds a quick access to the current list of "Pro" titles on Stadia
 var enhanced_ProGames = document.createElement("div");
 enhanced_ProGames.className = "CTvDXd QAAyWd soKQKc wJYinb";
 enhanced_ProGames.id = "enhanced_ProGames";
@@ -250,14 +308,45 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     document.querySelectorAll(".YNlByb")[0].append(enhanced_ProGames);
 }
 
-// Settings - Store Search
+/*
+// Library Search - Adds a search bar filtering your homescreen library
+// Current Issue: Keyboard navigation blocking backspace functionality
+var enhanced_LibrarySearch = document.createElement("input");
+enhanced_LibrarySearch.className = "CTvDXd QAAyWd soKQKc wJYinb";
+enhanced_LibrarySearch.id = "enhanced_LibrarySearch";
+enhanced_LibrarySearch.placeholder = "Search library";
+enhanced_LibrarySearch.tabIndex = "0";
+enhanced_LibrarySearch.style.border = "none";
+enhanced_LibrarySearch.style.textAlign = "left";
+enhanced_LibrarySearch.style.paddingLeft = "3rem";
+enhanced_LibrarySearch.style.background = "url('" + chrome.runtime.getURL("media/svg/search.svg") + "') 1rem center / 24px 24px no-repeat, rgba(255,255,255,.06)"
+enhanced_LibrarySearch.style.marginRight = "20px";
+enhanced_LibrarySearch.addEventListener("input", function(e) {
+    var enhanced_FilterList = document.querySelectorAll(".YM0nee.E3eEyc.H3tvrc.f2eaLc")[document.querySelectorAll(".YM0nee.E3eEyc.H3tvrc.f2eaLc").length-1].querySelectorAll(".GqLi4d");
+    var enhanced_FilterTerm = enhanced_LibrarySearch.value
+
+    for(var i = 0; i < enhanced_FilterList.length; i++) {
+        if (enhanced_FilterList[i].getAttribute("aria-label").match(new RegExp(enhanced_FilterTerm, 'gi')) === null) {
+            enhanced_FilterList[i].style.display = "none";
+        } else {
+            enhanced_FilterList[i].style.display = "block";
+        }
+    }
+});
+if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
+    document.querySelectorAll(".YNlByb")[0].append(enhanced_LibrarySearch);
+}
+*/
+
+// Store Search - Adds a search bar to the Stadia store
 var enhanced_StoreSearch = document.createElement("input");
 enhanced_StoreSearch.className = "CTvDXd QAAyWd soKQKc wJYinb";
 enhanced_StoreSearch.id = "enhanced_StoreSearch";
-enhanced_StoreSearch.placeholder = "Search";
+enhanced_StoreSearch.placeholder = "Search store";
 enhanced_StoreSearch.style.border = "none";
-enhanced_StoreSearch.style.backgroundColor = "rgba(255,255,255,.06)";
-enhanced_StoreSearch.style.outline = "none";
+enhanced_StoreSearch.style.textAlign = "left";
+enhanced_StoreSearch.style.paddingLeft = "3rem";
+enhanced_StoreSearch.style.background = "url('" + chrome.runtime.getURL("media/svg/search.svg") + "') 1rem center / 24px 24px no-repeat, rgba(255,255,255,.06)"
 enhanced_StoreSearch.style.marginRight = "20px";
 enhanced_StoreSearch.style.display = "none";
 enhanced_StoreSearch.addEventListener("keypress", function() {
@@ -269,111 +358,109 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     document.querySelectorAll(".YNlByb")[0].append(enhanced_StoreSearch);
 }
 
-// Settings - Store Dropdown
-var enhanced_dropContainer = document.createElement("div");
-enhanced_dropContainer.className = "NfVFqd cr1oJe QAAyWd wJYinb";
-enhanced_dropContainer.id = "enhanced_dropContainer";
-enhanced_dropContainer.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
-enhanced_dropContainer.style.marginRight = "20px";
-enhanced_dropContainer.style.cursor = "pointer";
-enhanced_dropContainer.style.userSelect = "none";
-enhanced_dropContainer.tabIndex = "0";
-enhanced_dropContainer.addEventListener("click", function() {
+// Store Dropdown - Adds a dropdown menu for quick access
+var enhanced_StoreDropdown = document.createElement("div");
+enhanced_StoreDropdown.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_StoreDropdown.id = "enhanced_StoreDropdown";
+enhanced_StoreDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
+enhanced_StoreDropdown.style.marginRight = "20px";
+enhanced_StoreDropdown.style.cursor = "pointer";
+enhanced_StoreDropdown.style.userSelect = "none";
+enhanced_StoreDropdown.tabIndex = "0";
+enhanced_StoreDropdown.addEventListener("click", function() {
     console.log("Match");
-    if (enhanced_dropContent.style.display === "none") {
-        enhanced_dropContent.style.display = "block";
+    if (enhanced_StoreDropContent.style.display === "none") {
+        enhanced_StoreDropContent.style.display = "block";
     } else {
-        enhanced_dropContent.style.display = "none";
+        enhanced_StoreDropContent.style.display = "none";
     }
 });
 
-enhanced_dropContainer.addEventListener("keyup", function(e) {
+enhanced_StoreDropdown.addEventListener("keyup", function(e) {
     if (e.keyCode === 13) {
-        e.preventDefault();
-        enhanced_dropContainer.click();
+        enhanced_StoreDropdown.click();
     }
 });
 
 window.addEventListener("click", function(e) {
-    console.log(e.target);
-    if (e.target != enhanced_dropContainer && enhanced_dropContainer.contains(e.target) === false) {
-        enhanced_dropContent.style.display = "none";
+    if (e.target != enhanced_StoreDropdown && enhanced_StoreDropdown.contains(e.target) === false) {
+        enhanced_StoreDropContent.style.display = "none";
     }
 });
 
-var enhanced_dropContent = document.createElement("div");
-enhanced_dropContent.id = "enhanced_dropContent";
-enhanced_dropContent.style.position = "absolute";
-enhanced_dropContent.style.width = "15rem";
-enhanced_dropContent.style.top = "4.25rem";
-enhanced_dropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
-enhanced_dropContent.style.background = "#2d2e30";
-enhanced_dropContent.style.borderRadius =  "0.5rem";
-enhanced_dropContent.style.zIndex = "20";
-enhanced_dropContent.style.display = "none";
+var enhanced_StoreDropContent = document.createElement("div");
+enhanced_StoreDropContent.id = "enhanced_StoreDropContent";
+enhanced_StoreDropContent.style.position = "absolute";
+enhanced_StoreDropContent.style.width = "15rem";
+enhanced_StoreDropContent.style.top = "4.25rem";
+enhanced_StoreDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
+enhanced_StoreDropContent.style.background = "#2d2e30";
+enhanced_StoreDropContent.style.borderRadius =  "0.5rem";
+enhanced_StoreDropContent.style.zIndex = "20";
+enhanced_StoreDropContent.style.display = "none";
 
 if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_dropContainer);
-    enhanced_dropContainer.append(enhanced_dropContent);
+    document.querySelectorAll(".YNlByb")[0].append(enhanced_StoreDropdown);
+    enhanced_StoreDropdown.append(enhanced_StoreDropContent);
 }
 
-// Settings - Dropdown > Base Deals
-var enhanced_baseDeals = document.createElement("div");
-enhanced_baseDeals.className = "pBvcyf QAAyWd";
-enhanced_baseDeals.id = "enhanced_baseDeals";
-enhanced_baseDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">local_offer</i></span><span class="mJVLwb">Base Deals</span>';
-enhanced_baseDeals.style.cursor = "pointer";
-enhanced_baseDeals.style.userSelect = "none";
-enhanced_baseDeals.tabIndex = "0";
-enhanced_baseDeals.addEventListener("click", function() {
+// Base Deals - Quick access to the list of deals available for "Base" users
+var enhanced_BaseDeals = document.createElement("div");
+enhanced_BaseDeals.className = "pBvcyf QAAyWd";
+enhanced_BaseDeals.id = "enhanced_BaseDeals";
+enhanced_BaseDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">local_offer</i></span><span class="mJVLwb">Base Deals</span>';
+enhanced_BaseDeals.style.cursor = "pointer";
+enhanced_BaseDeals.style.userSelect = "none";
+enhanced_BaseDeals.tabIndex = "0";
+enhanced_BaseDeals.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "store/list/86", "_self");
 });
-enhanced_dropContent.append(enhanced_baseDeals);
+enhanced_StoreDropContent.append(enhanced_BaseDeals);
 
-// Settings - Dropdown > Pro Deals
-var enhanced_proDeals = document.createElement("div");
-enhanced_proDeals.className = "pBvcyf QAAyWd";
-enhanced_proDeals.id = "enhanced_proDeals";
-enhanced_proDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">loyalty</i></span><span class="mJVLwb">Pro Deals</span>';
-enhanced_proDeals.style.cursor = "pointer";
-enhanced_proDeals.style.userSelect = "none";
-enhanced_proDeals.tabIndex = "0";
-enhanced_proDeals.addEventListener("click", function() {
+// Pro Deals - Quick access to the list of deals available for "Pro" users
+var enhanced_ProDeals = document.createElement("div");
+enhanced_ProDeals.className = "pBvcyf QAAyWd";
+enhanced_ProDeals.id = "enhanced_ProDeals";
+enhanced_ProDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">loyalty</i></span><span class="mJVLwb">Pro Deals</span>';
+enhanced_ProDeals.style.cursor = "pointer";
+enhanced_ProDeals.style.userSelect = "none";
+enhanced_ProDeals.tabIndex = "0";
+enhanced_ProDeals.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "store/list/45", "_self");
 });
-enhanced_dropContent.append(enhanced_proDeals);
+enhanced_StoreDropContent.append(enhanced_ProDeals);
 
-// Settings - Dropdown > All games
-var enhanced_listAll = document.createElement("div");
-enhanced_listAll.className = "pBvcyf QAAyWd";
-enhanced_listAll.id = "enhanced_listAll";
-enhanced_listAll.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">list</i></span><span class="mJVLwb">All games</span>';
-enhanced_listAll.style.cursor = "pointer";
-enhanced_listAll.style.userSelect = "none";
-enhanced_listAll.tabIndex = "0";
-enhanced_listAll.addEventListener("click", function() {
+// All games - Quick access to a list of all games currently available on Stadia
+var enhanced_AllGames = document.createElement("div");
+enhanced_AllGames.className = "pBvcyf QAAyWd";
+enhanced_AllGames.id = "enhanced_AllGames";
+enhanced_AllGames.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">list</i></span><span class="mJVLwb">All games</span>';
+enhanced_AllGames.style.cursor = "pointer";
+enhanced_AllGames.style.userSelect = "none";
+enhanced_AllGames.tabIndex = "0";
+enhanced_AllGames.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "store/list/3", "_self");
 });
-enhanced_dropContent.append(enhanced_listAll);
+enhanced_StoreDropContent.append(enhanced_AllGames);
 
-// Settings - Captures
-var enhanced_Captures = document.createElement("div");
-enhanced_Captures.className = "NfVFqd cr1oJe QAAyWd wJYinb";
-enhanced_Captures.id = "enhanced_Captures";
-enhanced_Captures.innerHTML = '<i class="material-icons-extended" aria-hidden="true">camera_alt</i>'
-enhanced_Captures.style.cursor = "pointer";
-enhanced_Captures.style.userSelect = "none";
-enhanced_Captures.tabIndex = "0";
-enhanced_Captures.addEventListener("click", function() {
+// Captures - A shortcut to the screenshots & videos of the current user
+var enhanced_UserMedia = document.createElement("div");
+enhanced_UserMedia.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_UserMedia.id = "enhanced_UserMedia";
+enhanced_UserMedia.innerHTML = '<i class="material-icons-extended" aria-hidden="true">camera_alt</i>'
+enhanced_UserMedia.style.cursor = "pointer";
+enhanced_UserMedia.style.userSelect = "none";
+enhanced_UserMedia.tabIndex = "0";
+enhanced_UserMedia.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "captures", "_self");
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Captures);
+    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_UserMedia);
 }
 
-// Settings - Grid
+// Grid - Control element for the homescreen library grid
 var enhanced_GridSize = parseInt(localStorage.getItem("enhanced_GridSize") || 0);
-callenhanced_GridSize(enhanced_GridSize)
+enhanced_changeGridSize(enhanced_GridSize)
 var enhanced_Grid = document.createElement("div");
 enhanced_Grid.className = "NfVFqd cr1oJe QAAyWd wJYinb";
 enhanced_Grid.id = "enhanced_Grid";
@@ -384,13 +471,13 @@ enhanced_Grid.tabIndex = "0";
 enhanced_Grid.addEventListener("click", function() {
     enhanced_GridSize = (enhanced_GridSize + 1) % 5;
     localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
-    callenhanced_GridSize(enhanced_GridSize)
+    enhanced_changeGridSize(enhanced_GridSize)
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
     document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Grid);
 }
 
-function callenhanced_GridSize(size) {
+function enhanced_changeGridSize(size) {
     switch (size) {
         case 0:
         enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto) !important; }');
@@ -426,7 +513,7 @@ function callenhanced_GridSize(size) {
     console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".");
 }
 
-// Settings - Screen
+// Resolution - Control element for the stream resolution
 localStorage.setItem("enhanced_DeskWidth", window.screen.width);
 localStorage.setItem("enhanced_DeskHeight", window.screen.height);
 // Object.defineProperty(window.screen, "colorDepth", { value: 48 });
@@ -517,7 +604,7 @@ if (document.querySelectorAll(".crOn3e")[0] !== undefined) {
     document.querySelectorAll(".crOn3e")[0].prepend(enhanced_Resolution);
 }
 
-// Settings - VP9
+// Codec - Control element for the stream codec
 var enhanced_Codec = document.createElement("div");
 enhanced_Codec.className = "pBvcyf QAAyWd";
 enhanced_Codec.id = "enhanced_Codec";
@@ -555,7 +642,7 @@ function enhanced_changeCodec(c) {
     }
 }
 
-// Settings - Custom Avatar
+// Avatar - Allows the user to set a custom avatar
 if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
     enhanced_setAvatar(localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
 }
@@ -576,20 +663,23 @@ function enhanced_setAvatar(url) {
     enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-color: #ff773d !important }');
     enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('.rybUIf { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.Nv1Sab { content: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('.dOyvbe { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.Nv1Sab[alt$="' + enhanced_AccountName + '"] { content: url("' + url + '") !important; }');
 }
 
+// Account Menu - Changes to the account menu behaviour
+enhanced_AccountMenu = document.querySelector(".Zxyh9c");
+enhanced_AccountMenu.setAttribute("data-close-if-content-clicked", "false");
 
 // After Setup
-console.log("[Stadia Enhanced] ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_startTimer) + "ms.")
+console.log("[Stadia Enhanced] ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.")
 
 // Main Loop
 setInterval(function() {
     // Loop Start
     //var enhanced_loopTimer = new Date().getTime();
 
-    // Use VP9 if possible
+    // Codec - Set codec preference
     switch (parseInt(localStorage.getItem("enhanced_CodecOption") || 0)) {
         case 0:
         if (document.location.href.indexOf("/home") != -1) {
@@ -604,43 +694,68 @@ setInterval(function() {
         break
     }
 
-    // Store Features / Search
+    // Store Search
     // Example: /store/list/3?search=NBA
     if (document.location.href.indexOf("/store/list/3?") != -1) {
-        var enhanced_searchParams = new URLSearchParams(window.location.search).get('search');
-        if (enhanced_searchParams !== null) {
-            var enhanced_searchCount = 0;
+        var enhanced_SearchTerm = new URLSearchParams(window.location.search).get('search');
+        if (enhanced_SearchTerm !== null) {
+            var enhanced_SearchResultCount = 0;
             document.querySelector(".TJQxhf").style.display = "none";
             document.getElementsByClassName("h6J22d null QAAyWd");
-            enhanced_gameList = document.getElementsByClassName("h6J22d null QAAyWd");
-            for(var i = 0; i < enhanced_gameList.length; i++) {
-                if (enhanced_gameList[i].getAttribute("aria-label").match(new RegExp(enhanced_searchParams, 'gi')) === null) {
-                    enhanced_gameList[i].style.display="none";
+            enhanced_SearchResults = document.getElementsByClassName("h6J22d null QAAyWd");
+            for(var i = 0; i < enhanced_SearchResults.length; i++) {
+                if (enhanced_SearchResults[i].getAttribute("aria-label").match(new RegExp(enhanced_SearchTerm, 'gi')) === null) {
+                    enhanced_SearchResults[i].style.display="none";
                 } else {
-                    enhanced_searchCount += 1;
+                    enhanced_SearchResultCount += 1;
                 }
             }
-            document.querySelector(".HZ5mJ").innerHTML = "Games including '" + enhanced_searchParams + "' (" + enhanced_searchCount + ")";
+            document.querySelector(".HZ5mJ").innerHTML = "Games including '" + enhanced_SearchTerm + "' (" + enhanced_SearchResultCount + ")";
         }
     }
 
-    // Force allow 4K in settings
+    // Resolution - Change to currently selected resolution
     if (document.location.href.indexOf("/settings") != -1 && document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0] !== undefined) {
         document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0].setAttribute("data-disabled", "false");
         document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0].classList.remove("OWB6Me");
     }
 
-    // Re-prepend monitor control after refresh
+    // UI Elements - Add controls again when needed
     if (parseInt(localStorage.getItem("enhanced_MonitorState")) == 1) {
         enhanced_Monitor.style.display = "flex";
-        if (document.getElementById("enhanced_Monitor") === null && document.querySelectorAll(".VCcUVc")[0] !== undefined) {
-            document.querySelectorAll(".VCcUVc")[0].prepend(enhanced_Monitor);
+        if (document.querySelector("#enhanced_Monitor") === null && document.querySelectorAll(".VCcUVc")[0] !== undefined) {
+            document.querySelectorAll(".VCcUVc")[0].append(enhanced_Monitor);
         }
     } else {
         enhanced_Monitor.style.display = "none";
     }
 
-    // Pro Games
+    if (document.querySelector("#enhanced_Clock") === null && document.querySelectorAll(".hxhAyf.OzUE7e.XY6ZL")[0] !== undefined) {
+        document.querySelectorAll(".hxhAyf.OzUE7e.XY6ZL")[0].append(enhanced_Clock);
+    }
+
+    if (document.location.href.indexOf("/player/") != -1) {
+        enhanced_Windowed.style.display = "flex";
+        if (document.querySelector("#enhanced_Windowed") === null && document.querySelectorAll(".VCcUVc")[0] !== undefined) {
+            document.querySelectorAll(".VCcUVc")[0].append(enhanced_Windowed);
+        }
+    } else {
+        enhanced_Windowed.style.display = "none";
+    }
+
+    // Clock Widget - Update to current time / display option
+    var enhanced_Date = new Date();
+    switch (enhanced_ClockMode) {
+        case 0:
+        var enhanced_CurrentTime = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_Date.toLocaleTimeString('en-GB');
+        break
+        case 1:
+        var enhanced_CurrentTime = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_Date.toLocaleTimeString('en-US');
+        break
+    }
+    enhanced_Clock.innerHTML = enhanced_CurrentTime;
+
+    // Pro Games - UI changes and count of currently unclaimed games
     if (document.location.href.indexOf("/store/list/2001") != -1) {
         document.querySelector(".YNlByb.URhE4b.G4fJWe").childNodes[2].classList.remove("YySNWc");
         enhanced_ProGames.style.backgroundColor = "rgba(255,255,255,.06)";
@@ -660,20 +775,20 @@ setInterval(function() {
         }
     }
 
-    // Homescreen only elements
+    // Visibility: Homescreen-only
     if (document.location.href.indexOf("/home") != -1) {
         enhanced_Grid.style.display = "flex";
     } else {
         enhanced_Grid.style.display = "none";
     }
 
-    // Store only elements
+    // Visibility: Store-only
     if (document.location.href.indexOf("/store") != -1) {
         enhanced_StoreSearch.style.display = "flex";
-        enhanced_dropContainer.style.display = "flex";
+        enhanced_StoreDropdown.style.display = "flex";
     } else {
         enhanced_StoreSearch.style.display = "none";
-        enhanced_dropContainer.style.display = "none";
+        enhanced_StoreDropdown.style.display = "none";
     }
 
     // Loop End
