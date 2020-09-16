@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 1.4.0
+* Added a new settings/shortcut menu
+* Added overlay clock
+* Added option to switch clock settings
+* Potential fix for H264 usage
+* Fixed being able to select a combination of H264 and 2K/4K
+* Fixed styling issues on dropdown menus
+* Added "Search on YouTube" to store pages
+* Added "Search on Metacritic" to store pages
+* Cleaned up the console output
+
 ## Version 1.3.0
 * Added a clock widget to the friends menu
 * Added a icon to the search bar
@@ -43,7 +54,6 @@
 * New popup menu, including changelog, quick start and shortcuts
 * Changed "Pro Games" to "Pro" for the sake of UI space at 720p
 * Fixed multiple issues related to duplicated content ID
-
 
 ## Version 0.3.5
 * Added "Pro Games" shortcut
