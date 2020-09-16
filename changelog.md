@@ -11,6 +11,9 @@
 * Added "Search on Metacritic" to store pages
 * Cleaned up the console output
 
+### Version 1.4.1
+* Another potential fixe when using H264
+
 ## Version 1.3.0
 * Added a clock widget to the friends menu
 * Added a icon to the search bar
