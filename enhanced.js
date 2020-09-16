@@ -1,18 +1,22 @@
 // Start Up
 var enhanced_StartTimer = new Date().getTime();
+var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 var enhanced_AccountName = document.querySelectorAll(".VY8blf.fSorq")[0].textContent;
 var enhanced_AccountID = document.querySelector(".ksZYgc.VGZcUb").getAttribute("data-player-id");
-console.log("[Stadia Enhanced] ⚙️ - User: " + enhanced_AccountName + " (" + enhanced_AccountID + ")");
+console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountName + " (" + enhanced_AccountID + ")", enhanced_consoleEnhanced, "");
+
 
 // CSS Rules - Global styles and overwrites
 enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }"); // Remove padding above avatar
 enhanced_addGlobalStyle(".VCcUVc { flex-wrap: wrap; gap: 10px; } "); // Flex-Wrap in-game options via friends menu
+enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 // enhanced_addGlobalStyle(".X5624d { display: none; } ") // Hide "Pro" Tags
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 function enhanced_RTCMonitor() {
     'use strict';
+    var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 
     function formatBytes(a, b) {
         if (0 == a) return "0 Bytes";
@@ -106,7 +110,7 @@ function enhanced_RTCMonitor() {
     localStorage.setItem("enhanced_MonitorOption", enhanced_MonitorState)
     localStorage.setItem("enhanced_MonitorState", 0)
 
-    console.log("[Stadia Enhanced] ⚙️ - Stream Monitor: Successfully injected.");
+    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor: Successfully injected.", enhanced_consoleEnhanced, "");
 
     setInterval(function() {
         var enhanced_MonitorOption = parseInt(localStorage.getItem("enhanced_MonitorOption") || 0);
@@ -129,7 +133,7 @@ function enhanced_RTCMonitor() {
                 sessionStart = new Date();
                 active = true;
                 localStorage.setItem("enhanced_MonitorState", 1)
-                console.log("[Stadia Enhanced] ⚙️ - Stream Monitor: Monitoring started.");
+                console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor: Monitoring started.", enhanced_consoleEnhanced, "");
             }
 
             peerConnections[2].getStats().then(function(stats) {
@@ -272,22 +276,45 @@ window.addEventListener('fullscreenchange', function (event) {
 
 // Clock Widget - Adds a little clock at the bottom of the friends menu
 var enhanced_ClockMode = parseInt(localStorage.getItem("enhanced_ClockMode") || 0);
-var enhanced_Clock = document.createElement("div");
-enhanced_Clock.id = "enhanced_Clock";
-enhanced_Clock.innerHTML = "00:00:00";
-enhanced_Clock.style.backgroundColor = "rgba(255,255,255,.06)";
-enhanced_Clock.style.fontFamily = "'Google Sans',sans-serif";
-enhanced_Clock.style.fontSize = "0.875rem";
-enhanced_Clock.style.lineHeight = "1.25rem";
-enhanced_Clock.style.fontWeight = "500";
-enhanced_Clock.style.userSelect = "none";
-enhanced_Clock.style.padding = "0.5rem 1rem";
-enhanced_Clock.style.cursor = "pointer";
-enhanced_Clock.style.display = "flex";
-enhanced_Clock.style.alignItems = "center";
-enhanced_Clock.style.justifyContent = "center";
-enhanced_Clock.style.zIndex = "20";
-enhanced_Clock.addEventListener("click", function() {
+var enhanced_ClockFriends = document.createElement("div");
+enhanced_ClockFriends.id = "enhanced_ClockFriends";
+enhanced_ClockFriends.innerHTML = "00:00:00";
+enhanced_ClockFriends.style.backgroundColor = "rgba(255,255,255,.06)";
+enhanced_ClockFriends.style.fontFamily = "'Google Sans',sans-serif";
+enhanced_ClockFriends.style.fontSize = "0.875rem";
+enhanced_ClockFriends.style.lineHeight = "1.25rem";
+enhanced_ClockFriends.style.fontWeight = "500";
+enhanced_ClockFriends.style.userSelect = "none";
+enhanced_ClockFriends.style.padding = "0.5rem 1rem";
+enhanced_ClockFriends.style.cursor = "pointer";
+enhanced_ClockFriends.style.display = "flex";
+enhanced_ClockFriends.style.alignItems = "center";
+enhanced_ClockFriends.style.justifyContent = "center";
+enhanced_ClockFriends.style.zIndex = "20";
+enhanced_ClockFriends.addEventListener("click", function() {
+    enhanced_ClockMode = (enhanced_ClockMode + 1) % 2;
+    localStorage.setItem("enhanced_ClockMode", enhanced_ClockMode);
+});
+
+// Overlay Clock - Adds a overlay clock element to the game stream
+var enhanced_ClockOverlay = document.createElement("div");
+enhanced_ClockOverlay.id = "enhanced_ClockOverlay";
+enhanced_ClockOverlay.innerHTML = "00:00:00";
+enhanced_ClockOverlay.style.position = "fixed";
+enhanced_ClockOverlay.style.left = "1rem";
+enhanced_ClockOverlay.style.top = "1rem";
+enhanced_ClockOverlay.style.fontFamily = "'Google Sans',sans-serif";
+enhanced_ClockOverlay.style.fontSize = "3.5rem";
+enhanced_ClockOverlay.style.lineHeight = "5rem";
+enhanced_ClockOverlay.style.fontWeight = "500";
+enhanced_ClockOverlay.style.userSelect = "none";
+enhanced_ClockOverlay.style.padding = "0";
+enhanced_ClockOverlay.style.cursor = "pointer";
+enhanced_ClockOverlay.style.display = "flex";
+enhanced_ClockOverlay.style.alignItems = "center";
+enhanced_ClockOverlay.style.justifyContent = "center";
+enhanced_ClockOverlay.style.zIndex = "20";
+enhanced_ClockOverlay.addEventListener("click", function() {
     enhanced_ClockMode = (enhanced_ClockMode + 1) % 2;
     localStorage.setItem("enhanced_ClockMode", enhanced_ClockMode);
 });
@@ -310,7 +337,7 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
 
 /*
 // Library Search - Adds a search bar filtering your homescreen library
-// Current Issue: Keyboard navigation blocking backspace functionality
+// Current Issue: Keyboard navigation blocking keyboard functionality
 var enhanced_LibrarySearch = document.createElement("input");
 enhanced_LibrarySearch.className = "CTvDXd QAAyWd soKQKc wJYinb";
 enhanced_LibrarySearch.id = "enhanced_LibrarySearch";
@@ -332,6 +359,7 @@ enhanced_LibrarySearch.addEventListener("input", function(e) {
             enhanced_FilterList[i].style.display = "block";
         }
     }
+    document.querySelectorAll(".CVVXfc.YYy3Zb")[document.querySelectorAll(".CVVXfc.YYy3Zb").length-1].scrollIntoView();
 });
 if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     document.querySelectorAll(".YNlByb")[0].append(enhanced_LibrarySearch);
@@ -360,7 +388,7 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
 
 // Store Dropdown - Adds a dropdown menu for quick access
 var enhanced_StoreDropdown = document.createElement("div");
-enhanced_StoreDropdown.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_StoreDropdown.className = "NfVFqd AH4sJe QAAyWd wJYinb";
 enhanced_StoreDropdown.id = "enhanced_StoreDropdown";
 enhanced_StoreDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
 enhanced_StoreDropdown.style.marginRight = "20px";
@@ -368,7 +396,6 @@ enhanced_StoreDropdown.style.cursor = "pointer";
 enhanced_StoreDropdown.style.userSelect = "none";
 enhanced_StoreDropdown.tabIndex = "0";
 enhanced_StoreDropdown.addEventListener("click", function() {
-    console.log("Match");
     if (enhanced_StoreDropContent.style.display === "none") {
         enhanced_StoreDropContent.style.display = "block";
     } else {
@@ -390,12 +417,11 @@ window.addEventListener("click", function(e) {
 
 var enhanced_StoreDropContent = document.createElement("div");
 enhanced_StoreDropContent.id = "enhanced_StoreDropContent";
+enhanced_StoreDropContent.className = "us22N";
 enhanced_StoreDropContent.style.position = "absolute";
 enhanced_StoreDropContent.style.width = "15rem";
 enhanced_StoreDropContent.style.top = "4.25rem";
 enhanced_StoreDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
-enhanced_StoreDropContent.style.background = "#2d2e30";
-enhanced_StoreDropContent.style.borderRadius =  "0.5rem";
 enhanced_StoreDropContent.style.zIndex = "20";
 enhanced_StoreDropContent.style.display = "none";
 
@@ -408,7 +434,7 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
 var enhanced_BaseDeals = document.createElement("div");
 enhanced_BaseDeals.className = "pBvcyf QAAyWd";
 enhanced_BaseDeals.id = "enhanced_BaseDeals";
-enhanced_BaseDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">local_offer</i></span><span class="mJVLwb">Base Deals</span>';
+enhanced_BaseDeals.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">local_offer</i><span class="mJVLwb">Base Deals</span>';
 enhanced_BaseDeals.style.cursor = "pointer";
 enhanced_BaseDeals.style.userSelect = "none";
 enhanced_BaseDeals.tabIndex = "0";
@@ -421,7 +447,7 @@ enhanced_StoreDropContent.append(enhanced_BaseDeals);
 var enhanced_ProDeals = document.createElement("div");
 enhanced_ProDeals.className = "pBvcyf QAAyWd";
 enhanced_ProDeals.id = "enhanced_ProDeals";
-enhanced_ProDeals.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">loyalty</i></span><span class="mJVLwb">Pro Deals</span>';
+enhanced_ProDeals.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">loyalty</i><span class="mJVLwb">Pro Deals</span>';
 enhanced_ProDeals.style.cursor = "pointer";
 enhanced_ProDeals.style.userSelect = "none";
 enhanced_ProDeals.tabIndex = "0";
@@ -434,7 +460,7 @@ enhanced_StoreDropContent.append(enhanced_ProDeals);
 var enhanced_AllGames = document.createElement("div");
 enhanced_AllGames.className = "pBvcyf QAAyWd";
 enhanced_AllGames.id = "enhanced_AllGames";
-enhanced_AllGames.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">list</i></span><span class="mJVLwb">All games</span>';
+enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">All games</span>';
 enhanced_AllGames.style.cursor = "pointer";
 enhanced_AllGames.style.userSelect = "none";
 enhanced_AllGames.tabIndex = "0";
@@ -443,80 +469,157 @@ enhanced_AllGames.addEventListener("click", function() {
 });
 enhanced_StoreDropContent.append(enhanced_AllGames);
 
+// Settings Dropdown - Adds a dropdown menu for quick access
+var enhanced_SettingsDropdown = document.createElement("div");
+enhanced_SettingsDropdown.className = "NfVFqd AH4sJe QAAyWd wJYinb";
+enhanced_SettingsDropdown.id = "enhanced_SettingsDropdown";
+enhanced_SettingsDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
+enhanced_SettingsDropdown.style.marginRight = "20px";
+enhanced_SettingsDropdown.style.cursor = "pointer";
+enhanced_SettingsDropdown.style.userSelect = "none";
+enhanced_SettingsDropdown.tabIndex = "0";
+enhanced_SettingsDropdown.addEventListener("click", function(e) {
+    if (document.querySelector(".X1asv.ahEBEd.LJni0").style.opacity == "1") {
+        document.querySelector(".aiUOwf.QAAyWd.wJYinb").click();
+    }
+    if (enhanced_SettingsDropContent.contains(e.target) === false && e.target.classList.contains("mJVLwb") === false) {
+        if (enhanced_SettingsDropContent.style.display === "none") {
+            enhanced_SettingsDropContent.style.display = "block";
+        } else {
+            enhanced_SettingsDropContent.style.display = "none";
+        }
+    }
+});
+
+enhanced_SettingsDropdown.addEventListener("keyup", function(e) {
+    if (e.keyCode === 13) {
+     enhanced_SettingsDropdown.click();
+ }
+});
+
+var enhanced_SettingsDropContent = document.createElement("div");
+enhanced_SettingsDropContent.id = "enhanced_SettingsDropContent";
+enhanced_SettingsDropContent.className = "us22N";
+enhanced_SettingsDropContent.style.position = "absolute";
+enhanced_SettingsDropContent.style.width = "15rem";
+enhanced_SettingsDropContent.style.top = "4.25rem";
+enhanced_SettingsDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
+enhanced_SettingsDropContent.style.zIndex = "20";
+enhanced_SettingsDropContent.style.display = "none";
+
+if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
+    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_SettingsDropdown);
+    enhanced_SettingsDropdown.append(enhanced_SettingsDropContent);
+}
+
+window.addEventListener("click", function(e) {
+    if (e.target != enhanced_SettingsDropdown && enhanced_SettingsDropdown.contains(e.target) === false && e.target.classList.contains("mJVLwb") === false) {
+        enhanced_SettingsDropContent.style.display = "none";
+    }
+});
+
 // Captures - A shortcut to the screenshots & videos of the current user
 var enhanced_UserMedia = document.createElement("div");
-enhanced_UserMedia.className = "NfVFqd cr1oJe QAAyWd wJYinb";
+enhanced_UserMedia.className = "pBvcyf QAAyWd";
 enhanced_UserMedia.id = "enhanced_UserMedia";
-enhanced_UserMedia.innerHTML = '<i class="material-icons-extended" aria-hidden="true">camera_alt</i>'
+enhanced_UserMedia.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">camera_alt</i><span class="mJVLwb">Screenshots & Videos</span>';
 enhanced_UserMedia.style.cursor = "pointer";
 enhanced_UserMedia.style.userSelect = "none";
 enhanced_UserMedia.tabIndex = "0";
+enhanced_UserMedia.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_UserMedia.style.borderRadius = "0.5rem 0.5rem 0 0";
 enhanced_UserMedia.addEventListener("click", function() {
     window.open(document.querySelector("head > base").getAttribute("href") + "captures", "_self");
 });
 if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
     document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_UserMedia);
 }
+enhanced_SettingsDropContent.append(enhanced_UserMedia);
 
-// Grid - Control element for the homescreen library grid
-var enhanced_GridSize = parseInt(localStorage.getItem("enhanced_GridSize") || 0);
-enhanced_changeGridSize(enhanced_GridSize)
-var enhanced_Grid = document.createElement("div");
-enhanced_Grid.className = "NfVFqd cr1oJe QAAyWd wJYinb";
-enhanced_Grid.id = "enhanced_Grid";
-enhanced_Grid.innerHTML = '<i class="material-icons-extended" aria-hidden="true">view_comfy</i>'
-enhanced_Grid.style.cursor = "pointer";
-enhanced_Grid.style.userSelect = "none";
-enhanced_Grid.tabIndex = "0";
-enhanced_Grid.addEventListener("click", function() {
-    enhanced_GridSize = (enhanced_GridSize + 1) % 5;
-    localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
-    enhanced_changeGridSize(enhanced_GridSize)
+// Codec - Control element for the stream codec
+var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption") || 0);
+var enhanced_Codec = document.createElement("div");
+enhanced_Codec.className = "pBvcyf QAAyWd";
+enhanced_Codec.id = "enhanced_Codec";
+enhanced_Codec.style.cursor = "pointer";
+enhanced_Codec.style.userSelect = "none";
+enhanced_Codec.addEventListener("click", function() {
+    enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
+    localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
+    enhanced_changeCodec(enhanced_currentCodec);
 });
-if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_Grid);
-}
+enhanced_SettingsDropContent.append(enhanced_Codec);
 
-function enhanced_changeGridSize(size) {
-    switch (size) {
+function enhanced_changeCodec(c) {
+    switch (c) {
         case 0:
-        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: 21.75rem !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
-        break;
+        enhanced_Codec.style.color = "";
+        enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb">Default</span>'
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'Default'.", enhanced_consoleEnhanced, "");
+        break
         case 1:
-        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.66) !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
-        break;
+        enhanced_Codec.style.color = "#00e0ba";
+        enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb">VP9</span>'
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'VP9'.", enhanced_consoleEnhanced, "");
+        break
         case 2:
-        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.5) !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1rem 1rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
-        break;
-        case 3:
-        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.4) !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1rem 1rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
-        break;
-        case 4:
-        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto) !important; }');
-        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.33) !important; }');
-        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.2rem 0.2rem !important; }');
-        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
-        break;
+        enhanced_currentRes = 0;
+        localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
+        enhanced_updateResolution(enhanced_currentRes)
+        enhanced_Codec.style.color = "#00e0ba";
+        enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb">H264</span>'
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'H264'", enhanced_consoleEnhanced, "");
+        break
     }
-    console.log("[Stadia Enhanced] ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".");
 }
 
 // Resolution - Control element for the stream resolution
 localStorage.setItem("enhanced_DeskWidth", window.screen.width);
 localStorage.setItem("enhanced_DeskHeight", window.screen.height);
 // Object.defineProperty(window.screen, "colorDepth", { value: 48 });
+var enhanced_currentRes = parseInt(localStorage.getItem("enhanced_ResOption") || 0);
+var enhanced_Resolution = document.createElement("div");
+enhanced_Resolution.className = "pBvcyf QAAyWd";
+enhanced_Resolution.id = "enhanced_Resolution";
+enhanced_Resolution.innerHTML = "Native";
+enhanced_Resolution.style.cursor = "pointer";
+enhanced_Resolution.style.userSelect = "none";
+enhanced_Resolution.addEventListener("click", function(evt) {
+    enhanced_currentRes = (enhanced_currentRes + 1) % 3;
+    localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
+    enhanced_updateResolution(enhanced_currentRes)
+});
+enhanced_SettingsDropContent.append(enhanced_Resolution);
+
+function enhanced_updateResolution(res) {
+    switch (res) {
+        case 0:
+        enhanced_Resolution.style.color = "white";
+        enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb">Native</span>';
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to 'Native'.", enhanced_consoleEnhanced, "");
+        break
+        case 1:
+        var x = 2560
+        var y = 1440
+        enhanced_currentCodec = 1;
+        localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
+        enhanced_changeCodec(enhanced_currentCodec)
+        enhanced_Resolution.style.color = "#00e0ba";
+        enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb">2K</span>';
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '2560x1440'.", enhanced_consoleEnhanced, "");
+        break
+        case 2:
+        var x = 3840
+        var y = 2160
+        enhanced_currentCodec = 1;
+        localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
+        enhanced_changeCodec(enhanced_currentCodec)
+        enhanced_Resolution.style.color = "#00e0ba";
+        enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb">4K</span>';
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '3840x2160'.", enhanced_consoleEnhanced, "");
+        break
+    }
+}
 
 function enhanced_changeResolution() {
     // Source: https://superuser.com/questions/712461/
@@ -529,17 +632,14 @@ function enhanced_changeResolution() {
                 case 0:
                 var x = parseInt(localStorage.getItem("enhanced_DeskWidth") || 1920);
                 var y = parseInt(localStorage.getItem("enhanced_DeskHeight") || 1920);
-                console.log("[Stadia Enhanced] ⚙️ - Resolution: Set to 'Native'.");
                 break
                 case 1:
                 var x = 2560
                 var y = 1440
-                console.log("[Stadia Enhanced] ⚙️ - Resolution: Set to '2560x1440'.");
                 break
                 case 2:
                 var x = 3840
                 var y = 2160
-                console.log("[Stadia Enhanced] ⚙️ - Resolution: Set to '3840x2160'.");
                 break
             }
 
@@ -564,89 +664,172 @@ function enhanced_changeResolution() {
 }
 embed(enhanced_changeResolution);
 
-var enhanced_Resolution = document.createElement("div");
-enhanced_Resolution.className = "pBvcyf QAAyWd";
-enhanced_Resolution.id = "enhanced_Resolution";
-enhanced_Resolution.innerHTML = "Native";
-var enhanced_currentRes = parseInt(localStorage.getItem("enhanced_ResOption") || 0);
-enhanced_updateResolution(enhanced_currentRes)
-enhanced_Resolution.style.cursor = "pointer";
-enhanced_Resolution.style.userSelect = "none";
-enhanced_Resolution.style.borderBottom = "1px solid rgba(255,255,255,.06)";
-enhanced_Resolution.addEventListener("click", function(evt) {
-    enhanced_currentRes = (enhanced_currentRes + 1) % 3;
-    localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
-    enhanced_updateResolution(enhanced_currentRes)
+// Grid - Control element for the homescreen library grid
+var enhanced_GridSize = parseInt(localStorage.getItem("enhanced_GridSize") || 0);
+var enhanced_Grid = document.createElement("div");
+enhanced_Grid.className = "pBvcyf QAAyWd";
+enhanced_Grid.id = "enhanced_Grid";
+enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">Grid Size: ' + (enhanced_GridSize+2) + '</span>';
+enhanced_Grid.style.cursor = "pointer";
+enhanced_Grid.style.userSelect = "none";
+enhanced_Grid.tabIndex = "0";
+enhanced_Grid.addEventListener("click", function() {
+    enhanced_GridSize = (enhanced_GridSize + 1) % 5;
+    localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
+    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">Grid Size: ' + (enhanced_GridSize+2) + '</span>';
+    enhanced_changeGridSize(enhanced_GridSize)
 });
+enhanced_SettingsDropContent.append(enhanced_Grid);
 
-function enhanced_updateResolution(res) {
-    switch (res) {
+function enhanced_changeGridSize(size) {
+    switch (size) {
         case 0:
-        enhanced_Resolution.style.color = "white";
-        enhanced_Resolution.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">monitor</i></span><span class="mJVLwb">Native</span>'
+        enhanced_Grid.style.color = "";
+        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto) !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: 21.75rem !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
+        break;
+        case 1:
+        enhanced_Grid.style.color = "#00e0ba";
+        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto) !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.66) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1.5rem 1.5rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
+        break;
+        case 2:
+        enhanced_Grid.style.color = "#00e0ba";
+        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto) !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.5) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1rem 1rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
+        break;
+        case 3:
+        enhanced_Grid.style.color = "#00e0ba";
+        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto) !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.4) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 1rem 1rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
+        break;
+        case 4:
+        enhanced_Grid.style.color = "#00e0ba";
+        enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto) !important; }');
+        enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.33) !important; }');
+        enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.2rem 0.2rem !important; }');
+        enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
+        break;
+    }
+    console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".", enhanced_consoleEnhanced, "");
+}
+
+// Clock - Control element for the clock specific settings
+var enhanced_ClockOption = parseInt(localStorage.getItem("enhanced_ClockOption") || 0);
+var enhanced_Clock = document.createElement("div");
+enhanced_Clock.className = "pBvcyf QAAyWd";
+enhanced_Clock.id = "enhanced_Clock";
+enhanced_Clock.style.cursor = "pointer";
+enhanced_Clock.style.userSelect = "none";
+enhanced_Clock.tabIndex = "0";
+enhanced_Clock.addEventListener("click", function() {
+    enhanced_ClockOption = (enhanced_ClockOption + 1) % 4;
+    localStorage.setItem("enhanced_ClockOption", enhanced_ClockOption);
+    enhanced_changeClock(enhanced_ClockOption);
+});
+enhanced_SettingsDropContent.append(enhanced_Clock);
+
+function enhanced_changeClock(opt) {
+    switch (opt) {
+        case 0:
+        enhanced_Clock.style.color = "#00e0ba";
+        enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb">Friend Menu</span>';
+        enhanced_ClockFriends.style.display = "flex";
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Friendlist'", enhanced_consoleEnhanced, "");
         break
         case 1:
-        var x = 2560
-        var y = 1440
-        enhanced_Resolution.style.color = "#00e0ba";
-        enhanced_Resolution.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">monitor</i></span><span class="mJVLwb">2K</span>'
+        enhanced_Clock.style.color = "#00e0ba";
+        enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb">In-Game Overlay</span>';
+        enhanced_ClockFriends.style.display = "none";
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'In-Game Overlay'", enhanced_consoleEnhanced, "");
         break
         case 2:
-        var x = 3840
-        var y = 2160
-        enhanced_Resolution.style.color = "#00e0ba";
-        enhanced_Resolution.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">monitor</i></span><span class="mJVLwb">4K</span>'
+        enhanced_Clock.style.color = "#00e0ba";
+        enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb">Menu & Overlay</span>';
+        enhanced_ClockFriends.style.display = "flex";
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Menu & Overlay'", enhanced_consoleEnhanced, "");
+        break
+        case 3:
+        enhanced_Clock.style.color = "";
+        enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb">Disabled</span>';
+        enhanced_ClockFriends.style.display = "none";
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
         break
     }
 }
 
-if (document.querySelectorAll(".crOn3e")[0] !== undefined) {
-    document.querySelectorAll(".crOn3e")[0].prepend(enhanced_Resolution);
-}
-
-// Codec - Control element for the stream codec
-var enhanced_Codec = document.createElement("div");
-enhanced_Codec.className = "pBvcyf QAAyWd";
-enhanced_Codec.id = "enhanced_Codec";
-var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption") || 0);
-enhanced_changeCodec(enhanced_currentCodec);
-enhanced_Codec.style.cursor = "pointer";
-enhanced_Codec.style.userSelect = "none";
-enhanced_Codec.addEventListener("click", function() {
-    enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
-    localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
-    enhanced_changeCodec(enhanced_currentCodec);
+// Invite Link
+var enhanced_InviteURL = "https://stadia.com/link/home?si_rid=" + enhanced_AccountID;
+var enhanced_Invite = document.createElement("div");
+enhanced_Invite.className = "pBvcyf QAAyWd";
+enhanced_Invite.id = "enhanced_Invite";
+enhanced_Invite.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_add</i><span class="mJVLwb">Copy invite link</span>';
+enhanced_Invite.style.cursor = "pointer";
+enhanced_Invite.style.userSelect = "none";
+enhanced_Invite.tabIndex = "0";
+enhanced_Invite.style.borderTop = "1px solid rgba(255,255,255,.06)";
+enhanced_Invite.style.borderRadius = "0 0 0.5rem 0.5rem";
+enhanced_Invite.addEventListener("click", function() {
+    navigator.clipboard.writeText(enhanced_InviteURL);
+    enhanced_Invite.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">person_add</i></span><span class="mJVLwb">Copied!</span>';
+    enhanced_Invite.style.color = "#ff773d";
+    setTimeout(function() {
+        enhanced_Invite.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">person_add</i></span><span class="mJVLwb">Copy invite link</span>';
+        enhanced_Invite.style.color = "";
+    },1000);
 });
+enhanced_SettingsDropContent.append(enhanced_Invite);
 
-if (document.querySelectorAll(".crOn3e")[0] !== undefined) {
-    document.querySelectorAll(".crOn3e")[0].prepend(enhanced_Codec);
-}
+// Store Cotainer - Container to display store buttons
+var enhanced_StoreContainer = document.createElement("div");
+enhanced_StoreContainer.id = "enhanced_ButtonBox";
+enhanced_StoreContainer.style.display = "flex";
+enhanced_StoreContainer.style.justifyContent = "space-around";
+enhanced_StoreContainer.style.gap = "1.5rem";
 
-function enhanced_changeCodec(c) {
-    switch (c) {
-        case 0:
-        enhanced_Codec.style.color = "white";
-        enhanced_Codec.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">video_settings</i></span><span class="mJVLwb">Default</span>'
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Set to 'Default'.");
-        break
-        case 1:
-        enhanced_Codec.style.color = "#00e0ba";
-        enhanced_Codec.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">video_settings</i></span><span class="mJVLwb">VP9</span>'
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Set to 'VP9'.");
-        break
-        case 2:
-        enhanced_Codec.style.color = "#00e0ba";
-        enhanced_Codec.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">video_settings</i></span><span class="mJVLwb">H264</span>'
-        console.log("[Stadia Enhanced] ⚙️ - Codec Preference: Set to 'H264'");
-        break
-    }
-}
+// Youtube Search
+var enhanced_YouTube = document.createElement("div");
+enhanced_YouTube.id = "enhanced_YouTube";
+enhanced_YouTube.className = "CTvDXd QAAyWd Fjy05d ATH3sf wJYinb rOskPc rpgZzc";
+enhanced_YouTube.innerHTML = '<span class="COTyRb">Search on YouTube</span>'
+enhanced_YouTube.style.cursor = "pointer";
+enhanced_YouTube.style.userSelect = "none";
+enhanced_YouTube.tabIndex = "0";
+enhanced_YouTube.style.backgroundColor = "#c00";
+enhanced_YouTube.style.color = "white";
+enhanced_YouTube.style.marginTop = "1.5rem";
+enhanced_YouTube.addEventListener("click", function() {
+    enhanced_GameTitle = document.querySelectorAll(".UG7HXc")[document.querySelectorAll(".UG7HXc").length-1].textContent;
+    window.open("https://www.youtube.com/results?search_query=" + enhanced_GameTitle, "_blank");
+});
+enhanced_StoreContainer.append(enhanced_YouTube);
+
+// Metacritic Search
+var enhanced_Metacritic = document.createElement("div");
+enhanced_Metacritic.id = "enhanced_Metacritic";
+enhanced_Metacritic.className = "CTvDXd QAAyWd Fjy05d ATH3sf wJYinb rOskPc rpgZzc";
+enhanced_Metacritic.innerHTML = '<span class="COTyRb">Search on <span style="color: #fc3;">Metacritic</span></span>'
+enhanced_Metacritic.style.cursor = "pointer";
+enhanced_Metacritic.style.userSelect = "none";
+enhanced_Metacritic.tabIndex = "0";
+enhanced_Metacritic.style.backgroundColor = "#131416";
+enhanced_Metacritic.style.color = "white";
+enhanced_Metacritic.style.marginTop = "1.5rem";
+enhanced_Metacritic.addEventListener("click", function() {
+    enhanced_GameTitle = document.querySelectorAll(".UG7HXc")[document.querySelectorAll(".UG7HXc").length-1].textContent;
+    window.open("https://www.metacritic.com/search/game/" + enhanced_GameTitle + "/results", "_blank");
+});
+enhanced_StoreContainer.append(enhanced_Metacritic);
 
 // Avatar - Allows the user to set a custom avatar
-if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
-    enhanced_setAvatar(localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
-}
-
 document.querySelector(".PMkDOc").addEventListener("click", function() {
     enhanced_avatarURL = prompt("New avatar URL (empty for default):")
     if (enhanced_avatarURL.length < 1) {
@@ -659,7 +842,7 @@ document.querySelector(".PMkDOc").addEventListener("click", function() {
 });
 
 function enhanced_setAvatar(url) {
-    console.log("[Stadia Enhanced] ⚙️ - Avatar changed to: " + url);
+    console.log("%cStadia Enhanced" + "%c ⚙️ - Avatar changed to: " + url, enhanced_consoleEnhanced, "");
     enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-color: #ff773d !important }');
     enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('.rybUIf { background-image: url("' + url + '") !important; }');
@@ -671,8 +854,17 @@ function enhanced_setAvatar(url) {
 enhanced_AccountMenu = document.querySelector(".Zxyh9c");
 enhanced_AccountMenu.setAttribute("data-close-if-content-clicked", "false");
 
+// Load stored settings
+if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
+    enhanced_setAvatar(localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
+}
+enhanced_changeGridSize(enhanced_GridSize);
+enhanced_changeClock(enhanced_ClockOption);
+enhanced_updateResolution(enhanced_currentRes)
+enhanced_changeCodec(enhanced_currentCodec);
+
 // After Setup
-console.log("[Stadia Enhanced] ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.")
+console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.", enhanced_consoleEnhanced, "")
 
 // Main Loop
 setInterval(function() {
@@ -690,7 +882,7 @@ setInterval(function() {
         localStorage.setItem("video_codec_implementation_by_codec_key", '{"vp9":"ExternalDecoder"}');
         break
         case 2:
-        localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"FFmpeg"}');
+        localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"ExternalDecoder", "vp9":"libvpx"}');
         break
     }
 
@@ -730,8 +922,20 @@ setInterval(function() {
         enhanced_Monitor.style.display = "none";
     }
 
-    if (document.querySelector("#enhanced_Clock") === null && document.querySelectorAll(".hxhAyf.OzUE7e.XY6ZL")[0] !== undefined) {
-        document.querySelectorAll(".hxhAyf.OzUE7e.XY6ZL")[0].append(enhanced_Clock);
+    if (document.querySelector("#enhanced_ClockFriends") === null && document.querySelectorAll(".hxhAyf.OzUE7e.XY6ZL")[0] !== undefined) {
+        document.querySelectorAll(".hxhAyf.OzUE7e.XY6ZL")[0].append(enhanced_ClockFriends);
+    }
+
+    if (document.location.href.indexOf("/player/") != -1) {
+        if (enhanced_ClockOption == 1 || enhanced_ClockOption == 2) {
+            console.log(enhanced_ClockOption);
+            enhanced_ClockOverlay.style.display = "flex";
+        }
+        if (document.querySelector("#enhanced_ClockOverlay") === null && document.querySelector(".bYYDgf") !== undefined) {
+            document.querySelector(".bYYDgf").append(enhanced_ClockOverlay);
+        }
+    } else {
+        enhanced_ClockOverlay.style.display = "none";
     }
 
     if (document.location.href.indexOf("/player/") != -1) {
@@ -747,13 +951,22 @@ setInterval(function() {
     var enhanced_Date = new Date();
     switch (enhanced_ClockMode) {
         case 0:
-        var enhanced_CurrentTime = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_Date.toLocaleTimeString('en-GB');
+        var enhanced_CurrentTime = enhanced_Date.toLocaleTimeString('en-GB');
         break
         case 1:
-        var enhanced_CurrentTime = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_Date.toLocaleTimeString('en-US');
+        var enhanced_CurrentTime = enhanced_Date.toLocaleTimeString('en-US');
         break
     }
-    enhanced_Clock.innerHTML = enhanced_CurrentTime;
+    enhanced_ClockFriends.innerHTML = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_CurrentTime;
+    enhanced_ClockOverlay.innerHTML = enhanced_CurrentTime;
+
+    // Add search buttons on store page
+    if (document.location.href.indexOf("/store/details/") != -1) {
+        enhanced_GameDescription = document.querySelectorAll(".WjVJKd")[document.querySelectorAll(".WjVJKd").length-1];
+        if (document.querySelector("#enhanced_StoreContainer") === null && enhanced_GameDescription !== undefined) {
+            enhanced_GameDescription.append(enhanced_StoreContainer);
+        }
+    }
 
     // Pro Games - UI changes and count of currently unclaimed games
     if (document.location.href.indexOf("/store/list/2001") != -1) {
@@ -777,9 +990,11 @@ setInterval(function() {
 
     // Visibility: Homescreen-only
     if (document.location.href.indexOf("/home") != -1) {
-        enhanced_Grid.style.display = "flex";
+        enhanced_Grid.style.display = "block";
+        //enhanced_LibrarySearch.style.display = "flex";
     } else {
         enhanced_Grid.style.display = "none";
+        //enhanced_LibrarySearch.style.display = "none";
     }
 
     // Visibility: Store-only
@@ -792,7 +1007,7 @@ setInterval(function() {
     }
 
     // Loop End
-    //console.log("[Stadia Enhanced] ⏲️ - Loop Time: " + (new Date().getTime() - enhanced_loopTimer) + "ms.")
+    //console.log("%cStadia Enhanced" + "%c ⏲️ - Loop Time: " + (new Date().getTime() - enhanced_loopTimer) + "ms.", enhanced_consoleEnhanced, "")
 }, 1000);
 
 // Source: https://somethingididnotknow.wordpress.com/2013/07/01/
