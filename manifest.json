@@ -1,37 +1,37 @@
 {
-	"name":"Stadia Enhanced",
-	"description":"Various new features for Google Stadia.",
-	"version":"1.4.1",
-	"author":"Christopher Klay",
-	"homepage_url":"https://github.com/ChristopherKlay/StadiaEnhanced",
-	"icons":{
-		"16":"media/logo/16.png",
-		"48":"media/logo/48.png",
-		"128":"media/logo/128.png"
-	},
-	"browser_action": {
-		"default_popup": "popup.html",
-		"default_title": "Stadia Enhanced v1.4.1",
-		"default_icon": {
-			"16":"media/logo/16.png",
-			"48":"media/logo/48.png",
-			"128":"media/logo/128.png"
-		}
-	},
-	"content_scripts":[
-		{
-			"run_at":"document_end",
-			"matches":[
+    "name": "Stadia Enhanced",
+    "description": "Various new features for Google Stadia.",
+    "version": "1.4.2",
+    "author": "Christopher Klay",
+    "homepage_url": "https://github.com/ChristopherKlay/StadiaEnhanced",
+    "icons": {
+        "16": "media/logo/16.png",
+        "48": "media/logo/48.png",
+        "128": "media/logo/128.png"
+    },
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "Stadia Enhanced v1.4.2",
+        "default_icon": {
+            "16": "media/logo/16.png",
+            "48": "media/logo/48.png",
+            "128": "media/logo/128.png"
+        }
+    },
+    "content_scripts": [
+        {
+            "run_at": "document_end",
+            "matches": [
 				"*://stadia.google.com/*"
 			],
-			"js":[
+            "js": [
 				"enhanced.js"
 			]
 		}
 	],
-	"web_accessible_resources":[
+    "web_accessible_resources": [
 		"media/svg/search.svg",
 		"media/svg/enhanced.svg"
 	],
-	"manifest_version":2
+    "manifest_version": 2
 }
