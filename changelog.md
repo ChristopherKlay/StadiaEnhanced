@@ -14,6 +14,9 @@
 ### Version 1.4.1
 * Another potential fixe when using H264
 
+### Version 1.4.2
+* Changed "Base Deals" to "On Sale", due to newly used categories
+
 ## Version 1.3.0
 * Added a clock widget to the friends menu
 * Added a icon to the search bar
