@@ -430,18 +430,18 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
     enhanced_StoreDropdown.append(enhanced_StoreDropContent);
 }
 
-// Base Deals - Quick access to the list of deals available for "Base" users
-var enhanced_BaseDeals = document.createElement("div");
-enhanced_BaseDeals.className = "pBvcyf QAAyWd";
-enhanced_BaseDeals.id = "enhanced_BaseDeals";
-enhanced_BaseDeals.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">local_offer</i><span class="mJVLwb">Base Deals</span>';
-enhanced_BaseDeals.style.cursor = "pointer";
-enhanced_BaseDeals.style.userSelect = "none";
-enhanced_BaseDeals.tabIndex = "0";
-enhanced_BaseDeals.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/86", "_self");
+// On Sale - Quick access to the list of deals available for "Base" users
+var enhanced_OnSale = document.createElement("div");
+enhanced_OnSale.className = "pBvcyf QAAyWd";
+enhanced_OnSale.id = "enhanced_OnSale";
+enhanced_OnSale.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">local_offer</i><span class="mJVLwb">On Sale</span>';
+enhanced_OnSale.style.cursor = "pointer";
+enhanced_OnSale.style.userSelect = "none";
+enhanced_OnSale.tabIndex = "0";
+enhanced_OnSale.addEventListener("click", function() {
+    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/14", "_self");
 });
-enhanced_StoreDropContent.append(enhanced_BaseDeals);
+enhanced_StoreDropContent.append(enhanced_OnSale);
 
 // Pro Deals - Quick access to the list of deals available for "Pro" users
 var enhanced_ProDeals = document.createElement("div");
@@ -493,8 +493,8 @@ enhanced_SettingsDropdown.addEventListener("click", function(e) {
 
 enhanced_SettingsDropdown.addEventListener("keyup", function(e) {
     if (e.keyCode === 13) {
-     enhanced_SettingsDropdown.click();
- }
+       enhanced_SettingsDropdown.click();
+   }
 });
 
 var enhanced_SettingsDropContent = document.createElement("div");
