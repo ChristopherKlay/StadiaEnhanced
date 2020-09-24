@@ -18,7 +18,7 @@ The left side of the following code are variables used to defined specific text 
 |avatarpopup|The text displayed when setting a custom avatar
 |searchheader|Used for "Games including 'searchterm'" when searching the store
 
-## Current Version
+## Current Template
 
     LANG: en
     
