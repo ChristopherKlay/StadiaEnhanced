@@ -4,7 +4,7 @@
 ## Your language is currently not supported?
 1. Start up [Stadia](https://stadia.com/).
 2. Get your current language code via `document.querySelector("html").getAttribute("lang");` in the console (Ctrl+Shift+I). This will return the language code used by Stadia.
-3. Submit a copy of the current template below with the values on the right side translated, together with your language code either via a [issues entry](https://github.com/ChristopherKlay/StadiaEnhanced/issues) (the best option, so we don't get duplicates and/or more refined translations), or a [direct message on Reddit](https://www.reddit.com/user/ChristopherKlay).
+3. Submit a copy of the current template below with the values on the right side translated, together with your language code via a [issues entry](https://github.com/ChristopherKlay/StadiaEnhanced/issues), so we don't get duplicates and/or more refined translations due to access of multiple people.
 
 Please note that for the sake of simplicity, en-gb/en-us will default to "en" for example.
 # Template
@@ -20,7 +20,7 @@ The left side of the following code are variables used to defined specific text 
 
 ## Current Template
 
-    LANG: en
+    LANG: en (default)
     
     "default":"Default",
     "native":"Native",
