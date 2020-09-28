@@ -2,11 +2,13 @@
 # Translations
 
 ## Your language is currently not supported?
+If your language is not currently supported and no translation is available under [issues](https://github.com/ChristopherKlay/StadiaEnhanced/issues?q=is%3Aissue+label%3Atranslation+), you can help translate the exntesion by doing the following:
+
 1. Start up [Stadia](https://stadia.com/).
 2. Get your current language code via `document.querySelector("html").getAttribute("lang");` in the console (Ctrl+Shift+I). This will return the language code used by Stadia.
 3. Submit a copy of the current template below with the values on the right side translated, together with your language code via a [issues entry](https://github.com/ChristopherKlay/StadiaEnhanced/issues), so we don't get duplicates and/or more refined translations due to access of multiple people.
 
-Please note that for the sake of simplicity, en-gb/en-us will default to "en" for example.
+Due to following Stadias language settings, languages like "en_GB"/"en_US" will default to "en".
 # Template
 
 ## Explanation
