@@ -22,14 +22,14 @@ The left side of the following code are variables used to defined specific text 
 
 ## Current Template
 
-    LANG: en (default)
+    LANG: en
     
     "default":"Default",
     "native":"Native",
     "disabled":"Disabled",
     "windowed":"Windowed Mode",
     "fullscreen":"Fullscreen",
-    "searchstore":Search store",
+    "searchstore":"Search store",
     "onsale":"On Sale",
     "prodeals":"Pro Deals",
     "allgames":"All Games",
