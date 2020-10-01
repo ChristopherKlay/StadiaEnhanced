@@ -1,11 +1,23 @@
 
 # Translations
 
+## Available languages
+Stadia Enhanced is currently available in the following languages:
+
+| Language | Author |
+|--|--|
+| English (default) | [ChristopherKlay](https://github.com/ChristopherKlay) |
+| [French](https://github.com/ChristopherKlay/StadiaEnhanced/issues/8) | [ELowry](https://github.com/ELowry) |
+| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/issues/7) | [zMattyPower](https://github.com/zMattyPower) |
+| [German](https://github.com/ChristopherKlay/StadiaEnhanced/issues/13) | [ChristopherKlay](https://github.com/ChristopherKlay) |
+| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/issues/11) | [Mafrans](https://github.com/Mafrans) |
+| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/issues/9) | [timewasternl](https://github.com/timewasternl) |
+
 ## Your language is currently not supported?
 If your language is not currently supported and no translation is available under [issues](https://github.com/ChristopherKlay/StadiaEnhanced/issues?q=is%3Aissue+label%3Atranslation+), you can help translate the extension by doing the following:
 
-1. Start up [Stadia](https://stadia.com/).
-2. Get your current language code via `document.querySelector("html").getAttribute("lang");` in the console (Ctrl+Shift+I). This will return the language code used by Stadia.
+1. While visiting the [Stadia](https://stadia.com/) homepage, open your console (Ctrl+Shift+I).
+2. If you have Stadia Enhanced installed, you will see log entires, beginning with a entry for your username, ID and language code.
 3. Submit a copy of the current template below with the values on the right side translated, together with your language code via a [issues entry](https://github.com/ChristopherKlay/StadiaEnhanced/issues), so we don't get duplicates and/or more refined translations due to access of multiple people.
 
 Due to following Stadias language settings, languages like "en_GB"/"en_US" will default to "en".
