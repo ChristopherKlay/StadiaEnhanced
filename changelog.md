@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.5.0
+* Added the option to show/hide games on the homescreen
+* Added setting to switch between "Toggle" and "Quick" filtering, or disable filtering
+* Added a language support system (based on Stadia settings, defaulting to english)
+* Added support for german, dutch, french, italian and swedish
+* Added a session timer next to the menu while playing
+* Reduced the average delay of Enhanced UI elements by ~80%
+* Changed UI position for windowed mode and stream monitor
+* Fixed incorrect base width/height values for resolution settings
+* Fixed dropdown size scaling to content
+* Potential fix for wrong counting of unclaimed games
+
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
@@ -42,7 +54,6 @@
 * Changed grid options to only be visible on the homescreen
 * Moved the version number to be visible when hovering the extensions icon
 
-
 ## Version 1.1.0
 * Fixed quick access issues with multiple logged in users
 * Moved the codec and resolution options to the settings popup menu
@@ -82,11 +93,9 @@
 * Added quick access for screenshots & video captures
 
 ## Version 0.3.2
-
 * Updated codec function to support switching between H264, VP9 and default
 * Added start up timer to the console output
 * Beautified code structure
 
 ## Version 0.3.0
-
 * First GitHub Release
