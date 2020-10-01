@@ -17,7 +17,7 @@ Stadia Enhanced is currently available in the following languages:
 If your language is not currently supported and no translation is available under [issues](https://github.com/ChristopherKlay/StadiaEnhanced/issues?q=is%3Aissue+label%3Atranslation+), you can help translate the extension by doing the following:
 
 1. While visiting the [Stadia](https://stadia.com/) homepage, open your console (Ctrl+Shift+I).
-2. If you have Stadia Enhanced installed, you will see log entires, beginning with a entry for your username, ID and language code.
+2. If you have Stadia Enhanced installed, you will see log entries, beginning with a entry for your username, ID and language code.
 3. Submit a copy of the current template below with the values on the right side translated, together with your language code via a [issues entry](https://github.com/ChristopherKlay/StadiaEnhanced/issues), so we don't get duplicates and/or more refined translations due to access of multiple people.
 
 Due to following Stadias language settings, languages like "en_GB"/"en_US" will default to "en".
