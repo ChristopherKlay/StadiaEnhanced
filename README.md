@@ -12,10 +12,6 @@
 * Quick access for screenshots and video captures, achievements, as well as current Pro games.
 * Store search bar to quickly find games.
 
-## Known Issues
-
-* Pro Games counter inaccurate after visiting specific store pages. Will be fixed when the next Pro game becomes available.
-
 ## Installation
 
 ### Chrome Store
@@ -27,6 +23,9 @@
 * Download the [newest release file](https://github.com/ChristopherKlay/StadiaEnhanced/releases) and extract it.
 * Open [your extension settings](chrome://extensions/) and enable the developer mode at the top right.
 * Select 'Load Unpacked' at the top left and chose the folder you extracted previously.
+
+## Translation
+If the project isn't available in your own language, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
 
 ## More screenshots
 
