@@ -1,6 +1,6 @@
 # Stadia Enhanced
 
-![](https://preview.redd.it/giy6pdkrnen51.png?width=1280&format=png&auto=webp&s=c5e9d5b9fbcdaa9f4585b2f89f8eadc1125349c8)
+![](https://preview.redd.it/bpji6yau3jq51.png?width=1280&format=png&auto=webp&s=25b00a2e868a6a81c5fa7e1c3e06ab48c1a2eb07)
 
 ## Features
 
@@ -18,18 +18,11 @@
 
 * Install the extension from the official chrome web store [here](https://chrome.google.com/webstore/detail/stadia-enhanced/ldeakaihfnkjmelifgmbmjlphdfncbfg).
 
-### Release file
-
-* Download the [newest release file](https://github.com/ChristopherKlay/StadiaEnhanced/releases) and extract it.
-* Open [your extension settings](chrome://extensions/) and enable the developer mode at the top right.
-* Select 'Load Unpacked' at the top left and chose the folder you extracted previously.
-
 ## Translation
 If the project isn't available in your own language, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
 
 ## More screenshots
 
-![](https://preview.redd.it/t48okk3unen51.png?width=1280&format=png&auto=webp&s=a61e3ac98370f5cf21f3eda1119603f77e0d7eb0)
-![](https://preview.redd.it/vinlewmvnen51.png?width=1280&format=png&auto=webp&s=a36b7d505e08b51b5b90f8b3d6c611da16cf48ac)
-![](https://preview.redd.it/3x97aj0xnen51.png?width=1280&format=png&auto=webp&s=21b7dc0608dbcd73d68e6f6153e0cc33361d1996)
-![](https://preview.redd.it/1p6c6mxznen51.png?width=1280&format=png&auto=webp&s=c541c8f61ced1045e0a4032f9f736b80a459fdae)
+![](https://preview.redd.it/ht18tjfk5jq51.png?width=1280&format=png&auto=webp&s=9c6911a75a6152b8ac7ecc13d5c1beceecff1ce4)
+![](https://preview.redd.it/z8gwcs2l5jq51.png?width=1280&format=png&auto=webp&s=e37485f0a7ae7d811aeb9f0c535717dcb5206742)
+![](https://preview.redd.it/c77sb16m5jq51.png?width=1280&format=png&auto=webp&s=384ddd8192a083139b509096aa7aeb0a4c322c67)
