@@ -59,6 +59,7 @@ The left side of the following code are variables used to define specific text e
     "searchheader":"Games including",
     "sessiontime":"Session time",
     "codec":"Codec",
+    "resolution": "Resolution",
     "trafficsession":"Session traffic",
     "trafficcurrent":"Current traffic",
     "trafficaverage":"Average traffic",
