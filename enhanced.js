@@ -18,6 +18,8 @@ enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-
 function enhanced_RTCMonitor() {
     'use strict';
     var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
+    var enhanced_local = document.querySelector("html").getAttribute("lang");
+    var enhanced_lang = loadLanguages(enhanced_local);
 
     function formatBytes(a, b) {
         if (0 == a) return "0 Bytes";
@@ -127,8 +129,8 @@ function enhanced_RTCMonitor() {
             lastFrames = 0;
             active = false;
             enhanced_StreamMonitor.innerHTML = "Waiting for game detection.";
-            localStorage.setItem("enhanced_MonitorState", 0)
-            localStorage.setItem("enhanced_MonitorOption", 0)
+            localStorage.setItem("enhanced_MonitorState", 0);
+            localStorage.setItem("enhanced_MonitorOption", 0);
         } else if (peerConnections.length >= 3) {
             if (!active) {
                 sessionStart = new Date();
@@ -137,7 +139,7 @@ function enhanced_RTCMonitor() {
             peerConnections[2].getStats().then(function(stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf("RTCInboundRTPVideoStream") != -1) {
-                        localStorage.setItem("enhanced_MonitorState", 1)
+                        localStorage.setItem("enhanced_MonitorState", 1);
 
                         var tmp1 = stats.get(key);
                         var tmp2 = stats.get(tmp1.trackId);
@@ -167,7 +169,6 @@ function enhanced_RTCMonitor() {
                             var jitterBufferDelay = tmp2.jitterBufferDelay * 1000;
                             var jitterBufferEmittedCount = tmp2.jitterBufferEmittedCount;
                             var jitterBuffer = tmp3.stat("googJitterBufferMs");
-                            //var jitterBuffer = parseInt((jitterBufferDelay - lastBufferDelay) / (jitterBufferEmittedCount - lastBufferEmitted));
 
                             if (codec == "VP9") {
                                 var compression = (tmp1.qpSum - lastQpSum) / (framesDecoded - lastFramesDecoded);
@@ -181,6 +182,7 @@ function enhanced_RTCMonitor() {
                             lastQpSum = tmp1.qpSum;
 
                             if (framesReceived > 0) {
+                                console.log("Frames recieved");
                                 var html = "";
 
                                 html += '<svg height="40" width="220" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg>'
@@ -232,6 +234,7 @@ function enhanced_RTCMonitor() {
         }
     }, 1000);
 };
+embed(loadLanguages, false);
 embed(enhanced_RTCMonitor);
 
 var enhanced_Monitor = document.createElement("div");
@@ -1107,7 +1110,6 @@ setInterval(function() {
 
     if (document.location.href.indexOf("/player/") != -1) {
         if (enhanced_ClockOption == 1 || enhanced_ClockOption == 2) {
-            console.log(enhanced_ClockOption);
             enhanced_ClockOverlay.style.display = "flex";
         }
         if (document.querySelector("#enhanced_ClockOverlay") === null && document.querySelector(".bYYDgf") !== undefined) {
@@ -1195,10 +1197,13 @@ function enhanced_addGlobalStyle(css) {
     head.appendChild(style);
 }
 
-// Source: https://stackoverflow.com/questions/12395722/
-function embed(fn) {
+function embed(fn, active = true) {
     const script = document.createElement("script");
-    script.text = `(${fn.toString()})();`;
+    if (active === true) {
+        script.text = `(${fn.toString()})();`;
+    } else {
+        script.text = `${fn.toString()}`;
+    }
     document.documentElement.appendChild(script);
 }
 
@@ -1238,6 +1243,7 @@ function loadLanguages(lang) {
                 "searchheader":"Giochi che includono",
                 "sessiontime":"Tempo sessione",
                 "codec":"Codec",
+                "resolution": "Risoluzione",
                 "trafficsession":"Traffico sessione",
                 "trafficcurrent":"Traffico corrente",
                 "trafficaverage":"Traffico medio",
@@ -1274,6 +1280,7 @@ function loadLanguages(lang) {
                 "searchheader":"Spel inklusive",
                 "sessiontime":"Sessionstid",
                 "codec":"Kodec",
+                "resolution":"Upplösning",
                 "trafficsession":"Sessionstrafik",
                 "trafficcurrent":"Nuvarande trafik",
                 "trafficaverage":"Genomsnittlig trafik",
@@ -1310,6 +1317,7 @@ function loadLanguages(lang) {
                 "searchheader":"Jeux avec",
                 "sessiontime":"Durée de la session",
                 "codec":"Codec",
+                "resolution": "Résolution",
                 "trafficsession":"Trafic de la session",
                 "trafficcurrent":"Trafic actuel",
                 "trafficaverage":"Trafic moyen",
@@ -1346,6 +1354,7 @@ function loadLanguages(lang) {
                 "searchheader":"Games inclusief",
                 "sessiontime":"Sessieduur",
                 "codec":"Codec",
+                "resolution": "Resolutie",
                 "trafficsession":"Sessie dataoverdracht",
                 "trafficcurrent":"Huidige dataoverdracht",
                 "trafficaverage":"Gemiddelde dataoverdracht",
@@ -1382,6 +1391,7 @@ function loadLanguages(lang) {
                 "searchheader":"Spiele beinhalten",
                 "sessiontime":"Sitzungs Dauer",
                 "codec":"Kodierung",
+                "resolution": "Auflösung",
                 "trafficsession":"Sitzungs Traffic",
                 "trafficcurrent":"Derzeitiger Traffic",
                 "trafficaverage":"Durchschnittlicher Traffic",
@@ -1418,6 +1428,7 @@ function loadLanguages(lang) {
                 "searchheader": "Games including",
                 "sessiontime": "Session time",
                 "codec": "Codec",
+                "resolution": "Resolution",
                 "trafficsession": "Session traffic",
                 "trafficcurrent": "Current traffic",
                 "trafficaverage": "Average traffic",
