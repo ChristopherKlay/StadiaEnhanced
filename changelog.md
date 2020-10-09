@@ -12,6 +12,11 @@
 * Fixed dropdown size scaling to content
 * Potential fix for wrong counting of unclaimed games
 
+### Version 1.5.1
+* Fixed language support breaking the stream monitor
+* Removed a console log entry dedicated to debugging
+* Fixed outdated changelog in the popup window
+
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
