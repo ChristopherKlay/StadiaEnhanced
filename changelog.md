@@ -17,6 +17,9 @@
 * Removed a console log entry dedicated to debugging
 * Fixed outdated changelog in the popup window
 
+### Version 1.5.2
+* Fixed layout issues based on recent Stadia changes
+
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
