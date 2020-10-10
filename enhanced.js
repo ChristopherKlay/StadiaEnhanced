@@ -693,38 +693,28 @@ function enhanced_changeGridSize(size) {
     switch (size) {
         case 0:
             enhanced_Grid.style.color = "";
-            enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(2,auto) !important; }');
-            enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: 21.75rem !important; }');
-            enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.5rem 0.5rem !important; }');
-            enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
+            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }');
+            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 36.75rem !important; height: 21.75rem !important; }');
             break;
         case 1:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(3,auto) !important; }');
-            enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.66) !important; }');
-            enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.5rem 0.5rem !important; }');
-            enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1.5rem !important; }');
+            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }');
+            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.66) !important; height: calc(21.75rem * 0.66) !important; }');
             break;
         case 2:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(4,auto) !important; }');
-            enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.5) !important; }');
-            enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.2rem 0.2rem !important; }');
-            enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
+            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }');
+            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.5) !important; height: calc(21.75rem * 0.5) !important; }');
             break;
         case 3:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(5,auto) !important; }');
-            enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.4) !important; }');
-            enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.2rem 0.2rem !important; }');
-            enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
+            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }');
+            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.4) !important; height: calc(21.75rem * 0.4) !important; }');
             break;
         case 4:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.E3eEyc.H3tvrc { grid-template-columns: repeat(6,auto) !important; }');
-            enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 100% !important; height: calc(21.75rem * 0.33) !important; }');
-            enhanced_addGlobalStyle('.a1l9D { margin: 0 0 0.2rem 0.2rem !important; }');
-            enhanced_addGlobalStyle('.E3eEyc { grid-gap: 1rem !important; }');
+            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }');
+            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.33) !important; height: calc(21.75rem * 0.33) !important; }');
             break;
     }
     console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".", enhanced_consoleEnhanced, "");
@@ -988,20 +978,19 @@ setInterval(function() {
             // Wrapper Element
             var enhanced_wrapper = document.createElement("div");
             enhanced_wrapper.id = "enhanced_wrapper";
-            enhanced_wrapper.style.position = "relative";
+            enhanced_wrapper.style.display = "inherit";
+            enhanced_wrapper.style.gridColumn = "span 6/span 6";
 
             // Visibility
             var enhanced_visibility = document.createElement("div");
             enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
             enhanced_visibility.style.position = "absolute";
-            enhanced_visibility.style.top = "0.2rem";
-            enhanced_visibility.style.right = "0.2rem";
-            enhanced_visibility.style.display = "flex";
+            enhanced_visibility.style.margin = "0.2rem";
             enhanced_visibility.style.background = "#202124";
             enhanced_visibility.style.borderRadius = "50%";
             enhanced_visibility.style.padding = "0.2rem";
             enhanced_visibility.style.cursor = "pointer";
-            enhanced_visibility.style.zIndex = "2";
+            enhanced_visibility.style.zIndex = "20";
             enhanced_visibility.gameid = enhanced_gameID;
             enhanced_visibility.addEventListener("click", function() {
                 //alert(this.gameid);
@@ -1040,7 +1029,7 @@ setInterval(function() {
             enhanced_gameList[i].parentNode.style.display = "none";
             enhanced_gameList[i].previousSibling.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
         } else {
-            enhanced_gameList[i].parentNode.style.display = "block";
+            enhanced_gameList[i].parentNode.style.display = "inherit";
         }
     }
 
