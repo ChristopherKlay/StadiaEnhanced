@@ -12,6 +12,7 @@ enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }")
 enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
 enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }") // Wrap menu items
+enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem; }") // Less padding on "Pro" labels
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -802,7 +803,7 @@ function enhanced_changeFilter(opt) {
 }
 
 // Invite Link
-var enhanced_InviteURL = "https://stadia.com/link/home?si_rid=" + enhanced_AccountID;
+var enhanced_InviteURL = "https://stadia.com/link/referrals?si_rid=" + enhanced_AccountID + "&si_rt=1";
 var enhanced_Invite = document.createElement("div");
 enhanced_Invite.className = "pBvcyf QAAyWd";
 enhanced_Invite.id = "enhanced_Invite";
