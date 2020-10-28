@@ -24,6 +24,9 @@
 * Updated the invite link with the new referral link
 * Less padding on the "Pro" label on games on the homescreen
 
+### Version 1.5.4
+* Adjusted measurements for latency/jitter
+
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
