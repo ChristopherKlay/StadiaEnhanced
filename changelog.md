@@ -27,6 +27,14 @@
 ### Version 1.5.4
 * Adjusted measurements for latency/jitter
 
+### Version 1.5.5
+* Added custom avatar button to own profile
+* Enabled transparent avatar background
+* Fixed "Pro" tag spacing on homescreen
+* Fixed avatar not changing on profile
+* Fixed custom avatar setting blocking profile links
+* Potential fix for the stream monitor not showing on first start
+
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
