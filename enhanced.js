@@ -12,7 +12,7 @@ enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }")
 enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
 enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }") // Wrap menu items
-enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem; }") // Less padding on "Pro" labels
+enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem; !important }") // Less padding on "Pro" labels
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -136,6 +136,7 @@ function enhanced_RTCMonitor() {
             if (!active) {
                 sessionStart = new Date();
                 active = true;
+                localStorage.setItem("enhanced_MonitorState", 1);
             }
             peerConnections[2].getStats().then(function(stats) {
                 for (var key of stats.keys()) {
@@ -143,8 +144,6 @@ function enhanced_RTCMonitor() {
                         var tmp4 = stats.get(key);
                     }
                     if (key.indexOf("RTCInboundRTPVideoStream") != -1) {
-                        localStorage.setItem("enhanced_MonitorState", 1);
-
                         var tmp1 = stats.get(key);
                         var tmp2 = stats.get(tmp1.trackId);
 
@@ -830,6 +829,35 @@ enhanced_Invite.addEventListener("click", function() {
 });
 enhanced_SettingsDropContent.append(enhanced_Invite);
 
+// Avatar - Allows the user to set a custom avatar
+var enhanced_customAvatar = document.createElement("div");
+enhanced_customAvatar.className = "CTvDXd QAAyWd Pjpac GShPJb edaWcd";
+enhanced_customAvatar.id = "enhanced_customAvatar";
+enhanced_customAvatar.role = "button";
+enhanced_customAvatar.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">face</i></span><span class="caSJV snByac">Avatar</span></div>';
+enhanced_customAvatar.tabIndex = "0";
+enhanced_customAvatar.addEventListener("click", function() {
+    enhanced_avatarURL = prompt(enhanced_lang.avatarpopup)
+    if (enhanced_avatarURL != null) {
+        if (enhanced_avatarURL.length < 1) {
+            enhanced_setAvatar(document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage.replace(/(url\(|\)|")/g, ''));
+            localStorage.removeItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"));
+        } else {
+            localStorage.setItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"), enhanced_avatarURL);
+            enhanced_setAvatar(enhanced_avatarURL);
+        }
+    }
+});
+
+function enhanced_setAvatar(url) {
+    console.log("%cStadia Enhanced" + "%c ⚙️ - Avatar changed to: " + url, enhanced_consoleEnhanced, "");
+    enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.rybUIf { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.dOyvbe { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.Nv1Sab[alt$="' + enhanced_AccountName + '"] { content: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('c-wiz[data-p*="' + enhanced_AccountID + '"] .XZRzG { background-image: url("' + url + '") !important; }');
+}
+
 // Store Cotainer - Container to display store buttons
 var enhanced_StoreContainer = document.createElement("div");
 enhanced_StoreContainer.id = "enhanced_ButtonBox";
@@ -870,27 +898,6 @@ enhanced_Metacritic.addEventListener("click", function() {
     window.open("https://www.metacritic.com/search/game/" + enhanced_GameTitle + "/results", "_blank");
 });
 enhanced_StoreContainer.append(enhanced_Metacritic);
-
-// Avatar - Allows the user to set a custom avatar
-document.querySelector(".PMkDOc").addEventListener("click", function() {
-    enhanced_avatarURL = prompt(enhanced_lang.avatarpopup)
-    if (enhanced_avatarURL.length < 1) {
-        enhanced_setAvatar(document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage.replace(/(url\(|\)|")/g, ''));
-        localStorage.removeItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"));
-    } else {
-        localStorage.setItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"), enhanced_avatarURL);
-        enhanced_setAvatar(enhanced_avatarURL);
-    }
-});
-
-function enhanced_setAvatar(url) {
-    console.log("%cStadia Enhanced" + "%c ⚙️ - Avatar changed to: " + url, enhanced_consoleEnhanced, "");
-    enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-color: #ff773d !important }');
-    enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.rybUIf { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.dOyvbe { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.Nv1Sab[alt$="' + enhanced_AccountName + '"] { content: url("' + url + '") !important; }');
-}
 
 // Account Menu - Changes to the account menu behaviour
 enhanced_AccountMenu = document.querySelector(".Zxyh9c");
@@ -1132,6 +1139,16 @@ setInterval(function() {
         enhanced_GameDescription = document.querySelectorAll(".WjVJKd")[document.querySelectorAll(".WjVJKd").length - 1];
         if (document.querySelector("#enhanced_StoreContainer") === null && enhanced_GameDescription !== undefined) {
             enhanced_GameDescription.append(enhanced_StoreContainer);
+        }
+    }
+
+    // Add avatar option on own profile
+    if (document.location.href.indexOf("/profile/" + enhanced_AccountID) != -1) {
+        enhanced_profileOptions = document.querySelectorAll(".hX4jqb")[document.querySelectorAll(".hX4jqb").length - 1];
+        if (enhanced_profileOptions !== undefined) {
+            if (enhanced_profileOptions.contains(enhanced_customAvatar) === false) {
+                enhanced_profileOptions.append(enhanced_customAvatar);
+            }
         }
     }
 
