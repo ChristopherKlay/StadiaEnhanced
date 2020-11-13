@@ -12,7 +12,7 @@ enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }")
 enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
 enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }") // Wrap menu items
-enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem; !important }") // Less padding on "Pro" labels
+enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }") // Less padding on "Pro" labels
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -326,19 +326,16 @@ enhanced_ClockOverlay.addEventListener("click", function() {
 });
 
 // Pro Games - Adds a quick access to the current list of "Pro" titles on Stadia
-var enhanced_ProGames = document.createElement("div");
-enhanced_ProGames.className = "CTvDXd QAAyWd soKQKc wJYinb";
+var enhanced_ProGames = document.createElement("li");
+enhanced_ProGames.className = "qVcdD";
 enhanced_ProGames.id = "enhanced_ProGames";
-enhanced_ProGames.innerHTML = "Pro";
-enhanced_ProGames.style.marginRight = "20px";
-enhanced_ProGames.style.cursor = "pointer";
-enhanced_ProGames.style.userSelect = "none";
-enhanced_ProGames.tabIndex = "0";
-enhanced_ProGames.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/2001", "_self");
-});
-if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_ProGames);
+var enhanced_ProGamesLink = document.createElement("a");
+enhanced_ProGames.appendChild(enhanced_ProGamesLink);
+enhanced_ProGamesLink.setAttribute('href', document.querySelector("head > base").getAttribute("href") + "store/list/2001");
+enhanced_ProGamesLink.className = "L4d3Ob QAAyWd wJYinb";
+enhanced_ProGamesLink.textContent = 'Pro';
+if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
+    document.querySelectorAll(".eMobNd")[0].append(enhanced_ProGames);
 }
 
 /*
@@ -373,31 +370,39 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
 */
 
 // Store Search - Adds a search bar to the Stadia store
+var enhanced_SearchBox = document.createElement("li");
+enhanced_SearchBox.className = "qVcdD";
+enhanced_SearchBox.id = "enhanced_ProGames";
 var enhanced_StoreSearch = document.createElement("input");
-enhanced_StoreSearch.className = "CTvDXd QAAyWd soKQKc wJYinb";
+enhanced_SearchBox.appendChild(enhanced_StoreSearch);
+enhanced_StoreSearch.className = "L4d3Ob QAAyWd wJYinb";
 enhanced_StoreSearch.id = "enhanced_StoreSearch";
 enhanced_StoreSearch.placeholder = enhanced_lang.searchstore;
 enhanced_StoreSearch.style.border = "none";
 enhanced_StoreSearch.style.textAlign = "left";
 enhanced_StoreSearch.style.paddingLeft = "3rem";
 enhanced_StoreSearch.style.background = "url('" + chrome.runtime.getURL("media/svg/search.svg") + "') 1rem center / 24px 24px no-repeat, rgba(255,255,255,.06)"
-enhanced_StoreSearch.style.marginRight = "20px";
 enhanced_StoreSearch.style.display = "none";
 enhanced_StoreSearch.addEventListener("keypress", function() {
     if (event.keyCode == 13 && enhanced_StoreSearch.value != "") {
         window.open(document.querySelector("head > base").getAttribute("href") + "store/list/3?search=" + enhanced_StoreSearch.value, "_self");
     }
 });
-if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_StoreSearch);
+if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
+    document.querySelectorAll(".eMobNd")[0].append(enhanced_SearchBox);
 }
 
 // Store Dropdown - Adds a dropdown menu for quick access
+var enhanced_StoreContainer = document.createElement("li");
+enhanced_StoreContainer.className = "qVcdD";
+enhanced_StoreContainer.id = "enhanced_StoreContainer";
 var enhanced_StoreDropdown = document.createElement("div");
-enhanced_StoreDropdown.className = "NfVFqd AH4sJe QAAyWd wJYinb";
+enhanced_StoreContainer.appendChild(enhanced_StoreDropdown);
+enhanced_StoreDropdown.className = "L4d3Ob QAAyWd wJYinb";
 enhanced_StoreDropdown.id = "enhanced_StoreDropdown";
 enhanced_StoreDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
-enhanced_StoreDropdown.style.marginRight = "20px";
+enhanced_StoreDropdown.style.width = "2.5rem";
+enhanced_StoreDropdown.style.padding = "0";
 enhanced_StoreDropdown.style.cursor = "pointer";
 enhanced_StoreDropdown.style.userSelect = "none";
 enhanced_StoreDropdown.tabIndex = "0";
@@ -422,6 +427,7 @@ window.addEventListener("click", function(e) {
 });
 
 var enhanced_StoreDropContent = document.createElement("div");
+enhanced_StoreDropdown.append(enhanced_StoreDropContent);
 enhanced_StoreDropContent.id = "enhanced_StoreDropContent";
 enhanced_StoreDropContent.className = "us22N";
 enhanced_StoreDropContent.style.position = "absolute";
@@ -431,9 +437,8 @@ enhanced_StoreDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 
 enhanced_StoreDropContent.style.zIndex = "20";
 enhanced_StoreDropContent.style.display = "none";
 
-if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_StoreDropdown);
-    enhanced_StoreDropdown.append(enhanced_StoreDropContent);
+if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
+    document.querySelectorAll(".eMobNd")[0].append(enhanced_StoreContainer);
 }
 
 // On Sale - Quick access to the list of deals available for "Base" users
@@ -479,12 +484,17 @@ enhanced_AllGames.addEventListener("click", function() {
 enhanced_StoreDropContent.append(enhanced_AllGames);
 
 // Settings Dropdown - Adds a dropdown menu for quick access
+var enhanced_SettingsContainer = document.createElement("li");
+enhanced_SettingsContainer.className = "qVcdD";
+enhanced_SettingsContainer.id = "enhanced_SettingsContainer";
 var enhanced_SettingsDropdown = document.createElement("div");
-enhanced_SettingsDropdown.className = "NfVFqd AH4sJe QAAyWd wJYinb";
+enhanced_SettingsContainer.appendChild(enhanced_SettingsDropdown);
+enhanced_SettingsDropdown.className = "L4d3Ob QAAyWd wJYinb";
 enhanced_SettingsDropdown.id = "enhanced_SettingsDropdown";
 enhanced_SettingsDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
-enhanced_SettingsDropdown.style.marginRight = "20px";
 enhanced_SettingsDropdown.style.cursor = "pointer";
+enhanced_SettingsDropdown.style.width = "2.5rem";
+enhanced_SettingsDropdown.style.padding = "0";
 enhanced_SettingsDropdown.style.userSelect = "none";
 enhanced_SettingsDropdown.tabIndex = "0";
 enhanced_SettingsDropdown.addEventListener("click", function(e) {
@@ -507,6 +517,7 @@ enhanced_SettingsDropdown.addEventListener("keyup", function(e) {
 });
 
 var enhanced_SettingsDropContent = document.createElement("div");
+enhanced_SettingsDropdown.append(enhanced_SettingsDropContent);
 enhanced_SettingsDropContent.id = "enhanced_SettingsDropContent";
 enhanced_SettingsDropContent.className = "us22N";
 enhanced_SettingsDropContent.style.position = "absolute";
@@ -516,9 +527,8 @@ enhanced_SettingsDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30
 enhanced_SettingsDropContent.style.zIndex = "20";
 enhanced_SettingsDropContent.style.display = "none";
 
-if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_SettingsDropdown);
-    enhanced_SettingsDropdown.append(enhanced_SettingsDropContent);
+if (document.querySelectorAll(".eMobNd")[1] !== undefined) {
+    document.querySelectorAll(".eMobNd")[1].prepend(enhanced_SettingsContainer);
 }
 
 window.addEventListener("click", function(e) {
@@ -856,6 +866,7 @@ function enhanced_setAvatar(url) {
     enhanced_addGlobalStyle('.dOyvbe { background-image: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('.Nv1Sab[alt$="' + enhanced_AccountName + '"] { content: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('c-wiz[data-p*="' + enhanced_AccountID + '"] .XZRzG { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountID + '"] .PwtJse { background-image: url("' + url + '") !important; }');
 }
 
 // Store Cotainer - Container to display store buttons
@@ -1069,7 +1080,7 @@ setInterval(function() {
             var enhanced_SearchResultCount = 0;
             document.querySelector(".TJQxhf").style.display = "none";
             document.getElementsByClassName("h6J22d null QAAyWd");
-            enhanced_SearchResults = document.getElementsByClassName("h6J22d null QAAyWd");
+            enhanced_SearchResults = document.getElementsByClassName("h6J22d");
             for (var i = 0; i < enhanced_SearchResults.length; i++) {
                 if (enhanced_SearchResults[i].getAttribute("aria-label").match(new RegExp(enhanced_SearchTerm, 'gi')) === null) {
                     enhanced_SearchResults[i].style.display = "none";
@@ -1137,9 +1148,7 @@ setInterval(function() {
     // Add search buttons on store page
     if (document.location.href.indexOf("/store/details/") != -1) {
         enhanced_GameDescription = document.querySelectorAll(".WjVJKd")[document.querySelectorAll(".WjVJKd").length - 1];
-        if (document.querySelector("#enhanced_StoreContainer") === null && enhanced_GameDescription !== undefined) {
-            enhanced_GameDescription.append(enhanced_StoreContainer);
-        }
+        enhanced_GameDescription.append(enhanced_StoreContainer);
     }
 
     // Add avatar option on own profile
@@ -1154,20 +1163,18 @@ setInterval(function() {
 
     // Pro Games - UI changes and count of currently unclaimed games
     if (document.location.href.indexOf("/store/list/2001") != -1) {
-        document.querySelector(".YNlByb.URhE4b.G4fJWe").childNodes[2].classList.remove("YySNWc");
-        enhanced_ProGames.style.backgroundColor = "rgba(255,255,255,.06)";
-        enhanced_ProGames.style.color = "#ff773d";
+        document.querySelector(".eMobNd > li:nth-child(3) > a").classList.remove("YySNWc");
+        enhanced_ProGamesLink.classList.add("YySNWc");
         if (document.querySelector(".alEDLe") !== null) {
             count = document.querySelector(".alEDLe").querySelectorAll('.X5624d').length;
             if (count != 0 && enhanced_ProGames.innerHTML.indexOf(count) == -1) {
-                enhanced_ProGames.innerHTML = 'Pro (' + count + ")";
+                enhanced_ProGamesLink.textContent = 'Pro (' + count + ")";
             }
         }
     } else {
-        enhanced_ProGames.style.backgroundColor = "";
-        enhanced_ProGames.style.color = "rgba(255,255,255,.9)";
-        if (enhanced_ProGames.innerHTML != "Pro") {
-            enhanced_ProGames.innerHTML = "Pro";
+        enhanced_ProGamesLink.classList.remove("YySNWc");
+        if (enhanced_ProGamesLink.textContentL != "Pro") {
+            enhanced_ProGamesLink.textContent = "Pro";
         }
     }
 
