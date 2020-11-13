@@ -35,6 +35,10 @@
 * Fixed custom avatar setting blocking profile links
 * Potential fix for the stream monitor not showing on first start
 
+### Version 1.5.6
+* Fixed various elements due to changes on Stadias side
+* Fixed avatar not showing in "Friends" section of profiles
+
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
