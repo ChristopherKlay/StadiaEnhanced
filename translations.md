@@ -68,4 +68,16 @@ The left side of the following code are variables used to define specific text e
     "latency":"Latency",
     "jitter":"Jitter Buffer",
     "compression":"Compression",
-    "streammon":"Stream Monitor"
+    "streammon":"Stream Monitor",
+    "stream": "Stream",
+    "community": "Community",
+    "speedtest": "Speedtest",
+    "quickaccess": "Quick Access",
+    "messages": "Messages",
+    "prolabel": "Pro Label",
+    "homegallery": "User Gallery",
+    "quickprev": "Message Preview",
+    "quickrep": "Quick Reply",
+    "offlinefriend": "Offline Friends",
+    "invisiblefriend": "Invisible Friends",
+    "avatar": "Avatar"
