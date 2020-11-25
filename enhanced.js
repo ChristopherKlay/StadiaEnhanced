@@ -139,7 +139,6 @@ function enhanced_RTCMonitor() {
                 localStorage.setItem("enhanced_MonitorState", 1);
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
-            console.log(openConnections);
             openConnections[1].getStats().then(function(stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf("RTCIceCandidatePair") != -1) {
