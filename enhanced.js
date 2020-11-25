@@ -11,8 +11,8 @@ console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountName + 
 enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }"); // Remove padding above avatar
 enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
-enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }") // Wrap menu items
-enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }") // Less padding on "Pro" labels
+enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }"); // Wrap menu items
+enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }"); // Less padding on "Pro" labels
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -138,7 +138,9 @@ function enhanced_RTCMonitor() {
                 active = true;
                 localStorage.setItem("enhanced_MonitorState", 1);
             }
-            peerConnections[2].getStats().then(function(stats) {
+            const openConnections = peerConnections.filter(x => x.connectionState == "connected");
+            console.log(openConnections);
+            openConnections[1].getStats().then(function(stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf("RTCIceCandidatePair") != -1) {
                         var tmp4 = stats.get(key);
@@ -147,7 +149,7 @@ function enhanced_RTCMonitor() {
                         var tmp1 = stats.get(key);
                         var tmp2 = stats.get(tmp1.trackId);
 
-                        peerConnections[2].getStats(function(stats) {
+                        openConnections[1].getStats(function(stats) {
                             var tmp3 = stats.result().find(function(f) {
                                 return "ssrc" == f.type && f.id.endsWith("recv") && f.names().includes("mediaType") && "video" == f.stat("mediaType");
                             });
@@ -235,6 +237,7 @@ function enhanced_RTCMonitor() {
                         });
                     }
                 }
+
             });
         }
     }, 1000);
@@ -280,6 +283,68 @@ window.addEventListener('fullscreenchange', function(event) {
     }
 }, true);
 
+// Emoji Picker
+var enhanced_emojiswitch = document.createElement("div");
+enhanced_emojiswitch.innerHTML = "😃";
+enhanced_emojiswitch.style.marginLeft = "1rem";
+enhanced_emojiswitch.style.cursor = "pointer";
+enhanced_emojiswitch.addEventListener("click", function(i) {
+    if (enhanced_emojiPicker.style.display == "none") {
+        enhanced_emojiPicker.style.display = "flex"
+        console.log("Show");
+    } else {
+        enhanced_emojiPicker.style.display = "none";
+        console.log("Hide")
+    }
+});
+
+var enhanced_emojiPicker = document.createElement("div");
+enhanced_emojiPicker.style.width = "auto";
+enhanced_emojiPicker.style.height = "10rem";
+enhanced_emojiPicker.style.margin = "0 1rem 0.5rem";
+enhanced_emojiPicker.style.overflowY = "scroll";
+enhanced_emojiPicker.style.overflowX = "hidden";
+enhanced_emojiPicker.style.fontSize = "1.4rem";
+enhanced_emojiPicker.style.cursor = "pointer";
+enhanced_emojiPicker.style.flexWrap = "wrap";
+enhanced_emojiPicker.style.justifyContent = "space-between";
+enhanced_emojiPicker.style.userSelect = "none";
+enhanced_emojiPicker.style.display = "none";
+
+enhanced_emojiPicker.addEventListener("click", function(i) {
+    document.querySelector(".m0BtMe").focus();
+    document.execCommand('insertText', false, i.target.textContent);
+});
+
+window.addEventListener("click", function(e) {
+    if (e.target != enhanced_emojiswitch && e.target != enhanced_emojiPicker && enhanced_emojiPicker.contains(e.target) === false) {
+        enhanced_emojiPicker.style.display = "none";
+    }
+});
+
+var enhanced_dummy;
+var enhanced_emojiRange = [
+    [128513, 128591],
+    [9994, 9996],
+    [128640, 128676],
+    [127747, 127776],
+    [127799, 127891],
+    [127908, 127946],
+    [128012, 128061],
+    [128138, 128191],
+    [128247, 128252],
+    [128336, 128347]
+];
+for (var i = 0; i < enhanced_emojiRange.length; i++) {
+    var range = enhanced_emojiRange[i];
+    for (var x = range[0]; x < range[1]; x++) {
+        enhanced_dummy = document.createElement('span');
+        enhanced_dummy.value = x;
+        enhanced_dummy.innerHTML = "&#" + x + ";";
+        enhanced_emojiPicker.appendChild(enhanced_dummy);
+    }
+}
+
 // Clock Widget - Adds a little clock at the bottom of the friends menu
 var enhanced_ClockMode = parseInt(localStorage.getItem("enhanced_ClockMode") || 0);
 var enhanced_ClockFriends = document.createElement("div");
@@ -316,7 +381,6 @@ enhanced_ClockOverlay.style.fontWeight = "500";
 enhanced_ClockOverlay.style.userSelect = "none";
 enhanced_ClockOverlay.style.padding = "0";
 enhanced_ClockOverlay.style.cursor = "pointer";
-enhanced_ClockOverlay.style.display = "flex";
 enhanced_ClockOverlay.style.alignItems = "center";
 enhanced_ClockOverlay.style.justifyContent = "center";
 enhanced_ClockOverlay.style.zIndex = "20";
@@ -331,9 +395,13 @@ enhanced_ProGames.className = "qVcdD";
 enhanced_ProGames.id = "enhanced_ProGames";
 var enhanced_ProGamesLink = document.createElement("a");
 enhanced_ProGames.appendChild(enhanced_ProGamesLink);
-enhanced_ProGamesLink.setAttribute('href', document.querySelector("head > base").getAttribute("href") + "store/list/2001");
+//enhanced_ProGamesLink.setAttribute('href', document.querySelector("head > base").getAttribute("href") + "store/list/2001");
 enhanced_ProGamesLink.className = "L4d3Ob QAAyWd wJYinb";
 enhanced_ProGamesLink.textContent = 'Pro';
+enhanced_ProGamesLink.addEventListener("click", function() {
+    openStadia("store/list/2001")
+});
+
 if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
     document.querySelectorAll(".eMobNd")[0].append(enhanced_ProGames);
 }
@@ -385,7 +453,7 @@ enhanced_StoreSearch.style.background = "url('" + chrome.runtime.getURL("media/s
 enhanced_StoreSearch.style.display = "none";
 enhanced_StoreSearch.addEventListener("keypress", function() {
     if (event.keyCode == 13 && enhanced_StoreSearch.value != "") {
-        window.open(document.querySelector("head > base").getAttribute("href") + "store/list/3?search=" + enhanced_StoreSearch.value, "_self");
+        openStadia("store/list/3?search=" + enhanced_StoreSearch.value);
     }
 });
 if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
@@ -451,7 +519,7 @@ enhanced_OnSale.style.userSelect = "none";
 enhanced_OnSale.style.paddingRight = "2rem";
 enhanced_OnSale.tabIndex = "0";
 enhanced_OnSale.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/14", "_self");
+    openStadia("store/list/14");
 });
 enhanced_StoreDropContent.append(enhanced_OnSale);
 
@@ -465,7 +533,7 @@ enhanced_ProDeals.style.userSelect = "none";
 enhanced_ProDeals.style.paddingRight = "2rem";
 enhanced_ProDeals.tabIndex = "0";
 enhanced_ProDeals.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/45", "_self");
+    openStadia("store/list/45");
 });
 enhanced_StoreDropContent.append(enhanced_ProDeals);
 
@@ -479,7 +547,7 @@ enhanced_AllGames.style.userSelect = "none";
 enhanced_AllGames.style.paddingRight = "2rem";
 enhanced_AllGames.tabIndex = "0";
 enhanced_AllGames.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "store/list/3", "_self");
+    openStadia("store/list/3");
 });
 enhanced_StoreDropContent.append(enhanced_AllGames);
 
@@ -503,7 +571,7 @@ enhanced_SettingsDropdown.addEventListener("click", function(e) {
     }
     if (enhanced_SettingsDropContent.contains(e.target) === false && e.target.classList.contains("mJVLwb") === false) {
         if (enhanced_SettingsDropContent.style.display === "none") {
-            enhanced_SettingsDropContent.style.display = "block";
+            enhanced_SettingsDropContent.style.display = "flex";
         } else {
             enhanced_SettingsDropContent.style.display = "none";
         }
@@ -516,20 +584,93 @@ enhanced_SettingsDropdown.addEventListener("keyup", function(e) {
     }
 });
 
+// Settings - Dropdown
 var enhanced_SettingsDropContent = document.createElement("div");
 enhanced_SettingsDropdown.append(enhanced_SettingsDropContent);
 enhanced_SettingsDropContent.id = "enhanced_SettingsDropContent";
 enhanced_SettingsDropContent.className = "us22N";
-enhanced_SettingsDropContent.style.position = "absolute";
+enhanced_SettingsDropContent.style.position = "fixed";
 enhanced_SettingsDropContent.style.width = "auto";
-enhanced_SettingsDropContent.style.top = "4.25rem";
+enhanced_SettingsDropContent.style.top = "4rem";
+enhanced_SettingsDropContent.style.right = "1.5rem";
+enhanced_SettingsDropContent.style.left = "1.5rem";
 enhanced_SettingsDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
 enhanced_SettingsDropContent.style.zIndex = "20";
+enhanced_SettingsDropContent.style.flexFlow = "row";
 enhanced_SettingsDropContent.style.display = "none";
-
+enhanced_SettingsDropContent.style.borderRadius = "0.5rem";
+enhanced_SettingsDropContent.style.overflowY = "auto";
+enhanced_SettingsDropContent.style.overflowX = "hidden";
 if (document.querySelectorAll(".eMobNd")[1] !== undefined) {
     document.querySelectorAll(".eMobNd")[1].prepend(enhanced_SettingsContainer);
 }
+enhanced_addGlobalStyle("#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }");
+enhanced_addGlobalStyle("#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }");
+
+// Settings - General
+var enhanced_settingsGeneral = document.createElement("div");
+enhanced_settingsGeneral.style.flexBasis = "50%";
+enhanced_settingsGeneral.style.flexGrow = "1";
+enhanced_settingsGeneral.style.boxShadow = "inset 0px 0px 0px 1px rgba(255,255,255,.06)";
+enhanced_SettingsDropContent.appendChild(enhanced_settingsGeneral);
+
+var enhanced_settingsGeneralTitle = document.createElement("div");
+enhanced_settingsGeneralTitle.className = "pBvcyf QAAyWd";
+enhanced_settingsGeneralTitle.id = "enhanced_settingsGeneralHead";
+enhanced_settingsGeneralTitle.innerHTML = '<span class="mJVLwb">Stadia</span>';
+enhanced_settingsGeneralTitle.style.userSelect = "none";
+enhanced_settingsGeneralTitle.style.background = "#202124";
+enhanced_settingsGeneralTitle.style.textAlign = "center";
+enhanced_settingsGeneralTitle.style.borderRadius = "0.5rem 0 0 0";
+enhanced_settingsGeneral.append(enhanced_settingsGeneralTitle);
+
+// Settings - Shortcut
+var enhanced_settingsShortcut = document.createElement("div");
+enhanced_settingsShortcut.style.flexBasis = "50%";
+enhanced_settingsShortcut.style.flexGrow = "1";
+enhanced_settingsShortcut.style.boxShadow = "inset 0px 0px 0px 1px rgba(255,255,255,.06)";
+enhanced_SettingsDropContent.appendChild(enhanced_settingsShortcut);
+
+var enhanced_settingsShortcutTitle = document.createElement("div");
+enhanced_settingsShortcutTitle.className = "pBvcyf QAAyWd";
+enhanced_settingsShortcutTitle.id = "enhanced_settingsShortcutTitle";
+enhanced_settingsShortcutTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.quickaccess + '</span>';
+enhanced_settingsShortcutTitle.style.userSelect = "none";
+enhanced_settingsShortcutTitle.style.background = "#202124";
+enhanced_settingsShortcutTitle.style.textAlign = "center";
+enhanced_settingsShortcut.append(enhanced_settingsShortcutTitle);
+
+// Settings - Messages
+var enhanced_settingsMessages = document.createElement("div");
+enhanced_settingsMessages.style.flexBasis = "50%";
+enhanced_settingsMessages.style.flexGrow = "1";
+enhanced_settingsMessages.style.boxShadow = "inset 0px 0px 0px 1px rgba(255,255,255,.06)";
+enhanced_SettingsDropContent.appendChild(enhanced_settingsMessages);
+
+var enhanced_settingsMessagesTitle = document.createElement("div");
+enhanced_settingsMessagesTitle.className = "pBvcyf QAAyWd";
+enhanced_settingsMessagesTitle.id = "enhanced_settingsMessagesTitle";
+enhanced_settingsMessagesTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.messages + '</span>';
+enhanced_settingsMessagesTitle.style.userSelect = "none";
+enhanced_settingsMessagesTitle.style.background = "#202124";
+enhanced_settingsMessagesTitle.style.textAlign = "center";
+enhanced_settingsMessages.append(enhanced_settingsMessagesTitle);
+
+// Settings - Stream
+var enhanced_settingsStream = document.createElement("div");
+enhanced_settingsStream.style.flexBasis = "50%";
+enhanced_settingsStream.style.flexGrow = "1";
+enhanced_SettingsDropContent.appendChild(enhanced_settingsStream);
+
+var enhanced_settingsStreamTitle = document.createElement("div");
+enhanced_settingsStreamTitle.className = "pBvcyf QAAyWd";
+enhanced_settingsStreamTitle.id = "enhanced_settingsStreamTitle";
+enhanced_settingsStreamTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.stream + '</span>';
+enhanced_settingsStreamTitle.style.userSelect = "none";
+enhanced_settingsStreamTitle.style.background = "#202124";
+enhanced_settingsStreamTitle.style.textAlign = "center";
+enhanced_settingsStreamTitle.style.borderRadius = "0 0.5rem 0 0";
+enhanced_settingsStream.append(enhanced_settingsStreamTitle);
 
 window.addEventListener("click", function(e) {
     if (e.target != enhanced_SettingsDropdown && enhanced_SettingsDropdown.contains(e.target) === false && e.target.classList.contains("mJVLwb") === false) {
@@ -546,15 +687,38 @@ enhanced_UserMedia.style.cursor = "pointer";
 enhanced_UserMedia.style.userSelect = "none";
 enhanced_UserMedia.style.paddingRight = "2rem";
 enhanced_UserMedia.tabIndex = "0";
-enhanced_UserMedia.style.borderBottom = "1px solid rgba(255,255,255,.06)";
-enhanced_UserMedia.style.borderRadius = "0.5rem 0.5rem 0 0";
 enhanced_UserMedia.addEventListener("click", function() {
-    window.open(document.querySelector("head > base").getAttribute("href") + "captures", "_self");
+    openStadia("captures");
 });
-if (document.querySelectorAll(".WpnpPe")[0] !== undefined) {
-    document.querySelectorAll(".WpnpPe")[0].prepend(enhanced_UserMedia);
-}
-enhanced_SettingsDropContent.append(enhanced_UserMedia);
+enhanced_settingsShortcut.append(enhanced_UserMedia);
+
+// Speedtest - Shortcut to M-Lab test
+var enhanced_speedTest = document.createElement("div");
+enhanced_speedTest.className = "pBvcyf QAAyWd";
+enhanced_speedTest.id = "enhanced_speedTest";
+enhanced_speedTest.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speed</i><span class="mJVLwb">' + enhanced_lang.speedtest + '</span>';
+enhanced_speedTest.style.cursor = "pointer";
+enhanced_speedTest.style.userSelect = "none";
+enhanced_speedTest.style.paddingRight = "2rem";
+enhanced_speedTest.tabIndex = "0";
+enhanced_speedTest.addEventListener("click", function() {
+    window.open("https://projectstream.google.com/speedtest", "_blank");
+});
+enhanced_settingsShortcut.append(enhanced_speedTest)
+
+// Community - Shortcut to community page
+var enhanced_communityPage = document.createElement("div");
+enhanced_communityPage.className = "pBvcyf QAAyWd";
+enhanced_communityPage.id = "enhanced_communityPage";
+enhanced_communityPage.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">forum</i><span class="mJVLwb">' + enhanced_lang.community + '</span>';
+enhanced_communityPage.style.cursor = "pointer";
+enhanced_communityPage.style.userSelect = "none";
+enhanced_communityPage.style.paddingRight = "2rem";
+enhanced_communityPage.tabIndex = "0";
+enhanced_communityPage.addEventListener("click", function() {
+    window.open("https://community.stadia.com/", "_blank");
+});
+enhanced_settingsShortcut.append(enhanced_communityPage)
 
 // Codec - Control element for the stream codec
 var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption") || 0);
@@ -564,12 +728,13 @@ enhanced_Codec.id = "enhanced_Codec";
 enhanced_Codec.style.cursor = "pointer";
 enhanced_Codec.style.userSelect = "none";
 enhanced_Codec.style.paddingRight = "2rem";
+enhanced_UserMedia.tabIndex = "0";
 enhanced_Codec.addEventListener("click", function() {
     enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
     localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
     enhanced_changeCodec(enhanced_currentCodec);
 });
-enhanced_SettingsDropContent.append(enhanced_Codec);
+enhanced_settingsStream.append(enhanced_Codec);
 
 function enhanced_changeCodec(c) {
     switch (c) {
@@ -606,12 +771,13 @@ enhanced_Resolution.innerHTML = enhanced_lang.native;
 enhanced_Resolution.style.cursor = "pointer";
 enhanced_Resolution.style.userSelect = "none";
 enhanced_Resolution.style.paddingRight = "2rem";
+enhanced_UserMedia.tabIndex = "0";
 enhanced_Resolution.addEventListener("click", function(evt) {
     enhanced_currentRes = (enhanced_currentRes + 1) % 3;
     localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
     enhanced_updateResolution(enhanced_currentRes)
 });
-enhanced_SettingsDropContent.append(enhanced_Resolution);
+enhanced_settingsStream.append(enhanced_Resolution);
 
 function enhanced_updateResolution(res) {
     switch (res) {
@@ -702,7 +868,7 @@ enhanced_Grid.addEventListener("click", function() {
     enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': ' + (enhanced_GridSize + 2) + '</span>';
     enhanced_changeGridSize(enhanced_GridSize)
 });
-enhanced_SettingsDropContent.append(enhanced_Grid);
+enhanced_settingsGeneral.append(enhanced_Grid);
 
 function enhanced_changeGridSize(size) {
     switch (size) {
@@ -749,7 +915,7 @@ enhanced_Clock.addEventListener("click", function() {
     localStorage.setItem("enhanced_ClockOption", enhanced_ClockOption);
     enhanced_changeClock(enhanced_ClockOption);
 });
-enhanced_SettingsDropContent.append(enhanced_Clock);
+enhanced_settingsGeneral.append(enhanced_Clock);
 
 function enhanced_changeClock(opt) {
     switch (opt) {
@@ -794,7 +960,7 @@ enhanced_gameFilter.addEventListener("click", function() {
     localStorage.setItem("enhanced_filterOption", enhanced_filterOption);
     enhanced_changeFilter(enhanced_filterOption);
 });
-enhanced_SettingsDropContent.append(enhanced_gameFilter);
+enhanced_settingsGeneral.append(enhanced_gameFilter);
 
 function enhanced_changeFilter(opt) {
     switch (opt) {
@@ -826,7 +992,6 @@ enhanced_Invite.style.cursor = "pointer";
 enhanced_Invite.style.userSelect = "none";
 enhanced_Invite.style.paddingRight = "2rem";
 enhanced_Invite.tabIndex = "0";
-enhanced_Invite.style.borderTop = "1px solid rgba(255,255,255,.06)";
 enhanced_Invite.style.borderRadius = "0 0 0.5rem 0.5rem";
 enhanced_Invite.addEventListener("click", function() {
     navigator.clipboard.writeText(enhanced_InviteURL);
@@ -837,14 +1002,198 @@ enhanced_Invite.addEventListener("click", function() {
         enhanced_Invite.style.color = "";
     }, 1000);
 });
-enhanced_SettingsDropContent.append(enhanced_Invite);
+enhanced_settingsShortcut.append(enhanced_Invite);
+
+// Message Preview
+var enhanced_messagePreview = parseInt(localStorage.getItem("enhanced_messagePreview") || 0);
+var enhanced_hidePreview = document.createElement("div");
+enhanced_hidePreview.className = "pBvcyf QAAyWd";
+enhanced_hidePreview.id = "enhanced_lastMessage";
+enhanced_hidePreview.style.cursor = "pointer";
+enhanced_hidePreview.style.userSelect = "none";
+enhanced_hidePreview.style.paddingRight = "2rem";
+enhanced_hidePreview.tabIndex = "0";
+enhanced_hidePreview.addEventListener("click", function() {
+    enhanced_messagePreview = (enhanced_messagePreview + 1) % 2;
+    localStorage.setItem("enhanced_messagePreview", enhanced_messagePreview);
+    enhanced_changeMsgPreview(enhanced_messagePreview);
+});
+enhanced_settingsMessages.append(enhanced_hidePreview);
+
+function enhanced_changeMsgPreview(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle(".lzIqJf .DvD76d { display: flex; }");
+            enhanced_addGlobalStyle(".lzIqJf .xzJkDf { display: block; }");
+            enhanced_hidePreview.style.color = "";
+            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes</i><span class="mJVLwb">' + enhanced_lang.quickprev + '</span>';
+            break
+        case 1:
+            enhanced_addGlobalStyle(".lzIqJf .DvD76d { display: none; }")
+            enhanced_addGlobalStyle(".lzIqJf .xzJkDf { display: none; }")
+            enhanced_hidePreview.style.color = "#00e0ba";
+            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes_off</i><span class="mJVLwb">' + enhanced_lang.quickprev + '</span>';
+            break
+    }
+}
+
+// Quick Reply
+var enhanced_useQuickReply = parseInt(localStorage.getItem("enhanced_useQuickReply") || 0);
+var enhanced_quickReply = document.createElement("div");
+enhanced_quickReply.className = "pBvcyf QAAyWd";
+enhanced_quickReply.id = "enhanced_quickReply";
+enhanced_quickReply.style.cursor = "pointer";
+enhanced_quickReply.style.userSelect = "none";
+enhanced_quickReply.style.paddingRight = "2rem";
+enhanced_quickReply.tabIndex = "0";
+enhanced_quickReply.addEventListener("click", function() {
+    enhanced_useQuickReply = (enhanced_useQuickReply + 1) % 2;
+    localStorage.setItem("enhanced_useQuickReply", enhanced_useQuickReply);
+    enhanced_changeQuickReply(enhanced_useQuickReply);
+});
+enhanced_settingsMessages.append(enhanced_quickReply);
+
+function enhanced_changeQuickReply(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle(".bbVL5c { display: flex !important; }");
+            enhanced_quickReply.style.color = "";
+            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles</i><span class="mJVLwb">' + enhanced_lang.quickrep + '</span>';
+            break
+        case 1:
+            enhanced_addGlobalStyle(".bbVL5c { display: none !important; }")
+            enhanced_quickReply.style.color = "#00e0ba";
+            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles_off</i><span class="mJVLwb">' + enhanced_lang.quickrep + '</span>';
+            break
+    }
+}
+
+// Hide: Offline Users
+var enhanced_hideOffline = parseInt(localStorage.getItem("enhanced_hideOffline") || 0);
+var enhanced_offlineUser = document.createElement("div");
+enhanced_offlineUser.className = "pBvcyf QAAyWd";
+enhanced_offlineUser.id = "enhanced_lastMessage";
+enhanced_offlineUser.style.cursor = "pointer";
+enhanced_offlineUser.style.userSelect = "none";
+enhanced_offlineUser.style.paddingRight = "2rem";
+enhanced_offlineUser.tabIndex = "0";
+enhanced_offlineUser.addEventListener("click", function() {
+    enhanced_hideOffline = (enhanced_hideOffline + 1) % 2;
+    localStorage.setItem("enhanced_hideOffline", enhanced_hideOffline);
+    enhanced_changeOfflineUser(enhanced_hideOffline);
+});
+enhanced_settingsMessages.append(enhanced_offlineUser);
+
+function enhanced_changeOfflineUser(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_offlineUser.style.color = "";
+            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb">' + enhanced_lang.offlinefriend + '</span>';
+            break
+        case 1:
+            enhanced_offlineUser.style.color = "#00e0ba";
+            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb">' + enhanced_lang.offlinefriend + '</span>';
+            break
+    }
+}
+
+// Hide: Invisible Users
+var enhanced_hideInvisible = parseInt(localStorage.getItem("enhanced_hideInvisible") || 0);
+var enhanced_invisibleUser = document.createElement("div");
+enhanced_invisibleUser.className = "pBvcyf QAAyWd";
+enhanced_invisibleUser.id = "enhanced_lastMessage";
+enhanced_invisibleUser.style.cursor = "pointer";
+enhanced_invisibleUser.style.userSelect = "none";
+enhanced_invisibleUser.style.paddingRight = "2rem";
+enhanced_invisibleUser.tabIndex = "0";
+enhanced_invisibleUser.addEventListener("click", function() {
+    enhanced_hideInvisible = (enhanced_hideInvisible + 1) % 2;
+    localStorage.setItem("enhanced_hideInvisible", enhanced_hideInvisible);
+    enhanced_changeInvisibleUser(enhanced_hideInvisible);
+});
+enhanced_settingsMessages.append(enhanced_invisibleUser);
+
+function enhanced_changeInvisibleUser(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_invisibleUser.style.color = "";
+            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb">' + enhanced_lang.invisiblefriend + '</span>';
+            break
+        case 1:
+            enhanced_invisibleUser.style.color = "#00e0ba";
+            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb">' + enhanced_lang.invisiblefriend + '</span>';
+            break
+    }
+}
+
+// Pro Labels
+var enhanced_hideLabel = parseInt(localStorage.getItem("enhanced_hideLabel") || 0);
+var enhanced_proLabel = document.createElement("div");
+enhanced_proLabel.className = "pBvcyf QAAyWd";
+enhanced_proLabel.id = "enhanced_proLabel";
+enhanced_proLabel.style.cursor = "pointer";
+enhanced_proLabel.style.userSelect = "none";
+enhanced_proLabel.style.paddingRight = "2rem";
+enhanced_proLabel.tabIndex = "0";
+enhanced_proLabel.addEventListener("click", function() {
+    enhanced_hideLabel = (enhanced_hideLabel + 1) % 2;
+    localStorage.setItem("enhanced_hideLabel", enhanced_hideLabel);
+    enhanced_changeProLabel(enhanced_hideLabel);
+});
+enhanced_settingsGeneral.append(enhanced_proLabel);
+
+function enhanced_changeProLabel(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { display: block; }")
+            enhanced_proLabel.style.color = "";
+            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb">' + enhanced_lang.prolabel + '</span>';
+            break
+        case 1:
+            enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { display: none; }")
+            enhanced_proLabel.style.color = "#00e0ba";
+            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb">' + enhanced_lang.prolabel + '</span>';
+            break
+    }
+}
+
+// Hide Screenshots on Homescreen
+var enhanced_hideUserMedia = parseInt(localStorage.getItem("enhanced_hideUserMedia") || 0);
+var enhanced_mediaPreview = document.createElement("div");
+enhanced_mediaPreview.className = "pBvcyf QAAyWd";
+enhanced_mediaPreview.id = "enhanced_mediaPreview";
+enhanced_mediaPreview.style.cursor = "pointer";
+enhanced_mediaPreview.style.userSelect = "none";
+enhanced_mediaPreview.style.paddingRight = "2rem";
+enhanced_mediaPreview.tabIndex = "0";
+enhanced_mediaPreview.addEventListener("click", function() {
+    enhanced_hideUserMedia = (enhanced_hideUserMedia + 1) % 2;
+    localStorage.setItem("enhanced_hideUserMedia", enhanced_hideUserMedia);
+    enhanced_changeMediaPreview(enhanced_hideUserMedia);
+});
+enhanced_settingsGeneral.append(enhanced_mediaPreview);
+
+function enhanced_changeMediaPreview(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle(".zUpxGe.lEPylf { display: block; }")
+            enhanced_mediaPreview.style.color = "";
+            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb">' + enhanced_lang.homegallery + '</span>';
+            break
+        case 1:
+            enhanced_addGlobalStyle(".zUpxGe.lEPylf { display: none; }")
+            enhanced_mediaPreview.style.color = "#00e0ba";
+            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image_not_supported</i><span class="mJVLwb">' + enhanced_lang.homegallery + '</span>';
+            break
+    }
+}
 
 // Avatar - Allows the user to set a custom avatar
 var enhanced_customAvatar = document.createElement("div");
 enhanced_customAvatar.className = "CTvDXd QAAyWd Pjpac GShPJb edaWcd";
 enhanced_customAvatar.id = "enhanced_customAvatar";
 enhanced_customAvatar.role = "button";
-enhanced_customAvatar.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">face</i></span><span class="caSJV snByac">Avatar</span></div>';
+enhanced_customAvatar.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">face</i></span><span class="caSJV snByac">' + enhanced_lang.avatar + '</span></div>';
 enhanced_customAvatar.tabIndex = "0";
 enhanced_customAvatar.addEventListener("click", function() {
     enhanced_avatarURL = prompt(enhanced_lang.avatarpopup)
@@ -867,9 +1216,11 @@ function enhanced_setAvatar(url) {
     enhanced_addGlobalStyle('.Nv1Sab[alt$="' + enhanced_AccountName + '"] { content: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('c-wiz[data-p*="' + enhanced_AccountID + '"] .XZRzG { background-image: url("' + url + '") !important; }');
     enhanced_addGlobalStyle('.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountID + '"] .PwtJse { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.Tidcwc > .Y1rZWd.QAAyWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + url + '") !important; }');
+    enhanced_addGlobalStyle('.mcaxA.ZmeF9 div:first-child { background-image: url("' + url + '") !important; }');
 }
 
-// Store Cotainer - Container to display store buttons
+// Store Container - Container to display store buttons
 var enhanced_StoreContainer = document.createElement("div");
 enhanced_StoreContainer.id = "enhanced_ButtonBox";
 enhanced_StoreContainer.style.display = "flex";
@@ -946,8 +1297,14 @@ if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > 
 enhanced_changeGridSize(enhanced_GridSize);
 enhanced_changeClock(enhanced_ClockOption);
 enhanced_changeFilter(enhanced_filterOption);
-enhanced_updateResolution(enhanced_currentRes)
+enhanced_updateResolution(enhanced_currentRes);
 enhanced_changeCodec(enhanced_currentCodec);
+enhanced_changeMsgPreview(enhanced_messagePreview);
+enhanced_changeProLabel(enhanced_hideLabel);
+enhanced_changeQuickReply(enhanced_useQuickReply);
+enhanced_changeOfflineUser(enhanced_hideOffline);
+enhanced_changeInvisibleUser(enhanced_hideInvisible);
+enhanced_changeMediaPreview(enhanced_hideUserMedia);
 
 // After Setup
 console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.", enhanced_consoleEnhanced, "")
@@ -1057,6 +1414,40 @@ setInterval(function() {
         }
     }
 
+    // Settings Menu
+    if (window.innerWidth < 1024) {
+        enhanced_SettingsDropContent.style.flexFlow = "row wrap";
+        enhanced_SettingsDropContent.style.bottom = "1rem";
+    } else {
+        enhanced_SettingsDropContent.style.flexFlow = "row";
+        enhanced_SettingsDropContent.style.bottom = "auto";
+    }
+    if (window.innerWidth < 640) {
+        enhanced_SettingsDropContent.style.top = "7.25rem";
+    } else {
+        enhanced_SettingsDropContent.style.top = "4.25rem";
+    }
+
+    // Offline / Invisible Users
+    var enhanced_statusList = document.querySelectorAll(".Y1rZWd.QAAyWd.PuD06d .DfyMcd"); // Offline Users
+    for (var i = 0; i < enhanced_statusList.length; i++) {
+        if (parseInt(localStorage.getItem("enhanced_hideOffline") || 0) == 1) {
+            enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: none !important");
+        } else {
+            enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: flex");
+        }
+    }
+    var enhanced_statusList = document.querySelectorAll(".UxR5ob.m8Kzt"); // Invisible Users
+    for (var i = 0; i < enhanced_statusList.length; i++) {
+        if (enhanced_statusList[i].childElementCount == 1) {
+            if (parseInt(localStorage.getItem("enhanced_hideInvisible") || 0) == 1) {
+                enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: none !important");
+            } else {
+                enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: flex");
+            }
+        }
+    }
+
     // Codec - Set codec preference
     switch (parseInt(localStorage.getItem("enhanced_CodecOption") || 0)) {
         case 0:
@@ -1123,10 +1514,10 @@ setInterval(function() {
 
     if (document.location.href.indexOf("/player/") != -1) {
         if (enhanced_ClockOption == 1 || enhanced_ClockOption == 2) {
+            if (document.querySelector("#enhanced_ClockOverlay") === null && document.querySelector(".bYYDgf") !== undefined) {
+                document.querySelector(".bYYDgf").append(enhanced_ClockOverlay);
+            }
             enhanced_ClockOverlay.style.display = "flex";
-        }
-        if (document.querySelector("#enhanced_ClockOverlay") === null && document.querySelector(".bYYDgf") !== undefined) {
-            document.querySelector(".bYYDgf").append(enhanced_ClockOverlay);
         }
     } else {
         enhanced_ClockOverlay.style.display = "none";
@@ -1148,7 +1539,9 @@ setInterval(function() {
     // Add search buttons on store page
     if (document.location.href.indexOf("/store/details/") != -1) {
         enhanced_GameDescription = document.querySelectorAll(".WjVJKd")[document.querySelectorAll(".WjVJKd").length - 1];
-        enhanced_GameDescription.append(enhanced_StoreContainer);
+        if (enhanced_GameDescription) {
+            enhanced_GameDescription.append(enhanced_StoreContainer);
+        }
     }
 
     // Add avatar option on own profile
@@ -1176,6 +1569,14 @@ setInterval(function() {
         if (enhanced_ProGamesLink.textContentL != "Pro") {
             enhanced_ProGamesLink.textContent = "Pro";
         }
+    }
+
+    // Emoji Picker
+    if (document.querySelector(".IRyDt") && document.querySelector(".IRyDt").contains(enhanced_emojiswitch) === false) {
+        document.querySelector(".IRyDt").append(enhanced_emojiswitch);
+    }
+    if (document.querySelector(".fcUT2e.b2r89e.D9Xvwb") && document.querySelector(".fcUT2e.b2r89e.D9Xvwb").contains(enhanced_emojiPicker) === false) {
+        document.querySelector(".fcUT2e.b2r89e.D9Xvwb").append(enhanced_emojiPicker);
     }
 
     // Visibility: Homescreen-only
@@ -1216,6 +1617,17 @@ function enhanced_addGlobalStyle(css) {
     head.appendChild(style);
 }
 
+function openStadia(url) {
+    var enhanced_urlBase = document.querySelector("head > base").getAttribute("href");
+    var enhanced_urlHL = new URLSearchParams(window.location.search).get('hl');
+    var enhanced_url = new URL(enhanced_urlBase + url);
+    if (enhanced_urlHL !== null) {
+        console.log(enhanced_urlHL);
+        enhanced_url.searchParams.append('hl', enhanced_urlHL);
+    }
+    window.open(enhanced_url, "_self");
+}
+
 function embed(fn, active = true) {
     const script = document.createElement("script");
     if (active === true) {
@@ -1237,7 +1649,7 @@ function formatTime(seconds) {
 // Translation
 function loadLanguages(lang) {
     switch (lang) {
-        case "it": // By zMattyPower (https://github.com/zMattyPower)
+        case "it": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/7 (By zMattyPower)
             var load = `{
                 "default":"Predefinito",
                 "native":"Nativo",
@@ -1271,10 +1683,22 @@ function loadLanguages(lang) {
                 "latency":"Latenza",
                 "jitter":"Buffer Jitter",
                 "compression":"Compressione",
-                "streammon":"Monitor Stream"
+                "streammon":"Monitor Stream",
+                "stream": "Stream",
+                "community": "Comunità",
+                "speedtest": "Speedtest",
+                "quickaccess": "Accesso Veloce",
+                "messages": "Messaggi",
+                "prolabel": "Etichetta Pro",
+                "homegallery": "Galleria Utente",
+                "quickprev": "Anteprima Messaggio",
+                "quickrep": "Risposta Veloce",
+                "offlinefriend": "Amici Offline",
+                "invisiblefriend": "Amici Invisibili",
+                "avatar": "Avatar"
             }`
             break
-        case "sv": // By Mafrans (https://github.com/Mafrans)
+        case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/11 (By Mafrans)
             var load = `{
                 "default":"Standard",
                 "native":"Inbyggd",
@@ -1308,10 +1732,22 @@ function loadLanguages(lang) {
                 "latency":"Latens",
                 "jitter":"Jitter Buffer",
                 "compression":"Kompression",
-                "streammon":"Strömmonitor"
+                "streammon":"Strömmonitor",
+                "stream": "Stream",
+                "community": "Community",
+                "speedtest": "Speedtest",
+                "quickaccess": "Quick Access",
+                "messages": "Messages",
+                "prolabel": "Pro Label",
+                "homegallery": "User Gallery",
+                "quickprev": "Message Preview",
+                "quickrep": "Quick Reply",
+                "offlinefriend": "Offline Friends",
+                "invisiblefriend": "Invisible Friends",
+                "avatar": "Avatar"
             }`
             break
-        case "fr": // By ELowry (https://github.com/ELowry)
+        case "fr": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/8 (By ELowry)
             var load = `{
                 "default":"Par Défaut",
                 "native":"Natif",
@@ -1345,10 +1781,22 @@ function loadLanguages(lang) {
                 "latency":"Latence",
                 "jitter":"Tampon de gigue",
                 "compression":"Compression",
-                "streammon":"Moniteur de Stream"
+                "streammon":"Moniteur de Stream",
+                "stream": "Stream",
+                "community": "Communauté",
+                "speedtest": "Test de Débit",
+                "quickaccess": "Accès Rapide",
+                "messages": "Messages",
+                "prolabel": "Vignette Pro",
+                "homegallery": "Galerie des Captures",
+                "quickprev": "Prévisualisation du Message",
+                "quickrep": "Réponse Rapide",
+                "offlinefriend": "Amis Connectés",
+                "invisiblefriend": "Amis Invisibles",
+                "avatar": "Avatar"
             }`
             break
-        case "nl": // By timewasternl (https://github.com/timewasternl)
+        case "nl": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/9 (By timewasternl)
             var load = `{
                 "default":"Standaard",
                 "native":"Native",
@@ -1382,10 +1830,22 @@ function loadLanguages(lang) {
                 "latency":"Vertraging",
                 "jitter":"Jitter Buffer",
                 "compression":"Compressie",
-                "streammon":"Stream Monitor"
+                "streammon":"Stream Monitor",
+                "stream": "Stream",
+                "community": "Community",
+                "speedtest": "Speedtest",
+                "quickaccess": "Snelle Toegang",
+                "messages": "Berichten",
+                "prolabel": "Pro Label",
+                "homegallery": "Gebruikersgallerij",
+                "quickprev": "Berichten Preview",
+                "quickrep": "Snel Antwoord",
+                "offlinefriend": "Offline Vrienden",
+                "invisiblefriend": "Onzichtbare Vrienden",
+                "avatar": "Avatar"
             }`
             break
-        case "de":
+        case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/13
             var load = `{
                 "default":"Standard",
                 "native":"Nativ",
@@ -1419,7 +1879,19 @@ function loadLanguages(lang) {
                 "latency":"Latency",
                 "jitter":"Jitter-Buffer",
                 "compression":"Komprimierung",
-                "streammon":"Stream Monitor"
+                "streammon":"Stream Monitor",
+                "stream": "Stream",
+                "community": "Community",
+                "speedtest": "Geschwindigkeitstest",
+                "quickaccess": "Schnellzugriff",
+                "messages": "Nachrichten",
+                "prolabel": "Pro Anzeige",
+                "homegallery": "Nutzer Galerie",
+                "quickprev": "Nachrichten Vorschau",
+                "quickrep": "Schnellantwort",
+                "offlinefriend": "Offline Freunde",
+                "invisiblefriend": "Unsichtbare Freunde",
+                "avatar": "Anzeigebild"
             }`
             break
         default:
@@ -1456,7 +1928,19 @@ function loadLanguages(lang) {
                 "latency": "Latency",
                 "jitter": "Jitter Buffer",
                 "compression": "Compression",
-                "streammon": "Stream Monitor"
+                "streammon": "Stream Monitor",
+                "stream": "Stream",
+                "community": "Community",
+                "speedtest": "Speedtest",
+                "quickaccess": "Quick Access",
+                "messages": "Messages",
+                "prolabel": "Pro Label",
+                "homegallery": "User Gallery",
+                "quickprev": "Message Preview",
+                "quickrep": "Quick Reply",
+                "offlinefriend": "Offline Friends",
+                "invisiblefriend": "Invisible Friends",
+                "avatar": "Avatar"
             }`
     }
     return JSON.parse(load);
