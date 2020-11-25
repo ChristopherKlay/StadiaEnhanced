@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 1.6.0
+* New settings menu
+* Added a emoji picker to chats
+* Added the option to show/hide the "Pro" label on games on the homescreen
+* Added the option to show/hide the user media section on the homescreen
+* Added the option to show/hide the "last message" in your friends list
+* Added the option to show/hide the quick reply function
+* Added the option to show/hide offline and/or invisible (online status not shared) friends
+* Added shortcuts for the M-Lab based speedtest and community page
+* Fixed custom avatar not showing in groups and group chats
+* Fixed stream monitor data not loading
+* Fixed overlay clock showing after refreshing a game, without being enabled
+* Fixed language settings via URL parameter (i.e. ?hl=en) being reset
+
 ## Version 1.5.0
 * Added the option to show/hide games on the homescreen
 * Added setting to switch between "Toggle" and "Quick" filtering, or disable filtering
