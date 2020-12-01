@@ -13,6 +13,7 @@ enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
 enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }"); // Wrap menu items
 enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }"); // Less padding on "Pro" labels
+enhanced_addGlobalStyle("#enhanced_wrapper:hover .enhanced_hover, .RjcqTc ~ .enhanced_hover { display: flex !important; }"); // Hover functionality for shortcuts
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -981,6 +982,42 @@ function enhanced_changeFilter(opt) {
     }
 }
 
+// Shortcuts
+var enhanced_shortcutsOption = parseInt(localStorage.getItem("enhanced_shortcutsOption") || 0);
+var enhanced_gameShortcut = document.createElement("div");
+enhanced_gameShortcut.className = "pBvcyf QAAyWd";
+enhanced_gameShortcut.id = "enhanced_gameShortcut";
+enhanced_gameShortcut.style.cursor = "pointer";
+enhanced_gameShortcut.style.userSelect = "none";
+enhanced_gameShortcut.style.paddingRight = "2rem";
+enhanced_gameShortcut.tabIndex = "0";
+enhanced_gameShortcut.addEventListener("click", function() {
+    enhanced_shortcutsOption = (enhanced_shortcutsOption + 1) % 3;
+    localStorage.setItem("enhanced_shortcutsOption", enhanced_shortcutsOption);
+    enhanced_changeShortcuts(enhanced_shortcutsOption);
+});
+enhanced_settingsGeneral.append(enhanced_gameShortcut);
+
+function enhanced_changeShortcuts(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_gameShortcut.style.color = "#00e0ba";
+            enhanced_gameShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb">' + enhanced_lang.shortcutshover + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts Option: Set to 'Hover'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_gameShortcut.style.color = "#00e0ba";
+            enhanced_gameShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb">' + enhanced_lang.shortcutstoggle + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts Option: Set to 'Display'", enhanced_consoleEnhanced, "");
+            break
+        case 2:
+            enhanced_gameShortcut.style.color = "";
+            enhanced_gameShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb">' + enhanced_lang.disabled + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+            break
+    }
+}
+
 // Invite Link
 var enhanced_InviteURL = "https://stadia.com/link/referrals?si_rid=" + enhanced_AccountID + "&si_rt=1";
 var enhanced_Invite = document.createElement("div");
@@ -1296,6 +1333,7 @@ if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > 
 enhanced_changeGridSize(enhanced_GridSize);
 enhanced_changeClock(enhanced_ClockOption);
 enhanced_changeFilter(enhanced_filterOption);
+enhanced_changeShortcuts(enhanced_shortcutsOption);
 enhanced_updateResolution(enhanced_currentRes);
 enhanced_changeCodec(enhanced_currentCodec);
 enhanced_changeMsgPreview(enhanced_messagePreview);
@@ -1310,6 +1348,7 @@ console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date
 var enhanced_loopCount = 0;
 var enhanced_loopTotal = 0;
 var enhanced_sessionStart = 0;
+var enhanced_wrappers = [];
 
 // Main Loop
 setInterval(function() {
@@ -1331,9 +1370,34 @@ setInterval(function() {
         enhanced_sessionStart = 0;
     }
 
-    // Game Filter
+    // Enhanced Wrapper
     var enhanced_gameList = document.querySelectorAll(".GqLi4d");
-    var enhanced_gameID;
+
+    for (var i = 0; i < enhanced_gameList.length; i++) {
+
+        if (enhanced_gameList[i].parentNode.id != "enhanced_wrapper") {
+            // Wrapper Element
+            var enhanced_wrapper = document.createElement("div");
+            enhanced_wrapper.id = "enhanced_wrapper";
+            enhanced_wrapper.style.position = "relative";
+            enhanced_wrapper.style.display = "inherit";
+            enhanced_wrapper.style.gridColumn = "span 6/span 6";
+
+            enhanced_wrappers.push({
+                parent: enhanced_gameList[i].parentNode,
+                id: enhanced_gameList[i].getAttribute( "jslog" ).split( "; " )[1].substring( 3 ),
+                name: enhanced_gameList[i].getAttribute("aria-label").replace(/^(View\s)/i,"").replace(/(( Pro)?.)$/i,""),
+                wrapper: enhanced_wrapper,
+                game: enhanced_gameList[i],
+            });
+
+            enhanced_gameList[i].parentNode.appendChild(enhanced_wrapper);
+            enhanced_wrapper.appendChild(enhanced_gameList[i]);
+        }
+    }
+
+
+    // Game Filter
     var enhanced_gameFilter = localStorage.getItem("enhanced_gameFilter") || "";
 
     // Add "Show All" UI element
@@ -1351,17 +1415,10 @@ setInterval(function() {
         enhanced_showAll.style.display = "flex";
     }
 
-    for (var i = 0; i < enhanced_gameList.length; i++) {
-        enhanced_gameID = enhanced_gameList[i].getAttribute("jslog").split("; ")[1].substring(3);
-
-        if (enhanced_gameList[i].parentNode.id != "enhanced_wrapper") {
-            // Wrapper Element
-            var enhanced_wrapper = document.createElement("div");
-            enhanced_wrapper.id = "enhanced_wrapper";
-            enhanced_wrapper.style.display = "inherit";
-            enhanced_wrapper.style.gridColumn = "span 6/span 6";
-
-            // Visibility
+    for (var i = 0; i < enhanced_wrappers.length; i++) {
+        
+        if (!enhanced_wrappers[i].hasOwnProperty("visibility")) {
+        // Visibility
             var enhanced_visibility = document.createElement("div");
             enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
             enhanced_visibility.style.position = "absolute";
@@ -1371,7 +1428,7 @@ setInterval(function() {
             enhanced_visibility.style.padding = "0.2rem";
             enhanced_visibility.style.cursor = "pointer";
             enhanced_visibility.style.zIndex = "20";
-            enhanced_visibility.gameid = enhanced_gameID;
+            enhanced_visibility.gameid = enhanced_wrappers[i].id;
             enhanced_visibility.addEventListener("click", function() {
                 //alert(this.gameid);
                 if (enhanced_gameFilter.includes(this.gameid)) {
@@ -1384,32 +1441,74 @@ setInterval(function() {
                     this.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
                 }
             });
-            enhanced_wrapper.appendChild(enhanced_visibility);
-
-            enhanced_gameList[i].parentNode.appendChild(enhanced_wrapper);
-            enhanced_wrapper.appendChild(enhanced_gameList[i]);
+            enhanced_wrappers[i].wrapper.appendChild(enhanced_visibility);
+            enhanced_wrappers[i].visibility = enhanced_visibility;
         }
 
         // Apply filter option
         if (enhanced_filterOption != 1 && enhanced_showState === false) {
-            enhanced_gameList[i].previousSibling.style.display = "none";
+            enhanced_wrappers[i].visibility.style.display = "none";
         } else {
-            enhanced_gameList[i].previousSibling.style.display = "flex";
+            enhanced_wrappers[i].visibility.style.display = "flex";
         }
 
         // Set brightness of filtered items
-        if (enhanced_gameFilter.includes(enhanced_gameID) && enhanced_filterOption != 2) {
-            enhanced_gameList[i].parentNode.style.filter = "brightness(40%)";
+        if (enhanced_gameFilter.includes(enhanced_wrappers[i].id) && enhanced_filterOption != 2) {
+            enhanced_wrappers[i].game.style.filter = "brightness(40%)";
         } else {
-            enhanced_gameList[i].parentNode.style.filter = "none";
+            enhanced_wrappers[i].game.style.filter = "none";
         }
 
         // Filter items
-        if (enhanced_gameFilter.includes(enhanced_gameID) && enhanced_showState === false && enhanced_filterOption != 2) {
-            enhanced_gameList[i].parentNode.style.display = "none";
-            enhanced_gameList[i].previousSibling.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
+        if (enhanced_gameFilter.includes(enhanced_wrappers[i].id) && enhanced_showState === false && enhanced_filterOption != 2) {
+            enhanced_wrappers[i].wrapper.style.display = "none";
+            enhanced_wrappers[i].visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
         } else {
-            enhanced_gameList[i].parentNode.style.display = "inherit";
+            enhanced_wrappers[i].wrapper.style.display = "inherit";
+        }
+    }
+
+    // Game Shortcuts
+    for (var i = 0; i < enhanced_wrappers.length; i++) {
+        
+        if (!enhanced_wrappers[i].hasOwnProperty("shortcut")) {
+        // Shortcut
+        var enhanced_shortcut = document.createElement("div");
+            enhanced_shortcut.innerHTML = '<i class="material-icons-extended" aria-hidden="true">get_app</i>';
+            enhanced_shortcut.title = "Install a Shortcut for " + enhanced_wrappers[i].name;
+            enhanced_shortcut.style.position = "absolute";
+            enhanced_shortcut.style.right = "0";
+            enhanced_shortcut.style.margin = "0.2rem";
+            enhanced_shortcut.style.background = "#202124";
+            enhanced_shortcut.style.borderRadius = "50%";
+            enhanced_shortcut.style.padding = "0.2rem";
+            enhanced_shortcut.style.cursor = "pointer";
+            enhanced_shortcut.style.zIndex = "20";
+            enhanced_shortcut.gameid = enhanced_wrappers[i].id;
+            enhanced_shortcut.name = enhanced_wrappers[i].name;
+            enhanced_shortcut.addEventListener("click", function() {
+                if (enhanced_shortcutsOption != 2) {
+                    window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent( this.name ), "_blank");
+                }
+            });
+            enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
+            enhanced_wrappers[i].shortcut = enhanced_shortcut;
+        }
+
+        // Apply shortcuts option
+        if (enhanced_shortcutsOption == 1) {
+            enhanced_wrappers[i].shortcut.style.display = "flex";
+        } else
+        {
+            enhanced_wrappers[i].shortcut.style.display = "none";
+        }
+
+        // Apply hover class
+        if (enhanced_shortcutsOption == 0) {
+            enhanced_wrappers[i].shortcut.classList.add("enhanced_hover");
+        }
+        else {
+            enhanced_wrappers[i].shortcut.classList.remove("enhanced_hover");
         }
     }
 
@@ -1666,6 +1765,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Lista & Overlay",
                 "filtertoggle":"Attiva Filtro",
                 "filterquick":"Filtro Rapido",
+                "shortcutshover":"Autohide Shortcut Buttons",
+                "shortcutstoggle":"Shortcut Buttons",
                 "invitebase":"Copia link invito",
                 "inviteactive":"Copiato!",
                 "searchbtnbase":"Cerca su",
@@ -1715,6 +1816,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Lista & Överlägg",
                 "filtertoggle":"Växla Filter",
                 "filterquick":"Snabbfilter",
+                "shortcutshover":"Autohide Shortcut Buttons",
+                "shortcutstoggle":"Shortcut Buttons",
                 "invitebase":"Kopiera inbjudningslänk",
                 "inviteactive":"Kopierat!",
                 "searchbtnbase":"Sök på",
@@ -1764,6 +1867,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Liste & Overlay",
                 "filtertoggle":"Activer/Désactiver le Filtrage",
                 "filterquick":"Filtrage Rapide",
+                "shortcutshover":"Boutons Discrèts pour Créer des Raccourcis",
+                "shortcutstoggle":"Bontons pour Créer des Raccourcis",
                 "invitebase":"Copier le lien d'Invitation",
                 "inviteactive":"Copié&nbps;!",
                 "searchbtnbase":"Rechercher sur",
@@ -1813,6 +1918,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Lijst & Overlay",
                 "filtertoggle":"Filter In-/Uitschakelen",
                 "filterquick":"Snel Filter",
+                "shortcutshover":"Autohide Shortcut Buttons",
+                "shortcutstoggle":"Shortcut Buttons",
                 "invitebase":"Kopieer Uitnodigingslink",
                 "inviteactive":"Gekopiëerd!",
                 "searchbtnbase":"Zoeken op",
@@ -1862,6 +1969,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Liste & Einblendung",
                 "filtertoggle":"Wechselfilter",
                 "filterquick":"Schnellfilter",
+                "shortcutshover":"Autohide Shortcut Buttons",
+                "shortcutstoggle":"Shortcut Buttons",
                 "invitebase":"Einladung kopieren",
                 "inviteactive":"Kopiert!",
                 "searchbtnbase":"Suche auf",
@@ -1911,6 +2020,8 @@ function loadLanguages(lang) {
                 "listoverlay": "List & Overlay",
                 "filtertoggle": "Toggle Filter",
                 "filterquick": "Quick Filter",
+                "shortcutshover":"Autohide Shortcut Buttons",
+                "shortcutstoggle":"Shortcut Buttons",
                 "invitebase": "Copy invite link",
                 "inviteactive": "Copied!",
                 "searchbtnbase": "Search on",
