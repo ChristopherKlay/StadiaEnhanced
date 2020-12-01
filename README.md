@@ -1,6 +1,6 @@
 # Stadia Enhanced
 
-![](https://preview.redd.it/bpji6yau3jq51.png?width=1280&format=png&auto=webp&s=25b00a2e868a6a81c5fa7e1c3e06ab48c1a2eb07)
+![](https://i.imgur.com/aFbkaTI.png)
 
 ## Features
 
@@ -19,10 +19,11 @@
 * Install the extension from the official chrome web store [here](https://chrome.google.com/webstore/detail/stadia-enhanced/ldeakaihfnkjmelifgmbmjlphdfncbfg).
 
 ## Translation
-If the project isn't available in your own language, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
+If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
 
 ## More screenshots
 
-![](https://preview.redd.it/ht18tjfk5jq51.png?width=1280&format=png&auto=webp&s=9c6911a75a6152b8ac7ecc13d5c1beceecff1ce4)
-![](https://preview.redd.it/z8gwcs2l5jq51.png?width=1280&format=png&auto=webp&s=e37485f0a7ae7d811aeb9f0c535717dcb5206742)
-![](https://preview.redd.it/c77sb16m5jq51.png?width=1280&format=png&auto=webp&s=384ddd8192a083139b509096aa7aeb0a4c322c67)
+![](https://i.imgur.com/0ZvmaDD.png)
+![](https://i.imgur.com/qD7nYGN.png)
+![](https://i.imgur.com/YFcRlxe.png)
+![](https://i.imgur.com/JcKLUZ7.png)
