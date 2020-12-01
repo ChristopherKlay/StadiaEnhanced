@@ -31,6 +31,7 @@ The left side of the following code are variables used to define specific text e
 |searchbtnbase|Used for "Search on" YouTube/Metacritic buttons on game pages
 |avatarpopup|The text displayed when setting a custom avatar
 |searchheader|Used for "Games including 'searchterm'" when searching the store
+|shortcutshover/toggle|Option descriptions to show shortcuts via hovering or permanently
 
 ## Current Template
 
