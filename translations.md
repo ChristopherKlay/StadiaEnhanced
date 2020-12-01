@@ -52,6 +52,8 @@ The left side of the following code are variables used to define specific text e
     "listoverlay":"List & Overlay",
     "filtertoggle":"Toggle Filter",
     "filterquick":"Quick Filter",
+    "shortcutshover":"Autohide Shortcut Buttons",
+    "shortcutstoggle":"Shortcut Buttons",
     "invitebase":"Copy invite link",
     "inviteactive":"Copied!",
     "searchbtnbase":"Search on",
