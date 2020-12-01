@@ -1485,9 +1485,10 @@ setInterval(function() {
             enhanced_shortcut.style.cursor = "pointer";
             enhanced_shortcut.style.zIndex = "20";
             enhanced_shortcut.gameid = enhanced_wrappers[i].id;
+            enhanced_shortcut.name = enhanced_wrappers[i].name;
             enhanced_shortcut.addEventListener("click", function() {
                 if (enhanced_shortcutsOption != 2) {
-                    window.open("https://stadiaicons.web.app/" + enhanced_wrappers[i].id + "/?fullName=" + encodeURIComponent( enhanced_wrappers[i].name ), "_blank");
+                    window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent( this.name ), "_blank");
                 }
             });
             enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
