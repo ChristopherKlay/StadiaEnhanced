@@ -83,4 +83,6 @@ The left side of the following code are variables used to define specific text e
     "quickrep": "Quick Reply",
     "offlinefriend": "Offline Friends",
     "invisiblefriend": "Invisible Friends",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "streammode": "Streaming Mode",
+    "interface": "Interface"
