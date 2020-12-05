@@ -2,7 +2,7 @@
 
 ## Version 1.7.0
 * Added shortcut integration by ELowry
-* Aded support for a minified streaming monitor (switch via doubleclick)
+* Added support for a minified streaming monitor (switch via doubleclick)
 * Added the option to personalize (via dragging) the position of the stream monitor
 * Added a stream mode (renders certain elements unreadable for privacy during streams)
 * Changed the "On Sale" linked category to load the "Featured deals" section
