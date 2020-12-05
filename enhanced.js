@@ -12,6 +12,7 @@ enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }")
 enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
 enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
 enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }"); // Wrap menu items
+enhanced_addGlobalStyle(".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }"); // Adjust menu height
 enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }"); // Less padding on "Pro" labels
 enhanced_addGlobalStyle("#enhanced_wrapper:hover .enhanced_hover, .RjcqTc ~ .enhanced_hover { display: flex !important; }"); // Hover functionality for shortcuts
 
@@ -23,23 +24,7 @@ function enhanced_RTCMonitor() {
     var enhanced_local = document.querySelector("html").getAttribute("lang");
     var enhanced_lang = loadLanguages(enhanced_local);
 
-    function formatBytes(a, b) {
-        if (0 == a) return "0 Bytes";
-        var c = 1024,
-            d = b || 2,
-            e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
-            f = Math.floor(Math.log(a) / Math.log(c));
-        return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
-    }
-
-    function formatTime(seconds) {
-        var hours = Math.floor(seconds / 3600);
-        seconds -= hours * 3600;
-        var minutes = Math.floor(seconds / 60);
-        seconds -= minutes * 60;
-        return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
-    }
-
+    // RTC Stream Inject
     var peerConnections = [];
 
     (function(original) {
@@ -51,93 +36,96 @@ function enhanced_RTCMonitor() {
         RTCPeerConnection.prototype = original.prototype;
     })(RTCPeerConnection);
 
-    var enhanced_StreamMonitor = document.createElement("div");
-    enhanced_StreamMonitor.id = "enhanced_StreamMonitor";
-    enhanced_StreamMonitor.innerHTML = "Stadia Enhanced";
-    enhanced_StreamMonitor.style.position = "fixed";
-    enhanced_StreamMonitor.style.width = "auto";
-    enhanced_StreamMonitor.style.zIndex = 1000;
-    enhanced_StreamMonitor.style.borderRadius = "1rem";
-    enhanced_StreamMonitor.style.background = "linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%)";
-    enhanced_StreamMonitor.style.padding = "0.5rem";
-    enhanced_StreamMonitor.style.fontSize = "0.8rem";
-    enhanced_StreamMonitor.style.display = "none";
-    document.body.appendChild(enhanced_StreamMonitor);
+    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor: Successfully injected.", enhanced_consoleEnhanced, "");
+
+    // Stream Monitor
+    var enhanced_streamMonitor = document.createElement("div");
+    enhanced_streamMonitor.id = "enhanced_streamMonitor";
+    enhanced_streamMonitor.style.position = "fixed";
+    enhanced_streamMonitor.style.width = "auto";
+    enhanced_streamMonitor.style.zIndex = 1000;
+    enhanced_streamMonitor.style.borderRadius = "0.5rem";
+    enhanced_streamMonitor.style.background = "rgba(32,33,36,0.7)";
+    enhanced_streamMonitor.style.padding = "0.5rem";
+    enhanced_streamMonitor.style.fontSize = "0.8rem";
+    enhanced_streamMonitor.style.cursor = "pointer";
+    enhanced_streamMonitor.style.display = "none";
+    enhanced_streamMonitor.addEventListener("dblclick", function() {
+        enhanced_monitorMode = (enhanced_monitorMode + 1) % 2;
+        localStorage.setItem("enhanced_monitorMode", enhanced_monitorMode);
+    });
+
+    document.body.appendChild(enhanced_streamMonitor);
+    enhanced_dragElement(enhanced_streamMonitor);
+
+    var enhanced_lastTime = new Date();
+    var enhanced_lastBytes = 0;
+    var enhanced_lastFrames = 0;
+    var enhanced_lastFramesDecoded = 0;
+    var enhanced_lastBufferDelay = 0;
+    var enhanced_lastBufferEmitted = 0;
+    var enhanced_lastQpSum = 0;
+    var enhanced_sessionStart;
+    var enhanced_sessionActive = false;
+    var enhanced_monitorState = 0;
+    var enhanced_monitorMode = localStorage.getItem("enhanced_monitorMode") || 0;
+    enhanced_updateMonitor(0)
+    localStorage.setItem("enhanced_monitorOption", enhanced_monitorState)
+    localStorage.setItem("enhanced_monitorState", 0)
 
     function enhanced_updateMonitor(opt) {
         switch (opt) {
             case 0:
-                enhanced_StreamMonitor.style.display = "none";
+                enhanced_streamMonitor.style.display = "none";
                 break
             case 1:
-                enhanced_StreamMonitor.style.top = "1rem";
-                enhanced_StreamMonitor.style.right = "";
-                enhanced_StreamMonitor.style.bottom = "";
-                enhanced_StreamMonitor.style.left = "1rem";
-                enhanced_StreamMonitor.style.display = "block";
-                break;
-            case 2:
-                enhanced_StreamMonitor.style.top = "1rem";
-                enhanced_StreamMonitor.style.right = "1rem";
-                enhanced_StreamMonitor.style.bottom = "";
-                enhanced_StreamMonitor.style.left = "";
-                enhanced_StreamMonitor.style.display = "block";
-                break;
-            case 3:
-                enhanced_StreamMonitor.style.top = "";
-                enhanced_StreamMonitor.style.right = "1rem";
-                enhanced_StreamMonitor.style.bottom = "1rem";
-                enhanced_StreamMonitor.style.left = "";
-                enhanced_StreamMonitor.style.display = "block";
-                break;
-            case 4:
-                enhanced_StreamMonitor.style.top = "";
-                enhanced_StreamMonitor.style.right = "";
-                enhanced_StreamMonitor.style.bottom = "1rem";
-                enhanced_StreamMonitor.style.left = "1rem";
-                enhanced_StreamMonitor.style.display = "block";
+                enhanced_streamMonitor.style.top = localStorage.getItem("enhanced_monitorPosition").split("|")[0] || "1rem"
+                enhanced_streamMonitor.style.left = localStorage.getItem("enhanced_monitorPosition").split("|")[1] || "1rem"
+                enhanced_streamMonitor.style.right = "";
+                enhanced_streamMonitor.style.bottom = "";
+                enhanced_streamMonitor.style.display = "block";
                 break;
         }
     }
 
-    var lastTime = new Date();
-    var lastBytes = 0;
-    var lastFrames = 0;
-    var lastFramesDecoded = 0;
-    var lastBufferDelay = 0;
-    var lastBufferEmitted = 0;
-    var lastQpSum = 0;
-    var sessionStart;
-    var active = false;
+    function enhanced_formatBytes(a, b) {
+        if (0 == a) return "0 Bytes";
+        var c = 1024,
+            d = b || 2,
+            e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+            f = Math.floor(Math.log(a) / Math.log(c));
+        return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
+    }
 
-    enhanced_updateMonitor(0)
-    var enhanced_MonitorState = 0;
-    localStorage.setItem("enhanced_MonitorOption", enhanced_MonitorState)
-    localStorage.setItem("enhanced_MonitorState", 0)
-
-    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor: Successfully injected.", enhanced_consoleEnhanced, "");
+    function enhanced_formatTime(seconds) {
+        var hours = Math.floor(seconds / 3600);
+        seconds -= hours * 3600;
+        var minutes = Math.floor(seconds / 60);
+        seconds -= minutes * 60;
+        return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
+    }
 
     setInterval(function() {
-        var enhanced_MonitorOption = parseInt(localStorage.getItem("enhanced_MonitorOption") || 0);
-        if (enhanced_MonitorOption != enhanced_MonitorState) {
-            enhanced_MonitorState = enhanced_MonitorOption;
-            localStorage.setItem("enhanced_MonitorOption", enhanced_MonitorState)
-            enhanced_updateMonitor(enhanced_MonitorState)
+        var enhanced_monitorOption = parseInt(localStorage.getItem("enhanced_monitorOption") || 0);
+        if (enhanced_monitorOption != enhanced_monitorState) {
+            enhanced_monitorState = enhanced_monitorOption;
+            localStorage.setItem("enhanced_monitorOption", enhanced_monitorState)
+            enhanced_updateMonitor(enhanced_monitorState)
         }
 
         if (document.location.href.indexOf("/player/") == -1) {
             peerConnections = [];
-            lastBytes = 0;
-            lastFrames = 0;
-            active = false;
-            enhanced_StreamMonitor.innerHTML = "Waiting for game detection.";
-            localStorage.setItem("enhanced_MonitorState", 0);
-            localStorage.setItem("enhanced_MonitorOption", 0);
+            enhanced_lastBytes = 0;
+            enhanced_lastFrames = 0;
+            enhanced_sessionActive = false;
+            enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
+            localStorage.setItem("enhanced_monitorState", 0);
+            localStorage.setItem("enhanced_monitorOption", 0);
         } else if (peerConnections.length >= 3) {
-            if (!active) {
-                sessionStart = new Date();
-                active = true;
-                localStorage.setItem("enhanced_MonitorState", 1);
+            if (!enhanced_sessionActive) {
+                enhanced_sessionStart = new Date();
+                enhanced_sessionActive = true;
+                localStorage.setItem("enhanced_monitorState", 1);
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
             openConnections[1].getStats().then(function(stats) {
@@ -148,6 +136,7 @@ function enhanced_RTCMonitor() {
                     if (key.indexOf("RTCInboundRTPVideoStream") != -1) {
                         var tmp1 = stats.get(key);
                         var tmp2 = stats.get(tmp1.trackId);
+                        enhanced_streamMonitor.innerHTML = "Loading stream data.";
 
                         openConnections[1].getStats(function(stats) {
                             var tmp3 = stats.result().find(function(f) {
@@ -155,17 +144,17 @@ function enhanced_RTCMonitor() {
                             });
 
                             var time = new Date();
-                            var timeSinceUpdate = (time - lastTime) / 1000;
-                            lastTime = time;
-                            var sessionDuration = (time - sessionStart) / 1000;
+                            var timeSinceUpdate = (time - enhanced_lastTime) / 1000;
+                            enhanced_lastTime = time;
+                            var sessionDuration = (time - enhanced_sessionStart) / 1000;
                             time = new Date(time - time.getTimezoneOffset() * 60 * 1000).toISOString().replace("T", " ").split(".")[0];
                             var resolution = tmp2.frameWidth + "x" + tmp2.frameHeight;
                             var framesReceived = tmp2.framesReceived;
-                            var framesReceivedPerSecond = (framesReceived - lastFrames) / timeSinceUpdate;
+                            var framesReceivedPerSecond = (framesReceived - enhanced_lastFrames) / timeSinceUpdate;
                             var framesDecoded = tmp2.framesDecoded;
                             var codec = tmp3.stat("googCodecName");
                             var bytesReceived = tmp1.bytesReceived;
-                            var bytesReceivedPerSecond = (bytesReceived - lastBytes) / timeSinceUpdate;
+                            var bytesReceivedPerSecond = (bytesReceived - enhanced_lastBytes) / timeSinceUpdate;
                             var averageData = ((((bytesReceived / sessionDuration) * 3600) / 1024) / 1024) / 1024;
                             var packetsLost = tmp1.packetsLost;
                             var packetsReceived = tmp1.packetsReceived;
@@ -179,60 +168,46 @@ function enhanced_RTCMonitor() {
                             var jitterBuffer = jitterBufferDelay / jitterBufferEmittedCount;
 
                             if (codec == "VP9") {
-                                var compression = (tmp1.qpSum - lastQpSum) / (framesDecoded - lastFramesDecoded);
+                                var compression = (tmp1.qpSum - enhanced_lastQpSum) / (framesDecoded - enhanced_lastFramesDecoded);
                             }
 
-                            lastFrames = framesReceived;
-                            lastFramesDecoded = framesDecoded;
-                            lastBytes = bytesReceived;
-                            lastBufferDelay = jitterBufferDelay;
-                            lastBufferEmitted = jitterBufferEmittedCount;
-                            lastQpSum = tmp1.qpSum;
+                            enhanced_lastFrames = framesReceived;
+                            enhanced_lastFramesDecoded = framesDecoded;
+                            enhanced_lastBytes = bytesReceived;
+                            enhanced_lastBufferDelay = jitterBufferDelay;
+                            enhanced_lastBufferEmitted = jitterBufferEmittedCount;
+                            enhanced_lastQpSum = tmp1.qpSum;
 
                             if (framesReceived > 0) {
-                                var html = "";
-
-                                html += '<svg height="40" width="220" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg>'
-
-                                html += "<center><b>" + time + "</b><br/>" + enhanced_lang.sessiontime + ": " + formatTime(sessionDuration) + "</center>";
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.resolution + ":</b> " + resolution;
-                                html += "<br/>";
-
-                                html += "<b>FPS:</b> " + framesReceivedPerSecond.toFixed(1);
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.codec + ":</b> " + codec;
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.trafficsession + ":</b> " + formatBytes(bytesReceived, 2);
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.trafficcurrent + ":</b> " + formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + "b/s";
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.trafficaverage + ":</b> " + averageData.toFixed(2) + " GB/h";
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.packetloss + ":</b> " + packetsLost + " (" + ((packetsLost / packetsReceived) * 100).toFixed(3) + "%)";
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.framedrop + ":</b> " + framesDropped + " (" + ((framesDropped / framesReceived) * 100).toFixed(3) + "%)";
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.latency + ":</b> " + latency + "ms";
-                                html += "<br/>";
-
-                                html += "<b>" + enhanced_lang.jitter + ":</b> " + jitterBuffer.toPrecision(4) + "ms";
-                                html += "<br/>";
-
-                                if (codec == "VP9") {
-                                    html += "<b>" + enhanced_lang.compression + ":</b> " + compression.toFixed(1);
-                                    html += "<br/>";
+                                switch (enhanced_monitorMode) {
+                                    case 0:
+                                        var enhanced_streamData = "";
+                                        enhanced_streamData += '<svg height="40" width="220" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg>'
+                                        enhanced_streamData += "<center><b>" + time + "</b><br/>" + enhanced_lang.sessiontime + ": " + enhanced_formatTime(sessionDuration) + "</center><br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.resolution + ":</b> " + resolution + "<br/>";
+                                        enhanced_streamData += "<b>FPS:</b> " + framesReceivedPerSecond.toFixed(1) + "<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.codec + ":</b> " + codec + "<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.trafficsession + ":</b> " + enhanced_formatBytes(bytesReceived, 2) + "<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.trafficcurrent + ":</b> " + enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + "b/s<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.trafficaverage + ":</b> " + averageData.toFixed(2) + " GB/h<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.packetloss + ":</b> " + packetsLost + " (" + ((packetsLost / packetsReceived) * 100).toFixed(3) + "%)<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b> " + framesDropped + " (" + ((framesDropped / framesReceived) * 100).toFixed(3) + "%)<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b> " + latency + "ms<br/>";
+                                        enhanced_streamData += "<b>" + enhanced_lang.jitter + ":</b> " + jitterBuffer.toPrecision(4) + "ms<br/>";
+                                        if (codec == "VP9") {
+                                            enhanced_streamData += "<b>" + enhanced_lang.compression + ":</b> " + compression.toFixed(1);
+                                            enhanced_streamData += "<br/>";
+                                        }
+                                        break
+                                    case 1:
+                                        var enhanced_streamData = codec + " | " + resolution + " | " + framesReceivedPerSecond.toFixed(1) + "fps | " + latency + "ms"
+                                        break
                                 }
+                                enhanced_streamMonitor.innerHTML = enhanced_streamData;
 
-                                enhanced_StreamMonitor.innerHTML = html;
+                                if (enhanced_monitorState == 1) {
+                                    localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
+                                }
                             }
                         });
                     }
@@ -243,6 +218,7 @@ function enhanced_RTCMonitor() {
     }, 1000);
 };
 embed(loadLanguages, false);
+embed(enhanced_dragElement, false);
 embed(enhanced_RTCMonitor);
 
 var enhanced_Monitor = document.createElement("div");
@@ -253,7 +229,7 @@ enhanced_Monitor.style.cursor = "pointer";
 enhanced_Monitor.style.userSelect = "none";
 enhanced_Monitor.tabIndex = "0";
 enhanced_Monitor.addEventListener("click", function() {
-    localStorage.setItem("enhanced_MonitorOption", (parseInt(localStorage.getItem("enhanced_MonitorOption") || 0) + 1) % 5)
+    localStorage.setItem("enhanced_monitorOption", (parseInt(localStorage.getItem("enhanced_monitorOption") || 0) + 1) % 2)
 });
 
 // Windowed Mode
@@ -391,19 +367,18 @@ enhanced_ClockOverlay.addEventListener("click", function() {
 
 // Pro Games - Adds a quick access to the current list of "Pro" titles on Stadia
 var enhanced_ProGames = document.createElement("li");
-enhanced_ProGames.className = "qVcdD";
+enhanced_ProGames.className = "OfFb0b";
 enhanced_ProGames.id = "enhanced_ProGames";
 var enhanced_ProGamesLink = document.createElement("a");
 enhanced_ProGames.appendChild(enhanced_ProGamesLink);
-//enhanced_ProGamesLink.setAttribute('href', document.querySelector("head > base").getAttribute("href") + "store/list/2001");
-enhanced_ProGamesLink.className = "L4d3Ob QAAyWd wJYinb";
+enhanced_ProGamesLink.className = "ROpnrd QAAyWd wJYinb";
 enhanced_ProGamesLink.textContent = 'Pro';
 enhanced_ProGamesLink.addEventListener("click", function() {
     openStadia("store/list/2001")
 });
 
-if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
-    document.querySelectorAll(".eMobNd")[0].append(enhanced_ProGames);
+if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
+    document.querySelectorAll(".ZECEje")[0].append(enhanced_ProGames);
 }
 
 /*
@@ -439,11 +414,11 @@ if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
 
 // Store Search - Adds a search bar to the Stadia store
 var enhanced_SearchBox = document.createElement("li");
-enhanced_SearchBox.className = "qVcdD";
+enhanced_SearchBox.className = "OfFb0b";
 enhanced_SearchBox.id = "enhanced_ProGames";
 var enhanced_StoreSearch = document.createElement("input");
 enhanced_SearchBox.appendChild(enhanced_StoreSearch);
-enhanced_StoreSearch.className = "L4d3Ob QAAyWd wJYinb";
+enhanced_StoreSearch.className = "ROpnrd QAAyWd wJYinb";
 enhanced_StoreSearch.id = "enhanced_StoreSearch";
 enhanced_StoreSearch.placeholder = enhanced_lang.searchstore;
 enhanced_StoreSearch.style.border = "none";
@@ -456,17 +431,17 @@ enhanced_StoreSearch.addEventListener("keypress", function() {
         openStadia("store/list/3?search=" + enhanced_StoreSearch.value);
     }
 });
-if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
-    document.querySelectorAll(".eMobNd")[0].append(enhanced_SearchBox);
+if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
+    document.querySelectorAll(".ZECEje")[0].append(enhanced_SearchBox);
 }
 
 // Store Dropdown - Adds a dropdown menu for quick access
 var enhanced_StoreContainer = document.createElement("li");
-enhanced_StoreContainer.className = "qVcdD";
+enhanced_StoreContainer.className = "OfFb0b";
 enhanced_StoreContainer.id = "enhanced_StoreContainer";
 var enhanced_StoreDropdown = document.createElement("div");
 enhanced_StoreContainer.appendChild(enhanced_StoreDropdown);
-enhanced_StoreDropdown.className = "L4d3Ob QAAyWd wJYinb";
+enhanced_StoreDropdown.className = "ROpnrd QAAyWd wJYinb";
 enhanced_StoreDropdown.id = "enhanced_StoreDropdown";
 enhanced_StoreDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
 enhanced_StoreDropdown.style.width = "2.5rem";
@@ -481,6 +456,9 @@ enhanced_StoreDropdown.addEventListener("click", function() {
         enhanced_StoreDropContent.style.display = "none";
     }
 });
+if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
+    document.querySelectorAll(".ZECEje")[0].append(enhanced_StoreContainer);
+}
 
 enhanced_StoreDropdown.addEventListener("keyup", function(e) {
     if (e.keyCode === 13) {
@@ -519,7 +497,7 @@ enhanced_OnSale.style.userSelect = "none";
 enhanced_OnSale.style.paddingRight = "2rem";
 enhanced_OnSale.tabIndex = "0";
 enhanced_OnSale.addEventListener("click", function() {
-    openStadia("store/list/14");
+    openStadia("store/list/35");
 });
 enhanced_StoreDropContent.append(enhanced_OnSale);
 
@@ -553,11 +531,11 @@ enhanced_StoreDropContent.append(enhanced_AllGames);
 
 // Settings Dropdown - Adds a dropdown menu for quick access
 var enhanced_SettingsContainer = document.createElement("li");
-enhanced_SettingsContainer.className = "qVcdD";
+enhanced_SettingsContainer.className = "OfFb0b";
 enhanced_SettingsContainer.id = "enhanced_SettingsContainer";
 var enhanced_SettingsDropdown = document.createElement("div");
 enhanced_SettingsContainer.appendChild(enhanced_SettingsDropdown);
-enhanced_SettingsDropdown.className = "L4d3Ob QAAyWd wJYinb";
+enhanced_SettingsDropdown.className = "ROpnrd QAAyWd wJYinb";
 enhanced_SettingsDropdown.id = "enhanced_SettingsDropdown";
 enhanced_SettingsDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
 enhanced_SettingsDropdown.style.cursor = "pointer";
@@ -567,7 +545,7 @@ enhanced_SettingsDropdown.style.userSelect = "none";
 enhanced_SettingsDropdown.tabIndex = "0";
 enhanced_SettingsDropdown.addEventListener("click", function(e) {
     if (document.querySelector(".X1asv.ahEBEd.LJni0").style.opacity == "1") {
-        document.querySelector(".aiUOwf.QAAyWd.wJYinb").click();
+        document.querySelector(".hBNsYe.QAAyWd.wJYinb.YySNWc").click();
     }
     if (enhanced_SettingsDropContent.contains(e.target) === false && e.target.classList.contains("mJVLwb") === false) {
         if (enhanced_SettingsDropContent.style.display === "none") {
@@ -601,8 +579,8 @@ enhanced_SettingsDropContent.style.display = "none";
 enhanced_SettingsDropContent.style.borderRadius = "0.5rem";
 enhanced_SettingsDropContent.style.overflowY = "auto";
 enhanced_SettingsDropContent.style.overflowX = "hidden";
-if (document.querySelectorAll(".eMobNd")[1] !== undefined) {
-    document.querySelectorAll(".eMobNd")[1].prepend(enhanced_SettingsContainer);
+if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
+    document.querySelectorAll(".ZECEje")[1].prepend(enhanced_SettingsContainer);
 }
 enhanced_addGlobalStyle("#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }");
 enhanced_addGlobalStyle("#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }");
@@ -617,7 +595,7 @@ enhanced_SettingsDropContent.appendChild(enhanced_settingsGeneral);
 var enhanced_settingsGeneralTitle = document.createElement("div");
 enhanced_settingsGeneralTitle.className = "pBvcyf QAAyWd";
 enhanced_settingsGeneralTitle.id = "enhanced_settingsGeneralHead";
-enhanced_settingsGeneralTitle.innerHTML = '<span class="mJVLwb">Stadia</span>';
+enhanced_settingsGeneralTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.interface + '</span>';
 enhanced_settingsGeneralTitle.style.userSelect = "none";
 enhanced_settingsGeneralTitle.style.background = "#202124";
 enhanced_settingsGeneralTitle.style.textAlign = "center";
@@ -728,7 +706,7 @@ enhanced_Codec.id = "enhanced_Codec";
 enhanced_Codec.style.cursor = "pointer";
 enhanced_Codec.style.userSelect = "none";
 enhanced_Codec.style.paddingRight = "2rem";
-enhanced_UserMedia.tabIndex = "0";
+enhanced_Codec.tabIndex = "0";
 enhanced_Codec.addEventListener("click", function() {
     enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
     localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
@@ -782,28 +760,24 @@ enhanced_settingsStream.append(enhanced_Resolution);
 function enhanced_updateResolution(res) {
     switch (res) {
         case 0:
-            enhanced_Resolution.style.color = "white";
+            enhanced_Resolution.style.color = "";
             enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb">' + enhanced_lang.native + '</span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to 'Native'.", enhanced_consoleEnhanced, "");
             break
         case 1:
-            var x = 2560
-            var y = 1440
             enhanced_currentCodec = 1;
             localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
             enhanced_changeCodec(enhanced_currentCodec)
             enhanced_Resolution.style.color = "#00e0ba";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb">2K</span>';
+            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">2k</i><span class="mJVLwb">1440p</span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '2560x1440'.", enhanced_consoleEnhanced, "");
             break
         case 2:
-            var x = 3840
-            var y = 2160
             enhanced_currentCodec = 1;
             localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
             enhanced_changeCodec(enhanced_currentCodec)
             enhanced_Resolution.style.color = "#00e0ba";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb">4K</span>';
+            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">4k</i><span class="mJVLwb">2160p</span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '3840x2160'.", enhanced_consoleEnhanced, "");
             break
     }
@@ -818,8 +792,8 @@ function enhanced_changeResolution() {
             enhancedinject_currentResolution = enhancedinject_newResolution;
             switch (enhancedinject_currentResolution) {
                 case 0:
-                    var x = parseInt(localStorage.getItem("enhanced_DeskWidth") || localStorage.getItem("enhanced_DeskWidth"));
-                    var y = parseInt(localStorage.getItem("enhanced_DeskHeight") || localStorage.getItem("enhanced_DeskHeight"));
+                    var x = parseInt(localStorage.getItem("enhanced_DeskWidth"));
+                    var y = parseInt(localStorage.getItem("enhanced_DeskHeight"));
                     break
                 case 1:
                     var x = 2560
@@ -982,7 +956,8 @@ function enhanced_changeFilter(opt) {
     }
 }
 
-// Shortcuts
+// StadiaIcons Integration by ELowry
+// GitHub: https://github.com/ELowry/StadiaIcons
 var enhanced_shortcutsOption = parseInt(localStorage.getItem("enhanced_shortcutsOption") || 0);
 var enhanced_gameShortcut = document.createElement("div");
 enhanced_gameShortcut.className = "pBvcyf QAAyWd";
@@ -1044,7 +1019,7 @@ enhanced_settingsShortcut.append(enhanced_Invite);
 var enhanced_messagePreview = parseInt(localStorage.getItem("enhanced_messagePreview") || 0);
 var enhanced_hidePreview = document.createElement("div");
 enhanced_hidePreview.className = "pBvcyf QAAyWd";
-enhanced_hidePreview.id = "enhanced_lastMessage";
+enhanced_hidePreview.id = "enhanced_hidePreview";
 enhanced_hidePreview.style.cursor = "pointer";
 enhanced_hidePreview.style.userSelect = "none";
 enhanced_hidePreview.style.paddingRight = "2rem";
@@ -1063,12 +1038,14 @@ function enhanced_changeMsgPreview(opt) {
             enhanced_addGlobalStyle(".lzIqJf .xzJkDf { display: block; }");
             enhanced_hidePreview.style.color = "";
             enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes</i><span class="mJVLwb">' + enhanced_lang.quickprev + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_addGlobalStyle(".lzIqJf .DvD76d { display: none; }")
             enhanced_addGlobalStyle(".lzIqJf .xzJkDf { display: none; }")
             enhanced_hidePreview.style.color = "#00e0ba";
             enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes_off</i><span class="mJVLwb">' + enhanced_lang.quickprev + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -1095,11 +1072,13 @@ function enhanced_changeQuickReply(opt) {
             enhanced_addGlobalStyle(".bbVL5c { display: flex !important; }");
             enhanced_quickReply.style.color = "";
             enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles</i><span class="mJVLwb">' + enhanced_lang.quickrep + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_addGlobalStyle(".bbVL5c { display: none !important; }")
             enhanced_quickReply.style.color = "#00e0ba";
             enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles_off</i><span class="mJVLwb">' + enhanced_lang.quickrep + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -1125,10 +1104,12 @@ function enhanced_changeOfflineUser(opt) {
         case 0:
             enhanced_offlineUser.style.color = "";
             enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb">' + enhanced_lang.offlinefriend + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_offlineUser.style.color = "#00e0ba";
             enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb">' + enhanced_lang.offlinefriend + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -1154,10 +1135,12 @@ function enhanced_changeInvisibleUser(opt) {
         case 0:
             enhanced_invisibleUser.style.color = "";
             enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb">' + enhanced_lang.invisiblefriend + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_invisibleUser.style.color = "#00e0ba";
             enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb">' + enhanced_lang.invisiblefriend + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -1184,16 +1167,18 @@ function enhanced_changeProLabel(opt) {
             enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { display: block; }")
             enhanced_proLabel.style.color = "";
             enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb">' + enhanced_lang.prolabel + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Pro Labels: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { display: none; }")
             enhanced_proLabel.style.color = "#00e0ba";
             enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb">' + enhanced_lang.prolabel + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Pro Labels: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
 }
 
-// Hide Screenshots on Homescreen
+// Hide User Media on Homescreen
 var enhanced_hideUserMedia = parseInt(localStorage.getItem("enhanced_hideUserMedia") || 0);
 var enhanced_mediaPreview = document.createElement("div");
 enhanced_mediaPreview.className = "pBvcyf QAAyWd";
@@ -1215,11 +1200,46 @@ function enhanced_changeMediaPreview(opt) {
             enhanced_addGlobalStyle(".zUpxGe.lEPylf { display: block; }")
             enhanced_mediaPreview.style.color = "";
             enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb">' + enhanced_lang.homegallery + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_addGlobalStyle(".zUpxGe.lEPylf { display: none; }")
             enhanced_mediaPreview.style.color = "#00e0ba";
             enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image_not_supported</i><span class="mJVLwb">' + enhanced_lang.homegallery + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+            break
+    }
+}
+
+// Stream Mode
+var enhanced_useStreamMode = parseInt(localStorage.getItem("enhanced_useStreamMode") || 0);
+var enhanced_streamMode = document.createElement("div");
+enhanced_streamMode.className = "pBvcyf QAAyWd";
+enhanced_streamMode.id = "enhanced_streamMode";
+enhanced_streamMode.style.cursor = "pointer";
+enhanced_streamMode.style.userSelect = "none";
+enhanced_streamMode.style.paddingRight = "2rem";
+enhanced_streamMode.tabIndex = "0";
+enhanced_streamMode.addEventListener("click", function() {
+    enhanced_useStreamMode = (enhanced_useStreamMode + 1) % 2;
+    localStorage.setItem("enhanced_useStreamMode", enhanced_useStreamMode);
+    enhanced_changeStreamMode(enhanced_useStreamMode);
+});
+enhanced_settingsGeneral.append(enhanced_streamMode);
+
+function enhanced_changeStreamMode(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle(".lzIqJf .Y1rZWd.QAAyWd.PuD06d, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: none; text-shadow: none }");
+            enhanced_streamMode.style.color = "";
+            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb">' + enhanced_lang.streammode + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_addGlobalStyle(".lzIqJf .Y1rZWd.QAAyWd.PuD06d, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }");
+            enhanced_streamMode.style.color = "#00e0ba";
+            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb">' + enhanced_lang.streammode + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -1330,6 +1350,8 @@ enhanced_showAll.addEventListener("click", function() {
 if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
     enhanced_setAvatar(localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
 }
+
+// Apply settings
 enhanced_changeGridSize(enhanced_GridSize);
 enhanced_changeClock(enhanced_ClockOption);
 enhanced_changeFilter(enhanced_filterOption);
@@ -1342,6 +1364,7 @@ enhanced_changeQuickReply(enhanced_useQuickReply);
 enhanced_changeOfflineUser(enhanced_hideOffline);
 enhanced_changeInvisibleUser(enhanced_hideInvisible);
 enhanced_changeMediaPreview(enhanced_hideUserMedia);
+enhanced_changeStreamMode(enhanced_useStreamMode);
 
 // After Setup
 console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.", enhanced_consoleEnhanced, "")
@@ -1363,7 +1386,7 @@ setInterval(function() {
             enhanced_sessionStart = new Date().getTime();
         } else {
             var enhanced_sessionDur = new Date().getTime();
-            enhanced_sessionDur = formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000);
+            enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000);
             enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>';
         }
     } else {
@@ -1385,8 +1408,8 @@ setInterval(function() {
 
             enhanced_wrappers.push({
                 parent: enhanced_gameList[i].parentNode,
-                id: enhanced_gameList[i].getAttribute( "jslog" ).split( "; " )[1].substring( 3 ),
-                name: enhanced_gameList[i].getAttribute("aria-label").replace(/^(View\s)/i,"").replace(/(( Pro)?.)$/i,""),
+                id: enhanced_gameList[i].getAttribute("jslog").split("; ")[1].substring(3),
+                name: enhanced_gameList[i].getAttribute("aria-label").replace(/^(View\s)/i, "").replace(/(( Pro)?.)$/i, ""),
                 wrapper: enhanced_wrapper,
                 game: enhanced_gameList[i],
             });
@@ -1416,9 +1439,9 @@ setInterval(function() {
     }
 
     for (var i = 0; i < enhanced_wrappers.length; i++) {
-        
+
         if (!enhanced_wrappers[i].hasOwnProperty("visibility")) {
-        // Visibility
+            // Visibility
             var enhanced_visibility = document.createElement("div");
             enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
             enhanced_visibility.style.position = "absolute";
@@ -1470,10 +1493,10 @@ setInterval(function() {
 
     // Game Shortcuts
     for (var i = 0; i < enhanced_wrappers.length; i++) {
-        
+
         if (!enhanced_wrappers[i].hasOwnProperty("shortcut")) {
-        // Shortcut
-        var enhanced_shortcut = document.createElement("div");
+            // Shortcut
+            var enhanced_shortcut = document.createElement("div");
             enhanced_shortcut.innerHTML = '<i class="material-icons-extended" aria-hidden="true">get_app</i>';
             enhanced_shortcut.title = "Install a Shortcut for " + enhanced_wrappers[i].name;
             enhanced_shortcut.style.position = "absolute";
@@ -1488,7 +1511,7 @@ setInterval(function() {
             enhanced_shortcut.name = enhanced_wrappers[i].name;
             enhanced_shortcut.addEventListener("click", function() {
                 if (enhanced_shortcutsOption != 2) {
-                    window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent( this.name ), "_blank");
+                    window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent(this.name), "_blank");
                 }
             });
             enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
@@ -1498,16 +1521,14 @@ setInterval(function() {
         // Apply shortcuts option
         if (enhanced_shortcutsOption == 1) {
             enhanced_wrappers[i].shortcut.style.display = "flex";
-        } else
-        {
+        } else {
             enhanced_wrappers[i].shortcut.style.display = "none";
         }
 
         // Apply hover class
         if (enhanced_shortcutsOption == 0) {
             enhanced_wrappers[i].shortcut.classList.add("enhanced_hover");
-        }
-        else {
+        } else {
             enhanced_wrappers[i].shortcut.classList.remove("enhanced_hover");
         }
     }
@@ -1597,7 +1618,7 @@ setInterval(function() {
         enhanced_Windowed.style.display = "none";
     }
 
-    if (parseInt(localStorage.getItem("enhanced_MonitorState")) == 1) {
+    if (parseInt(localStorage.getItem("enhanced_monitorState")) == 1) {
         enhanced_Monitor.style.display = "flex";
         if (document.querySelector("#enhanced_Monitor") === null && document.querySelectorAll(".E0Zk9b")[0] !== undefined) {
             document.querySelectorAll(".E0Zk9b")[0].append(enhanced_Monitor);
@@ -1654,7 +1675,7 @@ setInterval(function() {
 
     // Pro Games - UI changes and count of currently unclaimed games
     if (document.location.href.indexOf("/store/list/2001") != -1) {
-        document.querySelector(".eMobNd > li:nth-child(3) > a").classList.remove("YySNWc");
+        document.querySelector(".ZECEje > li:nth-child(3) > a").classList.remove("YySNWc");
         enhanced_ProGamesLink.classList.add("YySNWc");
         if (document.querySelector(".alEDLe") !== null) {
             count = document.querySelector(".alEDLe").querySelectorAll('.X5624d').length;
@@ -1726,9 +1747,9 @@ function openStadia(url) {
     window.open(enhanced_url, "_self");
 }
 
-function embed(fn, active = true) {
+function embed(fn, enhanced_sessionActive = true) {
     const script = document.createElement("script");
-    if (active === true) {
+    if (enhanced_sessionActive === true) {
         script.text = `(${fn.toString()})();`;
     } else {
         script.text = `${fn.toString()}`;
@@ -1736,12 +1757,47 @@ function embed(fn, active = true) {
     document.documentElement.appendChild(script);
 }
 
-function formatTime(seconds) {
+function enhanced_formatTime(seconds) {
     var hours = Math.floor(seconds / 3600);
     seconds -= hours * 3600;
     var minutes = Math.floor(seconds / 60);
     seconds -= minutes * 60;
     return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
+}
+
+// Dragable Objects
+function enhanced_dragElement(el) {
+    var pos = [0, 0, 0, 0];
+    if (document.getElementById(el.id)) {
+        document.getElementById(el.id).onmousedown = enhanced_dragMouseDown;
+    } else {
+        el.onmousedown = enhanced_dragMouseDown;
+    }
+
+    function enhanced_dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos[2] = e.clientX;
+        pos[3] = e.clientY;
+        document.onmouseup = enhanced_closeDragElement;
+        document.onmousemove = enhanced_elementDrag;
+    }
+
+    function enhanced_elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos[0] = pos[2] - e.clientX;
+        pos[1] = pos[3] - e.clientY;
+        pos[2] = e.clientX;
+        pos[3] = e.clientY;
+        el.style.top = (el.offsetTop - pos[1]) + "px";
+        el.style.left = (el.offsetLeft - pos[0]) + "px";
+    }
+
+    function enhanced_closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
 }
 
 // Translation
@@ -1765,8 +1821,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Lista & Overlay",
                 "filtertoggle":"Attiva Filtro",
                 "filterquick":"Filtro Rapido",
-                "shortcutshover":"Autohide Shortcut Buttons",
-                "shortcutstoggle":"Shortcut Buttons",
+                "shortcutshover":"Nascondi Automaticamente Pulsanti di Scelta Rapida",
+                "shortcutstoggle":"Pulsanti di Scelta Rapida",
                 "invitebase":"Copia link invito",
                 "inviteactive":"Copiato!",
                 "searchbtnbase":"Cerca su",
@@ -1795,7 +1851,9 @@ function loadLanguages(lang) {
                 "quickrep": "Risposta Veloce",
                 "offlinefriend": "Amici Offline",
                 "invisiblefriend": "Amici Invisibili",
-                "avatar": "Avatar"
+                "avatar": "Avatar",
+                "streammode": "Streaming Mode",
+                "interface": "Interface"
             }`
             break
         case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/11 (By Mafrans)
@@ -1816,8 +1874,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Lista & Överlägg",
                 "filtertoggle":"Växla Filter",
                 "filterquick":"Snabbfilter",
-                "shortcutshover":"Autohide Shortcut Buttons",
-                "shortcutstoggle":"Shortcut Buttons",
+                "shortcutshover":"Göm Genvägar Automatiskt",
+                "shortcutstoggle":"Genvägar"
                 "invitebase":"Kopiera inbjudningslänk",
                 "inviteactive":"Kopierat!",
                 "searchbtnbase":"Sök på",
@@ -1835,18 +1893,20 @@ function loadLanguages(lang) {
                 "jitter":"Jitter Buffer",
                 "compression":"Kompression",
                 "streammon":"Strömmonitor",
-                "stream": "Stream",
-                "community": "Community",
-                "speedtest": "Speedtest",
-                "quickaccess": "Quick Access",
-                "messages": "Messages",
-                "prolabel": "Pro Label",
-                "homegallery": "User Gallery",
-                "quickprev": "Message Preview",
-                "quickrep": "Quick Reply",
-                "offlinefriend": "Offline Friends",
-                "invisiblefriend": "Invisible Friends",
-                "avatar": "Avatar"
+                "stream": "Ström",
+                "community": "Gemenskap",
+                "speedtest": "Hastighetstest",
+                "quickaccess": "Snabbmeny",
+                "messages": "Meddelanden",
+                "prolabel": "Pro-Etikett",
+                "homegallery": "Användargalleri",
+                "quickprev": "Förhandsvisning av Meddelande",
+                "quickrep": "Snabbsvar",
+                "offlinefriend": "Offlinevänner",
+                "invisiblefriend": "Osynliga Vänner",
+                "avatar": "Avatar",
+                "streammode": "Streaming Mode",
+                "interface": "Interface"
             }`
             break
         case "fr": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/8 (By ELowry)
@@ -1897,7 +1957,9 @@ function loadLanguages(lang) {
                 "quickrep": "Réponse Rapide",
                 "offlinefriend": "Amis Connectés",
                 "invisiblefriend": "Amis Invisibles",
-                "avatar": "Avatar"
+                "avatar": "Avatar",
+                "streammode": "Streaming Mode",
+                "interface": "Interface"
             }`
             break
         case "nl": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/9 (By timewasternl)
@@ -1918,8 +1980,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Lijst & Overlay",
                 "filtertoggle":"Filter In-/Uitschakelen",
                 "filterquick":"Snel Filter",
-                "shortcutshover":"Autohide Shortcut Buttons",
-                "shortcutstoggle":"Shortcut Buttons",
+                "shortcutshover":"Snelkoppelingsknoppen automatisch verbergen",
+                "shortcutstoggle":"Snelkoppelingsknoppen",
                 "invitebase":"Kopieer Uitnodigingslink",
                 "inviteactive":"Gekopiëerd!",
                 "searchbtnbase":"Zoeken op",
@@ -1948,7 +2010,9 @@ function loadLanguages(lang) {
                 "quickrep": "Snel Antwoord",
                 "offlinefriend": "Offline Vrienden",
                 "invisiblefriend": "Onzichtbare Vrienden",
-                "avatar": "Avatar"
+                "avatar": "Avatar",
+                "streammode": "Streaming Mode",
+                "interface": "Interface"
             }`
             break
         case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/13
@@ -1969,8 +2033,8 @@ function loadLanguages(lang) {
                 "listoverlay":"Liste & Einblendung",
                 "filtertoggle":"Wechselfilter",
                 "filterquick":"Schnellfilter",
-                "shortcutshover":"Autohide Shortcut Buttons",
-                "shortcutstoggle":"Shortcut Buttons",
+                "shortcutshover":"Versteckte Verknüpfungen",
+                "shortcutstoggle":"Verknüpfungen",
                 "invitebase":"Einladung kopieren",
                 "inviteactive":"Kopiert!",
                 "searchbtnbase":"Suche auf",
@@ -1999,7 +2063,9 @@ function loadLanguages(lang) {
                 "quickrep": "Schnellantwort",
                 "offlinefriend": "Offline Freunde",
                 "invisiblefriend": "Unsichtbare Freunde",
-                "avatar": "Anzeigebild"
+                "avatar": "Anzeigebild",
+                "streammode": "Streaming Modus",
+                "interface": "Oberfläche"
             }`
             break
         default:
@@ -2050,7 +2116,9 @@ function loadLanguages(lang) {
                 "quickrep": "Quick Reply",
                 "offlinefriend": "Offline Friends",
                 "invisiblefriend": "Invisible Friends",
-                "avatar": "Avatar"
+                "avatar": "Avatar",
+                "streammode": "Streaming Mode",
+                "interface": "Interface"
             }`
     }
     return JSON.parse(load);
