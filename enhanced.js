@@ -39,6 +39,7 @@ function enhanced_RTCMonitor() {
     console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor: Successfully injected.", enhanced_consoleEnhanced, "");
 
     // Stream Monitor
+    var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
     var enhanced_streamMonitor = document.createElement("div");
     enhanced_streamMonitor.id = "enhanced_streamMonitor";
     enhanced_streamMonitor.style.position = "fixed";
@@ -68,7 +69,6 @@ function enhanced_RTCMonitor() {
     var enhanced_sessionStart;
     var enhanced_sessionActive = false;
     var enhanced_monitorState = 0;
-    var enhanced_monitorMode = localStorage.getItem("enhanced_monitorMode") || 0;
     enhanced_updateMonitor(0)
     localStorage.setItem("enhanced_monitorOption", enhanced_monitorState)
     localStorage.setItem("enhanced_monitorState", 0)
@@ -136,7 +136,6 @@ function enhanced_RTCMonitor() {
                     if (key.indexOf("RTCInboundRTPVideoStream") != -1) {
                         var tmp1 = stats.get(key);
                         var tmp2 = stats.get(tmp1.trackId);
-                        enhanced_streamMonitor.innerHTML = "Loading stream data.";
 
                         openConnections[1].getStats(function(stats) {
                             var tmp3 = stats.result().find(function(f) {
@@ -178,11 +177,12 @@ function enhanced_RTCMonitor() {
                             enhanced_lastBufferEmitted = jitterBufferEmittedCount;
                             enhanced_lastQpSum = tmp1.qpSum;
 
+                            var enhanced_streamData = "Loading stream data.";
                             if (framesReceived > 0) {
+                                console.log("M-Mode: " + enhanced_monitorMode)
                                 switch (enhanced_monitorMode) {
                                     case 0:
-                                        var enhanced_streamData = "";
-                                        enhanced_streamData += '<svg height="40" width="220" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg>'
+                                        enhanced_streamData = '<svg height="40" width="220" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg>'
                                         enhanced_streamData += "<center><b>" + time + "</b><br/>" + enhanced_lang.sessiontime + ": " + enhanced_formatTime(sessionDuration) + "</center><br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.resolution + ":</b> " + resolution + "<br/>";
                                         enhanced_streamData += "<b>FPS:</b> " + framesReceivedPerSecond.toFixed(1) + "<br/>";
@@ -200,15 +200,16 @@ function enhanced_RTCMonitor() {
                                         }
                                         break
                                     case 1:
-                                        var enhanced_streamData = codec + " | " + resolution + " | " + framesReceivedPerSecond.toFixed(1) + "fps | " + latency + "ms"
+                                        enhanced_streamData = codec + " | " + resolution + " | " + framesReceivedPerSecond.toFixed(1) + "fps | " + latency + "ms"
                                         break
                                 }
-                                enhanced_streamMonitor.innerHTML = enhanced_streamData;
 
                                 if (enhanced_monitorState == 1) {
                                     localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
                                 }
                             }
+                            console.log("S-Data: " + enhanced_streamData)
+                            enhanced_streamMonitor.innerHTML = enhanced_streamData;
                         });
                     }
                 }
@@ -1548,7 +1549,7 @@ setInterval(function() {
     }
 
     // Offline / Invisible Users
-    var enhanced_statusList = document.querySelectorAll(".Y1rZWd.QAAyWd.PuD06d .DfyMcd"); // Offline Users
+    var enhanced_statusList = document.querySelectorAll(".eXdFqc .Y1rZWd.QAAyWd.PuD06d .DfyMcd"); // Offline Users
     for (var i = 0; i < enhanced_statusList.length; i++) {
         if (parseInt(localStorage.getItem("enhanced_hideOffline") || 0) == 1) {
             enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: none !important");
@@ -1556,7 +1557,7 @@ setInterval(function() {
             enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: flex");
         }
     }
-    var enhanced_statusList = document.querySelectorAll(".UxR5ob.m8Kzt"); // Invisible Users
+    var enhanced_statusList = document.querySelectorAll(".eXdFqc .UxR5ob.m8Kzt"); // Invisible Users
     for (var i = 0; i < enhanced_statusList.length; i++) {
         if (enhanced_statusList[i].childElementCount == 1) {
             if (parseInt(localStorage.getItem("enhanced_hideInvisible") || 0) == 1) {
@@ -1852,8 +1853,8 @@ function loadLanguages(lang) {
                 "offlinefriend": "Amici Offline",
                 "invisiblefriend": "Amici Invisibili",
                 "avatar": "Avatar",
-                "streammode": "Streaming Mode",
-                "interface": "Interface"
+                "streammode": "Modalità Streaming",
+                "interface": "Interfaccia"
             }`
             break
         case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/11 (By Mafrans)
@@ -1875,7 +1876,7 @@ function loadLanguages(lang) {
                 "filtertoggle":"Växla Filter",
                 "filterquick":"Snabbfilter",
                 "shortcutshover":"Göm Genvägar Automatiskt",
-                "shortcutstoggle":"Genvägar"
+                "shortcutstoggle":"Genvägar",
                 "invitebase":"Kopiera inbjudningslänk",
                 "inviteactive":"Kopierat!",
                 "searchbtnbase":"Sök på",
@@ -1905,8 +1906,8 @@ function loadLanguages(lang) {
                 "offlinefriend": "Offlinevänner",
                 "invisiblefriend": "Osynliga Vänner",
                 "avatar": "Avatar",
-                "streammode": "Streaming Mode",
-                "interface": "Interface"
+                "streammode": "Streamer-läge",
+                "interface": "Gränssnitt"
             }`
             break
         case "fr": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/8 (By ELowry)
@@ -1958,7 +1959,7 @@ function loadLanguages(lang) {
                 "offlinefriend": "Amis Connectés",
                 "invisiblefriend": "Amis Invisibles",
                 "avatar": "Avatar",
-                "streammode": "Streaming Mode",
+                "streammode": "Mode Streaming",
                 "interface": "Interface"
             }`
             break
@@ -2011,7 +2012,7 @@ function loadLanguages(lang) {
                 "offlinefriend": "Offline Vrienden",
                 "invisiblefriend": "Onzichtbare Vrienden",
                 "avatar": "Avatar",
-                "streammode": "Streaming Mode",
+                "streammode": "Streaming Modus",
                 "interface": "Interface"
             }`
             break
