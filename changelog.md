@@ -2,12 +2,17 @@
 
 ## Version 1.7.0
 * Added shortcut integration by ELowry
-* Added support for a minified streaming monitor (switch via doubleclick)
+* Aded support for a minified streaming monitor (switch via doubleclick)
 * Added the option to personalize (via dragging) the position of the stream monitor
 * Added a stream mode (renders certain elements unreadable for privacy during streams)
 * Changed the "On Sale" linked category to load the "Featured deals" section
 * Fixed Stadia Enhanced not working correctly due to changes on Stadias end
 * Fixed missing status logs & removed logs for debugging
+
+### Version 1.7.1
+* Updated translations
+* Fixed a language file error, resulting in the extension not loading in swedish
+* Changed offline/invisible users to no longer also be hidden in messages
 
 ## Version 1.6.0
 * New settings menu
