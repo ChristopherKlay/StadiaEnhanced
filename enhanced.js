@@ -179,7 +179,6 @@ function enhanced_RTCMonitor() {
 
                             var enhanced_streamData = "Loading stream data.";
                             if (framesReceived > 0) {
-                                console.log("M-Mode: " + enhanced_monitorMode)
                                 switch (enhanced_monitorMode) {
                                     case 0:
                                         enhanced_streamData = '<svg height="40" width="220" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg>'
@@ -208,7 +207,6 @@ function enhanced_RTCMonitor() {
                                     localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
                                 }
                             }
-                            console.log("S-Data: " + enhanced_streamData)
                             enhanced_streamMonitor.innerHTML = enhanced_streamData;
                         });
                     }
@@ -222,6 +220,7 @@ embed(loadLanguages, false);
 embed(enhanced_dragElement, false);
 embed(enhanced_RTCMonitor);
 
+// Streaming Monitor
 var enhanced_Monitor = document.createElement("div");
 enhanced_Monitor.className = "R2s0be";
 enhanced_Monitor.id = "enhanced_Monitor";
@@ -231,6 +230,10 @@ enhanced_Monitor.style.userSelect = "none";
 enhanced_Monitor.tabIndex = "0";
 enhanced_Monitor.addEventListener("click", function() {
     localStorage.setItem("enhanced_monitorOption", (parseInt(localStorage.getItem("enhanced_monitorOption") || 0) + 1) % 2)
+});
+enhanced_Monitor.addEventListener("dblclick", function() {
+    document.getElementById("enhanced_streamMonitor").style.top = "1rem";
+    document.getElementById("enhanced_streamMonitor").style.left = "1rem";
 });
 
 // Windowed Mode
@@ -268,10 +271,8 @@ enhanced_emojiswitch.style.cursor = "pointer";
 enhanced_emojiswitch.addEventListener("click", function(i) {
     if (enhanced_emojiPicker.style.display == "none") {
         enhanced_emojiPicker.style.display = "flex"
-        console.log("Show");
     } else {
         enhanced_emojiPicker.style.display = "none";
-        console.log("Hide")
     }
 });
 
@@ -381,37 +382,6 @@ enhanced_ProGamesLink.addEventListener("click", function() {
 if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
     document.querySelectorAll(".ZECEje")[0].append(enhanced_ProGames);
 }
-
-/*
-// Library Search - Adds a search bar filtering your homescreen library
-// Current Issue: Keyboard navigation blocking keyboard functionality
-var enhanced_LibrarySearch = document.createElement("input");
-enhanced_LibrarySearch.className = "CTvDXd QAAyWd soKQKc wJYinb";
-enhanced_LibrarySearch.id = "enhanced_LibrarySearch";
-enhanced_LibrarySearch.placeholder = "Search library";
-enhanced_LibrarySearch.tabIndex = "0";
-enhanced_LibrarySearch.style.border = "none";
-enhanced_LibrarySearch.style.textAlign = "left";
-enhanced_LibrarySearch.style.paddingLeft = "3rem";
-enhanced_LibrarySearch.style.background = "url('" + chrome.runtime.getURL("media/svg/search.svg") + "') 1rem center / 24px 24px no-repeat, rgba(255,255,255,.06)"
-enhanced_LibrarySearch.style.marginRight = "20px";
-enhanced_LibrarySearch.addEventListener("input", function(e) {
-    var enhanced_FilterList = document.querySelectorAll(".YM0nee.E3eEyc.H3tvrc.f2eaLc")[document.querySelectorAll(".YM0nee.E3eEyc.H3tvrc.f2eaLc").length - 1].querySelectorAll(".GqLi4d");
-    var enhanced_FilterTerm = enhanced_LibrarySearch.value
-
-    for (var i = 0; i < enhanced_FilterList.length; i++) {
-        if (enhanced_FilterList[i].getAttribute("aria-label").match(new RegExp(enhanced_FilterTerm, 'gi')) === null) {
-            enhanced_FilterList[i].style.display = "none";
-        } else {
-            enhanced_FilterList[i].style.display = "block";
-        }
-    }
-    document.querySelectorAll(".CVVXfc.YYy3Zb")[document.querySelectorAll(".CVVXfc.YYy3Zb").length - 1].scrollIntoView();
-});
-if (document.querySelectorAll(".YNlByb")[0] !== undefined) {
-    document.querySelectorAll(".YNlByb")[0].append(enhanced_LibrarySearch);
-}
-*/
 
 // Store Search - Adds a search bar to the Stadia store
 var enhanced_SearchBox = document.createElement("li");
@@ -1791,8 +1761,8 @@ function enhanced_dragElement(el) {
         pos[1] = pos[3] - e.clientY;
         pos[2] = e.clientX;
         pos[3] = e.clientY;
-        el.style.top = (el.offsetTop - pos[1]) + "px";
-        el.style.left = (el.offsetLeft - pos[0]) + "px";
+        el.style.top = Math.min(Math.max(el.offsetTop - pos[1], 0), screen.availHeight - el.offsetHeight) + "px";
+        el.style.left = Math.min(Math.max(el.offsetLeft - pos[0], 0), screen.availWidth - el.offsetWidth) + "px";
     }
 
     function enhanced_closeDragElement() {
