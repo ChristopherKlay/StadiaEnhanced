@@ -18,6 +18,9 @@
 * Added the option to reset the streaming monitors position (doubleclick the menu icon)
 * Fixed streaming monitor being able to be displayed outside the available screen area
 
+### Version 1.7.3
+* Updated "On Sale" link to direct to the currently used deals section
+
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
