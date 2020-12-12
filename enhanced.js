@@ -468,7 +468,7 @@ enhanced_OnSale.style.userSelect = "none";
 enhanced_OnSale.style.paddingRight = "2rem";
 enhanced_OnSale.tabIndex = "0";
 enhanced_OnSale.addEventListener("click", function() {
-    openStadia("store/list/35");
+    openStadia("store/list/14");
 });
 enhanced_StoreDropContent.append(enhanced_OnSale);
 
