@@ -21,6 +21,9 @@
 ## Translation
 If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
 
+## Ideas? Requests? Questions?
+Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
+
 ## Support this project
 <a href="https://www.buymeacoffee.com/christopherklay" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
