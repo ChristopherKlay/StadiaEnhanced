@@ -2,7 +2,7 @@
 
 ## Version 1.7.0
 * Added shortcut integration by ELowry
-* Aded support for a minified streaming monitor (switch via doubleclick)
+* Added support for a minified streaming monitor (switch via doubleclick)
 * Added the option to personalize (via dragging) the position of the stream monitor
 * Added a stream mode (renders certain elements unreadable for privacy during streams)
 * Changed the "On Sale" linked category to load the "Featured deals" section
@@ -13,6 +13,10 @@
 * Updated translations
 * Fixed a language file error, resulting in the extension not loading in swedish
 * Changed offline/invisible users to no longer also be hidden in messages
+
+### Version 1.7.2
+* Added the option to reset the streaming monitors position (doubleclick the menu icon)
+* Fixed streaming monitor being able to be displayed outside the available screen area
 
 ## Version 1.6.0
 * New settings menu
