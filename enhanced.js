@@ -15,6 +15,7 @@ enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-
 enhanced_addGlobalStyle(".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }"); // Adjust menu height
 enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }"); // Less padding on "Pro" labels
 enhanced_addGlobalStyle("#enhanced_wrapper:hover .enhanced_hover, .RjcqTc ~ .enhanced_hover { display: flex !important; }"); // Hover functionality for shortcuts
+enhanced_addGlobalStyle("#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }"); // Remove popup effect on game tiles
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -304,6 +305,7 @@ var enhanced_dummy;
 var enhanced_emojiRange = [
     [128513, 128591],
     [9994, 9996],
+    [128070, 128079],
     [128640, 128676],
     [127747, 127776],
     [127799, 127891],
@@ -810,7 +812,6 @@ enhanced_Grid.tabIndex = "0";
 enhanced_Grid.addEventListener("click", function() {
     enhanced_GridSize = (enhanced_GridSize + 1) % 5;
     localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
-    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': ' + (enhanced_GridSize + 2) + '</span>';
     enhanced_changeGridSize(enhanced_GridSize)
 });
 enhanced_settingsGeneral.append(enhanced_Grid);
@@ -819,28 +820,28 @@ function enhanced_changeGridSize(size) {
     switch (size) {
         case 0:
             enhanced_Grid.style.color = "";
-            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }');
-            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: 36.75rem !important; height: 21.75rem !important; }');
+            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }")
+            enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': 2</span>';
             break;
         case 1:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }');
-            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.66) !important; height: calc(21.75rem * 0.66) !important; }');
+            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }")
+            enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': 3</span>';
             break;
         case 2:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }');
-            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.5) !important; height: calc(21.75rem * 0.5) !important; }');
+            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }")
+            enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': 4</span>';
             break;
         case 3:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }');
-            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.4) !important; height: calc(21.75rem * 0.4) !important; }');
+            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }")
+            enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': 5</span>';
             break;
         case 4:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle('.YM0nee.E3eEyc.f2eaLc.lEPylf { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }');
-            //enhanced_addGlobalStyle('.GqLi4d.qu6XL { width: calc(36.75rem * 0.33) !important; height: calc(21.75rem * 0.33) !important; }');
+            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }")
+            enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb">' + enhanced_lang.gridsize + ': 6</span>';
             break;
     }
     console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".", enhanced_consoleEnhanced, "");
@@ -1168,16 +1169,82 @@ enhanced_settingsGeneral.append(enhanced_mediaPreview);
 function enhanced_changeMediaPreview(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".zUpxGe.lEPylf { display: block; }")
+            enhanced_addGlobalStyle(".ctThpb.lEPylf { display: block; }")
             enhanced_mediaPreview.style.color = "";
             enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb">' + enhanced_lang.homegallery + '</span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Default'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".zUpxGe.lEPylf { display: none; }")
+            enhanced_addGlobalStyle(".ctThpb.lEPylf { display: none; }")
             enhanced_mediaPreview.style.color = "#00e0ba";
             enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image_not_supported</i><span class="mJVLwb">' + enhanced_lang.homegallery + '</span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+            break
+    }
+}
+
+// Category Preview
+var enhanced_hideCategory = parseInt(localStorage.getItem("enhanced_hideCategory") || 0);
+var enhanced_categoryPreview = document.createElement("div");
+enhanced_categoryPreview.className = "pBvcyf QAAyWd";
+enhanced_categoryPreview.id = "enhanced_categoryPreview";
+enhanced_categoryPreview.style.cursor = "pointer";
+enhanced_categoryPreview.style.userSelect = "none";
+enhanced_categoryPreview.style.paddingRight = "2rem";
+enhanced_categoryPreview.tabIndex = "0";
+enhanced_categoryPreview.addEventListener("click", function() {
+    enhanced_hideCategory = (enhanced_hideCategory + 1) % 2;
+    localStorage.setItem("enhanced_hideCategory", enhanced_hideCategory);
+    enhanced_changeCategoryPreview(enhanced_hideCategory);
+});
+enhanced_settingsGeneral.append(enhanced_categoryPreview);
+
+function enhanced_changeCategoryPreview(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle("#enhanced_wrapper .ssR8Bc { display: inline-block !important; }");
+            enhanced_categoryPreview.style.color = "";
+            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb">' + enhanced_lang.catprev + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Default'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_addGlobalStyle("#enhanced_wrapper .ssR8Bc { display: none !important; }");
+            enhanced_categoryPreview.style.color = "#00e0ba";
+            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb">' + enhanced_lang.catprev + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+            break
+    }
+}
+
+// Popup on game tiles
+var enhanced_hidePopupEffect = parseInt(localStorage.getItem("enhanced_hidePopupEffect") || 0);
+var enhanced_gamePopup = document.createElement("div");
+enhanced_gamePopup.className = "pBvcyf QAAyWd";
+enhanced_gamePopup.id = "enhanced_gamePopup";
+enhanced_gamePopup.style.cursor = "pointer";
+enhanced_gamePopup.style.userSelect = "none";
+enhanced_gamePopup.style.paddingRight = "2rem";
+enhanced_gamePopup.tabIndex = "0";
+enhanced_gamePopup.addEventListener("click", function() {
+    enhanced_hidePopupEffect = (enhanced_hidePopupEffect + 1) % 2;
+    localStorage.setItem("enhanced_hidePopupEffect", enhanced_hidePopupEffect);
+    enhanced_changeGamePopup(enhanced_hidePopupEffect);
+});
+enhanced_settingsGeneral.append(enhanced_gamePopup);
+
+function enhanced_changeGamePopup(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_addGlobalStyle("#enhanced_wrapper:hover { z-index: 3; transform: scale(1.1); transition: transform .2s cubic-bezier(0.35,0,0.15,1); }");
+            enhanced_gamePopup.style.color = "";
+            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb">' + enhanced_lang.gamepopon + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Default'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_addGlobalStyle("#enhanced_wrapper:hover { z-index: unset; transform: none; transition: none; }");
+            enhanced_gamePopup.style.color = "#00e0ba";
+            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb">' + enhanced_lang.gamepopoff + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -1336,6 +1403,8 @@ enhanced_changeOfflineUser(enhanced_hideOffline);
 enhanced_changeInvisibleUser(enhanced_hideInvisible);
 enhanced_changeMediaPreview(enhanced_hideUserMedia);
 enhanced_changeStreamMode(enhanced_useStreamMode);
+enhanced_changeCategoryPreview(enhanced_hideCategory);
+enhanced_changeGamePopup(enhanced_hidePopupEffect);
 
 // After Setup
 console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.", enhanced_consoleEnhanced, "")
@@ -1365,142 +1434,149 @@ setInterval(function() {
     }
 
     // Enhanced Wrapper
-    var enhanced_gameList = document.querySelectorAll(".GqLi4d");
+    if (document.location.href.indexOf("/home") != -1) {
+        var enhanced_gameList = document.querySelectorAll(".GqLi4d");
+        var enhanced_uidData = enhanced_loadUIDs()
 
-    for (var i = 0; i < enhanced_gameList.length; i++) {
+        for (var i = 0; i < enhanced_gameList.length; i++) {
 
-        if (enhanced_gameList[i].parentNode.id != "enhanced_wrapper") {
-            // Wrapper Element
-            var enhanced_wrapper = document.createElement("div");
-            enhanced_wrapper.id = "enhanced_wrapper";
-            enhanced_wrapper.style.position = "relative";
-            enhanced_wrapper.style.display = "inherit";
-            enhanced_wrapper.style.gridColumn = "span 6/span 6";
+            if (enhanced_gameList[i].parentNode.id != "enhanced_wrapper") {
+                // Wrapper Element
+                var enhanced_wrapper = document.createElement("div");
+                enhanced_wrapper.id = "enhanced_wrapper";
+                enhanced_wrapper.style.position = "relative";
+                enhanced_wrapper.style.display = "inherit";
+                enhanced_wrapper.style.gridColumn = "span 6/span 6";
 
-            enhanced_wrappers.push({
-                parent: enhanced_gameList[i].parentNode,
-                id: enhanced_gameList[i].getAttribute("jslog").split("; ")[1].substring(3),
-                name: enhanced_gameList[i].getAttribute("aria-label").replace(/^(View\s)/i, "").replace(/(( Pro)?.)$/i, ""),
-                wrapper: enhanced_wrapper,
-                game: enhanced_gameList[i],
-            });
+                enhanced_wrappers.push({
+                    parent: enhanced_gameList[i].parentNode,
+                    id: enhanced_skui2uid(enhanced_uidData, enhanced_gameList[i].getAttribute("jsdata").split(";")[1]),
+                    name: enhanced_gameList[i].getElementsByClassName("xmcLFc")[0].textContent,
+                    wrapper: enhanced_wrapper,
+                    game: enhanced_gameList[i],
+                });
 
-            enhanced_gameList[i].parentNode.appendChild(enhanced_wrapper);
-            enhanced_wrapper.appendChild(enhanced_gameList[i]);
+                enhanced_gameList[i].parentNode.appendChild(enhanced_wrapper);
+                enhanced_wrapper.appendChild(enhanced_gameList[i]);
+            }
         }
-    }
 
 
-    // Game Filter
-    var enhanced_gameFilter = localStorage.getItem("enhanced_gameFilter") || "";
+        // Game Filter
+        var enhanced_gameFilter = localStorage.getItem("enhanced_gameFilter") || "";
 
-    // Add "Show All" UI element
-    if (document.location.href.indexOf("/home") != -1 && document.querySelectorAll(".CVVXfc.YYy3Zb").length != 0) {
-        if (document.querySelectorAll(".CVVXfc.YYy3Zb")[document.querySelectorAll(".CVVXfc.YYy3Zb").length - 1].contains(enhanced_showAll) === false) {
-            document.querySelectorAll(".CVVXfc.YYy3Zb")[document.querySelectorAll(".CVVXfc.YYy3Zb").length - 1].append(enhanced_showAll);
-            enhanced_showAll.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
+        // Add "Show All" UI element
+        if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length != 0) {
+            if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].contains(enhanced_showAll) === false) {
+                document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].append(enhanced_showAll);
+                enhanced_showAll.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
+                enhanced_showState = false;
+            }
+        }
+        if (enhanced_filterOption == 2) {
+            enhanced_showAll.style.display = "none";
             enhanced_showState = false;
-        }
-    }
-    if (enhanced_filterOption == 2) {
-        enhanced_showAll.style.display = "none";
-        enhanced_showState = false;
-    } else {
-        enhanced_showAll.style.display = "flex";
-    }
-
-    for (var i = 0; i < enhanced_wrappers.length; i++) {
-
-        if (!enhanced_wrappers[i].hasOwnProperty("visibility")) {
-            // Visibility
-            var enhanced_visibility = document.createElement("div");
-            enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
-            enhanced_visibility.style.position = "absolute";
-            enhanced_visibility.style.margin = "0.2rem";
-            enhanced_visibility.style.background = "#202124";
-            enhanced_visibility.style.borderRadius = "50%";
-            enhanced_visibility.style.padding = "0.2rem";
-            enhanced_visibility.style.cursor = "pointer";
-            enhanced_visibility.style.zIndex = "20";
-            enhanced_visibility.gameid = enhanced_wrappers[i].id;
-            enhanced_visibility.addEventListener("click", function() {
-                //alert(this.gameid);
-                if (enhanced_gameFilter.includes(this.gameid)) {
-                    enhanced_gameFilter = enhanced_gameFilter.replace("(" + this.gameid + ")", "")
-                    localStorage.setItem("enhanced_gameFilter", enhanced_gameFilter);
-                    this.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
-                } else {
-                    enhanced_gameFilter += "(" + this.gameid + ")";
-                    localStorage.setItem("enhanced_gameFilter", enhanced_gameFilter);
-                    this.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
-                }
-            });
-            enhanced_wrappers[i].wrapper.appendChild(enhanced_visibility);
-            enhanced_wrappers[i].visibility = enhanced_visibility;
-        }
-
-        // Apply filter option
-        if (enhanced_filterOption != 1 && enhanced_showState === false) {
-            enhanced_wrappers[i].visibility.style.display = "none";
         } else {
-            enhanced_wrappers[i].visibility.style.display = "flex";
+            enhanced_showAll.style.display = "flex";
         }
 
-        // Set brightness of filtered items
-        if (enhanced_gameFilter.includes(enhanced_wrappers[i].id) && enhanced_filterOption != 2) {
-            enhanced_wrappers[i].game.style.filter = "brightness(40%)";
-        } else {
-            enhanced_wrappers[i].game.style.filter = "none";
+        for (var i = 0; i < enhanced_wrappers.length; i++) {
+
+            if (!enhanced_wrappers[i].hasOwnProperty("visibility")) {
+                // Visibility
+                var enhanced_visibility = document.createElement("div");
+                enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
+                enhanced_visibility.style.position = "absolute";
+                enhanced_visibility.style.margin = "0.2rem";
+                enhanced_visibility.style.background = "#202124";
+                enhanced_visibility.style.borderRadius = "50%";
+                enhanced_visibility.style.padding = "0.2rem";
+                enhanced_visibility.style.cursor = "pointer";
+                enhanced_visibility.style.zIndex = "2";
+                enhanced_visibility.id = enhanced_wrappers[i].id;
+                enhanced_visibility.name = enhanced_wrappers[i].name;
+                enhanced_visibility.title = enhanced_lang.hide + " " + enhanced_visibility.name;
+                enhanced_visibility.addEventListener("click", function() {
+                    if (enhanced_gameFilter.includes(this.id)) {
+                        enhanced_gameFilter = enhanced_gameFilter.replace("(" + this.id + ")", "")
+                        this.title = enhanced_lang.hide + " " + this.name;
+                        localStorage.setItem("enhanced_gameFilter", enhanced_gameFilter);
+                        this.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
+                    } else {
+                        enhanced_gameFilter += "(" + this.id + ")";
+                        this.title = enhanced_lang.show + " " + this.name;
+                        localStorage.setItem("enhanced_gameFilter", enhanced_gameFilter);
+                        this.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
+                    }
+                });
+                enhanced_wrappers[i].wrapper.appendChild(enhanced_visibility);
+                enhanced_wrappers[i].visibility = enhanced_visibility;
+            }
+
+            // Apply filter option
+            if (enhanced_filterOption != 1 && enhanced_showState === false) {
+                enhanced_wrappers[i].visibility.style.display = "none";
+            } else {
+                enhanced_wrappers[i].visibility.style.display = "flex";
+            }
+
+            // Set brightness of filtered items
+            if (enhanced_gameFilter.includes(enhanced_wrappers[i].id) && enhanced_filterOption != 2) {
+                enhanced_wrappers[i].game.style.filter = "brightness(40%)";
+            } else {
+                enhanced_wrappers[i].game.style.filter = "none";
+            }
+
+            // Filter items
+            if (enhanced_gameFilter.includes(enhanced_wrappers[i].id) && enhanced_showState === false && enhanced_filterOption != 2) {
+                enhanced_wrappers[i].wrapper.style.display = "none";
+                enhanced_wrappers[i].visibility.title = enhanced_lang.show + " " + enhanced_wrappers[i].name;
+                enhanced_wrappers[i].visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
+            } else {
+                enhanced_wrappers[i].wrapper.style.display = "inherit";
+            }
         }
 
-        // Filter items
-        if (enhanced_gameFilter.includes(enhanced_wrappers[i].id) && enhanced_showState === false && enhanced_filterOption != 2) {
-            enhanced_wrappers[i].wrapper.style.display = "none";
-            enhanced_wrappers[i].visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
-        } else {
-            enhanced_wrappers[i].wrapper.style.display = "inherit";
-        }
-    }
+        // Game Shortcuts
+        for (var i = 0; i < enhanced_wrappers.length; i++) {
 
-    // Game Shortcuts
-    for (var i = 0; i < enhanced_wrappers.length; i++) {
+            if (!enhanced_wrappers[i].hasOwnProperty("shortcut")) {
+                // Shortcut
+                var enhanced_shortcut = document.createElement("div");
+                enhanced_shortcut.innerHTML = '<i class="material-icons-extended" aria-hidden="true">get_app</i>';
+                enhanced_shortcut.title = enhanced_lang.shortcuthover + " " + enhanced_wrappers[i].name;
+                enhanced_shortcut.style.position = "absolute";
+                enhanced_shortcut.style.right = "0";
+                enhanced_shortcut.style.margin = "0.2rem";
+                enhanced_shortcut.style.background = "#202124";
+                enhanced_shortcut.style.borderRadius = "50%";
+                enhanced_shortcut.style.padding = "0.2rem";
+                enhanced_shortcut.style.cursor = "pointer";
+                enhanced_shortcut.style.zIndex = "2";
+                enhanced_shortcut.gameid = enhanced_wrappers[i].id;
+                enhanced_shortcut.name = enhanced_wrappers[i].name;
+                enhanced_shortcut.addEventListener("click", function() {
+                    if (enhanced_shortcutsOption != 2) {
+                        window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent(this.name), "_blank");
+                    }
+                });
+                enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
+                enhanced_wrappers[i].shortcut = enhanced_shortcut;
+            }
 
-        if (!enhanced_wrappers[i].hasOwnProperty("shortcut")) {
-            // Shortcut
-            var enhanced_shortcut = document.createElement("div");
-            enhanced_shortcut.innerHTML = '<i class="material-icons-extended" aria-hidden="true">get_app</i>';
-            enhanced_shortcut.title = "Install a Shortcut for " + enhanced_wrappers[i].name;
-            enhanced_shortcut.style.position = "absolute";
-            enhanced_shortcut.style.right = "0";
-            enhanced_shortcut.style.margin = "0.2rem";
-            enhanced_shortcut.style.background = "#202124";
-            enhanced_shortcut.style.borderRadius = "50%";
-            enhanced_shortcut.style.padding = "0.2rem";
-            enhanced_shortcut.style.cursor = "pointer";
-            enhanced_shortcut.style.zIndex = "20";
-            enhanced_shortcut.gameid = enhanced_wrappers[i].id;
-            enhanced_shortcut.name = enhanced_wrappers[i].name;
-            enhanced_shortcut.addEventListener("click", function() {
-                if (enhanced_shortcutsOption != 2) {
-                    window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent(this.name), "_blank");
-                }
-            });
-            enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
-            enhanced_wrappers[i].shortcut = enhanced_shortcut;
-        }
+            // Apply shortcuts option
+            if (enhanced_shortcutsOption == 1) {
+                enhanced_wrappers[i].shortcut.style.display = "flex";
+            } else {
+                enhanced_wrappers[i].shortcut.style.display = "none";
+            }
 
-        // Apply shortcuts option
-        if (enhanced_shortcutsOption == 1) {
-            enhanced_wrappers[i].shortcut.style.display = "flex";
-        } else {
-            enhanced_wrappers[i].shortcut.style.display = "none";
-        }
-
-        // Apply hover class
-        if (enhanced_shortcutsOption == 0) {
-            enhanced_wrappers[i].shortcut.classList.add("enhanced_hover");
-        } else {
-            enhanced_wrappers[i].shortcut.classList.remove("enhanced_hover");
+            // Apply hover class
+            if (enhanced_shortcutsOption == 0) {
+                enhanced_wrappers[i].shortcut.classList.add("enhanced_hover");
+            } else {
+                enhanced_wrappers[i].shortcut.classList.remove("enhanced_hover");
+            }
         }
     }
 
@@ -1707,17 +1783,36 @@ function enhanced_addGlobalStyle(css) {
     head.appendChild(style);
 }
 
+function enhanced_loadUIDs() {
+    var enhanced_embedScripts = document.querySelectorAll('body>script');
+    for (s in enhanced_embedScripts) {
+        if (enhanced_embedScripts[s].attributes && enhanced_embedScripts[s].attributes.length == 1 && enhanced_embedScripts[s].hasAttribute('nonce') && enhanced_embedScripts[s].text.substring(0, 19) == 'AF_initDataCallback' && enhanced_embedScripts[s].text.indexOf("key: 'ds:6") !== -1) {
+            return JSON.parse(enhanced_embedScripts[s].text.split('data:[false,').pop().split('[]')[0].slice(0, -2));
+        }
+    }
+}
+
+function enhanced_skui2uid(uiddata, skuid) {
+    for (var i = 0; i < uiddata.length; i++) {
+        if (uiddata[i][1][1] == skuid) {
+            return uiddata[i][1][0]
+            break
+        }
+    }
+}
+
+// Open pages including Stadia specific settings
 function openStadia(url) {
     var enhanced_urlBase = document.querySelector("head > base").getAttribute("href");
     var enhanced_urlHL = new URLSearchParams(window.location.search).get('hl');
     var enhanced_url = new URL(enhanced_urlBase + url);
     if (enhanced_urlHL !== null) {
-        console.log(enhanced_urlHL);
         enhanced_url.searchParams.append('hl', enhanced_urlHL);
     }
     window.open(enhanced_url, "_self");
 }
 
+// Embed scripts to execute on the websites layer
 function embed(fn, enhanced_sessionActive = true) {
     const script = document.createElement("script");
     if (enhanced_sessionActive === true) {
@@ -1824,7 +1919,13 @@ function loadLanguages(lang) {
                 "invisiblefriend": "Amici Invisibili",
                 "avatar": "Avatar",
                 "streammode": "Modalità Streaming",
-                "interface": "Interfaccia"
+                "interface": "Interfaccia",
+                "catprev": "Category Preview",
+                "shortcuthover": "Install a Shortcut for",
+                "gamepopon": "Default Popup Effect",
+                "gamepopoff": "No Popup Effect",
+                "hide": "Hide",
+                "show": "Show"
             }`
             break
         case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/11 (By Mafrans)
@@ -1877,7 +1978,13 @@ function loadLanguages(lang) {
                 "invisiblefriend": "Osynliga Vänner",
                 "avatar": "Avatar",
                 "streammode": "Streamer-läge",
-                "interface": "Gränssnitt"
+                "interface": "Gränssnitt",
+                "catprev": "Category Preview",
+                "shortcuthover": "Install a Shortcut for",
+                "gamepopon": "Default Popup Effect",
+                "gamepopoff": "No Popup Effect",
+                "hide": "Hide",
+                "show": "Show"
             }`
             break
         case "fr": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/8 (By ELowry)
@@ -1930,7 +2037,13 @@ function loadLanguages(lang) {
                 "invisiblefriend": "Amis Invisibles",
                 "avatar": "Avatar",
                 "streammode": "Mode Streaming",
-                "interface": "Interface"
+                "interface": "Interface",
+                "catprev": "Category Preview",
+                "shortcuthover": "Install a Shortcut for",
+                "gamepopon": "Default Popup Effect",
+                "gamepopoff": "No Popup Effect",
+                "hide": "Hide",
+                "show": "Show"
             }`
             break
         case "nl": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/9 (By timewasternl)
@@ -1983,7 +2096,13 @@ function loadLanguages(lang) {
                 "invisiblefriend": "Onzichtbare Vrienden",
                 "avatar": "Avatar",
                 "streammode": "Streaming Modus",
-                "interface": "Interface"
+                "interface": "Interface",
+                "catprev": "Category Preview",
+                "shortcuthover": "Install a Shortcut for",
+                "gamepopon": "Default Popup Effect",
+                "gamepopoff": "No Popup Effect",
+                "hide": "Hide",
+                "show": "Show"
             }`
             break
         case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/13
@@ -2036,7 +2155,13 @@ function loadLanguages(lang) {
                 "invisiblefriend": "Unsichtbare Freunde",
                 "avatar": "Anzeigebild",
                 "streammode": "Streaming Modus",
-                "interface": "Oberfläche"
+                "interface": "Oberfläche",
+                "catprev": "Kategorie Vorschau",
+                "shortcuthover": "Installiere eine Verknüpfung für",
+                "gamepopon": "Standard Popup Effekt",
+                "gamepopoff": "Kein Popup Effekt",
+                "hide": "Verstecke",
+                "show": "Zeige"
             }`
             break
         default:
@@ -2089,7 +2214,13 @@ function loadLanguages(lang) {
                 "invisiblefriend": "Invisible Friends",
                 "avatar": "Avatar",
                 "streammode": "Streaming Mode",
-                "interface": "Interface"
+                "interface": "Interface",
+                "catprev": "Category Preview",
+                "shortcuthover": "Install a Shortcut for",
+                "gamepopon": "Default Popup Effect",
+                "gamepopoff": "No Popup Effect",
+                "hide": "Hide",
+                "show": "Show"
             }`
     }
     return JSON.parse(load);
