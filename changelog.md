@@ -21,6 +21,16 @@
 ### Version 1.7.3
 * Updated "On Sale" link to direct to the currently used deals section
 
+### Version 1.7.4
+* Added the option to hide the category preview on games
+* Added the option to disable the popup effect on games
+* Added "hand" based emojis
+* Fixed homescreen grid scaling
+* Fixed not being able to hide the user gallery at the bottom of the homescreen
+* Fixed homescreen filtering
+* Fixed shortcut creation
+* Fixed language based errors with game titles on shortcuts
+
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
