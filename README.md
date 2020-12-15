@@ -1,6 +1,6 @@
 # Stadia Enhanced
 
-![](https://i.imgur.com/tTD5ozM.png)
+![](https://i.imgur.com/yt2tyuk.png)
 
 ## Features
 
@@ -29,7 +29,7 @@ Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanc
 
 ## More screenshots
 
-![](https://i.imgur.com/Mh0yWN7.png)
+![](https://i.imgur.com/uNotT1y.png)
 ![](https://i.imgur.com/JnYg4eA.png)
 ![](https://i.imgur.com/luECKUX.png)
 ![](https://i.imgur.com/3HcWw4w.png)
