@@ -31,6 +31,9 @@
 * Fixed shortcut creation
 * Fixed language based errors with game titles on shortcuts
 
+### Version 1.7.5
+* Fixed UID issues with the claim all section
+
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
