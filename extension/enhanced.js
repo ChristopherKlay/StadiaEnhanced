@@ -1467,8 +1467,8 @@ setInterval(function() {
 
         // Add "Show All" UI element
         if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length != 0) {
-            if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].contains(enhanced_showAll) === false) {
-                document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].append(enhanced_showAll);
+            if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[0].contains(enhanced_showAll) === false) {
+                document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[0].append(enhanced_showAll);
                 enhanced_showAll.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
                 enhanced_showState = false;
             }
@@ -1793,12 +1793,14 @@ function enhanced_loadUIDs() {
 }
 
 function enhanced_skui2uid(uiddata, skuid) {
+  if (uiddata) {
     for (var i = 0; i < uiddata.length; i++) {
         if (uiddata[i][1][1] == skuid) {
             return uiddata[i][1][0]
             break
         }
     }
+  }
 }
 
 // Open pages including Stadia specific settings
