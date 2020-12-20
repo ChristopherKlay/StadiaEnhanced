@@ -34,6 +34,11 @@
 ### Version 1.7.5
 * Fixed UID issues with the claim all section
 
+### Version 1.7.6
+* Added support to autostart the streaming monitor
+* Decreased the delay when switching the monitor on/off drastically
+* Temp-fix to stop filtering/shortcuts from breaking the extension in some situations (will be fixed at a later point)
+
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
@@ -54,7 +59,7 @@
 * Added a language support system (based on Stadia settings, defaulting to english)
 * Added support for german, dutch, french, italian and swedish
 * Added a session timer next to the menu while playing
-* Reduced the average delay of Enhanced UI elements by ~80%
+* Reduced the average delay of Enhanced UI elements by roughly 80%
 * Changed UI position for windowed mode and stream monitor
 * Fixed incorrect base width/height values for resolution settings
 * Fixed dropdown size scaling to content
