@@ -7,27 +7,65 @@ var enhanced_AccountName = document.querySelectorAll(".VY8blf.fSorq")[0].textCon
 var enhanced_AccountID = document.querySelector(".ksZYgc.VGZcUb").getAttribute("data-player-id");
 console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountName + " (" + enhanced_AccountID + ") (" + enhanced_local + ")", enhanced_consoleEnhanced, "");
 
-// CSS Rules - Global styles and overwrites
-enhanced_addGlobalStyle(".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }"); // Remove padding above avatar
-enhanced_addGlobalStyle(".DGX7fe { display: none } "); // Hide the invite menu
-enhanced_addGlobalStyle("#enhanced_showAll > i { font-size: 1.5rem; }"); // Change "Show All" size
-enhanced_addGlobalStyle(".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }"); // Wrap menu items
-enhanced_addGlobalStyle(".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }"); // Adjust menu height
-enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }"); // Less padding on "Pro" labels
-enhanced_addGlobalStyle("#enhanced_wrapper:hover .enhanced_hover, .RjcqTc ~ .enhanced_hover { display: flex !important; }"); // Hover functionality for shortcuts
-enhanced_addGlobalStyle("#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }"); // Remove popup effect on game tiles
+// CSS Changes - Global styles and overwrites
+enhanced_appliedCSS = ".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }" // Remove padding above avatar
+enhanced_appliedCSS += ".DGX7fe { display: none }" // Hide the invite menu
+enhanced_appliedCSS += "#enhanced_showAll > i { font-size: 1.5rem; }" // Change "Show All" size
+enhanced_appliedCSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }" // Wrap menu items
+enhanced_appliedCSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
+enhanced_appliedCSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" labels
+enhanced_appliedCSS += "#enhanced_wrapper:hover .enhanced_hover, .RjcqTc ~ .enhanced_hover { display: flex !important; }" // Hover functionality for shortcuts
+enhanced_appliedCSS += "#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }" // Remove popup effect on game tiles
+enhanced_addGlobalStyle(enhanced_appliedCSS);
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
+var enhanced_monitorState = 0;
+var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
+var enhanced_streamMonitor = document.createElement("div");
+enhanced_streamMonitor.id = "enhanced_streamMonitor";
+enhanced_streamMonitor.style.position = "fixed";
+enhanced_streamMonitor.style.width = "auto";
+enhanced_streamMonitor.style.top = localStorage.getItem("enhanced_monitorPosition").split("|")[0] || "1rem"
+enhanced_streamMonitor.style.left = localStorage.getItem("enhanced_monitorPosition").split("|")[1] || "1rem"
+enhanced_streamMonitor.style.zIndex = 1000;
+enhanced_streamMonitor.style.borderRadius = "0.5rem";
+enhanced_streamMonitor.style.background = "rgba(32,33,36,0.7)";
+enhanced_streamMonitor.style.padding = "0.5rem";
+enhanced_streamMonitor.style.fontSize = "0.8rem";
+enhanced_streamMonitor.style.cursor = "pointer";
+enhanced_streamMonitor.style.display = "block";
+enhanced_streamMonitor.addEventListener("dblclick", function() {
+    enhanced_monitorMode = (enhanced_monitorMode + 1) % 2;
+    localStorage.setItem("enhanced_monitorMode", enhanced_monitorMode);
+});
+document.body.appendChild(enhanced_streamMonitor);
+enhanced_dragElement(enhanced_streamMonitor);
+
+function enhanced_updateMonitor(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_streamMonitor.style.display = "none";
+            break
+        case 1:
+            enhanced_streamMonitor.style.top = localStorage.getItem("enhanced_monitorPosition").split("|")[0] || "1rem"
+            enhanced_streamMonitor.style.left = localStorage.getItem("enhanced_monitorPosition").split("|")[1] || "1rem"
+            enhanced_streamMonitor.style.right = "";
+            enhanced_streamMonitor.style.bottom = "";
+            enhanced_streamMonitor.style.display = "block";
+            break;
+    }
+}
+
 function enhanced_RTCMonitor() {
     'use strict';
+    var enhanced_streamMonitor = document.getElementById("enhanced_streamMonitor");
     var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
     var enhanced_local = document.querySelector("html").getAttribute("lang");
     var enhanced_lang = loadLanguages(enhanced_local);
 
     // RTC Stream Inject
     var peerConnections = [];
-
     (function(original) {
         RTCPeerConnection = function() {
             var connection = new original(arguments[0], arguments[1]);
@@ -36,30 +74,10 @@ function enhanced_RTCMonitor() {
         };
         RTCPeerConnection.prototype = original.prototype;
     })(RTCPeerConnection);
-
     console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor: Successfully injected.", enhanced_consoleEnhanced, "");
 
-    // Stream Monitor
+    // Setup
     var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
-    var enhanced_streamMonitor = document.createElement("div");
-    enhanced_streamMonitor.id = "enhanced_streamMonitor";
-    enhanced_streamMonitor.style.position = "fixed";
-    enhanced_streamMonitor.style.width = "auto";
-    enhanced_streamMonitor.style.zIndex = 1000;
-    enhanced_streamMonitor.style.borderRadius = "0.5rem";
-    enhanced_streamMonitor.style.background = "rgba(32,33,36,0.7)";
-    enhanced_streamMonitor.style.padding = "0.5rem";
-    enhanced_streamMonitor.style.fontSize = "0.8rem";
-    enhanced_streamMonitor.style.cursor = "pointer";
-    enhanced_streamMonitor.style.display = "none";
-    enhanced_streamMonitor.addEventListener("dblclick", function() {
-        enhanced_monitorMode = (enhanced_monitorMode + 1) % 2;
-        localStorage.setItem("enhanced_monitorMode", enhanced_monitorMode);
-    });
-
-    document.body.appendChild(enhanced_streamMonitor);
-    enhanced_dragElement(enhanced_streamMonitor);
-
     var enhanced_lastTime = new Date();
     var enhanced_lastBytes = 0;
     var enhanced_lastFrames = 0;
@@ -70,24 +88,6 @@ function enhanced_RTCMonitor() {
     var enhanced_sessionStart;
     var enhanced_sessionActive = false;
     var enhanced_monitorState = 0;
-    enhanced_updateMonitor(0)
-    localStorage.setItem("enhanced_monitorOption", enhanced_monitorState)
-    localStorage.setItem("enhanced_monitorState", 0)
-
-    function enhanced_updateMonitor(opt) {
-        switch (opt) {
-            case 0:
-                enhanced_streamMonitor.style.display = "none";
-                break
-            case 1:
-                enhanced_streamMonitor.style.top = localStorage.getItem("enhanced_monitorPosition").split("|")[0] || "1rem"
-                enhanced_streamMonitor.style.left = localStorage.getItem("enhanced_monitorPosition").split("|")[1] || "1rem"
-                enhanced_streamMonitor.style.right = "";
-                enhanced_streamMonitor.style.bottom = "";
-                enhanced_streamMonitor.style.display = "block";
-                break;
-        }
-    }
 
     function enhanced_formatBytes(a, b) {
         if (0 == a) return "0 Bytes";
@@ -107,26 +107,16 @@ function enhanced_RTCMonitor() {
     }
 
     setInterval(function() {
-        var enhanced_monitorOption = parseInt(localStorage.getItem("enhanced_monitorOption") || 0);
-        if (enhanced_monitorOption != enhanced_monitorState) {
-            enhanced_monitorState = enhanced_monitorOption;
-            localStorage.setItem("enhanced_monitorOption", enhanced_monitorState)
-            enhanced_updateMonitor(enhanced_monitorState)
-        }
-
         if (document.location.href.indexOf("/player/") == -1) {
             peerConnections = [];
             enhanced_lastBytes = 0;
             enhanced_lastFrames = 0;
             enhanced_sessionActive = false;
             enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
-            localStorage.setItem("enhanced_monitorState", 0);
-            localStorage.setItem("enhanced_monitorOption", 0);
         } else if (peerConnections.length >= 3) {
             if (!enhanced_sessionActive) {
                 enhanced_sessionStart = new Date();
                 enhanced_sessionActive = true;
-                localStorage.setItem("enhanced_monitorState", 1);
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
             openConnections[1].getStats().then(function(stats) {
@@ -203,11 +193,8 @@ function enhanced_RTCMonitor() {
                                         enhanced_streamData = codec + " | " + resolution + " | " + framesReceivedPerSecond.toFixed(1) + "fps | " + latency + "ms"
                                         break
                                 }
-
-                                if (enhanced_monitorState == 1) {
-                                    localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
-                                }
                             }
+                            localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
                             enhanced_streamMonitor.innerHTML = enhanced_streamData;
                         });
                     }
@@ -218,7 +205,6 @@ function enhanced_RTCMonitor() {
     }, 1000);
 };
 embed(loadLanguages, false);
-embed(enhanced_dragElement, false);
 embed(enhanced_RTCMonitor);
 
 // Streaming Monitor
@@ -230,7 +216,8 @@ enhanced_Monitor.style.cursor = "pointer";
 enhanced_Monitor.style.userSelect = "none";
 enhanced_Monitor.tabIndex = "0";
 enhanced_Monitor.addEventListener("click", function() {
-    localStorage.setItem("enhanced_monitorOption", (parseInt(localStorage.getItem("enhanced_monitorOption") || 0) + 1) % 2)
+    enhanced_monitorState = (enhanced_monitorState + 1) % 2;
+    enhanced_updateMonitor(enhanced_monitorState);
 });
 enhanced_Monitor.addEventListener("dblclick", function() {
     document.getElementById("enhanced_streamMonitor").style.top = "1rem";
@@ -798,6 +785,38 @@ function enhanced_changeResolution() {
     }, 200);
 }
 embed(enhanced_changeResolution);
+
+// Stream Monitor Autostart
+var enhanced_autostartMonitor = parseInt(localStorage.getItem("enhanced_autostartMonitor") || 0);
+var enhanced_monitorStarted = false;
+var enhanced_monitorAutostart = document.createElement("div");
+enhanced_monitorAutostart.className = "pBvcyf QAAyWd";
+enhanced_monitorAutostart.id = "enhanced_monitorAutostart";
+enhanced_monitorAutostart.style.cursor = "pointer";
+enhanced_monitorAutostart.style.userSelect = "none";
+enhanced_monitorAutostart.style.paddingRight = "2rem";
+enhanced_monitorAutostart.tabIndex = "0";
+enhanced_monitorAutostart.addEventListener("click", function() {
+    enhanced_autostartMonitor = (enhanced_autostartMonitor + 1) % 2;
+    localStorage.setItem("enhanced_autostartMonitor", enhanced_autostartMonitor);
+    enhanced_changeMonitorAutostart(enhanced_autostartMonitor);
+});
+enhanced_settingsStream.append(enhanced_monitorAutostart);
+
+function enhanced_changeMonitorAutostart(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_monitorAutostart.style.color = "";
+            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb">' + enhanced_lang.automon + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Default'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_monitorAutostart.style.color = "#00e0ba";
+            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb">' + enhanced_lang.automon + '</span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Auto'", enhanced_consoleEnhanced, "");
+            break
+    }
+}
 
 // Grid - Control element for the homescreen library grid
 var enhanced_GridSize = parseInt(localStorage.getItem("enhanced_GridSize") || 0);
@@ -1390,6 +1409,7 @@ if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > 
 }
 
 // Apply settings
+enhanced_updateMonitor(0)
 enhanced_changeGridSize(enhanced_GridSize);
 enhanced_changeClock(enhanced_ClockOption);
 enhanced_changeFilter(enhanced_filterOption);
@@ -1405,6 +1425,7 @@ enhanced_changeMediaPreview(enhanced_hideUserMedia);
 enhanced_changeStreamMode(enhanced_useStreamMode);
 enhanced_changeCategoryPreview(enhanced_hideCategory);
 enhanced_changeGamePopup(enhanced_hidePopupEffect);
+enhanced_changeMonitorAutostart(enhanced_autostartMonitor);
 
 // After Setup
 console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.", enhanced_consoleEnhanced, "")
@@ -1467,8 +1488,8 @@ setInterval(function() {
 
         // Add "Show All" UI element
         if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length != 0) {
-            if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[0].contains(enhanced_showAll) === false) {
-                document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[0].append(enhanced_showAll);
+            if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].contains(enhanced_showAll) === false) {
+                document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].append(enhanced_showAll);
                 enhanced_showAll.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
                 enhanced_showState = false;
             }
@@ -1509,7 +1530,9 @@ setInterval(function() {
                         this.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
                     }
                 });
-                enhanced_wrappers[i].wrapper.appendChild(enhanced_visibility);
+                if (enhanced_visibility.id != "undefined") {
+                    enhanced_wrappers[i].wrapper.appendChild(enhanced_visibility);
+                }
                 enhanced_wrappers[i].visibility = enhanced_visibility;
             }
 
@@ -1560,7 +1583,9 @@ setInterval(function() {
                         window.open("https://stadiaicons.web.app/" + this.gameid + "/?fullName=" + encodeURIComponent(this.name), "_blank");
                     }
                 });
-                enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
+                if (enhanced_shortcut.gameid) {
+                    enhanced_wrappers[i].wrapper.appendChild(enhanced_shortcut);
+                }
                 enhanced_wrappers[i].shortcut = enhanced_shortcut;
             }
 
@@ -1661,16 +1686,12 @@ setInterval(function() {
         if (document.querySelector("#enhanced_Windowed") === null && document.querySelectorAll(".E0Zk9b")[0] !== undefined) {
             document.querySelectorAll(".E0Zk9b")[0].append(enhanced_Windowed);
         }
-    } else {
-        enhanced_Windowed.style.display = "none";
-    }
-
-    if (parseInt(localStorage.getItem("enhanced_monitorState")) == 1) {
         enhanced_Monitor.style.display = "flex";
         if (document.querySelector("#enhanced_Monitor") === null && document.querySelectorAll(".E0Zk9b")[0] !== undefined) {
             document.querySelectorAll(".E0Zk9b")[0].append(enhanced_Monitor);
         }
     } else {
+        enhanced_Windowed.style.display = "none";
         enhanced_Monitor.style.display = "none";
     }
 
@@ -1687,6 +1708,19 @@ setInterval(function() {
         }
     } else {
         enhanced_ClockOverlay.style.display = "none";
+    }
+
+    // Monitor Autostart
+    if (document.location.href.indexOf("/player/") != -1) {
+        if (enhanced_autostartMonitor == 1 && enhanced_monitorStarted == false) {
+            enhanced_monitorStarted = true;
+            enhanced_monitorState = 1;
+            enhanced_updateMonitor(enhanced_monitorState);
+        }
+    } else {
+        enhanced_monitorStarted = false;
+        enhanced_monitorState = 0;
+        enhanced_updateMonitor(enhanced_monitorState);
     }
 
     // Clock Widget - Update to current time / display option
@@ -1793,14 +1827,14 @@ function enhanced_loadUIDs() {
 }
 
 function enhanced_skui2uid(uiddata, skuid) {
-  if (uiddata) {
-    for (var i = 0; i < uiddata.length; i++) {
-        if (uiddata[i][1][1] == skuid) {
-            return uiddata[i][1][0]
-            break
+    if (uiddata) {
+        for (var i = 0; i < uiddata.length; i++) {
+            if (uiddata[i][1][1] == skuid) {
+                return uiddata[i][1][0]
+                break
+            }
         }
     }
-  }
 }
 
 // Open pages including Stadia specific settings
@@ -1927,7 +1961,8 @@ function loadLanguages(lang) {
                 "gamepopon": "Default Popup Effect",
                 "gamepopoff": "No Popup Effect",
                 "hide": "Hide",
-                "show": "Show"
+                "show": "Show",
+                "automon": "Autostart Stream Monitor"
             }`
             break
         case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/11 (By Mafrans)
@@ -1986,7 +2021,8 @@ function loadLanguages(lang) {
                 "gamepopon": "Default Popup Effect",
                 "gamepopoff": "No Popup Effect",
                 "hide": "Hide",
-                "show": "Show"
+                "show": "Show",
+                "automon": "Autostart Stream Monitor"
             }`
             break
         case "fr": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/8 (By ELowry)
@@ -2045,7 +2081,8 @@ function loadLanguages(lang) {
                 "gamepopon": "Default Popup Effect",
                 "gamepopoff": "No Popup Effect",
                 "hide": "Hide",
-                "show": "Show"
+                "show": "Show",
+                "automon": "Autostart Stream Monitor"
             }`
             break
         case "nl": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/9 (By timewasternl)
@@ -2104,7 +2141,8 @@ function loadLanguages(lang) {
                 "gamepopon": "Default Popup Effect",
                 "gamepopoff": "No Popup Effect",
                 "hide": "Hide",
-                "show": "Show"
+                "show": "Show",
+                "automon": "Autostart Stream Monitor"
             }`
             break
         case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/issues/13
@@ -2163,7 +2201,8 @@ function loadLanguages(lang) {
                 "gamepopon": "Standard Popup Effekt",
                 "gamepopoff": "Kein Popup Effekt",
                 "hide": "Verstecke",
-                "show": "Zeige"
+                "show": "Zeige",
+                "automon": "Streaming Monitor Autostart"
             }`
             break
         default:
@@ -2222,7 +2261,8 @@ function loadLanguages(lang) {
                 "gamepopon": "Default Popup Effect",
                 "gamepopoff": "No Popup Effect",
                 "hide": "Hide",
-                "show": "Show"
+                "show": "Show",
+                "automon": "Autostart Stream Monitor"
             }`
     }
     return JSON.parse(load);
