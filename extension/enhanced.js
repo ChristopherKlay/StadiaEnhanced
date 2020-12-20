@@ -22,12 +22,13 @@ enhanced_addGlobalStyle(enhanced_appliedCSS);
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 var enhanced_monitorState = 0;
 var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
+var enhanced_monitorPos = localStorage.getItem("enhanced_monitorPosition") || "1rem|1rem";
 var enhanced_streamMonitor = document.createElement("div");
 enhanced_streamMonitor.id = "enhanced_streamMonitor";
 enhanced_streamMonitor.style.position = "fixed";
 enhanced_streamMonitor.style.width = "auto";
-enhanced_streamMonitor.style.top = localStorage.getItem("enhanced_monitorPosition").split("|")[0] || "1rem"
-enhanced_streamMonitor.style.left = localStorage.getItem("enhanced_monitorPosition").split("|")[1] || "1rem"
+enhanced_streamMonitor.style.top = enhanced_monitorPos.split("|")[0];
+enhanced_streamMonitor.style.left = enhanced_monitorPos.split("|")[1];
 enhanced_streamMonitor.style.zIndex = 1000;
 enhanced_streamMonitor.style.borderRadius = "0.5rem";
 enhanced_streamMonitor.style.background = "rgba(32,33,36,0.7)";
