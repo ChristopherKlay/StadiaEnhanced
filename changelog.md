@@ -39,6 +39,9 @@
 * Decreased the delay when switching the monitor on/off drastically
 * Temp-fix to stop filtering/shortcuts from breaking the extension in some situations (will be fixed at a later point)
 
+### Version 1.7.7
+* Fixed a possible error when no monitor position is set
+
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
