@@ -1434,6 +1434,10 @@ var enhanced_loopCount = 0;
 var enhanced_loopTotal = 0;
 var enhanced_sessionStart = 0;
 var enhanced_wrappers = [];
+var enhanced_storedUIDs = {
+    timestamp: 0,
+    data: null
+};
 
 // Main Loop
 setInterval(function() {
@@ -1457,8 +1461,21 @@ setInterval(function() {
 
     // Enhanced Wrapper
     if (document.location.href.indexOf("/home") != -1) {
-        var enhanced_gameList = document.querySelectorAll(".GqLi4d");
-        var enhanced_uidData = enhanced_loadUIDs()
+        var enhanced_gameList = document.querySelectorAll( ".GqLi4d" );
+
+        if (enhanced_storedUIDs.timestamp < enhanced_loopTimer - (300000)) {
+            var enhanced_uidData = enhanced_loadUIDs();
+
+            if (enhanced_uidData !== null) {
+                enhanced_storedUIDs.timestamp = enhanced_loopTimer;
+                enhanced_storedUIDs.data = enhanced_uidData;
+                enhanced_storeUIDs(enhanced_storedUIDs.data);
+            }
+        }
+        if (enhanced_storedUIDs.timestamp === 0) {
+            enhanced_storedUIDs.data = localStorage.getItem("enhanced_storedUIDs");
+            enhanced_storedUIDs.timestamp = enhanced_loopTimer;
+        }
 
         for (var i = 0; i < enhanced_gameList.length; i++) {
 
@@ -1472,7 +1489,7 @@ setInterval(function() {
 
                 enhanced_wrappers.push({
                     parent: enhanced_gameList[i].parentNode,
-                    id: enhanced_skui2uid(enhanced_uidData, enhanced_gameList[i].getAttribute("jsdata").split(";")[1]),
+                    id: enhanced_skui2uid(enhanced_storedUIDs.data, enhanced_gameList[i].getAttribute("jsdata").split(";")[1]),
                     name: enhanced_gameList[i].getElementsByClassName("xmcLFc")[0].textContent,
                     wrapper: enhanced_wrapper,
                     game: enhanced_gameList[i],
@@ -1822,18 +1839,43 @@ function enhanced_loadUIDs() {
     var enhanced_embedScripts = document.querySelectorAll('body>script');
     for (s in enhanced_embedScripts) {
         if (enhanced_embedScripts[s].attributes && enhanced_embedScripts[s].attributes.length == 1 && enhanced_embedScripts[s].hasAttribute('nonce') && enhanced_embedScripts[s].text.substring(0, 19) == 'AF_initDataCallback' && enhanced_embedScripts[s].text.indexOf("key: 'ds:6") !== -1) {
-            return JSON.parse(enhanced_embedScripts[s].text.split('data:[false,').pop().split('[]')[0].slice(0, -2));
+            var uiddata = JSON.parse(enhanced_embedScripts[s].text.split('data:[false,').pop().split('[]')[0].slice(0, -2)),
+                parsedUiddata = {};
+            for (var i = 0; i < uiddata.length; i++) {
+                parsedUiddata[uiddata[i][1][1]] = uiddata[i][1][0];
+            }
+            return parsedUiddata;
         }
     }
+    return null;
 }
 
 function enhanced_skui2uid(uiddata, skuid) {
     if (uiddata) {
-        for (var i = 0; i < uiddata.length; i++) {
-            if (uiddata[i][1][1] == skuid) {
-                return uiddata[i][1][0]
-                break
+        for (const key in uiddata) {
+            if (key == skuid) {
+                return uiddata[key];
+                break;
             }
+        }
+    }
+}
+
+function enhanced_storeUIDs(uiddata) {
+    if (uiddata) {
+        var combinedUIDData = localStorage.getItem("enhanced_storedUIDs"),
+            storedUIDsChanged = false;
+        if (combinedUIDData == null) {
+            combinedUIDData = {};
+        }
+        for (const key in uiddata) {
+            if (!combinedUIDData.hasOwnProperty(key) || combinedUIDData[key] != uiddata[key]) {
+                combinedUIDData[key] = uiddata[key];
+                storedUIDsChanged = true;
+            }
+        }
+        if (storedUIDsChanged) {
+            localStorage.setItem("enhanced_storedUIDs", combinedUIDData);
         }
     }
 }
