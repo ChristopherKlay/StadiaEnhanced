@@ -42,6 +42,12 @@
 ### Version 1.7.7
 * Fixed a possible error when no monitor position is set
 
+### Version 1.7.8
+* Added the ability to reset most settings
+* Changed the home screen filter from using the UID to the SKU
+* Moved the option to create a shortcut for a game to the pop-up window
+* Fixed being unable to switch between full and minified stream monitor
+
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
