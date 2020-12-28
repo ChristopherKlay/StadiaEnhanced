@@ -1,6 +1,10 @@
 
 # Translations
 
+# Important Note
+Due to `v1.8.0` revamping big parts of the menu and other translation heavy areas, translations are currently closed.
+New translation files will be released together with `v1.8.0` as soon as possible.
+
 ## Available languages
 Stadia Enhanced is currently available in the following languages:
 
