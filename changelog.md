@@ -9,6 +9,7 @@
 * Re-enabled the sort function when searching the store
 * Changed the extension menu to display all changes, instead of just the most recent ones
 * Fixed the filter icon being attached to the wrong element if Pro games are claimable
+* Fixed styling issues with the streaming monitor on smaller screens
 * Temporarily disabled incomplete translations - see GitHub for details
 
 ## Version 1.7.0
