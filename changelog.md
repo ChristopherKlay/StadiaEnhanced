@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 1.8.0
+* Settings menu changed from full-width to scrollable dropdown
+* Added descriptions and default values to menu options
+* Added statistics to the users full overview ("See More/All") on profiles
+* Added a option to split store lists into two columns
+* Added the option to enable scrollbars on the homescreen and store
+* Re-enabled the sort function when searching the store
+* Changed the extension menu to display all changes, instead of just the most recent ones
+* Fixed the filter icon being attached to the wrong element if Pro games are claimable
+* Temporarily disabled incomplete translations - see GitHub for details
+
 ## Version 1.7.0
 * Added shortcut integration by ELowry
 * Added support for a minified streaming monitor (switch via doubleclick)
