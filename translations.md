@@ -2,20 +2,19 @@
 # Translations
 
 # Important Note
-Due to `v1.8.0` revamping big parts of the menu and other translation heavy areas, translations are currently closed.
-New translation files will be released together with `v1.8.0` as soon as possible.
+Version `1.8.0` revamped a big part of the menu and thus the needed translation lines changed heavily. As always english and german are supported by default, but i've disabled other languages (they will for now default to english) until the translations are available - they will be patched in whenever available.
 
 ## Available languages
 Stadia Enhanced is currently available in the following languages:
 
-| Language | Author |
-|--|--|
-| English (default) | [ChristopherKlay](https://github.com/ChristopherKlay) |
-| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | [ELowry](https://github.com/ELowry) |
-| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | [zMattyPower](https://github.com/zMattyPower) |
-| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | [ChristopherKlay](https://github.com/ChristopherKlay) |
-| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | [Mafrans](https://github.com/Mafrans) |
-| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | [timewasternl](https://github.com/timewasternl) |
+| Language | Author | Status |
+|--|--|--|
+| English (default) | [ChristopherKlay](https://github.com/ChristopherKlay) | Complete |
+| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | [ELowry](https://github.com/ELowry) | Incomplete |
+| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | [zMattyPower](https://github.com/zMattyPower) | Incomplete |
+| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | [ChristopherKlay](https://github.com/ChristopherKlay) | Complete |
+| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | [Mafrans](https://github.com/Mafrans) | Incomplete |
+| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | [timewasternl](https://github.com/timewasternl) | Incomplete |
 
 ## Your language is currently not supported?
 If your language is not currently supported and no translation is available under [translations](https://github.com/ChristopherKlay/StadiaEnhanced/discussions?discussions_q=category%3ATranslations), you can help translate the extension by doing the following:
@@ -27,24 +26,21 @@ If your language is not currently supported and no translation is available unde
 Due to following Stadias language settings, languages like "en_GB"/"en_US" will currently default to "en".
 # Template
 
-## Explanation
-The left side of the following code are variables used to define specific text elements by Stadia Enhanced, while the right side features the specific translation. Most elements are self explained, but I will list some more complicated ones and their use case in detail below.
-|Variable|Use Case|
-|--|--|
-|inviteactive|Shortly displayed after clicking the invite link button|
-|searchbtnbase|Used for "Search on" YouTube/Metacritic buttons on game pages
-|avatarpopup|The text displayed when setting a custom avatar
-|searchheader|Used for "Games including 'searchterm'" when searching the store
-|shortcutshover/toggle|Option descriptions to show shortcuts via hovering or permanently
-
-## Current Template - Updated 17.12.2020
+## Current Template - Updated 01.01.2021
 
 ```
 LANG: en
     
 "default": "Default",
 "native": "Native",
+"hide": "Hide",
+"show": "Show",
+"visible": "Visible",
+"hidden": "Hidden",
+"enabled": "Enabled",
 "disabled": "Disabled",
+"auto": "Automatic",
+"manual": "Manual",
 "windowed": "Windowed Mode",
 "fullscreen": "Fullscreen",
 "searchstore": "Search store",
@@ -52,16 +48,6 @@ LANG: en
 "prodeals": "Pro Deals",
 "allgames": "All Games",
 "usermedia": "Screenshots & Videos",
-"gridsize": "Grid Size",
-"friendslist": "Friends List",
-"igoverlay": "In-Game Overlay",
-"listoverlay": "List & Overlay",
-"filtertoggle": "Toggle Filter",
-"filterquick": "Quick Filter",
- "shortcutshover":"Autohide Shortcut Buttons",
-"shortcutstoggle":"Shortcut Buttons",
-"invitebase": "Copy invite link",
-"inviteactive": "Copied!",
 "searchbtnbase": "Search on",
 "avatarpopup": "New avatar URL (empty for default):",
 "searchheader": "Games including",
@@ -82,19 +68,49 @@ LANG: en
 "speedtest": "Speedtest",
 "quickaccess": "Quick Access",
 "messages": "Messages",
-"prolabel": "Pro Label",
-"homegallery": "User Gallery",
-"quickprev": "Message Preview",
-"quickrep": "Quick Reply",
-"offlinefriend": "Offline Friends",
-"invisiblefriend": "Invisible Friends",
 "avatar": "Avatar",
-"streammode": "Streaming Mode",
 "interface": "Interface",
+"shortcut": "Install a shortcut for",
+"gridsize": "Grid Size",
+"griddesc": "Changes the amount of games per row on the homescreen.",
+"clock": "Clock",
+"clockdesc": "Displays the current time on the friends list, as a in-game overlay, or both.",
+"friendslist": "Friends List",
+"igoverlay": "In-Game Overlay",
+"listoverlay": "List & Overlay",
+"filter": "Filter",
+"filterdesc": "Allows you to sort your homescreen by hiding games. The filter can be toggled via the symbol, top-right above your games on the homescreen.",
+"filtertoggle": "Toggle",
+"filterquick": "Quick",
+"invitebase": "Copy invite link",
+"inviteactive": "Copied!",
+"prolabel": "Pro Label",
+"prolabeldesc": "Removes the 'Pro' label from games on the homescreen.",
+"homegallery": "User Gallery",
+"homegallerydesc": "Hides the 'Captures' area at the bottom of the homescreen.",
+"quickprev": "Message Preview",
+"quickprevdesc": "Hides the message preview in the friends list.",
+"quickrep": "Quick Reply",
+"quickrepdesc": "Hides the quick reply option in chats.",
+"offlinefriend": "Offline Friends",
+"offlinefrienddesc": "Hides offline friends in the friends list.",
+"invisiblefriend": "Invisible Friends",
+"invisiblefrienddesc": "Hides friends with unknown online status in the friends list.",
+"streammode": "Streaming Mode",
+"streammodedesc": "Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).",
 "catprev": "Category Preview",
-"shortcuthover": "Install a Shortcut for",
-"gamepopon": "Default Popup Effect",
-"gamepopoff": "No Popup Effect",
-"hide": "Hide",
-"show": "Show"
+"catprevdesc": "Hides the category tags when hovering over a game.",
+"popup": "Popup Effect",
+"popupdesc": "Removes the zoom-in / enlarge effect when hovering over a game on the homesceen.",
+"streammondesc": "Activate to start the monitor whenever a game starts.",
+"resolutiondesc": "The targeted resolution for games. 1440p and 2160p require VP9.",
+"codecdesc": "The codec used for games.",
+"confirmreset": "Are you sure you want to reset the settings?",
+"gamesfinished": "Games Finished",
+"achievementsunlocked": "Achievements Unlocked",
+"splitstore": "Split Store Lists",
+"splitstoredesc": "Splits store lists into two columns for a better overview.",
+"scrollbar": "Scrollbars",
+"scrollbardesc": "Enables scrollbars on the homescreen and store.",
+"resetsettings": "Reset Settings"
 ```
