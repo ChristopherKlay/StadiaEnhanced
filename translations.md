@@ -41,6 +41,7 @@ LANG: en
 "disabled": "Disabled",
 "auto": "Automatic",
 "manual": "Manual",
+"responsive": "Responsive",
 "windowed": "Windowed Mode",
 "fullscreen": "Fullscreen",
 "searchstore": "Search store",
