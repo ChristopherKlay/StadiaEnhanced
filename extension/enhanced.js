@@ -829,26 +829,57 @@ function enhanced_changeGridSize(size) {
     switch (size) {
         case 0:
             enhanced_Grid.style.color = "";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }")
+            enhanced_addGlobalStyle(
+                `@media (max-width: 640px) { .lEPylf.YOW9Fd:before { display: none !important; } }
+                .lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }`
+            )
             break;
         case 1:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }")
+            enhanced_addGlobalStyle(
+                `@media (max-width: 640px) { .lEPylf.YOW9Fd:before { display: none !important; } }
+                .lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }`
+            )
             break;
         case 2:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }")
+            enhanced_addGlobalStyle(
+                `@media (max-width: 640px) { .lEPylf.YOW9Fd:before { display: none !important; } }
+                .lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }`
+            )
             break;
         case 3:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }")
+            enhanced_addGlobalStyle(
+                `@media (max-width: 640px) { .lEPylf.YOW9Fd:before { display: none !important; } }
+                .lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }`
+            )
             break;
         case 4:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }")
+            enhanced_addGlobalStyle(
+                `@media (max-width: 640px) { .lEPylf.YOW9Fd:before { display: none !important; } }
+                .lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }`
+            )
+            break;
+        case 5:
+            enhanced_Grid.style.color = "#00e0ba";
+            enhanced_addGlobalStyle(
+                `@media (max-width: 640px) { .lEPylf.YOW9Fd:before { display: none !important; } }
+                .lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }
+                @media (min-width: 800px) { .lEPylf.YOW9Fd > div { grid-column: span 4 / span 4 !important; } }
+                @media (min-width: 1024px) { .lEPylf.YOW9Fd > div { grid-column: span 3 / span 3 !important; } }
+                @media (min-width: 1920px) { .lEPylf.YOW9Fd > div { grid-column: span 2 / span 2 !important; } }
+                @media (min-width: 1920px) AND (max-width: 2559px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(10,minmax(auto,7.8125rem)) !important; }`
+            )
             break;
     }
-    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.gridsize + ': ' + (enhanced_GridSize + 2) + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.griddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': 2</span></span>';
+    let enhanced_gridsizename = enhanced_GridSize + 2;
+    if ( enhanced_gridsizename >= 7 )
+    {
+        enhanced_gridsizename = enhanced_lang.gridresponsive
+	}
+    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.gridsize + ': ' + enhanced_gridsizename + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.griddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default + ': 2</span></span>';
     console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + (enhanced_GridSize + 2) + ".", enhanced_consoleEnhanced, "");
 }
 
@@ -2055,6 +2086,7 @@ function loadLanguages(lang) {
                 "shortcut": "Installiere eine Verknüpfung für",
                 "gridsize": "Rastergröße",
                 "griddesc": "Ändert die Anzahl der Spiele pro Reihe auf dem Startbildschirm.",
+                "gridresponsive": "Responsive",
                 "clock": "Uhr",
                 "clockdesc": "Zeigt die Uhrzeit in der Freundesliste, als Einblendung im Spiel, oder beides.",
                 "friendslist": "Freundesliste",
@@ -2141,6 +2173,7 @@ function loadLanguages(lang) {
                 "shortcut": "Install a shortcut for",
                 "gridsize": "Grid Size",
                 "griddesc": "Changes the amount of games per row on the homescreen.",
+                "gridresponsive": "Responsive",
                 "clock": "Clock",
                 "clockdesc": "Displays the current time on the friends list, as a in-game overlay, or both.",
                 "friendslist": "Friends List",
