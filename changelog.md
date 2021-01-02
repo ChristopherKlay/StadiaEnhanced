@@ -12,6 +12,15 @@
 * Fixed styling issues with the streaming monitor on smaller screens
 * Temporarily disabled incomplete translations - see GitHub for details
 
+### Version 1.8.1
+* Added a "Responsive" option to the grid size settings
+* Added french and catalan translation
+* Added a option to enable/disable the shortcut feature
+* Changed the shortcut icon to only show on hover and fixed it's tooltip
+* Changed the searchbar to auto-hide on small screens, to avoid overlapping issues
+* Fixed settings reset not including the scrollbar option
+* Fixed a possible error when loading the username/tag
+
 ## Version 1.7.0
 * Added shortcut integration by ELowry
 * Added support for a minified streaming monitor (switch via doubleclick)
