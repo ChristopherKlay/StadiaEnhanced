@@ -819,7 +819,7 @@ enhanced_Grid.style.userSelect = "none";
 enhanced_Grid.style.borderBottom = "1px solid rgba(255,255,255,.06)";
 enhanced_Grid.tabIndex = "0";
 enhanced_Grid.addEventListener("click", function() {
-    enhanced_GridSize = (enhanced_GridSize + 1) % 5;
+    enhanced_GridSize = (enhanced_GridSize + 1) % 6;
     localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
     enhanced_changeGridSize(enhanced_GridSize)
 });
