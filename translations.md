@@ -7,14 +7,15 @@ Version `1.8.0` revamped a big part of the menu and thus the needed translation 
 ## Available languages
 Stadia Enhanced is currently available in the following languages:
 
-| Language | Author | Status |
-|--|--|--|
-| English (default) | [ChristopherKlay](https://github.com/ChristopherKlay) | Complete |
-| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | [ELowry](https://github.com/ELowry) | Incomplete |
-| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | [zMattyPower](https://github.com/zMattyPower) | Incomplete |
-| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | [ChristopherKlay](https://github.com/ChristopherKlay) | Complete |
-| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | [Mafrans](https://github.com/Mafrans) | Incomplete |
-| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | [timewasternl](https://github.com/timewasternl) | Incomplete |
+| Language | Status |
+|--|--|
+| English (default) | Complete |
+| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | Complete |
+| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Complete |
+| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Complete |
+| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Incomplete |
+| [Catan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Complete |
+| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Incomplete |
 
 ## Your language is currently not supported?
 If your language is not currently supported and no translation is available under [translations](https://github.com/ChristopherKlay/StadiaEnhanced/discussions?discussions_q=category%3ATranslations), you can help translate the extension by doing the following:
