@@ -14,7 +14,7 @@ Stadia Enhanced is currently available in the following languages:
 | [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Complete |
 | [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Complete |
 | [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Incomplete |
-| [Catan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Complete |
+| [Catalan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Complete |
 | [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Incomplete |
 
 ## Your language is currently not supported?
