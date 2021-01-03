@@ -10,12 +10,13 @@ Stadia Enhanced is currently available in the following languages:
 | Language | Status |
 |--|--|
 | English (default) | Complete |
-| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | Complete |
-| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Complete |
-| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Complete |
-| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Incomplete |
 | [Catalan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Complete |
 | [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Incomplete |
+| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | Complete |
+| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Complete |
+| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Complete |
+| [Spanish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67) | Complete |
+| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Incomplete |
 
 ## Your language is currently not supported?
 If your language is not currently supported and no translation is available under [translations](https://github.com/ChristopherKlay/StadiaEnhanced/discussions?discussions_q=category%3ATranslations), you can help translate the extension by doing the following:
