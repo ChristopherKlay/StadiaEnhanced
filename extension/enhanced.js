@@ -2399,7 +2399,7 @@ function loadLanguages(lang) {
                 "latency": "Latencia",
                 "jitter": "Jitter Buffer",
                 "compression": "Compresión",
-                "streammon": "Monitor de retransmisión"
+                "streammon": "Monitor de retransmisión",
                 "stream": "Retransmisión",
                 "community": "Comunidad",
                 "speedtest": "Test de Velocidad",
