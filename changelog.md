@@ -1,20 +1,5 @@
 # Changelog
 
-<details open>
-<summary>Version 1.8</summary>
-
-## Version 1.8.0
-* Settings menu changed from full-width to scrollable dropdown
-* Added descriptions and default values to menu options
-* Added statistics to the users full overview ("See More/All") on profiles
-* Added a option to split store lists into two columns
-* Added the option to enable scrollbars on the homescreen and store
-* Re-enabled the sort function when searching the store
-* Changed the extension menu to display all changes, instead of just the most recent ones
-* Fixed the filter icon being attached to the wrong element if Pro games are claimable
-* Fixed styling issues with the streaming monitor on smaller screens
-* Temporarily disabled incomplete translations - see GitHub for details
-
 ## Version 1.8.0
 * Settings menu changed from full-width to scrollable dropdown
 * Added descriptions and default values to menu options
@@ -47,11 +32,7 @@
 * Fixed latency/compression showing "NaN" instead of placeholder
 * Fixed a styling issue where text could clip into nearby elements
 * Fixed and updated spanish translation
-</details>
 
-<details closed>
-<summary>Version 1.7</summary>
-  
 ## Version 1.7.0
 * Added shortcut integration by ELowry
 * Added support for a minified streaming monitor (switch via doubleclick)
@@ -99,11 +80,7 @@
 * Changed the home screen filter from using the UID to the SKU
 * Moved the option to create a shortcut for a game to the pop-up window
 * Fixed being unable to switch between full and minified stream monitor
-</details>
 
-<details closed>
-<summary>Version 1.6</summary>
-  
 ## Version 1.6.0
 * New settings menu
 * Added a emoji picker to chats
@@ -117,11 +94,7 @@
 * Fixed stream monitor data not loading
 * Fixed overlay clock showing after refreshing a game, without being enabled
 * Fixed language settings via URL parameter (i.e. ?hl=en) being reset
-</details>
 
-<details closed>
-<summary>Version 1.6</summary>
-  
 ## Version 1.5.0
 * Added the option to show/hide games on the homescreen
 * Added setting to switch between "Toggle" and "Quick" filtering, or disable filtering
@@ -160,11 +133,7 @@
 ### Version 1.5.6
 * Fixed various elements due to changes on Stadias side
 * Fixed avatar not showing in "Friends" section of profiles
-</details>
 
-<details closed>
-<summary>Version 1.4</summary>
-  
 ## Version 1.4.0
 * Added a new settings/shortcut menu
 * Added overlay clock
@@ -181,22 +150,14 @@
 
 ### Version 1.4.2
 * Changed "Base Deals" to "On Sale", due to newly used categories
-</details>
 
-<details closed>
-<summary>Version 1.3</summary>
-  
 ## Version 1.3.0
 * Added a clock widget to the friends menu
 * Added a icon to the search bar
 * Added windowed mode support
 * Fixed account menu hiding when changing options
 * Fixed wrong avatars on friends achievement pages
-</details>
 
-<details closed>
-<summary>Version 1.2</summary>
-  
 ## Version 1.2.0
 * Potential fix for games not starting, due to empty start-up preference
 * Custom avatar option (click your icon)
@@ -214,11 +175,7 @@
 * Fixed store dropdown menu being unresponsive
 * Changed grid options to only be visible on the homescreen
 * Moved the version number to be visible when hovering the extensions icon
-</details>
 
-<details closed>
-<summary>Version 1.1</summary>
-  
 ## Version 1.1.0
 * Fixed quick access issues with multiple logged in users
 * Moved the codec and resolution options to the settings popup menu
@@ -226,11 +183,7 @@
 * Fixed some UI elements not being reachable via tabbing
 * Added current version number to the popup window
 * Changes to the game library size (hopefully fixing overflows)
-</details>
 
-<details closed>
-<summary>Version 1.0</summary>
-  
 ## Version 1.0.0
 * Converted from userscript to chrome extension
 * Fixed the stream monitor blocking voice chat and other features
@@ -240,11 +193,7 @@
 * New popup menu, including changelog, quick start and shortcuts
 * Changed "Pro Games" to "Pro" for the sake of UI space at 720p
 * Fixed multiple issues related to duplicated content ID
-</details>
 
-<details closed>
-<summary>Version Pre 1.0</summary>
-  
 ## Version 0.3.5
 * Added "Pro Games" shortcut
 * Code optimisation
@@ -272,4 +221,3 @@
 
 ## Version 0.3.0
 * First GitHub Release
-</details>
