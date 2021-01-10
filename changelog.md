@@ -33,6 +33,14 @@
 * Fixed a styling issue where text could clip into nearby elements
 * Fixed and updated spanish translation
 
+### Version 1.8.4
+* Added danish translation
+* Added the option to filter captures by type (screenshot/clip)
+* Added the option to filter lists by type (game/bundle/add-on)
+* Added decoding time and type (software/hardware) to the stream monitor
+* Fixed the emoji picker not being displayed
+* Fixed styling issues when using split store lists
+
 ## Version 1.7.0
 * Added shortcut integration by ELowry
 * Added support for a minified streaming monitor (switch via doubleclick)
