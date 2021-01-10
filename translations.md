@@ -32,9 +32,12 @@ Due to following Stadias language settings, languages like "en_GB"/"en_US" will 
 ## Current Template - Updated 10.01.2021
 ### New content
 ```
-"games": "Games",
-"bundles": "Bundles",
-"addons": "Add-ons",
+"games": "Games"
+"bundles": "Bundles"
+"addons": "Add-ons"
+"hardware": "Hardware"
+"software": "Software"
+"decodetime": "Decoding Time"
 ```
 ### Full translation
 ```
@@ -67,6 +70,8 @@ LANG: en
 "sessiontime": "Session time",
 "codec": "Codec",
 "resolution": "Resolution",
+"hardware": "Hardware",
+"software": "Software",
 "trafficsession": "Session traffic",
 "trafficcurrent": "Current traffic",
 "trafficaverage": "Average traffic",
@@ -74,6 +79,7 @@ LANG: en
 "framedrop": "Frames dropped",
 "latency": "Latency",
 "jitter": "Jitter Buffer",
+"decodetime": "Decoding Time",
 "compression": "Compression",
 "streammon": "Stream Monitor",
 "stream": "Stream",
