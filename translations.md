@@ -28,8 +28,14 @@ If your language is not currently supported and no translation is available unde
 Due to following Stadias language settings, languages like "en_GB"/"en_US" will currently default to "en".
 # Template
 
-## Current Template - Updated 01.01.2021
-
+## Current Template - Updated 10.01.2021
+### New content
+```
+"games": "Games",
+"bundles": "Bundles",
+"addons": "Add-ons",
+```
+### Full translation
 ```
 LANG: en
     
@@ -43,6 +49,9 @@ LANG: en
 "disabled": "Disabled",
 "auto": "Automatic",
 "manual": "Manual",
+"games": "Games",
+"bundles": "Bundles",
+"addons": "Add-ons",
 "responsive": "Responsive",
 "windowed": "Windowed Mode",
 "fullscreen": "Fullscreen",
