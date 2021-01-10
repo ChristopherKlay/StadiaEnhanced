@@ -21,6 +21,18 @@
 * Fixed settings reset not including the scrollbar option
 * Fixed a possible error when loading the username/tag
 
+### Version 1.8.2
+* Added spanish and italian translation
+* Optimised the management of style elements added by the extension
+* Fixed a styling issue with the menu in chrome versions below 87
+
+### Version 1.8.3
+* Added a basic connectivity status display (dot) to the minified streaming monitor
+* Fixed game tiles not featuring the pop-up effect on default settings
+* Fixed latency/compression showing "NaN" instead of placeholder
+* Fixed a styling issue where text could clip into nearby elements
+* Fixed and updated spanish translation
+
 ## Version 1.7.0
 * Added shortcut integration by ELowry
 * Added support for a minified streaming monitor (switch via doubleclick)

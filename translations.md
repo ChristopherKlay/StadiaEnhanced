@@ -7,14 +7,17 @@ Version `1.8.0` revamped a big part of the menu and thus the needed translation 
 ## Available languages
 Stadia Enhanced is currently available in the following languages:
 
-| Language | Author | Status |
-|--|--|--|
-| English (default) | [ChristopherKlay](https://github.com/ChristopherKlay) | Complete |
-| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | [ELowry](https://github.com/ELowry) | Incomplete |
-| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | [zMattyPower](https://github.com/zMattyPower) | Incomplete |
-| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | [ChristopherKlay](https://github.com/ChristopherKlay) | Complete |
-| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | [Mafrans](https://github.com/Mafrans) | Incomplete |
-| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | [timewasternl](https://github.com/timewasternl) | Incomplete |
+| Language | Status |
+|--|--|
+| English (default) | Complete |
+| [Catalan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Active |
+| [Danish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81) | Active |
+| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Inactive |
+| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | Active |
+| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Active |
+| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Active |
+| [Spanish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67) | Active |
+| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Inactive |
 
 ## Your language is currently not supported?
 If your language is not currently supported and no translation is available under [translations](https://github.com/ChristopherKlay/StadiaEnhanced/discussions?discussions_q=category%3ATranslations), you can help translate the extension by doing the following:
@@ -26,8 +29,14 @@ If your language is not currently supported and no translation is available unde
 Due to following Stadias language settings, languages like "en_GB"/"en_US" will currently default to "en".
 # Template
 
-## Current Template - Updated 01.01.2021
-
+## Current Template - Updated 10.01.2021
+### New content
+```
+"games": "Games",
+"bundles": "Bundles",
+"addons": "Add-ons",
+```
+### Full translation
 ```
 LANG: en
     
@@ -41,6 +50,9 @@ LANG: en
 "disabled": "Disabled",
 "auto": "Automatic",
 "manual": "Manual",
+"games": "Games",
+"bundles": "Bundles",
+"addons": "Add-ons",
 "responsive": "Responsive",
 "windowed": "Windowed Mode",
 "fullscreen": "Fullscreen",

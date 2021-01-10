@@ -8,19 +8,21 @@ var enhanced_AccountID = document.querySelector(".ksZYgc.VGZcUb").getAttribute("
 console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountNameTag[0] + "#" + enhanced_AccountNameTag[1] + " (" + enhanced_AccountID + ") (" + enhanced_local + ")", enhanced_consoleEnhanced, "");
 
 // CSS Changes - Global styles and overwrites
-enhanced_appliedCSS = ".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }" // Remove padding above avatar
-enhanced_appliedCSS += ".DGX7fe { display: none }" // Hide the invite menu
-enhanced_appliedCSS += "#enhanced_showAll > i { font-size: 1.5rem; }" // Change "Show All" size
-enhanced_appliedCSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }" // Wrap menu items
-enhanced_appliedCSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
-enhanced_appliedCSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" labels
-enhanced_appliedCSS += "#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }" // Remove popup effect on game tiles
-enhanced_appliedCSS += ".tlZCoe { margin-right: .5rem; }" // Allow for multiple buttons on popup
-enhanced_appliedCSS += "::-webkit-scrollbar { width: 1rem; } ::-webkit-scrollbar-thumb { background-color: #2d2e30; border-radius: 1rem; border: 3px solid #202124; }" // Adjusted scrollbars
-enhanced_appliedCSS += ".Z5U6eb[jslog='81272'] { top: 4rem; }" // Fix store offset on scrollbars
-enhanced_appliedCSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
-enhanced_appliedCSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
-enhanced_addGlobalStyle(enhanced_appliedCSS);
+enhanced_CSS = ".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }" // Remove padding above avatar
+enhanced_CSS += ".DGX7fe { display: none }" // Hide the invite menu
+enhanced_CSS += "#enhanced_showAll > i { font-size: 1.5rem; }" // Change "Show All" size
+enhanced_CSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }" // Wrap menu items
+enhanced_CSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
+enhanced_CSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" labels
+enhanced_CSS += "#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }" // Remove popup effect on game tiles
+enhanced_CSS += ".tlZCoe { margin-right: .5rem; }" // Allow for multiple buttons on popup
+enhanced_CSS += "::-webkit-scrollbar { width: 1rem; } ::-webkit-scrollbar-thumb { background-color: #2d2e30; border-radius: 1rem; border: 3px solid #202124; }" // Adjusted scrollbars
+enhanced_CSS += ".Z5U6eb[jslog='81272'] { top: 4rem; }" // Fix store offset on scrollbars
+enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
+enhanced_CSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
+enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }" // Settings menu scrollbar width
+enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }" // Settings menu scrollbar style
+enhanced_injectStyle(enhanced_CSS, "enhanced_styleGeneral");
 
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
@@ -154,7 +156,7 @@ function enhanced_RTCMonitor() {
                             var packetsReceived = tmp1.packetsReceived;
                             var framesDropped = tmp2.framesDropped;
                             var latency = tmp4.currentRoundTripTime * 1000;
-                            if (latency == "undefined") {
+                            if (isNaN(latency)) {
                                 latency = "-";
                             }
                             var jitterBufferDelay = tmp2.jitterBufferDelay * 1000;
@@ -163,6 +165,10 @@ function enhanced_RTCMonitor() {
 
                             if (codec == "VP9") {
                                 var compression = (tmp1.qpSum - enhanced_lastQpSum) / (framesDecoded - enhanced_lastFramesDecoded);
+                                compression = compression.toFixed(1)
+                                if (isNaN(compression)) {
+                                    compression = "-";
+                                }
                             }
 
                             enhanced_lastFrames = framesReceived;
@@ -171,6 +177,7 @@ function enhanced_RTCMonitor() {
                             enhanced_lastBufferDelay = jitterBufferDelay;
                             enhanced_lastBufferEmitted = jitterBufferEmittedCount;
                             enhanced_lastQpSum = tmp1.qpSum;
+                            var enhanced_connectionStatus = "white";
                             var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
 
                             var enhanced_streamData = "Loading stream data.";
@@ -190,12 +197,22 @@ function enhanced_RTCMonitor() {
                                         enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b> " + latency + "ms<br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.jitter + ":</b> " + jitterBuffer.toPrecision(4) + "ms<br/>";
                                         if (codec == "VP9") {
-                                            enhanced_streamData += "<b>" + enhanced_lang.compression + ":</b> " + compression.toFixed(1);
+                                            enhanced_streamData += "<b>" + enhanced_lang.compression + ":</b> " + compression;
                                             enhanced_streamData += "<br/>";
                                         }
                                         break
                                     case 1:
-                                        enhanced_streamData = codec + " &ensp;|&ensp;" + resolution + "&ensp;|&ensp;" + framesReceivedPerSecond.toFixed(1) + "fps&ensp;|&ensp;" + latency + "ms"
+                                        if (parseInt(framesReceivedPerSecond) < 1) {
+                                            enhanced_connectionStatus = "white";
+                                        } else if (parseInt(framesReceivedPerSecond) < 57) {
+                                            enhanced_connectionStatus = "#FF7070"; // Red
+                                        } else if (parseInt(framesReceivedPerSecond) < 57) {
+                                            enhanced_connectionStatus = "#FFB83D"; // Yellow
+                                        } else {
+                                            enhanced_connectionStatus = "#00E0BA"; // Green
+                                        }
+
+                                        enhanced_streamData = codec + " &ensp;|&ensp;" + resolution + "&ensp;|&ensp;" + framesReceivedPerSecond.toFixed(1) + "fps&ensp;|&ensp;" + latency + "ms | <span style='color: " + enhanced_connectionStatus + ";'>⬤</span>";
                                         break
                                 }
                             }
@@ -534,7 +551,10 @@ enhanced_SettingsDropContent.id = "enhanced_SettingsDropContent";
 enhanced_SettingsDropContent.className = "us22N";
 enhanced_SettingsDropContent.style.position = "fixed";
 enhanced_SettingsDropContent.style.width = "30rem";
-enhanced_SettingsDropContent.style.inset = "4rem 1.5rem 1.5rem auto"
+enhanced_SettingsDropContent.style.top = "4rem";
+enhanced_SettingsDropContent.style.left = "auto";
+enhanced_SettingsDropContent.style.right = "1.5rem";
+enhanced_SettingsDropContent.style.bottom = "1rem";
 enhanced_SettingsDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
 enhanced_SettingsDropContent.style.zIndex = "20";
 enhanced_SettingsDropContent.style.flexFlow = "column";
@@ -545,8 +565,6 @@ enhanced_SettingsDropContent.style.overflowX = "hidden";
 if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
     document.querySelectorAll(".ZECEje")[1].prepend(enhanced_SettingsContainer);
 }
-enhanced_addGlobalStyle("#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }");
-enhanced_addGlobalStyle("#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }");
 
 // Settings - Shortcut
 var enhanced_settingsShortcut = document.createElement("div");
@@ -672,12 +690,12 @@ function enhanced_changeCodec(c) {
     switch (c) {
         case 0:
             enhanced_Codec.style.color = "";
-            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.codec + ': ' + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
+            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': ' + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'Automatic'.", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_Codec.style.color = "#00e0ba";
-            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.codec + ': VP9<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
+            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': VP9<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'VP9'.", enhanced_consoleEnhanced, "");
             break
         case 2:
@@ -685,7 +703,7 @@ function enhanced_changeCodec(c) {
             localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
             enhanced_updateResolution(enhanced_currentRes)
             enhanced_Codec.style.color = "#00e0ba";
-            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.codec + ': H264<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
+            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': H264<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'H264'", enhanced_consoleEnhanced, "");
             break
     }
@@ -694,7 +712,6 @@ function enhanced_changeCodec(c) {
 // Resolution - Control element for the stream resolution
 localStorage.setItem("enhanced_DeskWidth", window.screen.width);
 localStorage.setItem("enhanced_DeskHeight", window.screen.height);
-// Object.defineProperty(window.screen, "colorDepth", { value: 48 });
 var enhanced_currentRes = parseInt(localStorage.getItem("enhanced_ResOption") || 0);
 var enhanced_Resolution = document.createElement("div");
 enhanced_Resolution.className = "pBvcyf QAAyWd";
@@ -714,7 +731,7 @@ function enhanced_updateResolution(res) {
     switch (res) {
         case 0:
             enhanced_Resolution.style.color = "";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to 'Native'.", enhanced_consoleEnhanced, "");
             break
         case 1:
@@ -722,7 +739,7 @@ function enhanced_updateResolution(res) {
             localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
             enhanced_changeCodec(enhanced_currentCodec)
             enhanced_Resolution.style.color = "#00e0ba";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.resolution + ': 1440p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 1440p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '2560x1440'.", enhanced_consoleEnhanced, "");
             break
         case 2:
@@ -730,7 +747,7 @@ function enhanced_updateResolution(res) {
             localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
             enhanced_changeCodec(enhanced_currentCodec)
             enhanced_Resolution.style.color = "#00e0ba";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.resolution + ': 2160p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 2160p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '3840x2160'.", enhanced_consoleEnhanced, "");
             break
     }
@@ -774,6 +791,9 @@ function enhanced_changeResolution() {
                 value: y,
                 configurable: true
             });
+            Object.defineProperty(window.screen, "colorDepth", {
+                value: 48
+            });
         }
     }, 200);
 }
@@ -799,12 +819,12 @@ function enhanced_changeMonitorAutostart(opt) {
     switch (opt) {
         case 0:
             enhanced_monitorAutostart.style.color = "";
-            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.manual + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.manual + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Manual'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_monitorAutostart.style.color = "#00e0ba";
-            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Auto'", enhanced_consoleEnhanced, "");
             break
     }
@@ -830,32 +850,34 @@ function enhanced_changeGridSize(size) {
     switch (size) {
         case 0:
             enhanced_Grid.style.color = "";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }")
+            enhanced_CSS = ""
             break;
         case 1:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }")
+            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }"
             break;
         case 2:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }")
+            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }"
             break;
         case 3:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }")
+            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }"
             break;
         case 4:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(".lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }")
+            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }"
             break;
         case 5:
             enhanced_Grid.style.color = "#00e0ba";
-            enhanced_addGlobalStyle(`.lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }
-                @media (min-width: 1280px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; } }
-                @media (min-width: 1920px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; } }
-                @media (min-width: 2560px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; } }
-                @media (min-width: 3840px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; } }`);
+            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }"
+            enhanced_CSS += "@media (min-width: 1280px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; } }"
+            enhanced_CSS += "@media (min-width: 1920px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; } }"
+            enhanced_CSS += "@media (min-width: 2560px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; } }"
+            enhanced_CSS += "@media (min-width: 3840px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; } }"
     }
+
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleGrid");
 
     if (size < 5) {
         enhanced_gridOption = enhanced_GridSize + 2
@@ -863,7 +885,7 @@ function enhanced_changeGridSize(size) {
         enhanced_gridOption = enhanced_lang.responsive
     }
 
-    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.gridsize + ': ' + enhanced_gridOption + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.griddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': 2</span></span>';
+    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.gridsize + ': ' + enhanced_gridOption + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.griddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': 2</span></span>';
     console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + enhanced_gridOption + ".", enhanced_consoleEnhanced, "");
 }
 
@@ -887,25 +909,25 @@ function enhanced_changeClock(opt) {
     switch (opt) {
         case 0:
             enhanced_Clock.style.color = "";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             enhanced_ClockFriends.style.display = "none";
             console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_Clock.style.color = "#00e0ba";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.friendslist + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.friendslist + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             enhanced_ClockFriends.style.display = "flex";
             console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Friendlist'", enhanced_consoleEnhanced, "");
             break
         case 2:
             enhanced_Clock.style.color = "#00e0ba";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.igoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.igoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             enhanced_ClockFriends.style.display = "none";
             console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'In-Game Overlay'", enhanced_consoleEnhanced, "");
             break
         case 3:
             enhanced_Clock.style.color = "#00e0ba";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.listoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.listoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             enhanced_ClockFriends.style.display = "flex";
             console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Menu & Overlay'", enhanced_consoleEnhanced, "");
             break
@@ -932,17 +954,17 @@ function enhanced_changeFilter(opt) {
     switch (opt) {
         case 0:
             enhanced_gameFilter.style.color = "";
-            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_gameFilter.style.color = "#00e0ba";
-            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filtertoggle + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filtertoggle + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Toggle'", enhanced_consoleEnhanced, "");
             break
         case 2:
             enhanced_gameFilter.style.color = "#00e0ba";
-            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filterquick + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filterquick + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Quick'", enhanced_consoleEnhanced, "");
             break
     }
@@ -953,7 +975,7 @@ var enhanced_InviteURL = "https://stadia.com/link/referrals?si_rid=" + enhanced_
 var enhanced_Invite = document.createElement("div");
 enhanced_Invite.className = "pBvcyf QAAyWd";
 enhanced_Invite.id = "enhanced_Invite";
-enhanced_Invite.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_add</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.invitebase + '</span>';
+enhanced_Invite.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_add</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invitebase + '</span>';
 enhanced_Invite.style.cursor = "pointer";
 enhanced_Invite.style.userSelect = "none";
 enhanced_Invite.style.borderBottom = "1px solid rgba(255,255,255,.06)";
@@ -1029,20 +1051,19 @@ enhanced_settingsMessages.append(enhanced_hidePreview);
 function enhanced_changeMsgPreview(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".lzIqJf .DvD76d { display: flex; }");
-            enhanced_addGlobalStyle(".lzIqJf .xzJkDf { display: block; }");
+            enhanced_CSS = ""
             enhanced_hidePreview.style.color = "";
-            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".lzIqJf .DvD76d { display: none; }")
-            enhanced_addGlobalStyle(".lzIqJf .xzJkDf { display: none; }")
+            enhanced_CSS = ".lzIqJf .DvD76d { display: none; } .lzIqJf .xzJkDf { display: none; }"
             enhanced_hidePreview.style.color = "#00e0ba";
-            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes_off</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleMsgPreview");
 }
 
 // Quick Reply
@@ -1064,18 +1085,19 @@ enhanced_settingsMessages.append(enhanced_quickReply);
 function enhanced_changeQuickReply(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".bbVL5c { display: flex !important; }");
+            enhanced_CSS = ""
             enhanced_quickReply.style.color = "";
-            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".bbVL5c { display: none !important; }")
+            enhanced_CSS = ".bbVL5c { display: none !important; }"
             enhanced_quickReply.style.color = "#00e0ba";
-            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles_off</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleQuickReply");
 }
 
 // Hide: Offline Users
@@ -1098,12 +1120,12 @@ function enhanced_changeOfflineUser(opt) {
     switch (opt) {
         case 0:
             enhanced_offlineUser.style.color = "";
-            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_offlineUser.style.color = "#00e0ba";
-            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
@@ -1128,12 +1150,12 @@ function enhanced_changeInvisibleUser(opt) {
     switch (opt) {
         case 0:
             enhanced_invisibleUser.style.color = "";
-            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_invisibleUser.style.color = "#00e0ba";
-            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
@@ -1158,18 +1180,19 @@ enhanced_settingsGeneral.append(enhanced_proLabel);
 function enhanced_changeProLabel(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { display: block; }")
+            enhanced_CSS = ""
             enhanced_proLabel.style.color = "";
-            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.prolabel + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.prolabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.prolabel + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.prolabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Pro Labels: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".GqLi4d.XUBkDd .a1l9D { display: none; }")
+            enhanced_CSS = ".GqLi4d.XUBkDd .a1l9D { display: none; }"
             enhanced_proLabel.style.color = "#00e0ba";
-            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.prolabel + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.prolabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.prolabel + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.prolabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Pro Labels: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleProlabel");
 }
 
 // Hide User Media on Homescreen
@@ -1191,18 +1214,19 @@ enhanced_settingsGeneral.append(enhanced_mediaPreview);
 function enhanced_changeMediaPreview(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".ctThpb.lEPylf { display: block; }")
+            enhanced_CSS = ""
             enhanced_mediaPreview.style.color = "";
-            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".ctThpb.lEPylf { display: none; }")
+            enhanced_CSS = ".ctThpb.lEPylf { display: none; }"
             enhanced_mediaPreview.style.color = "#00e0ba";
-            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleMediaPreview");
 }
 
 // Category Preview
@@ -1224,18 +1248,19 @@ enhanced_settingsGeneral.append(enhanced_categoryPreview);
 function enhanced_changeCategoryPreview(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle("#enhanced_wrapper .ssR8Bc { display: inline-block !important; }");
+            enhanced_CSS = ""
             enhanced_categoryPreview.style.color = "";
-            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle("#enhanced_wrapper .ssR8Bc { display: none !important; }");
+            enhanced_CSS = "#enhanced_wrapper .ssR8Bc { display: none !important; }"
             enhanced_categoryPreview.style.color = "#00e0ba";
-            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleCategoryPreview");
 }
 
 // Popup on game tiles
@@ -1257,18 +1282,19 @@ enhanced_settingsGeneral.append(enhanced_gamePopup);
 function enhanced_changeGamePopup(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle("#enhanced_wrapper:hover { z-index: 3; transform: scale(1.1); transition: transform .2s cubic-bezier(0.35,0,0.15,1); }");
+            enhanced_CSS = "#enhanced_wrapper:hover { z-index: 3; transform: scale(1.1); transition: transform .2s cubic-bezier(0.35,0,0.15,1); }"
             enhanced_gamePopup.style.color = "";
-            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.default+'<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.default+'<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Enabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle("#enhanced_wrapper:hover { z-index: unset; transform: none; transition: none; }");
+            enhanced_CSS = "#enhanced_wrapper:hover { z-index: unset; transform: none; transition: none; }"
             enhanced_gamePopup.style.color = "#00e0ba";
-            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleGamePopup");
 }
 
 // Store-List Split
@@ -1290,18 +1316,19 @@ enhanced_settingsGeneral.append(enhanced_storeList);
 function enhanced_changeStoreList(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".alEDLe.URhE4b .h6J22d { float: none; width: 100%; } .alEDLe.URhE4b .h6J22d:nth-child(2n) { margin-left: 0; }");
+            enhanced_CSS = ""
             enhanced_storeList.style.color = "";
-            enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 0.5rem); } .alEDLe.URhE4b .h6J22d:nth-child(2n) { margin-left: 1rem; }");
+            enhanced_CSS = ".alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 0.5rem); } .alEDLe.URhE4b .h6J22d:nth-child(2n) { margin-left: 1rem; }"
             enhanced_storeList.style.color = "#00e0ba";
-            enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Enabled'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleStoreSplit");
 }
 
 // Enable Scrollbars
@@ -1323,18 +1350,19 @@ enhanced_settingsGeneral.append(enhanced_forcedScrollbar);
 function enhanced_changeScrollbar(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".Z5U6eb .qWf7Hd > .h1uihb { overflow-y: auto; height: auto; }");
+            enhanced_CSS = ""
             enhanced_forcedScrollbar.style.color = "";
-            enhanced_forcedScrollbar.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">unfold_more</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.scrollbar + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.scrollbardesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_forcedScrollbar.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">unfold_more</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.scrollbar + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.scrollbardesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Scrollbars: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".Z5U6eb .qWf7Hd > .h1uihb { overflow-y: scroll; height: 100%; }");
+            enhanced_CSS = ".Z5U6eb .qWf7Hd > .h1uihb { overflow-y: scroll; height: 100%; }"
             enhanced_forcedScrollbar.style.color = "#00e0ba";
-            enhanced_forcedScrollbar.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">unfold_more</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.scrollbar + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.scrollbardesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_forcedScrollbar.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">unfold_more</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.scrollbar + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.scrollbardesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Scrollbars: Set to 'Enabled'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleScrollbar");
 }
 
 // Shortcuts
@@ -1357,12 +1385,12 @@ function enhanced_changeShortcuts(opt) {
     switch (opt) {
         case 0:
             enhanced_showShortcut.style.color = "";
-            enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
             enhanced_showShortcut.style.color = "#00e0ba";
-            enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+            enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Enabled'", enhanced_consoleEnhanced, "");
             break
     }
@@ -1386,18 +1414,19 @@ enhanced_settingsGeneral.append(enhanced_streamMode);
 function enhanced_changeStreamMode(opt) {
     switch (opt) {
         case 0:
-            enhanced_addGlobalStyle(".lzIqJf .Y1rZWd.QAAyWd.PuD06d, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: none; text-shadow: none }");
+            enhanced_CSS = ""
             enhanced_streamMode.style.color = "";
-            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_addGlobalStyle(".lzIqJf .Y1rZWd.QAAyWd.PuD06d, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }");
+            enhanced_CSS = ".lzIqJf .Y1rZWd.QAAyWd.PuD06d, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }"
             enhanced_streamMode.style.color = "#00e0ba";
-            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 25rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Enabled'", enhanced_consoleEnhanced, "");
             break
     }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleStreamMode");
 }
 
 // Avatar - Allows the user to set a custom avatar
@@ -1422,14 +1451,15 @@ enhanced_customAvatar.addEventListener("click", function() {
 
 function enhanced_setAvatar(url) {
     console.log("%cStadia Enhanced" + "%c ⚙️ - Avatar changed to: " + url, enhanced_consoleEnhanced, "");
-    enhanced_addGlobalStyle('.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.rybUIf { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.dOyvbe { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.Nv1Sab[alt$="' + enhanced_AccountNameTag[0] + '"] { content: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('c-wiz[data-p*="' + enhanced_AccountID + '"] .XZRzG { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountID + '"] .PwtJse { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.Tidcwc > .Y1rZWd.QAAyWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + url + '") !important; }');
-    enhanced_addGlobalStyle('.mcaxA.ZmeF9 div:first-child { background-image: url("' + url + '") !important; }');
+    enhanced_CSS = '.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.rybUIf { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.dOyvbe { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.Nv1Sab[alt$="' + enhanced_AccountNameTag[0] + '"] { content: url("' + url + '") !important; }'
+    enhanced_CSS += 'c-wiz[data-p*="' + enhanced_AccountID + '"] .XZRzG { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountID + '"] .PwtJse { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.Tidcwc > .Y1rZWd.QAAyWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.mcaxA.ZmeF9 div:first-child { background-image: url("' + url + '") !important; }'
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleAvatar");
 }
 
 // Store Container - Container to display store buttons
@@ -1976,17 +2006,27 @@ setInterval(function() {
     }
 }, 200);
 
-// Source: https://somethingididnotknow.wordpress.com/2013/07/01/
-function enhanced_addGlobalStyle(css) {
-    var head, style;
+function enhanced_injectStyle(content, id) {
     head = document.getElementsByTagName('head')[0];
     if (!head) {
         return;
     }
-    style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = css;
-    head.appendChild(style);
+    if (content) {
+        if (document.getElementById(id)) {
+            var el = document.getElementById(id);
+        } else {
+            var el = document.createElement('style');
+        }
+        el.type = 'text/css';
+        el.id = id;
+        el.innerHTML = content;
+        head.appendChild(el);
+    } else {
+        if (document.getElementById(id)) {
+            var el = document.getElementById(id);
+            el.parentNode.removeChild(el);
+        }
+    }
 }
 
 // Open pages including Stadia specific settings
@@ -2249,6 +2289,184 @@ function loadLanguages(lang) {
                 "scrollbar": "Barres de desplaçament",
                 "scrollbardesc": "Activa les barres de desplaçament a la pantalla d'inici i la botiga.",
                 "resetsettings": "Restableix la configuració"
+            }`
+            break
+        case "it": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
+            var load = `{
+                "default": "Predefinito",
+                "native": "Nativo",
+                "hide": "Nascondi",
+                "show": "Mostra",
+                "visible": "Visibile",
+                "hidden": "Nascosto",
+                "enabled": "Abilitato",
+                "disabled": "Disabilitato",
+                "auto": "Automatico",
+                "manual": "Manuale",
+                "responsive": "Reattivo",
+                "windowed": "Modalità Finestra",
+                "fullscreen": "Schermo Intero",
+                "searchstore": "Cerca nello store",
+                "onsale": "In Offerta",
+                "prodeals": "Offerte del Pro",
+                "allgames": "Tutti i Giochi",
+                "usermedia": "Screenshot & Video",
+                "searchbtnbase": "Cerca su",
+                "avatarpopup": "Nuovo URL avatar (vuoto per impostazione predefinita):",
+                "searchheader": "Giochi che includono",
+                "sessiontime": "Tempo sessione",
+                "codec": "Codec",
+                "resolution": "Risoluzione",
+                "trafficsession": "Traffico sessione",
+                "trafficcurrent": "Traffico corrente",
+                "trafficaverage": "Traffico medio",
+                "packetloss": "Pacchetti persi",
+                "framedrop": "Fotogrammi persi",
+                "latency": "Latenza",
+                "jitter": "Buffer Jitter",
+                "compression": "Compressione",
+                "streammon": "Monitor Stream",
+                "stream": "Stream",
+                "community": "Comunità",
+                "speedtest": "Speedtest",
+                "quickaccess": "Accesso Veloce",
+                "messages": "Messaggi",
+                "avatar": "Avatar",
+                "interface": "Interfaccia",
+                "shortcut": "Scorciatoie",
+                "shortcuttitle": "Installa una scorciatoia per",
+                "shortcutdesc": "Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo",
+                "gridsize": "Dimensione Griglia",
+                "griddesc": "Modifica la quantità di giochi per riga nella schermata home.",
+                "clock": "Orologio",
+                "clockdesc": "Visualizza l'ora corrente nell'elenco degli amici, come un overlay di gioco o entrambi.",
+                "friendslist": "Lista Amici",
+                "igoverlay": "Overlay In-Gioco",
+                "listoverlay": "Lista & Overlay",
+                "filter": "Filtro",
+                "filterdesc": "Ti consente di ordinare la schermata home nascondendo i giochi. Il filtro può essere attivato / disattivato dal simbolo, in alto a destra sopra i tuoi giochi nella schermata home.",
+                "filtertoggle": "Attiva Filtro",
+                "filterquick": "Filtro Rapido",
+                "invitebase": "Copia link invito",
+                "inviteactive": "Copiato!",
+                "prolabel": "Etichetta Pro",
+                "prolabeldesc": "Rimuove l'etichetta 'Pro' dai giochi nella schermata home.",
+                "homegallery": "Galleria Utente",
+                "homegallerydesc": "Nasconde l'area 'Acquisizioni' nella parte inferiore della schermata home.",
+                "quickprev": "Anteprima Messaggio",
+                "quickprevdesc": "Nasconde l'anteprima dei messaggi nella lista amici.",
+                "quickrep": "Risposta Veloce",
+                "quickrepdesc": "Nasconde l'opzione di risposta rapida nelle chat.",
+                "offlinefriend": "Amici Offline",
+                "offlinefrienddesc": "Nasconde gli amici offline nella lista amici.",
+                "invisiblefriend": "Amici Invisibili",
+                "invisiblefrienddesc": "Nasconde gli amici con stato online sconosciuto nella lista amici.",
+                "streammode": "Modalità Streaming",
+                "streammodedesc": "Abilita per rendere illeggibili alcuni elementi (ad esempio l'elenco degli amici) durante lo streaming (tramite strumenti come OBS / Discord).",
+                "catprev": "Anteprima Categoria",
+                "catprevdesc": "Nasconde i tag di categoria quando si passa con il mouse su un gioco.",
+                "popup": "Effetto Popup",
+                "popupdesc": "Rimuove l'effetto di zoom-in / ingrandimento quando si passa con il mouse su un gioco nella schermata home.",
+                "streammondesc": "Attiva per avviare il monitor ogni volta che apri un gioco.",
+                "resolutiondesc": "La risoluzione impostata per i giochi. 1440p e 2160p richiedono VP9.",
+                "codecdesc": "Il codec utilizzato per i giochi.",
+                "confirmreset": "Sei sicuro di voler ripristinare le impostazioni?",
+                "gamesfinished": "Giochi Completati",
+                "achievementsunlocked": "Obiettivi Sbloccati",
+                "splitstore": "Dividi Liste Store",
+                "splitstoredesc": "Divide le liste nello store in due colonne per una migliore panoramica.",
+                "scrollbar": "Barre di scorrimento",
+                "scrollbardesc": "Abilita le barre di scorrimento sulla schermata home e store.",
+                "resetsettings": "Ripristina Impostazioni"
+            }`
+            break
+        case "es": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67
+            var load = `{
+                "default": "Por defecto",
+                "native": "Nativa",
+                "hide": "Ocultar",
+                "show": "Mostrar",
+                "visible": "Visible",
+                "hidden": "Oculto",
+                "enabled": "Activado",
+                "disabled": "Desactivado",
+                "auto": "Automático",
+                "manual": "Manual",
+                "responsive": "Respuesta",
+                "windowed": "Modo Ventana",
+                "fullscreen": "Pantalla Completa",
+                "searchstore": "Buscar en la Tienda",
+                "onsale": "En Oferta",
+                "prodeals": "En Oferta (Pro)",
+                "allgames": "Todos los juegos",
+                "usermedia": "Capturas y Videos",
+                "searchbtnbase": "Buscar en",
+                "avatarpopup": "URL del nuevo avatar (vacío por defecto):",
+                "searchheader": "Juegos que contienen en su título",
+                "sessiontime": "Duración de la sesión",
+                "codec": "Códec",
+                "resolution": "Resolución",
+                "trafficsession": "Tráfico de la sesión",
+                "trafficcurrent": "Tráfico actual",
+                "trafficaverage": "Tráfico promedio",
+                "packetloss": "Paquetes perdidos",
+                "framedrop": "Imágenes perdidas",
+                "latency": "Latencia",
+                "jitter": "Jitter Buffer",
+                "compression": "Compresión",
+                "streammon": "Monitor de retransmisión",
+                "stream": "Retransmisión",
+                "community": "Comunidad",
+                "speedtest": "Test de Velocidad",
+                "quickaccess": "Acceso Rápido",
+                "messages": "Mensajes",
+                "avatar": "Avatar",
+                "interface": "Interfaz",
+                "shortcut": "Accesos Directos",
+                "shortcuttitle": "Instala un acceso directo para",
+                "shortcutdesc": "Permite instalar un acceso directo de un juego en tu dispositivo.",
+                "gridsize": "Tamaño de la cuadrícula",
+                "griddesc": "Cambia la cantidad de juegos por fila en la pantalla de inicio.",
+                "clock": "Reloj",
+                "clockdesc": "Muestra la hora actual en la lista de amigos, como superposición dentro del juego, o ambas cosas.",
+                "friendslist": "Lista de amigos",
+                "igoverlay": "Superposición dentro del juego",
+                "listoverlay": "Lista y Superposición",
+                "filter": "Filtro",
+                "filterdesc": "Permite ordenar la pantalla de inicio ocultando juegos. El filtro se puede cambiar mediante el símbolo situado en la parte superior derecha, encima de tus juegos, de la pantalla de inicio.",
+                "filtertoggle": "Esconde Juegos",
+                "filterquick": "Rápido",
+                "invitebase": "Copiar el enlace de invitación",
+                "inviteactive": "¡Copiado!",
+                "prolabel": "Etiqueta Pro",
+                "prolabeldesc": "Elimina la etiqueta 'Pro' de los juegos de la pantalla de inicio.",
+                "homegallery": "Galería de Capturas",
+                "homegallerydesc": "Oculta el área de 'Capturas' de la parte inferior de la pantalla de inicio.",
+                "quickprev": "Previsualización de Mensajes",
+                "quickprevdesc": "Oculta la previsualización de mensajes de la lista de amigos.",
+                "quickrep": "Respuesta Rápida",
+                "quickrepdesc": "Oculta la opción de respuesta rápida del chat.",
+                "offlinefriend": "Amigos Desconectados",
+                "offlinefrienddesc": "Oculta los amigos desconectados de la lista de amigos.",
+                "invisiblefriend": "Amigos Invisibles",
+                "invisiblefrienddesc": "Oculta los amigos con un estado en línea desconocido de la lista de amigos.",
+                "streammode": "Modo Retransmisión",
+                "streammodedesc": "Permite ocultar ciertos elementos (por ejemplo: la lista de amigos) mientras retransmites (a través de un programa externo como OBS o Discord).",
+                "catprev": "Previsualización de Categorías.",
+                "catprevdesc": "Oculta las etiquetas de categoría cuando el cursor pasa sobre un juego en la página de inicio.",
+                "popup": "Efecto Zoom",
+                "popupdesc": "Desactiva el efecto de ampliación (zoom-in) que se produce cuando el cursor pasa sobre un juego de la página de inicio.",
+                "streammondesc": "Activa automáticamente el monitor de retransmisión al ejecutar un juego.",
+                "resolutiondesc": "Máxima resolución a la que pueden alcanzar los juegos. Para resoluciones 1440p (Quad HD) o 2160p (4K UHDTV) es necesario el códec VP9.",
+                "codecdesc": "El códec usado por los juegos.",
+                "confirmreset": "¿Estás seguro de querer restablecer los ajustes?",
+                "gamesfinished": "Juegos Completados",
+                "achievementsunlocked": "Logros Desbloqueados",
+                "splitstore": "Tienda a Doble Columna",
+                "splitstoredesc": "Divide la lista de la tienda en dos columnas para una mayor legibilidad.",
+                "scrollbar": "Barras de desplazamiento",
+                "scrollbardesc": "Habilita las barras de desplazamiento en la pantalla de inicio y en la tienda.",
+                "resetsettings": "Restablecer los ajustes"
             }`
             break
         case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13
