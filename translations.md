@@ -10,13 +10,14 @@ Stadia Enhanced is currently available in the following languages:
 | Language | Status |
 |--|--|
 | English (default) | Complete |
-| [Catalan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Complete |
-| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Incomplete |
-| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | Complete |
-| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Complete |
-| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Complete |
-| [Spanish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67) | Complete |
-| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Incomplete |
+| [Catalan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Active |
+| [Danish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81) | Active |
+| [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Inactive |
+| [French](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8) | Active |
+| [German](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13) | Active |
+| [Italian](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7) | Active |
+| [Spanish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67) | Active |
+| [Swedish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11) | Inactive |
 
 ## Your language is currently not supported?
 If your language is not currently supported and no translation is available under [translations](https://github.com/ChristopherKlay/StadiaEnhanced/discussions?discussions_q=category%3ATranslations), you can help translate the extension by doing the following:
