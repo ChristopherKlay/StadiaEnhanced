@@ -32,6 +32,10 @@ Please note that installing the extension this way, removes the automatic update
 ## Translation
 If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
 
+## Pull Requests
+The main point about this repository is to provide the sourcecode of the current release version of Stadia Enhanced.
+Pull requests for new feature implementations will be manually merged into the (non-public) dev version and tested for errors, before being released with the next public version of the extension. Please post updates to translations in their respective discussions. No content will be pulled directly into the current release version.
+
 ## Ideas? Requests? Questions?
 Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
 
