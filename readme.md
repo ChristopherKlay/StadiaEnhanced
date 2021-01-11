@@ -45,6 +45,6 @@ Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanc
 ## More screenshots
 
 ![](https://i.imgur.com/loGcwYE.png)
-![](https://i.imgur.com/336ru5Q.png)
-![](https://i.imgur.com/OFar9AE.png)
-![](https://i.imgur.com/cM9jC0z.png)
+![](https://i.imgur.com/i2JHauj.png)
+![](https://i.imgur.com/DjwV4hk.png)
+![](https://i.imgur.com/XBplGec.png)
