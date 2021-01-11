@@ -9,7 +9,7 @@ Stadia Enhanced is currently available in the following languages:
 
 | Language | Status |
 |--|--|
-| English (default) | Complete |
+| English | Default |
 | [Catalan](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60) | Active |
 | [Danish](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81) | Active |
 | [Dutch](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9) | Inactive |
