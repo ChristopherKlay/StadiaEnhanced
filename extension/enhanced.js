@@ -287,7 +287,9 @@ enhanced_emojiswitch.style.cursor = "pointer";
 enhanced_emojiswitch.addEventListener("click", function(i) {
     if (enhanced_emojiPicker.style.display == "none") {
         enhanced_emojiPicker.style.display = "flex";
-        document.querySelector('div[jsname="IbgIAb"]').lastChild.scrollIntoView(false);
+        if (document.querySelector('div[jsname="IbgIAb"] .emG1mb')) {
+            document.querySelectorAll('div[jsname="IbgIAb"] .emG1mb')[document.querySelectorAll('div[jsname="IbgIAb"] .emG1mb').length - 1].scrollIntoView(false);
+        }
     } else {
         enhanced_emojiPicker.style.display = "none";
     }
@@ -2362,6 +2364,101 @@ function loadLanguages(lang) {
                 "resetsettings": "Réinitialiser les Paramètres"
             }`
             break
+        case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
+            var load = `{
+                "default": "Standard",
+                "native": "Inbyggd",
+                "hide": "Göm",
+                "show": "Visa",
+                "visible": "Synligt",
+                "hidden": "Gömt",
+                "enabled": "Aktiverat",
+                "disabled": "Inaktiverat",
+                "auto": "Automatisk",
+                "manual": "Manuell",
+                "games": "Spel",
+                "bundles": "Spel-paket",
+                "addons": "Tillägg",
+                "responsive": "Responsiv",
+                "windowed": "Fönsterläge",
+                "fullscreen": "Fullskärmsläge",
+                "searchstore": "Sök i butiken",
+                "onsale": "På Rea",
+                "prodeals": "Pro Deals",
+                "allgames": "Alla Spel",
+                "usermedia": "Skärmdumpar & Filmer",
+                "searchbtnbase": "Sök på",
+                "avatarpopup": "Nytt avatar-URL (lämna tomt för standard):",
+                "searchheader": "Spel inklusive",
+                "sessiontime": "Sessionstid",
+                "codec": "Kodec",
+                "resolution": "Upplösning",
+                "hardware": "Hårdvara",
+                "software": "Mjukvara",
+                "trafficsession": "Sessionstrafik",
+                "trafficcurrent": "Nuvarande trafik",
+                "trafficaverage": "Genomsnittlig trafik",
+                "packetloss": "Tappade paket",
+                "framedrop": "Tappade bilder",
+                "latency": "Latens",
+                "jitter": "Jitter Buffer",
+                "decodetime": "Avkodningstid",
+                "compression": "Kompression",
+                "streammon": "Strömmonitor",
+                "stream": "Ström",
+                "community": "Gemenskap",
+                "speedtest": "Hastighetstest",
+                "quickaccess": "Snabbmeny",
+                "messages": "Meddelanden",
+                "avatar": "Avatar",
+                "interface": "Gränssnitt",
+                "shortcut": "Genvägar",
+                "shortcuttitle": "Installera en genväg för",
+                "shortcutdesc": "Låter dig installera en genväg för ett spel på din enhet",
+                "gridsize": "Rutnätsstorlek",
+                "griddesc": "Ändrar hur många spel visas per rad på hemskärmen",
+                "clock": "Klocka",
+                "clockdesc": "Visar den nuvarande tiden på vänlistan, som en spel-overlay eller båda.",
+                "friendslist":"Vänner",
+                "igoverlay":"Spelöverlägg",
+                "listoverlay":"Lista & Överlägg",
+                "filter": "Filter",
+                "filterdesc": "Låter dig sortera hemskärmen genom att gömma spel. Filtret kan växlas med symbolen uppe till höver ovanför dina spel på hemskärmen.",
+                "filtertoggle":"Växla Filter",
+                "filterquick":"Snabbfilter",
+                "invitebase":"Kopiera inbjudningslänk",
+                "inviteactive":"Kopierat!",
+                "prolabel": "Pro-Etikett",
+                "prolabeldesc": "Gömmer 'Pro'-etiketten från spel på hemskärmen.",
+                "homegallery": "Användargalleri",
+                "homegallerydesc": "Gömmer 'Captures'-sektionen längst ner på hemskärmen.",
+                "quickprev": "Förhandsvisning av Meddelande",
+                "quickprevdesc": "Gömmer förhandsvisningen av meddelanden i vänlistan.",
+                "quickrep": "Snabbsvar",
+                "quickrepdesc": "Gömmer snabbsvarsfunktionen i vänlistan",
+                "offlinefriend": "Offline-vänner",
+                "offlinefrienddesc": "Gömmer offline-vänner i vänlistan",
+                "invisiblefriend": "Osynliga Vänner",
+                "invisiblefrienddesc": "Gömmer vänner med okänd online-status i vänlistan",
+                "streammode": "Streamer-läge",
+                "streammodedesc": "Aktivera för att göra vissa delar (bl.a vänlistan) oläsbar medan du streamar (genom verktyg som OBS / Discord)",
+                "catprev": "Kategori-förhandsvisning",
+                "catprevdesc": "Gömmer kategori-taggarna när du har muspekaren över ett spel.",
+                "popup": "Popup-Effekt",
+                "popupdesc": "Tar bort inzoomingseffekten när du har muspekaren över ett spel på hemskärmen.",
+                "streammondesc": "Aktivera för att starta en monitor så fort du öppnar ett spel.",
+                "resolutiondesc": "Målupplösningen för spel. 1440p och 2160p kräver VP9.",
+                "codecdesc": "Det kodec som används för spel.",
+                "confirmreset": "Är du säker på att du vill återställa inställningarna?",
+                "gamesfinished": "Färdiga Spel",
+                "achievementsunlocked": "Prestationer Uppnådda",
+                "splitstore": "Dela Butikslistor",
+                "splitstoredesc": "Delar butikslistor i två kolumner för en bättre överblick.",
+                "scrollbar": "Scrollistor",
+                "scrollbardesc": "Aktiverar scrollistor på hemskärmen och i butiken.",
+                "resetsettings": "Återställ Inställningar"
+            }`
+            break
         case "ca": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
             var load = `{
                 "default": "Per defecte",
@@ -2377,7 +2474,7 @@ function loadLanguages(lang) {
                 "games": "Jocs",
                 "bundles": "Paquets",
                 "addons": "Complements",
-                "responsive": "Responsiu",
+                "responsive": "Responsiu"
                 "windowed": "Mode finestra",
                 "fullscreen": "Pantalla completa",
                 "searchstore": "Navega la botiga",
@@ -2391,8 +2488,8 @@ function loadLanguages(lang) {
                 "sessiontime": "Temps de sessió",
                 "codec": "Còdec",
                 "resolution": "Resolució",
-                "hardware": "Hardware",
-                "software": "Software",
+                "hardware": "Maquinari",
+                "software": "Programari",
                 "trafficsession": "Trànsit de sessió",
                 "trafficcurrent": "Trànsit actual",
                 "trafficaverage": "Trànsit de mitjana",
@@ -2400,7 +2497,7 @@ function loadLanguages(lang) {
                 "framedrop": "Fotogrames perduts",
                 "latency": "Latència",
                 "jitter": "Jitter Buffer",
-                "decodetime": "Decoding Time",
+                "decodetime": "Temps de descodificació"
                 "compression": "Compressió",
                 "streammon": "Monitor de retransmissió",
                 "stream": "Retransmissió",
@@ -2469,9 +2566,9 @@ function loadLanguages(lang) {
                 "disabled": "Deaktiveret",
                 "auto": "Automatisk",
                 "manual": "Manuelt",
-                "games": "Games",
-                "bundles": "Bundles",
-                "addons": "Add-ons",
+                "games": "Spil",
+                "bundles": "Bundter",
+                "addons": "Tilføjelser",
                 "responsive": "Lydhør",
                 "windowed": "Vindue-tilstand",
                 "fullscreen": "Fuld skærm",
@@ -2495,7 +2592,7 @@ function loadLanguages(lang) {
                 "framedrop": "Rammer tabt",
                 "latency": "Netværksventetid",
                 "jitter": "Jitter Buffer",
-                "decodetime": "Decoding Time",
+                "decodetime": "Afkodningstid",
                 "compression": "Kompression",
                 "streammon": "Overvågning af strøm",
                 "stream": "Strøm",
@@ -2551,6 +2648,7 @@ function loadLanguages(lang) {
                 "scrollbardesc": "Aktiverer rullebjælker på startskærmen og gem.",
                 "resetsettings": "Nulstil indstillingerne"
                 }`
+            break
         case "it": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
             var load = `{
                 "default": "Predefinito",
@@ -2563,9 +2661,9 @@ function loadLanguages(lang) {
                 "disabled": "Disabilitato",
                 "auto": "Automatico",
                 "manual": "Manuale",
-                "games": "Games",
+                "games": "Giochi",
                 "bundles": "Bundles",
-                "addons": "Add-ons",
+                "addons": "Contenuti aggiuntivi",
                 "responsive": "Reattivo",
                 "windowed": "Modalità Finestra",
                 "fullscreen": "Schermo Intero",
@@ -2589,7 +2687,7 @@ function loadLanguages(lang) {
                 "framedrop": "Fotogrammi persi",
                 "latency": "Latenza",
                 "jitter": "Buffer Jitter",
-                "decodetime": "Decoding Time",
+                "decodetime": "Tempo di Decodifica",
                 "compression": "Compressione",
                 "streammon": "Monitor Stream",
                 "stream": "Stream",
@@ -2668,7 +2766,7 @@ function loadLanguages(lang) {
                 "onsale": "En Oferta",
                 "prodeals": "En Oferta (Pro)",
                 "allgames": "Todos los juegos",
-                "usermedia": "Capturas y Videos",
+                "usermedia": "Capturas de pantalla y Vídeos",
                 "searchbtnbase": "Buscar en",
                 "avatarpopup": "URL del nuevo avatar (vacío por defecto):",
                 "searchheader": "Juegos que contienen en el título",
@@ -2684,7 +2782,7 @@ function loadLanguages(lang) {
                 "framedrop": "Imágenes perdidas",
                 "latency": "Latencia",
                 "jitter": "Jitter Buffer",
-                "decodetime": "Decoding Time",
+                "decodetime": "Tiempo de decodificación",
                 "compression": "Compresión",
                 "streammon": "Monitor de retransmisión",
                 "stream": "Retransmisión",
@@ -2705,7 +2803,7 @@ function loadLanguages(lang) {
                 "igoverlay": "Superposición dentro del juego",
                 "listoverlay": "Lista y Superposición",
                 "filter": "Filtro",
-                "filterdesc": "Permite ocultar juegos de la pantalla de inicio. Activado el filtro, aparecen símbolos (ojos); el símbolo general, encima de tu colección de juegos en la parte superior derecha, aplica o desaplica los cambios en el filtro; los símbolos específicos de cada juego permiten elegir qué juegos ocultar.",
+                "filterdesc": "Permite ocultar juegos de la pantalla de inicio. Activado el filtro, aparecen unos símbolos (ojos); el símbolo general, situado encima de tu colección de juegos en la parte superior derecha, aplica o desaplica los cambios en el filtro; los símbolos específicos de cada juego permiten elegir qué juegos ocultar.",
                 "filtertoggle": "Activado (modo normal)",
                 "filterquick": "Activado (modo rápido)",
                 "invitebase": "Copiar el enlace de invitación",
@@ -2931,5 +3029,10 @@ function loadLanguages(lang) {
                 "resetsettings": "Reset Settings"
             }`
     }
-    return JSON.parse(load);
+    try {
+        load = JSON.parse(load)
+    } catch (e) {
+        console.log("%cStadia Enhanced" + "%c Error loading translation file: " + e, enhanced_consoleEnhanced, "");
+    }
+    return load;
 }
