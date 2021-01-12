@@ -41,6 +41,11 @@
 * Fixed the emoji picker not being displayed
 * Fixed styling issues when using split store lists
 
+### Version 1.8.5
+* Added swedish translation & updated translations
+* Fixed a error when using the emoji picker in empty conversations
+* Fixed a error causing the wrong language to load
+
 ## Version 1.7.0
 * Added shortcut integration by ELowry
 * Added support for a minified streaming monitor (switch via doubleclick)
