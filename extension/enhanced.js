@@ -2266,6 +2266,19 @@ function enhanced_dragElement(el) {
     }
 }
 
+// Debugging - Call via "debugEnhanced(); on Stadia
+function debugEnhanced() {
+    var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
+
+    // Translations
+    var languages = ["fr", "sv", "pt", "ca", "da", "it", "es", "de", "en"];
+    for (var i = 0; i < languages.length; i++) {
+        console.log("%cStadia Enhanced" + "%c 🛠️ - Checking language: '" + languages[i] + "'", enhanced_consoleEnhanced, "");
+        loadLanguages(languages[i]);
+    }
+}
+embed(debugEnhanced, 0);
+
 // Translation
 function loadLanguages(lang) {
     switch (lang) {
@@ -2459,6 +2472,100 @@ function loadLanguages(lang) {
                 "resetsettings": "Återställ Inställningar"
             }`
             break
+        case "pt": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/91
+            var load = `{
+                "default": "Padrão",
+                "native": "Nativo",
+                "hide": "Esconder",
+                "show": "Mostrar",
+                "visible": "Visivel",
+                "hidden": "Escondido",
+                "enabled": "Activado",
+                "disabled": "Desactivado",
+                "auto": "Automático",
+                "manual": "Manual",
+                "games": "Jogos",
+                "bundles": "Bundles",
+                "addons": "Add-ons",
+                "responsive": "Responsivo",
+                "windowed": "Modo Janela",
+                "fullscreen": "Ecrã completo",
+                "searchstore": "Pesquisar na loja",
+                "onsale": "Em promoção",
+                "prodeals": "Promoções Pro",
+                "allgames": "Todos os jogos",
+                "usermedia": "Screenshots & Videos",
+                "searchbtnbase": "Pesquisar em",
+                "avatarpopup": "Novo URL para avatar (vazio para o padrão):",
+                "searchheader": "Incluindo Jogos",
+                "sessiontime": "Tempo de sessão",
+                "codec": "Codec",
+                "resolution": "Resolução",
+                "hardware": "Hardware",
+                "software": "Software",
+                "trafficsession": "Tráfego da sessão",
+                "trafficcurrent": "Tráfego instantâneo",
+                "trafficaverage": "Tráfego médio",
+                "packetloss": "Pacotes perdidos",
+                "framedrop": "Frames perdidos",
+                "latency": "Latencia",
+                "jitter": "Buffer de Jitter",
+                "decodetime": "Tempo de descodificação",
+                "compression": "Compressão",
+                "streammon": "Monitor do Stream",
+                "stream": "Stream",
+                "community": "Comunidade",
+                "speedtest": "Teste de velocidade",
+                "quickaccess": "Acesso Rápido",
+                "messages": "Mensagens",
+                "avatar": "Avatar",
+                "interface": "Interface",
+                "shortcut": "Atalhos",
+                "shortcuttitle": "Instalar atalho para",
+                "shortcutdesc": "Permite-te instalar um atalho para um jogo no teu dispositivo",
+                "gridsize": "Tamanho da Grelha",
+                "griddesc": "Muda o número de jogos por linha no ecrã inicial.",
+                "clock": "Relógio",
+                "clockdesc": "Mostra a hora actual na lista de amigos, em sobreposição no jogo, ou ambos.",
+                "friendslist": "Lista de Amigos",
+                "igoverlay": "Sobreposição no jogo",
+                "listoverlay": "Lista e Sobreposição",
+                "filter": "Filtro",
+                "filterdesc": "Permite-te organizar o teu ecrã inicial escondendo jogos. O filtro pode ser alternado pelo simbolo no topo direito, acima dos teus jogos no ecrã inicial.",
+                "filtertoggle": "Alternar",
+                "filterquick": "Rápido",
+                "invitebase": "Copiar ligação de convite",
+                "inviteactive": "Copiado!",
+                "prolabel": "Etiqueta Pro",
+                "prolabeldesc": "Remove a etiqueta 'Pro' dos jogos no ecrã inicial.",
+                "homegallery": "Galeria do Utilizador",
+                "homegallerydesc": "Esconde a área 'Capturas' no fundo do ecrã inicial.",
+                "quickprev": "Pré-visualização de mensagens",
+                "quickprevdesc": "Esconde a pré-visualização de mensagens na tua lista de amigos.",
+                "quickrep": "Resposta Rápida",
+                "quickrepdesc": "Esconde a opção de resposta rápida nas conversas.",
+                "offlinefriend": "Amigos Offline",
+                "offlinefrienddesc": "Esconde amigos offline na lista de amigos.",
+                "invisiblefriend": "Amigos Invisíveis",
+                "invisiblefrienddesc": "Esconde amigos com estado desconhecido na lista de amigos.",
+                "streammode": "Modo de Streaming",
+                "streammodedesc": "Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS / Discord).",
+                "catprev": "Pré-visualização da Categoria",
+                "catprevdesc": "Esconde a etiqueta da categoria ao passar por cima de um jogo.",
+                "popup": "Efeito Popup",
+                "popupdesc": "Remove o efeito de zoom-in / aumento ao passar por cima de um jogo no ecrã inicial.",
+                "streammondesc": "Activa para iniciar o monitor quando um jogo começa.",
+                "resolutiondesc": "A resolução pretendida para stream de jogos. 1440p e 2160p requerem VP9.",
+                "codecdesc": "O codec utilizado para stream de jogos.",
+                "confirmreset": "De certeza que queres reiniciar as configurações?",
+                "gamesfinished": "Jogo terminado",
+                "achievementsunlocked": "Conquistas desbloqueadas",
+                "splitstore": "Dividir Listas da Loja",
+                "splitstoredesc": "Divide as listas da loja em duas colunas para uma melhor visão geral.",
+                "scrollbar": "Scrollbar",
+                "scrollbardesc": "Activa as scrollbars no ecrã inicial e loja.",
+                "resetsettings": "Reiniciar Configurações"
+            }`
         case "ca": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
             var load = `{
                 "default": "Per defecte",
@@ -2474,7 +2581,7 @@ function loadLanguages(lang) {
                 "games": "Jocs",
                 "bundles": "Paquets",
                 "addons": "Complements",
-                "responsive": "Responsiu"
+                "responsive": "Responsiu",
                 "windowed": "Mode finestra",
                 "fullscreen": "Pantalla completa",
                 "searchstore": "Navega la botiga",
@@ -2497,7 +2604,7 @@ function loadLanguages(lang) {
                 "framedrop": "Fotogrames perduts",
                 "latency": "Latència",
                 "jitter": "Jitter Buffer",
-                "decodetime": "Temps de descodificació"
+                "decodetime": "Temps de descodificació",
                 "compression": "Compressió",
                 "streammon": "Monitor de retransmissió",
                 "stream": "Retransmissió",
@@ -3030,9 +3137,11 @@ function loadLanguages(lang) {
             }`
     }
     try {
-        load = JSON.parse(load)
+        load = JSON.parse(load);
     } catch (e) {
-        console.log("%cStadia Enhanced" + "%c Error loading translation file: " + e, enhanced_consoleEnhanced, "");
+        console.log("Error in " + lang + " translation.");
+        console.log(e);
+        return loadLanguages("");
     }
     return load;
 }
