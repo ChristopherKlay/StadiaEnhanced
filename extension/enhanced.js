@@ -15,8 +15,6 @@ enhanced_CSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adju
 enhanced_CSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" labels
 enhanced_CSS += "#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }" // Remove popup effect on game tiles
 enhanced_CSS += ".tlZCoe { margin-right: .5rem; }" // Allow for multiple buttons on popup
-enhanced_CSS += "::-webkit-scrollbar { width: 1rem; } ::-webkit-scrollbar-thumb { background-color: #2d2e30; border-radius: 1rem; border: 3px solid #202124; }" // Adjusted scrollbars
-enhanced_CSS += ".Z5U6eb[jslog='81272'] { top: 4rem; }" // Fix store offset on scrollbars
 enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
 enhanced_CSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }" // Settings menu scrollbar width
@@ -1036,7 +1034,6 @@ enhanced_resetSettings.addEventListener("click", function() {
         localStorage.removeItem("enhanced_ResOption");
         localStorage.removeItem("enhanced_hideInvisible");
         localStorage.removeItem("enhanced_storeListSize");
-        localStorage.removeItem("enhanced_enableScroll");
         console.log("%cStadia Enhanced" + "%c ⚙️ - Settings reverted to default.", enhanced_consoleEnhanced, "");
         location.reload();
     }
@@ -1340,40 +1337,6 @@ function enhanced_changeStoreList(opt) {
             break
     }
     enhanced_injectStyle(enhanced_CSS, "enhanced_styleStoreSplit");
-}
-
-// Enable Scrollbars
-var enhanced_enableScroll = parseInt(localStorage.getItem("enhanced_enableScroll") || 0);
-var enhanced_forcedScrollbar = document.createElement("div");
-enhanced_forcedScrollbar.className = "pBvcyf QAAyWd";
-enhanced_forcedScrollbar.id = "enhanced_forcedScrollbar";
-enhanced_forcedScrollbar.style.cursor = "pointer";
-enhanced_forcedScrollbar.style.userSelect = "none";
-enhanced_forcedScrollbar.style.borderBottom = "1px solid rgba(255,255,255,.06)";
-enhanced_forcedScrollbar.tabIndex = "0";
-enhanced_forcedScrollbar.addEventListener("click", function() {
-    enhanced_enableScroll = (enhanced_enableScroll + 1) % 2;
-    localStorage.setItem("enhanced_enableScroll", enhanced_enableScroll);
-    enhanced_changeScrollbar(enhanced_enableScroll);
-});
-enhanced_settingsGeneral.append(enhanced_forcedScrollbar);
-
-function enhanced_changeScrollbar(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_forcedScrollbar.style.color = "";
-            enhanced_forcedScrollbar.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">unfold_more</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.scrollbar + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.scrollbardesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Scrollbars: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".Z5U6eb .qWf7Hd > .h1uihb { overflow-y: scroll; height: 100%; }"
-            enhanced_forcedScrollbar.style.color = "#00e0ba";
-            enhanced_forcedScrollbar.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">unfold_more</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.scrollbar + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.scrollbardesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Scrollbars: Set to 'Enabled'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleScrollbar");
 }
 
 // Shortcuts
@@ -1734,7 +1697,6 @@ function updateSettings() {
     enhanced_changeGamePopup(enhanced_hidePopupEffect);
     enhanced_changeMonitorAutostart(enhanced_autostartMonitor);
     enhanced_changeStoreList(enhanced_storeListSize);
-    enhanced_changeScrollbar(enhanced_enableScroll);
     enhanced_changeShortcuts(enhanced_enableShortcuts);
 }
 
@@ -2372,7 +2334,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Succès Débloqués",
                 "splitstore": "Store à 2 Colonnes",
                 "splitstoredesc": "Divise les listes du store en deux colonnes pour une meilleur lisibilité.",
-                "scrollbar": "Barres de Défilement",
                 "scrollbardesc": "Affiche des barres de défilement dans l'accueil et la boutique.",
                 "resetsettings": "Réinitialiser les Paramètres"
             }`
@@ -2467,7 +2428,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Prestationer Uppnådda",
                 "splitstore": "Dela Butikslistor",
                 "splitstoredesc": "Delar butikslistor i två kolumner för en bättre överblick.",
-                "scrollbar": "Scrollistor",
                 "scrollbardesc": "Aktiverar scrollistor på hemskärmen och i butiken.",
                 "resetsettings": "Återställ Inställningar"
             }`
@@ -2562,7 +2522,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Conquistas desbloqueadas",
                 "splitstore": "Dividir Listas da Loja",
                 "splitstoredesc": "Divide as listas da loja em duas colunas para uma melhor visão geral.",
-                "scrollbar": "Scrollbar",
                 "scrollbardesc": "Activa as scrollbars no ecrã inicial e loja.",
                 "resetsettings": "Reiniciar Configurações"
             }`
@@ -2656,7 +2615,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Assoliments desbloquejats",
                 "splitstore": "Divideix les llistes de la botiga",
                 "splitstoredesc": "Divideix les llistes de la botiga en dues columnes per obtenir una millor visió.",
-                "scrollbar": "Barres de desplaçament",
                 "scrollbardesc": "Activa les barres de desplaçament a la pantalla d'inici i la botiga.",
                 "resetsettings": "Restableix la configuració"
             }`
@@ -2751,7 +2709,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Oplåste Præstationer",
                 "splitstore": "Opdel butikslister",
                 "splitstoredesc": "Opdeler butikslister i to kolonner for at få et bedre overblik.",
-                "scrollbar": "Rullebjælker",
                 "scrollbardesc": "Aktiverer rullebjælker på startskærmen og gem.",
                 "resetsettings": "Nulstil indstillingerne"
                 }`
@@ -2846,7 +2803,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Obiettivi Sbloccati",
                 "splitstore": "Dividi Liste Store",
                 "splitstoredesc": "Divide le liste nello store in due colonne per una migliore panoramica.",
-                "scrollbar": "Barre di scorrimento",
                 "scrollbardesc": "Abilita le barre di scorrimento sulla schermata home e store.",
                 "resetsettings": "Ripristina Impostazioni"
             }`
@@ -2941,7 +2897,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Logros Desbloqueados",
                 "splitstore": "Tienda a Doble Columna",
                 "splitstoredesc": "Divide la lista de la tienda en dos columnas para una mayor legibilidad.",
-                "scrollbar": "Barras de desplazamiento",
                 "scrollbardesc": "Habilita las barras de desplazamiento en la pantalla de inicio y en la tienda.",
                 "resetsettings": "Restablecer los ajustes"
             }`
@@ -3036,7 +2991,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Erfolge Freigeschaltet",
                 "splitstore": "Store Listen teilen",
                 "splitstoredesc": "Teilt Listen im Store für eine bessere Übersicht in zwei Spalten.",
-                "scrollbar": "Scrollbalken",
                 "scrollbardesc": "Aktiviert Scrollbalken im Store und dem Startbildschirm.",
                 "resetsettings": "Einstellungen zurücksetzen"
             }`
@@ -3131,7 +3085,6 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Achievements Unlocked",
                 "splitstore": "Split Store Lists",
                 "splitstoredesc": "Splits store lists into two columns for a better overview.",
-                "scrollbar": "Scrollbars",
                 "scrollbardesc": "Enables scrollbars on the homescreen and store.",
                 "resetsettings": "Reset Settings"
             }`
