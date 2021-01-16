@@ -2,6 +2,9 @@
 
 ## Version 1.8
 
+### 1.8.7
+* Removed scrollbar funtionality, which is now officially supported
+
 ### 1.8.6
 * Added portuguese translation
 * Changed changelog to be sorted descending based on main version
