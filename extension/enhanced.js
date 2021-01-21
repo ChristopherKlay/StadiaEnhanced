@@ -2525,6 +2525,7 @@ function loadLanguages(lang) {
                 "scrollbardesc": "Activa as scrollbars no ecrã inicial e loja.",
                 "resetsettings": "Reiniciar Configurações"
             }`
+            break
         case "ca": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
             var load = `{
                 "default": "Per defecte",
