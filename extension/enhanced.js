@@ -1,4 +1,5 @@
 // Start Up
+var enhanced_timerLoadStart = window.performance.now();
 var enhanced_StartTimer = new Date().getTime();
 var enhanced_local = document.querySelector("html").getAttribute("lang");
 var enhanced_lang = loadLanguages(enhanced_local);
@@ -90,7 +91,6 @@ function enhanced_RTCMonitor() {
     var enhanced_lastQpSum = 0;
     var enhanced_sessionStart;
     var enhanced_sessionActive = false;
-    var enhanced_monitorState = 0;
 
     function enhanced_formatBytes(a, b) {
         if (0 == a) return "0 Bytes";
@@ -177,8 +177,6 @@ function enhanced_RTCMonitor() {
                             enhanced_lastFrames = framesReceived;
                             enhanced_lastFramesDecoded = framesDecoded;
                             enhanced_lastBytes = bytesReceived;
-                            enhanced_lastBufferDelay = jitterBufferDelay;
-                            enhanced_lastBufferEmitted = jitterBufferEmittedCount;
                             enhanced_lastQpSum = tmp1.qpSum;
                             var enhanced_connectionStatus = "white";
                             var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
@@ -229,7 +227,7 @@ function enhanced_RTCMonitor() {
             });
         }
     }, 1000);
-};
+}
 embed(loadLanguages, false);
 embed(enhanced_RTCMonitor);
 
@@ -282,7 +280,7 @@ var enhanced_emojiswitch = document.createElement("div");
 enhanced_emojiswitch.innerHTML = "😃";
 enhanced_emojiswitch.style.marginLeft = "1rem";
 enhanced_emojiswitch.style.cursor = "pointer";
-enhanced_emojiswitch.addEventListener("click", function(i) {
+enhanced_emojiswitch.addEventListener("click", function() {
     if (enhanced_emojiPicker.style.display == "none") {
         enhanced_emojiPicker.style.display = "flex";
         if (document.querySelector('div[jsname="IbgIAb"] .emG1mb')) {
@@ -406,7 +404,7 @@ if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
 // Store Search - Adds a search bar to the Stadia store
 var enhanced_SearchBox = document.createElement("li");
 enhanced_SearchBox.className = "OfFb0b";
-enhanced_SearchBox.id = "enhanced_ProGames";
+enhanced_SearchBox.id = "enhanced_SearchBox";
 var enhanced_StoreSearch = document.createElement("input");
 enhanced_SearchBox.appendChild(enhanced_StoreSearch);
 enhanced_StoreSearch.className = "ROpnrd QAAyWd wJYinb";
@@ -729,7 +727,7 @@ enhanced_Resolution.style.cursor = "pointer";
 enhanced_Resolution.style.userSelect = "none";
 enhanced_Resolution.style.borderBottom = "1px solid rgba(255,255,255,.06)";
 enhanced_UserMedia.tabIndex = "0";
-enhanced_Resolution.addEventListener("click", function(evt) {
+enhanced_Resolution.addEventListener("click", function() {
     enhanced_currentRes = (enhanced_currentRes + 1) % 3;
     localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
     enhanced_updateResolution(enhanced_currentRes)
@@ -1636,7 +1634,7 @@ enhanced_captureScreenshot.style.width = "2.5rem";
 enhanced_captureScreenshot.style.padding = "0px";
 enhanced_captureScreenshot.style.marginRight = "1rem";
 enhanced_captureScreenshot.style.userSelect = "none";
-enhanced_captureScreenshot.addEventListener("click", function(e) {
+enhanced_captureScreenshot.addEventListener("click", function() {
     if (enhanced_activeCapFilter != "image") {
         enhanced_activeCapFilter = "image";
         enhanced_captureScreenshot.style.color = "#ff773d";
@@ -1658,7 +1656,7 @@ enhanced_captureClip.tabIndex = "0";
 enhanced_captureClip.style.width = "2.5rem";
 enhanced_captureClip.style.padding = "0px";
 enhanced_captureClip.style.userSelect = "none";
-enhanced_captureClip.addEventListener("click", function(e) {
+enhanced_captureClip.addEventListener("click", function() {
     if (enhanced_activeCapFilter != "movie") {
         enhanced_activeCapFilter = "movie";
         enhanced_captureScreenshot.style.color = "rgba(255,255,255,.9)";
@@ -1701,17 +1699,17 @@ function updateSettings() {
 }
 
 // After Setup
-console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + (new Date().getTime() - enhanced_StartTimer) + "ms.", enhanced_consoleEnhanced, "")
+var enhanced_timerLoadEnd = window.performance.now() - enhanced_timerLoadStart;
+console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + enhanced_timerLoadEnd.toFixed(2) + "ms.", enhanced_consoleEnhanced, "")
 var enhanced_loopCount = 0;
 var enhanced_loopTotal = 0;
+var enhanced_timerLoopTotal = 0;
 var enhanced_sessionStart = 0;
 var enhanced_wrappers = [];
 
 // Main Loop
 setInterval(function() {
-    // Loop Start
-    var enhanced_loopTimer = new Date().getTime();
-    enhanced_loopCount++;
+    var enhanced_timerLoopStart = window.performance.now();
 
     // Session Time
     if (document.location.href.indexOf("/player/") != -1) {
@@ -1758,10 +1756,11 @@ setInterval(function() {
         var enhanced_gameFilter = localStorage.getItem("enhanced_gameFilter") || "";
 
         // Add "Show All" UI element
-        if (document.querySelectorAll(".CVVXfc.URhE4b.ivS28e.tfyX5").length != 0) {
-            if (document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].contains(enhanced_showAll) === false) {
-                document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5")[document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5").length - 1].append(enhanced_showAll);
+        var enhanced_selector = document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5");
+        if (enhanced_selector.length != 0) {
+            if (enhanced_selector[enhanced_selector.length - 1].contains(enhanced_showAll) === false) {
                 enhanced_showAll.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
+                enhanced_selector[enhanced_selector.length - 1].append(enhanced_showAll);
                 enhanced_showState = false;
             }
         }
@@ -1843,30 +1842,34 @@ setInterval(function() {
     }
 
     // Shortcuts
-    if (enhanced_enableShortcuts == 1) {
-        enhanced_installShortcut.style.display = "inline-flex";
-        enhanced_shortcutLastPlayed.style.display = "flex";
+    if (document.location.href.indexOf("/home") != -1) {
+        if (enhanced_enableShortcuts == 1) {
+            enhanced_installShortcut.style.display = "inline-flex";
+            enhanced_shortcutLastPlayed.style.display = "flex";
 
-        // Popup
-        if (document.querySelector("#enhanced_installShortcut") === null && document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")) {
-            enhanced_installShortcut.gameName = document.querySelector(".Wq73hb").textContent;
-            enhanced_installShortcut.gameID = document.querySelector(".h1uihb > c-wiz").getAttribute("data-app-id");
-            enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>';
-            document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc").parentElement.append(enhanced_installShortcut);
-        }
-
-        // Last Played
-        if (document.querySelector(".mGdxHb.ltdNmc")) {
-            if (!document.querySelectorAll(".mGdxHb.ltdNmc")[document.querySelectorAll(".mGdxHb.ltdNmc").length - 1].contains(enhanced_shortcutLastPlayed)) {
-                enhanced_shortcutLastPlayed.gameName = document.querySelector(".mGdxHb.ltdNmc").getAttribute("aria-label").split(": ")[1]
-                enhanced_shortcutLastPlayed.gameID = document.querySelector(".UiBYIe > c-wiz").getAttribute("data-app-id");
-                enhanced_shortcutLastPlayed.title = enhanced_lang.shortcuttitle + " " + enhanced_shortcutLastPlayed.gameName;
-                document.querySelectorAll(".mGdxHb.ltdNmc")[document.querySelectorAll(".mGdxHb.ltdNmc").length - 1].append(enhanced_shortcutLastPlayed);
+            // Popup
+            var enhanced_selector = document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")
+            if (document.getElementById(enhanced_installShortcut) === null && enhanced_selector) {
+                enhanced_installShortcut.gameName = document.querySelector(".Wq73hb").textContent;
+                enhanced_installShortcut.gameID = document.querySelector(".h1uihb > c-wiz").getAttribute("data-app-id");
+                enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>';
+                enhanced_selector.parentElement.append(enhanced_installShortcut);
             }
+
+            // Last Played
+            var enhanced_selector = document.querySelectorAll(".mGdxHb.ltdNmc");
+            if (enhanced_selector[enhanced_selector.length - 1] !== undefined) {
+                if (enhanced_selector[enhanced_selector.length - 1].contains(enhanced_shortcutLastPlayed) === false) {
+                    enhanced_shortcutLastPlayed.gameName = enhanced_selector[enhanced_selector.length - 1].getAttribute("aria-label").split(": ")[1]
+                    enhanced_shortcutLastPlayed.gameID = document.querySelector(".UiBYIe > c-wiz").getAttribute("data-app-id");
+                    enhanced_shortcutLastPlayed.title = enhanced_lang.shortcuttitle + " " + enhanced_shortcutLastPlayed.gameName;
+                    enhanced_selector[enhanced_selector.length - 1].append(enhanced_shortcutLastPlayed);
+                }
+            }
+        } else {
+            enhanced_installShortcut.style.display = "none";
+            enhanced_shortcutLastPlayed.style.display = "none";
         }
-    } else {
-        enhanced_installShortcut.style.display = "none";
-        enhanced_shortcutLastPlayed.style.display = "none";
     }
 
     // Offline / Invisible Users
@@ -1950,7 +1953,9 @@ setInterval(function() {
                             </div>\
                         </div>\
                     </div>'
-                enhanced_statOverview.innerHTML = enhanced_loadStats;
+                if (enhanced_statOverview.innerHTML != enhanced_loadStats) {
+                    enhanced_statOverview.innerHTML = enhanced_loadStats;
+                }
             }
         }
         secureInsert(enhanced_statOverview, ".dkZt0b.qRvogc", 2);
@@ -1994,9 +1999,10 @@ setInterval(function() {
     }
 
     // Resolution - Enable "Up to 4K" option
-    if (document.location.href.indexOf("/settings") != -1 && document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0] !== undefined) {
-        document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0].setAttribute("data-disabled", "false");
-        document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0].classList.remove("OWB6Me");
+    var enhanced_selector = document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0]
+    if (document.location.href.indexOf("/settings") != -1 && enhanced_selector !== undefined) {
+        enhanced_selector.setAttribute("data-disabled", "false");
+        enhanced_selector.classList.remove("OWB6Me");
     }
 
     // UI Elements - Add controls again when needed
@@ -2094,9 +2100,12 @@ setInterval(function() {
     }
 
     // Loop End
-    enhanced_loopTotal += new Date().getTime() - enhanced_loopTimer;
+    enhanced_loopCount++;
+    var enhanced_timerLoopEnd = window.performance.now();
+    enhanced_timerLoopTotal += enhanced_timerLoopEnd - enhanced_timerLoopStart;
     if (enhanced_loopCount == 300) {
-        console.log("%cStadia Enhanced" + "%c ⏲️ - Loop Time: ~" + enhanced_loopTotal / enhanced_loopCount + "ms.", enhanced_consoleEnhanced, "");
+        var enhanced_timerLoopAverage = (enhanced_timerLoopTotal / 300)
+        console.log("%cStadia Enhanced" + "%c ⏲️ - Loop Time: ~" + enhanced_timerLoopAverage.toFixed(2) + "ms.", enhanced_consoleEnhanced, "");
     }
 }, 200);
 
@@ -2148,7 +2157,8 @@ function embed(fn, enhanced_sessionActive = true) {
 }
 
 function secureInsert(el, sel, opt = 0) {
-    var target = document.querySelectorAll(sel)[document.querySelectorAll(sel).length - 1];
+    var selector = document.querySelectorAll(sel)
+    var target = selector[selector.length - 1];
     if (target && el) {
         switch (opt) {
             case 0:
@@ -2229,14 +2239,21 @@ function enhanced_dragElement(el) {
 }
 
 // Debugging - Call via "debugEnhanced(); on Stadia
-function debugEnhanced() {
+function debugEnhanced(opt) {
     var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 
-    // Translations
-    var languages = ["fr", "sv", "pt", "ca", "da", "it", "es", "de", "en"];
-    for (var i = 0; i < languages.length; i++) {
-        console.log("%cStadia Enhanced" + "%c 🛠️ - Checking language: '" + languages[i] + "'", enhanced_consoleEnhanced, "");
-        loadLanguages(languages[i]);
+    switch (opt) {
+        case 0:
+            // Translations
+            var languages = ["fr", "nl", "sv", "pt", "ca", "da", "it", "es", "de", "en"];
+            for (var i = 0; i < languages.length; i++) {
+                console.log("%cStadia Enhanced" + "%c 🛠️ - Loading translation: '" + languages[i] + "'", enhanced_consoleEnhanced, "");
+                debug_load = loadLanguages(languages[i]);
+                if (debug_load.languagecode != languages[i]) {
+                    console.error("%cStadia Enhanced" + "%c 🛠️ - Error loading translation: '" + languages[i] + "' featuring wrong language code: '" + debug_load.languagecode + "'", enhanced_consoleEnhanced, "");
+                }
+            }
+            break
     }
 }
 embed(debugEnhanced, 0);
@@ -2246,6 +2263,7 @@ function loadLanguages(lang) {
     switch (lang) {
         case "fr": //https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8
             var load = `{
+                "languagecode": "fr",
                 "default": "Par Défaut",
                 "native": "Natif",
                 "hide": "Masquer",
@@ -2340,6 +2358,7 @@ function loadLanguages(lang) {
             break
         case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
             var load = `{
+                "languagecode": "sv",
                 "default": "Standard",
                 "native": "Inbyggd",
                 "hide": "Göm",
@@ -2434,6 +2453,7 @@ function loadLanguages(lang) {
             break
         case "pt": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/91
             var load = `{
+                "languagecode": "pt",
                 "default": "Padrão",
                 "native": "Nativo",
                 "hide": "Esconder",
@@ -2525,8 +2545,10 @@ function loadLanguages(lang) {
                 "scrollbardesc": "Activa as scrollbars no ecrã inicial e loja.",
                 "resetsettings": "Reiniciar Configurações"
             }`
+            break
         case "ca": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
             var load = `{
+                "languagecode": "ca",
                 "default": "Per defecte",
                 "native": "Natiu",
                 "hide": "Amaga",
@@ -2621,6 +2643,7 @@ function loadLanguages(lang) {
             break
         case "da": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81
             var load = `{
+                "languagecode": "da",
                 "default": "Standard",
                 "native": "Hjemmehørende",
                 "hide": "Skjul",
@@ -2715,6 +2738,7 @@ function loadLanguages(lang) {
             break
         case "it": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
             var load = `{
+                "languagecode": "it",
                 "default": "Predefinito",
                 "native": "Nativo",
                 "hide": "Nascondi",
@@ -2809,6 +2833,7 @@ function loadLanguages(lang) {
             break
         case "es": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67
             var load = `{
+                "languagecode": "es",
                 "default": "Por defecto",
                 "native": "Nativa",
                 "hide": "Ocultar",
@@ -2901,8 +2926,105 @@ function loadLanguages(lang) {
                 "resetsettings": "Restablecer los ajustes"
             }`
             break
+        case "nl": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9
+            var load = `{
+                "languagecode": "nl",
+                "default": "Standaard",
+                "native": "Native",
+                "hide": "Verbergen",
+                "show": "Tonen",
+                "visible": "Zichtbaar",
+                "hidden": "Verborgen",
+                "enabled": "Ingeschakeld",
+                "disabled": "Uitgeschakeld",
+                "auto": "Automatisch",
+                "manual": "Handmatig",
+                "games": "Games",
+                "bundles": "Bundels",
+                "addons": "Add-ons",
+                "responsive": "Responsief",
+                "windowed": "Venster Modus",
+                "fullscreen": "Volledig Scherm",
+                "searchstore": "Zoek in de winkel",
+                "onsale": "In de Uitverkoop",
+                "prodeals": "Pro Deals",
+                "allgames": "Alle Games",
+                "usermedia": "Screenshots & Videos",
+                "searchbtnbase": "Zoek verder",
+                "avatarpopup": "Nieuwe avatar URL (laat leeg voor standaard):",
+                "searchheader": "Games inclusief",
+                "sessiontime": "Sessie tijd",
+                "codec": "Codec",
+                "resolution": "Resolutie",
+                "hardware": "Hardware",
+                "software": "Software",
+                "trafficsession": "Sessie traffic",
+                "trafficcurrent": "Huidige traffic",
+                "trafficaverage": "Gemiddelde traffic",
+                "packetloss": "Verloren pakketten",
+                "framedrop": "Frames dropped",
+                "latency": "Vertraging",
+                "jitter": "Jitter Buffer",
+                "decodetime": "Decodeer Tijd",
+                "compression": "Compressie",
+                "streammon": "Stream Monitor",
+                "stream": "Stream",
+                "community": "Gemeenschap",
+                "speedtest": "Snelheidstest",
+                "quickaccess": "Snelle Toegang",
+                "messages": "Berichten",
+                "avatar": "Avatar",
+                "interface": "Interface",
+                "shortcut": "Snelkoppelingen",
+                "shortcuttitle": "Installeer een snelkoppeling voor",
+                "shortcutdesc": "Laat je een snelkoppeling voor een game installeren op je apparaat",
+                "gridsize": "Rooster Grootte",
+                "griddesc": "Verander het aantal games per rij op je thuisscherm.",
+                "clock": "Klok",
+                "clockdesc": "Geef de huidige tijd weer in je vriendenlijst, als in-game overlay of allebei.",
+                "friendslist": "Vriendenlijst",
+                "igoverlay": "In-Game Overlay",
+                "listoverlay": "Lijst & Overlay",
+                "filter": "Filter",
+                "filterdesc": "Laat je het thuisscherm sorteren door games te verbergen. Dit filter kan in-/uitgeschakeld worden via het symbool, rechtsboven je games op het thuisscherm.",
+                "filtertoggle": "Omschakelen",
+                "filterquick": "Snel",
+                "invitebase": "Kopiëer uitnodigingslink",
+                "inviteactive": "Gekopiëerd!",
+                "prolabel": "Pro Label",
+                "prolabeldesc": "Verwijderd het 'Pro' label van games op het thuisscherm.",
+                "homegallery": "Gebruikers Gallerij",
+                "homegallerydesc": "Verbergt het 'Captures' deel onderaan het thuisscherm.",
+                "quickprev": "Berichtvoorbeeld",
+                "quickprevdesc": "Verbergt het berichtvoorbeeld in de vriendenlijst.",
+                "quickrep": "Snelantwoord",
+                "quickrepdesc": "Verbergt de snelantwoord optie in chats.",
+                "offlinefriend": "Offline Vrienden",
+                "offlinefrienddesc": "Verbergt offline vrienden in de vriendenlijst.",
+                "invisiblefriend": "Onzichtbare Vrienden",
+                "invisiblefrienddesc": "Vergbergt vrienden met onbekend online status in de vriendenlijst.",
+                "streammode": "Streaming Modus",
+                "streammodedesc": "Schakel in om bepaalde elementen (zoals de vriendenlijst) onleesbaar te maken tijdens het streamen (via tools als OBS / Discord).",
+                "catprev": "Categorievoorbeeld",
+                "catprevdesc": "Verbergt de categorie tags bij het bewegen over een game.",
+                "popup": "Popup Effect",
+                "popupdesc": "Haal het zoom-in / vergroot effect weg bij het bewegen over een game op het thuisscherm.",
+                "streammondesc": "Activeer om de monitor te starten bij het starten van een game.",
+                "resolutiondesc": "De beoogde resolutio voor games. 1440p en 2160p vereisen VP9.",
+                "codecdesc": "De codec gebruikt voor games.",
+                "confirmreset": "Weet je zeker dat je de instellingen wilt resetten?",
+                "gamesfinished": "Games Voltooid",
+                "achievementsunlocked": "Achievements Vrijgespeeld",
+                "splitstore": "Splits Winkel Lijsten",
+                "splitstoredesc": "Splits de winkel lijsten in twee kolommen voor een beter overzicht.",
+                "scrollbar": "Scrollbalken",
+                "scrollbardesc": "Schakel scrollbalken in voor het thuisscherm en de winkel.",
+                "resetsettings": "Reset Instellingen"
+            }`
+            break
         case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13
             var load = `{
+                "languagecode": "de",
                 "default": "Standard",
                 "native": "Nativ",
                 "hide": "Verstecke",
@@ -2997,6 +3119,7 @@ function loadLanguages(lang) {
             break
         default:
             var load = `{
+                "languagecode": "en",
                 "default": "Default",
                 "native": "Native",
                 "hide": "Hide",
