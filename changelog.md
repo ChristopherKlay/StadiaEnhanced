@@ -2,6 +2,13 @@
 
 ## Version 1.8
 
+### 1.8.8
+* Reduced CPU usage due to optimisation of selectors
+* Added dutch translation
+* Fixed debugging function ignoring wrong language codes
+* Fixed the extension loading on shared captures
+* Fixed portoguese language option loading the wrong language
+
 ### 1.8.7
 * Removed scrollbar functionality, which is now officially supported
 
