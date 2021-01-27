@@ -2,6 +2,9 @@
 
 ## Version 1.8
 
+### 1.8.9
+* Added hungarian translation
+
 ### 1.8.8
 * Reduced CPU usage due to optimisation of selectors
 * Added dutch translation
