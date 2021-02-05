@@ -2,6 +2,9 @@
 
 ## Version 1.8
 
+### 1.8.10
+* Fixed offline/invisible & statistics functionality/errors after changes to Stadia
+
 ### 1.8.9
 * Added hungarian translation
 
