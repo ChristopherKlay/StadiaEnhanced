@@ -1617,7 +1617,7 @@ enhanced_shortcutLastPlayed.addEventListener("click", function() {
 // Game Statistics
 var enhanced_statsCheck = 0;
 var enhanced_statOverview = document.createElement("div");
-enhanced_statOverview.className = "MDSsFe";
+enhanced_statOverview.className = "MDSsFe URhE4b";
 enhanced_statOverview.style.marginBottom = "3.5rem";
 
 // Capture Filters
@@ -1873,29 +1873,30 @@ setInterval(function() {
     }
 
     // Offline / Invisible Users
-    var enhanced_statusList = document.querySelectorAll(".eXdFqc .Y1rZWd.QAAyWd.PuD06d .DfyMcd"); // Offline Users
+    var enhanced_statusList = document.querySelectorAll(".eXdFqc .rtsndf.WTetv .DfyMcd");
     for (var i = 0; i < enhanced_statusList.length; i++) {
         if (parseInt(localStorage.getItem("enhanced_hideOffline") || 0) == 1) {
-            enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: none !important");
+            enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: none !important");
         } else {
-            enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: flex");
+            enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: flex");
         }
     }
+
     var enhanced_statusList = document.querySelectorAll(".eXdFqc .UxR5ob.m8Kzt"); // Invisible Users
     for (var i = 0; i < enhanced_statusList.length; i++) {
         if (enhanced_statusList[i].childElementCount == 1) {
             if (parseInt(localStorage.getItem("enhanced_hideInvisible") || 0) == 1) {
-                enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: none !important");
+                enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: none !important");
             } else {
-                enhanced_statusList[i].closest(".Y1rZWd.QAAyWd.PuD06d").setAttribute("style", "display: flex");
+                enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: flex");
             }
         }
     }
 
     // Game Statistics
     if (document.location.href.indexOf("/gameactivities/all") != -1 && document.querySelector(".MDSsFe") !== null) {
-        var enhanced_statsBaseQuery = document.querySelectorAll(".lsY9kc")[document.querySelectorAll(".lsY9kc").length - 1];
-        var enhanced_statsOwned = enhanced_statsBaseQuery.querySelectorAll(".nyQclf").length;
+        var enhanced_statsBaseQuery = document.querySelectorAll("div[jsname='jlb53b']")[document.querySelectorAll("div[jsname='jlb53b']").length - 1];
+        var enhanced_statsOwned = enhanced_statsBaseQuery.childElementCount;
         var enhanced_statsAchievementQuery = enhanced_statsBaseQuery.querySelectorAll(".kPtFV");
 
         if (enhanced_statsAchievementQuery.length > 0) {
