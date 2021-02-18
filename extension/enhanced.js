@@ -4,7 +4,7 @@ var enhanced_StartTimer = new Date().getTime();
 var enhanced_local = document.querySelector("html").getAttribute("lang");
 var enhanced_lang = loadLanguages(enhanced_local);
 var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
-var enhanced_AccountInfo = enhanced_loadUserInfo()
+var enhanced_AccountInfo = enhanced_loadUserInfo();
 console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountInfo[0] + "#" + enhanced_AccountInfo[1] + " (" + enhanced_AccountInfo[2] + ") (" + enhanced_local + ")", enhanced_consoleEnhanced, "");
 
 // CSS Changes - Global styles and overwrites
@@ -152,9 +152,10 @@ function enhanced_RTCMonitor() {
                             var packetsLost = tmp1.packetsLost;
                             var packetsReceived = tmp1.packetsReceived;
                             var framesDropped = tmp2.framesDropped;
+                            var framesDroppedPerc = ((framesDropped / framesReceived) * 100).toFixed(3)
                             var latency = tmp4.currentRoundTripTime * 1000;
                             if (isNaN(latency)) {
-                                latency = "-";
+                                latency = "0";
                             }
                             var jitterBufferDelay = tmp2.jitterBufferDelay * 1000;
                             var jitterBufferEmittedCount = tmp2.jitterBufferEmittedCount;
@@ -183,37 +184,70 @@ function enhanced_RTCMonitor() {
 
                             var enhanced_streamData = "Loading stream data.";
                             if (framesReceived > 0) {
+
+                                // Connection Check
+                                if (parseInt(framesReceivedPerSecond) < 1) {
+                                    enhanced_connectionStatus = "white";
+                                } else if (decodingTime > 12 || framesDroppedPerc > 1 || latency > 100) {
+                                    enhanced_connectionStatus = "#FF7070"; // Red
+                                } else if (decodingTime > 10 || framesDroppedPerc > 0.5 || latency > 75) {
+                                    enhanced_connectionStatus = "#FFB83D"; // Yellow
+                                } else if (decodingTime > 8.33 || framesDroppedPerc > 0.2 || latency > 40) {
+                                    enhanced_connectionStatus = "#00E0BA"; // Green
+                                } else {
+                                    enhanced_connectionStatus = "#44BBD8"; // Blue
+                                }
+
                                 switch (enhanced_monitorMode) {
                                     case 0:
                                         enhanced_streamData = '<center><svg height="30" width="45" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg><br/>'
                                         enhanced_streamData += "<b>" + time + "</b><br/>" + enhanced_lang.sessiontime + ": " + enhanced_formatTime(sessionDuration) + "</center><br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.resolution + ":</b> " + resolution + "<br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.codec + ":</b> " + decodingType + " " + codec + "<br/>";
+                                        if (codec == "VP9") {
+                                            enhanced_streamData += "<b>" + enhanced_lang.compression + ":</b> " + compression;
+                                            enhanced_streamData += "<br/>";
+                                        }
                                         enhanced_streamData += "<b>FPS:</b> " + framesReceivedPerSecond.toFixed(1) + "<br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.trafficsession + ":</b> " + enhanced_formatBytes(bytesReceived, 2) + "<br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.trafficcurrent + ":</b> " + enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + "b/s<br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.trafficaverage + ":</b> " + averageData.toFixed(2) + " GB/h<br/>";
                                         enhanced_streamData += "<b>" + enhanced_lang.packetloss + ":</b> " + packetsLost + " (" + ((packetsLost / packetsReceived) * 100).toFixed(3) + "%)<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b> " + framesDropped + " (" + ((framesDropped / framesReceived) * 100).toFixed(3) + "%)<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b>" + decodingTime.toFixed(2) + " ms<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b> " + latency + " ms<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.jitter + ":</b> " + jitterBuffer.toPrecision(4) + " ms<br/>";
-                                        if (codec == "VP9") {
-                                            enhanced_streamData += "<b>" + enhanced_lang.compression + ":</b> " + compression;
-                                            enhanced_streamData += "<br/>";
-                                        }
-                                        break
-                                    case 1:
-                                        if (parseInt(framesReceivedPerSecond) < 1) {
-                                            enhanced_connectionStatus = "white";
-                                        } else if (parseInt(framesReceivedPerSecond) < 50) {
-                                            enhanced_connectionStatus = "#FF7070"; // Red
-                                        } else if (parseInt(framesReceivedPerSecond) < 57) {
-                                            enhanced_connectionStatus = "#FFB83D"; // Yellow
+
+                                        if (framesDroppedPerc > 1) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #FF7070;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
+                                        } else if (framesDroppedPerc > 0.5) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #FFB83D;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
+                                        } else if (framesDroppedPerc > 0.2) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #00E0BA;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
                                         } else {
-                                            enhanced_connectionStatus = "#00E0BA"; // Green
+                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #44BBD8;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
                                         }
 
+                                        if (decodingTime > 12) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #FF7070;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                        } else if (decodingTime > 10) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #FFB83D;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                        } else if (decodingTime > 8.33) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #00E0BA;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                        } else {
+                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #44BBD8;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                        }
+
+                                        if (latency > 100) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #FF7070;'> " + latency + " ms</span><br/>";
+                                        } else if (latency > 75) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #FFB83D;'> " + latency + " ms</span><br/>";
+                                        } else if (latency > 40) {
+                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #00E0BA;'> " + latency + " ms</span><br/>";
+                                        } else {
+                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #44BBD8;'> " + latency + " ms</span><br/>";
+                                        }
+
+                                        enhanced_streamData += "<b>" + enhanced_lang.jitter + ":</b> " + jitterBuffer.toPrecision(4) + " ms<br/>";
+                                        enhanced_streamData += "<hr style='height: 4px; border: none; border-radius: 0.5rem; background: " + enhanced_connectionStatus + ";'></hr>";
+                                        break
+                                    case 1:
                                         enhanced_streamData = decodingType + " " + codec + "&ensp;|&ensp;" + resolution + "&ensp;|&ensp;" + framesReceivedPerSecond.toFixed(1) + "fps&ensp;|&ensp;" + latency + "ms&ensp;|&ensp;" + decodingTime.toFixed(1) + "ms&ensp;|&ensp;<span style='color: " + enhanced_connectionStatus + ";'>⬤</span>";
                                         break
                                 }
@@ -1429,7 +1463,7 @@ function enhanced_setAvatar(url) {
     enhanced_CSS += '.Nv1Sab[alt$="' + enhanced_AccountInfo[0] + '"] { content: url("' + url + '") !important; }'
     enhanced_CSS += 'c-wiz[data-p*="' + enhanced_AccountInfo[2] + '"] .XZRzG { background-image: url("' + url + '") !important; }'
     enhanced_CSS += '.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountInfo[2] + '"] .PwtJse { background-image: url("' + url + '") !important; }'
-    enhanced_CSS += '.Tidcwc > .Y1rZWd.QAAyWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + url + '") !important; }'
+    enhanced_CSS += '.Tidcwc > .Y1rZWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + url + '") !important; }' // Group Avatar
     enhanced_CSS += '.mcaxA.ZmeF9 div:first-child { background-image: url("' + url + '") !important; }'
     enhanced_injectStyle(enhanced_CSS, "enhanced_styleAvatar");
 }
@@ -1848,12 +1882,11 @@ setInterval(function() {
             enhanced_shortcutLastPlayed.style.display = "flex";
 
             // Popup
-            var enhanced_selector = document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")
-            if (document.getElementById(enhanced_installShortcut) === null && enhanced_selector) {
+            if (document.getElementById(enhanced_installShortcut) === null && document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")) {
                 enhanced_installShortcut.gameName = document.querySelector(".Wq73hb").textContent;
                 enhanced_installShortcut.gameID = document.querySelector(".h1uihb > c-wiz").getAttribute("data-app-id");
                 enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>';
-                enhanced_selector.parentElement.append(enhanced_installShortcut);
+                secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0);
             }
 
             // Last Played
