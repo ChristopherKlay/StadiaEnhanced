@@ -2,6 +2,11 @@
 
 ## Version 1.8
 
+### 1.8.11
+* Fixed custom avatar not showing in partys
+* More precise connection status (blue/perfect > green/good > yellow/some issues > red/heavy issues)
+* Connection status bar now on both monitor options
+
 ### 1.8.10
 * Fixed offline/invisible & statistics functionality/errors after changes to Stadia
 
