@@ -2,7 +2,7 @@
 
 ![](https://i.imgur.com/mKhLrPJ.png)
 
-![GitHub](https://img.shields.io/badge/GitHub-1.8.10-green?style=for-the-badge)
+![GitHub](https://img.shields.io/badge/GitHub-1.8.11-green?style=for-the-badge)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)](https://chrome.google.com/webstore/detail/stadia-enhanced/ldeakaihfnkjmelifgmbmjlphdfncbfg)
 
 ## Features
