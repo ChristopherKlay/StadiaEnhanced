@@ -2,6 +2,13 @@
 
 ## Common Questions
 
+* [Do i need to pay for Pro, to play games?](#do-i-need-to-pay-for-pro-to-play-games)
+* [Are all games 4K/2160p and 60fps?](#are-all-games-4k2160p-and-60fps)
+* [What devices can i use Stadia on?](#what-devices-can-i-use-stadia-on)
+* [Is there a difference between using a Chromecast or my PC?](#is-there-a-difference-between-using-a-chromecast-or-my-pc)
+* [Can't i just play the games i already own?](#cant-i-just-play-the-games-i-already-own)
+* [Why is there no cross-play / cross-save in this game?](#why-is-there-no-cross-play--cross-save-in-this-game)
+
 ### Do i need to pay for Pro, to play games?
 
 **No, you don't!**
