@@ -109,6 +109,8 @@ function enhanced_RTCMonitor() {
         return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
     }
 
+    var enhanced_timerPackageLoss = window.performance.now();
+
     setInterval(function() {
         if (document.location.href.indexOf("/player/") == -1) {
             peerConnections = [];
@@ -669,6 +671,20 @@ window.addEventListener("click", function(e) {
     }
 });
 
+// My Profile - Shortcut to the users profile
+var enhanced_UserProfile = document.createElement("div");
+enhanced_UserProfile.className = "pBvcyf QAAyWd";
+enhanced_UserProfile.id = "enhanced_UserProfile";
+enhanced_UserProfile.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb">' + enhanced_lang.userprofile + '</span>';
+enhanced_UserProfile.style.cursor = "pointer";
+enhanced_UserProfile.style.userSelect = "none";
+enhanced_UserProfile.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_UserProfile.tabIndex = "0";
+enhanced_UserProfile.addEventListener("click", function() {
+    openStadia("profile/" + enhanced_AccountInfo[2]);
+});
+enhanced_settingsShortcut.append(enhanced_UserProfile);
+
 // Captures - A shortcut to the screenshots & videos of the current user
 var enhanced_UserMedia = document.createElement("div");
 enhanced_UserMedia.className = "pBvcyf QAAyWd";
@@ -754,6 +770,7 @@ function enhanced_changeCodec(c) {
 localStorage.setItem("enhanced_DeskWidth", window.screen.width);
 localStorage.setItem("enhanced_DeskHeight", window.screen.height);
 var enhanced_currentRes = parseInt(localStorage.getItem("enhanced_ResOption") || 0);
+
 var enhanced_Resolution = document.createElement("div");
 enhanced_Resolution.className = "pBvcyf QAAyWd";
 enhanced_Resolution.id = "enhanced_Resolution";
@@ -768,11 +785,22 @@ enhanced_Resolution.addEventListener("click", function() {
 });
 enhanced_settingsStream.append(enhanced_Resolution);
 
+var enhanced_resolutionPopup = document.createElement("div");
+enhanced_resolutionPopup.id = "enhanced_resolutionPopup";
+enhanced_resolutionPopup.className = "HP4yJd heSpB";
+enhanced_resolutionPopup.style.cursor = "pointer";
+enhanced_resolutionPopup.addEventListener("click", function() {
+    enhanced_currentRes = (enhanced_currentRes + 1) % 3;
+    localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
+    enhanced_updateResolution(enhanced_currentRes)
+});
+
 function enhanced_updateResolution(res) {
     switch (res) {
         case 0:
             enhanced_Resolution.style.color = "";
             enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+            enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '</div>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to 'Native'.", enhanced_consoleEnhanced, "");
             break
         case 1:
@@ -781,6 +809,7 @@ function enhanced_updateResolution(res) {
             enhanced_changeCodec(enhanced_currentCodec)
             enhanced_Resolution.style.color = "#00e0ba";
             enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 1440p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+            enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': 1440p</div>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '2560x1440'.", enhanced_consoleEnhanced, "");
             break
         case 2:
@@ -789,13 +818,13 @@ function enhanced_updateResolution(res) {
             enhanced_changeCodec(enhanced_currentCodec)
             enhanced_Resolution.style.color = "#00e0ba";
             enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 2160p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+            enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': 2160p</div>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '3840x2160'.", enhanced_consoleEnhanced, "");
             break
     }
 }
 
 function enhanced_changeResolution() {
-    // Source: https://superuser.com/questions/712461/
     var enhancedinject_currentResolution;
     setInterval(function() {
         var enhancedinject_newResolution = parseInt(localStorage.getItem("enhanced_ResOption"));
@@ -1066,6 +1095,9 @@ enhanced_resetSettings.addEventListener("click", function() {
         localStorage.removeItem("enhanced_ResOption");
         localStorage.removeItem("enhanced_hideInvisible");
         localStorage.removeItem("enhanced_storeListSize");
+        localStorage.removeItem("enhanced_useInlinePreview");
+        localStorage.removeItem("enhanced_wishlist");
+        localStorage.removeItem("enhanced_familySharingElements");
         console.log("%cStadia Enhanced" + "%c ⚙️ - Settings reverted to default.", enhanced_consoleEnhanced, "");
         location.reload();
     }
@@ -1138,6 +1170,37 @@ function enhanced_changeQuickReply(opt) {
             break
     }
     enhanced_injectStyle(enhanced_CSS, "enhanced_styleQuickReply");
+}
+
+// In-line image preview
+var enhanced_useInlinePreview = parseInt(localStorage.getItem("enhanced_useInlinePreview") || 0);
+var enhanced_inlineConvert = document.createElement("div");
+enhanced_inlineConvert.className = "pBvcyf QAAyWd";
+enhanced_inlineConvert.id = "enhanced_inlineConvert";
+enhanced_inlineConvert.style.cursor = "pointer";
+enhanced_inlineConvert.style.userSelect = "none";
+enhanced_inlineConvert.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_inlineConvert.tabIndex = "0";
+enhanced_inlineConvert.addEventListener("click", function() {
+    enhanced_useInlinePreview = (enhanced_useInlinePreview + 1) % 2;
+    localStorage.setItem("enhanced_useInlinePreview", enhanced_useInlinePreview);
+    enhanced_changeInlinePreview(enhanced_useInlinePreview);
+});
+enhanced_settingsMessages.append(enhanced_inlineConvert);
+
+function enhanced_changeInlinePreview(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_inlineConvert.style.color = "";
+            enhanced_inlineConvert.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">insert_photo</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.inlineimage + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.inlinedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - In-line Image Preview: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_inlineConvert.style.color = "#00e0ba";
+            enhanced_inlineConvert.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">insert_photo</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.inlineimage + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.inlinedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - In-line Image Preview: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+            break
+    }
 }
 
 // Hide: Offline Users
@@ -1371,6 +1434,40 @@ function enhanced_changeStoreList(opt) {
     enhanced_injectStyle(enhanced_CSS, "enhanced_styleStoreSplit");
 }
 
+// Family Sharing Elements
+var enhanced_familySharingElements = parseInt(localStorage.getItem("enhanced_familySharingElements") || 0);
+var enhanced_hideFamilyElements = document.createElement("div");
+enhanced_hideFamilyElements.className = "pBvcyf QAAyWd";
+enhanced_hideFamilyElements.id = "enhanced_storeList";
+enhanced_hideFamilyElements.style.cursor = "pointer";
+enhanced_hideFamilyElements.style.userSelect = "none";
+enhanced_hideFamilyElements.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_hideFamilyElements.tabIndex = "0";
+enhanced_hideFamilyElements.addEventListener("click", function() {
+    enhanced_familySharingElements = (enhanced_familySharingElements + 1) % 2;
+    localStorage.setItem("enhanced_familySharingElements", enhanced_familySharingElements);
+    enhanced_changeFamilySharing(enhanced_familySharingElements);
+});
+enhanced_settingsGeneral.append(enhanced_hideFamilyElements);
+
+function enhanced_changeFamilySharing(opt) {
+    switch (opt) {
+        case 0:
+            enhanced_CSS = ""
+            enhanced_hideFamilyElements.style.color = "";
+            enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Visible'", enhanced_consoleEnhanced, "");
+            break
+        case 1:
+            enhanced_CSS = ".HP4yJd.heSpB, .HP4yJd.AQVgjb { display: none; } #enhanced_resolutionPopup { display: flex !important; }"
+            enhanced_hideFamilyElements.style.color = "#00e0ba";
+            enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+            break
+    }
+    enhanced_injectStyle(enhanced_CSS, "enhanced_styleFamilyElements");
+}
+
 // Shortcuts
 var enhanced_enableShortcuts = parseInt(localStorage.getItem("enhanced_enableShortcuts") || 0);
 var enhanced_showShortcut = document.createElement("div");
@@ -1426,7 +1523,7 @@ function enhanced_changeStreamMode(opt) {
             console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Disabled'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_CSS = ".lzIqJf .Y1rZWd.QAAyWd.PuD06d, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }"
+            enhanced_CSS = ".lzIqJf .Y1rZWd, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }"
             enhanced_streamMode.style.color = "#00e0ba";
             enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Enabled'", enhanced_consoleEnhanced, "");
@@ -1509,6 +1606,40 @@ enhanced_Metacritic.addEventListener("click", function() {
 });
 enhanced_StoreContainer.append(enhanced_Metacritic);
 
+// Wishlisting
+var enhanced_wishlistContainer = document.createElement("li");
+enhanced_wishlistContainer.className = "OfFb0b";
+enhanced_wishlistContainer.id = "enhanced_wishlistContainer";
+enhanced_wishlistContainer.style.display = "none";
+var enhanced_wishlistHeart = document.createElement("div");
+enhanced_wishlistContainer.appendChild(enhanced_wishlistHeart);
+enhanced_wishlistHeart.className = "ROpnrd QAAyWd wJYinb";
+enhanced_wishlistHeart.id = "enhanced_WishlistHeart";
+enhanced_wishlistHeart.innerHTML = "";
+enhanced_wishlistHeart.style.width = "2.5rem";
+enhanced_wishlistHeart.style.padding = "0";
+enhanced_wishlistHeart.style.cursor = "pointer";
+enhanced_wishlistHeart.style.userSelect = "none";
+enhanced_wishlistHeart.tabIndex = "0";
+enhanced_wishlistHeart.addEventListener("click", function() {
+    var enhanced_wishlist = localStorage.getItem("enhanced_wishlist") || "";
+    var enhanced_currentSKU = document.location.href.split("sku/")[1].substring(0, 32);
+
+    if (enhanced_wishlist.includes(enhanced_currentSKU)) {
+        enhanced_wishlist = enhanced_wishlist.replace("(" + enhanced_currentSKU + ")", "");
+        enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite_border</i>';
+        enhanced_wishlistHeart.style.color = "";
+    } else {
+        enhanced_wishlist += "(" + enhanced_currentSKU + ")";
+        enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>';
+        enhanced_wishlistHeart.style.color = "#ff773d";
+    }
+    localStorage.setItem("enhanced_wishlist", enhanced_wishlist);
+});
+if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
+    document.querySelectorAll(".ZECEje")[0].append(enhanced_wishlistContainer);
+}
+
 // Account Menu - Changes to the account menu behaviour
 enhanced_AccountMenu = document.querySelector(".Zxyh9c");
 enhanced_AccountMenu.setAttribute("data-close-if-content-clicked", "false");
@@ -1518,6 +1649,9 @@ var enhanced_sessionTimer = document.createElement("div");
 enhanced_sessionTimer.className = "HPX1od";
 enhanced_sessionTimer.id = "enhanced_sessionTimer";
 enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">00:00:00</span></div>';
+
+// WIP - Limit to 1080p (60fps)
+
 
 // Game Filter
 var enhanced_showState = false;
@@ -1573,6 +1707,16 @@ enhanced_listFilterBundles.addEventListener("click", function() {
     enhanced_switchListFilter(3);
 });
 
+enhanced_listFilterWishlist = document.createElement("div");
+enhanced_listFilterWishlist.innerHTML = enhanced_lang.wishlist;
+enhanced_listFilterWishlist.className = "Adwm6c";
+enhanced_listFilterWishlist.style.userSelect = "none";
+enhanced_listFilterWishlist.style.marginLeft = "0.75rem";
+enhanced_listFilter.append(enhanced_listFilterWishlist);
+enhanced_listFilterWishlist.addEventListener("click", function() {
+    enhanced_switchListFilter(4);
+});
+
 function enhanced_switchListFilter(type) {
     if (enhanced_activeListFilter != type) {
         switch (type) {
@@ -1584,6 +1728,8 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = "line-through";
                 enhanced_listFilterAddOns.style.color = "grey";
                 enhanced_listFilterAddOns.style.textDecoration = "line-through";
+                enhanced_listFilterWishlist.style.color = "grey";
+                enhanced_listFilterWishlist.style.textDecoration = "line-through";
                 enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:2'], .h6J22d.undefined.QAAyWd[jslog*='17:3'] { display: none }", "enhanced_styleListFilter");
                 break
             case 2:
@@ -1594,6 +1740,8 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = "line-through";
                 enhanced_listFilterAddOns.style.color = "white";
                 enhanced_listFilterAddOns.style.textDecoration = "none";
+                enhanced_listFilterWishlist.style.color = "grey";
+                enhanced_listFilterWishlist.style.textDecoration = "line-through";
                 enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:1'], .h6J22d.undefined.QAAyWd[jslog*='17:3'] { display: none }", "enhanced_styleListFilter");
                 break
             case 3:
@@ -1604,8 +1752,29 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = "none";
                 enhanced_listFilterAddOns.style.color = "grey";
                 enhanced_listFilterAddOns.style.textDecoration = "line-through";
+                enhanced_listFilterWishlist.style.color = "grey";
+                enhanced_listFilterWishlist.style.textDecoration = "line-through";
                 enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:1'], .h6J22d.undefined.QAAyWd[jslog*='17:2'] { display: none }", "enhanced_styleListFilter");
                 break
+            case 4:
+                enhanced_activeListFilter = 4;
+                enhanced_listFilterGames.style.color = "grey";
+                enhanced_listFilterGames.style.textDecoration = "line-through";
+                enhanced_listFilterBundles.style.color = "grey";
+                enhanced_listFilterBundles.style.textDecoration = "line-through";
+                enhanced_listFilterAddOns.style.color = "grey";
+                enhanced_listFilterAddOns.style.textDecoration = "line-through";
+                enhanced_listFilterWishlist.style.color = "white";
+                enhanced_listFilterWishlist.style.textDecoration = "none";
+                var enhanced_wishlist = localStorage.getItem("enhanced_wishlist") || "";
+                var enhanced_wishlist = enhanced_wishlist.substring(1, enhanced_wishlist.length - 1).split(")(");
+                var enhanced_generateStyle = "";
+
+                for (var i = 0; i < enhanced_wishlist.length; i++) {
+                    enhanced_generateStyle += 'div[data-sku-id="' + enhanced_wishlist[i] + '"], '
+                }
+                enhanced_generateStyle = '.h6J22d.undefined.QAAyWd { display: none; } ' + enhanced_generateStyle.substring(0, enhanced_generateStyle.length - 2) + ' { display: grid !important }';
+                enhanced_injectStyle(enhanced_generateStyle, "enhanced_styleListFilter");
         }
     } else {
         enhanced_activeListFilter = 0;
@@ -1615,6 +1784,8 @@ function enhanced_switchListFilter(type) {
         enhanced_listFilterBundles.style.textDecoration = "none";
         enhanced_listFilterAddOns.style.color = "white";
         enhanced_listFilterAddOns.style.textDecoration = "none";
+        enhanced_listFilterWishlist.style.color = "white";
+        enhanced_listFilterWishlist.style.textDecoration = "none";
         enhanced_injectStyle("", "enhanced_styleListFilter");
     }
 }
@@ -1730,6 +1901,8 @@ function updateSettings() {
     enhanced_changeMonitorAutostart(enhanced_autostartMonitor);
     enhanced_changeStoreList(enhanced_storeListSize);
     enhanced_changeShortcuts(enhanced_enableShortcuts);
+    enhanced_changeInlinePreview(enhanced_useInlinePreview);
+    enhanced_changeFamilySharing(enhanced_familySharingElements);
 }
 
 // After Setup
@@ -1757,6 +1930,25 @@ setInterval(function() {
         }
     } else {
         enhanced_sessionStart = 0;
+    }
+
+    // Wishlist Startup
+    if (document.location.href.indexOf("/store/details/") != -1) {
+        if (enhanced_wishlistHeart.innerHTML == "") {
+            var enhanced_wishlist = localStorage.getItem("enhanced_wishlist") || "";
+            var enhanced_currentSKU = document.location.href.split("sku/")[1].substring(0, 32);
+            if (enhanced_wishlist.includes(enhanced_currentSKU)) {
+                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>';
+                enhanced_wishlistHeart.style.color = "#ff773d";
+            } else {
+                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite_border</i>';
+                enhanced_wishlistHeart.style.color = "";
+            }
+            enhanced_wishlistContainer.style.display = "inline-block";
+        }
+    } else {
+        enhanced_wishlistContainer.style.display = "none";
+        enhanced_wishlistHeart.innerHTML = "";
     }
 
     // Enhanced Wrapper
@@ -1872,7 +2064,14 @@ setInterval(function() {
 
     // List Filters
     if (document.location.href.indexOf("/list") != -1) {
-        secureInsert(enhanced_listFilter, ".HZ5mJ", 2);
+        secureInsert(enhanced_listFilter, ".dwGRGd", 2);
+    } else if (enhanced_activeListFilter != 0) {
+        enhanced_switchListFilter(enhanced_activeListFilter);
+    }
+
+    // Resolution settings in Pop-Up
+    if (document.location.href.indexOf("/home") != -1) {
+        secureInsert(enhanced_resolutionPopup, ".HP4yJd.heSpB", 2);
     }
 
     // Shortcuts
@@ -2008,6 +2207,31 @@ setInterval(function() {
         case 2:
             localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"ExternalDecoder", "vp9":"libvpx", "vp9-profile0":"libvpx"}');
             break
+    }
+
+    // Links 2 Images
+    if (enhanced_useInlinePreview == 1) {
+        var enhanced_linkedURL = document.querySelectorAll(".lwvtBe a");
+        for (var i = 0; i < enhanced_linkedURL.length; i++) {
+            if (enhanced_linkedURL[i].href.match(/\.(jpeg|jpg|gif|png)$/) != null && enhanced_linkedURL[i].childElementCount == 0) {
+                var enhanced_imagePreview = document.createElement("img");
+                enhanced_imagePreview.src = enhanced_linkedURL[i].href;
+                enhanced_imagePreview.style.width = "100%";
+                var enhanced_imagePrevLink = document.createElement("a");
+                enhanced_imagePrevLink.href = enhanced_linkedURL[i].href;
+                enhanced_imagePrevLink.target = "_blank";
+                enhanced_imagePrevLink.append(enhanced_imagePreview);
+
+                if (enhanced_linkedURL[i].parentNode.textContent.replace(enhanced_linkedURL[i].href, "") != "") {
+                    enhanced_imagePreview.style.borderRadius = "0.5rem";
+                    enhanced_linkedURL[i].innerHTML = enhanced_imagePreview.outerHTML;
+                } else {
+                    enhanced_imagePreview.style.borderRadius = "0.5rem 0.5rem 0 0.5rem";
+                    enhanced_linkedURL[i].closest(".wJVlXc").prepend(enhanced_imagePrevLink);
+                    enhanced_linkedURL[i].closest(".FPgvD").remove();
+                }
+            }
+        }
     }
 
     // Store Search
@@ -2286,6 +2510,7 @@ function debugEnhanced(opt) {
                 if (debug_load.languagecode != languages[i]) {
                     console.error("%cStadia Enhanced" + "%c 🛠️ - Error loading translation: '" + languages[i] + "' featuring wrong language code: '" + debug_load.languagecode + "'", enhanced_consoleEnhanced, "");
                 }
+                console.log("%cStadia Enhanced" + "%c 🛠️ - Finished loading: '" + languages[i] + "' with " + Object.keys(debug_load).length + " translation keys.", enhanced_consoleEnhanced, "");
             }
             break
     }
@@ -2311,6 +2536,7 @@ function loadLanguages(lang) {
                 "games": "Jeux",
                 "bundles": "Lots",
                 "addons": "Extensions",
+                "wishlist": "Wishlist",
                 "responsive": "Responsive",
                 "windowed": "Mode Fenêtré",
                 "fullscreen": "Plein Écran",
@@ -2318,6 +2544,7 @@ function loadLanguages(lang) {
                 "onsale": "En Promotion",
                 "prodeals": "Offres Stadia Pro",
                 "allgames": "Tous les Jeux",
+                "userprofile": "My Profile",
                 "usermedia": "Captures & Vidéos",
                 "searchbtnbase": "Rechercher sur",
                 "avatarpopup": "URL du nouvel avatar (vide = par défaut):",
@@ -2386,7 +2613,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Succès Débloqués",
                 "splitstore": "Store à 2 Colonnes",
                 "splitstoredesc": "Divise les listes du store en deux colonnes pour une meilleur lisibilité.",
-                "scrollbardesc": "Affiche des barres de défilement dans l'accueil et la boutique.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Réinitialiser les Paramètres"
             }`
             break
@@ -2406,6 +2636,7 @@ function loadLanguages(lang) {
                 "games": "Spel",
                 "bundles": "Spel-paket",
                 "addons": "Tillägg",
+                "wishlist": "Wishlist",
                 "responsive": "Responsiv",
                 "windowed": "Fönsterläge",
                 "fullscreen": "Fullskärmsläge",
@@ -2413,6 +2644,7 @@ function loadLanguages(lang) {
                 "onsale": "På Rea",
                 "prodeals": "Pro Deals",
                 "allgames": "Alla Spel",
+                "userprofile": "My Profile",
                 "usermedia": "Skärmdumpar & Filmer",
                 "searchbtnbase": "Sök på",
                 "avatarpopup": "Nytt avatar-URL (lämna tomt för standard):",
@@ -2481,7 +2713,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Prestationer Uppnådda",
                 "splitstore": "Dela Butikslistor",
                 "splitstoredesc": "Delar butikslistor i två kolumner för en bättre överblick.",
-                "scrollbardesc": "Aktiverar scrollistor på hemskärmen och i butiken.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Återställ Inställningar"
             }`
             break
@@ -2501,6 +2736,7 @@ function loadLanguages(lang) {
                 "games": "Jogos",
                 "bundles": "Bundles",
                 "addons": "Add-ons",
+                "wishlist": "Wishlist",
                 "responsive": "Responsivo",
                 "windowed": "Modo Janela",
                 "fullscreen": "Ecrã completo",
@@ -2508,6 +2744,7 @@ function loadLanguages(lang) {
                 "onsale": "Em promoção",
                 "prodeals": "Promoções Pro",
                 "allgames": "Todos os jogos",
+                "userprofile": "My Profile",
                 "usermedia": "Screenshots & Videos",
                 "searchbtnbase": "Pesquisar em",
                 "avatarpopup": "Novo URL para avatar (vazio para o padrão):",
@@ -2576,7 +2813,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Conquistas desbloqueadas",
                 "splitstore": "Dividir Listas da Loja",
                 "splitstoredesc": "Divide as listas da loja em duas colunas para uma melhor visão geral.",
-                "scrollbardesc": "Activa as scrollbars no ecrã inicial e loja.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Reiniciar Configurações"
             }`
             break
@@ -2596,6 +2836,7 @@ function loadLanguages(lang) {
                 "games": "Jocs",
                 "bundles": "Paquets",
                 "addons": "Complements",
+                "wishlist": "Wishlist",
                 "responsive": "Responsiu",
                 "windowed": "Mode finestra",
                 "fullscreen": "Pantalla completa",
@@ -2603,6 +2844,7 @@ function loadLanguages(lang) {
                 "onsale": "Ofertes",
                 "prodeals": "Ofertes Pro",
                 "allgames": "Tots els jocs",
+                "userprofile": "My Profile",
                 "usermedia": "Captures de pantalla i vídeos",
                 "searchbtnbase": "Cerca a",
                 "avatarpopup": "URL d'avatar nou (buit per defecte):",
@@ -2671,7 +2913,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Assoliments desbloquejats",
                 "splitstore": "Divideix les llistes de la botiga",
                 "splitstoredesc": "Divideix les llistes de la botiga en dues columnes per obtenir una millor visió.",
-                "scrollbardesc": "Activa les barres de desplaçament a la pantalla d'inici i la botiga.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Restableix la configuració"
             }`
             break
@@ -2691,6 +2936,7 @@ function loadLanguages(lang) {
                 "games": "Spil",
                 "bundles": "Bundter",
                 "addons": "Tilføjelser",
+                "wishlist": "Wishlist",
                 "responsive": "Lydhør",
                 "windowed": "Vindue-tilstand",
                 "fullscreen": "Fuld skærm",
@@ -2698,6 +2944,7 @@ function loadLanguages(lang) {
                 "onsale": "På Udsalg",
                 "prodeals": "Pro Tilbud",
                 "allgames": "Alle spil",
+                "userprofile": "My Profile",
                 "usermedia": "Skærmbilleder og videoer",
                 "searchbtnbase": "Søg videre",
                 "avatarpopup": "Ny avatar-URL (tom for standard):",
@@ -2766,7 +3013,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Oplåste Præstationer",
                 "splitstore": "Opdel butikslister",
                 "splitstoredesc": "Opdeler butikslister i to kolonner for at få et bedre overblik.",
-                "scrollbardesc": "Aktiverer rullebjælker på startskærmen og gem.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Nulstil indstillingerne"
                 }`
             break
@@ -2786,6 +3036,7 @@ function loadLanguages(lang) {
                 "games": "Giochi",
                 "bundles": "Bundles",
                 "addons": "Contenuti aggiuntivi",
+                "wishlist": "Wishlist",
                 "responsive": "Reattivo",
                 "windowed": "Modalità Finestra",
                 "fullscreen": "Schermo Intero",
@@ -2793,6 +3044,7 @@ function loadLanguages(lang) {
                 "onsale": "In Offerta",
                 "prodeals": "Offerte del Pro",
                 "allgames": "Tutti i Giochi",
+                "userprofile": "My Profile",
                 "usermedia": "Screenshot & Video",
                 "searchbtnbase": "Cerca su",
                 "avatarpopup": "Nuovo URL avatar (vuoto per impostazione predefinita):",
@@ -2861,7 +3113,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Obiettivi Sbloccati",
                 "splitstore": "Dividi Liste Store",
                 "splitstoredesc": "Divide le liste nello store in due colonne per una migliore panoramica.",
-                "scrollbardesc": "Abilita le barre di scorrimento sulla schermata home e store.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Ripristina Impostazioni"
             }`
             break
@@ -2881,6 +3136,7 @@ function loadLanguages(lang) {
                 "games": "Juegos",
                 "bundles": "Paquetes",
                 "addons": "Complementos",
+                "wishlist": "Wishlist",
                 "responsive": "Adaptativo",
                 "windowed": "Modo Ventana",
                 "fullscreen": "Pantalla Completa",
@@ -2888,6 +3144,7 @@ function loadLanguages(lang) {
                 "onsale": "En Oferta",
                 "prodeals": "En Oferta (Pro)",
                 "allgames": "Todos los juegos",
+                "userprofile": "My Profile",
                 "usermedia": "Capturas de pantalla y Vídeos",
                 "searchbtnbase": "Buscar en",
                 "avatarpopup": "URL del nuevo avatar (vacío por defecto):",
@@ -2956,7 +3213,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Logros Desbloqueados",
                 "splitstore": "Tienda a Doble Columna",
                 "splitstoredesc": "Divide la lista de la tienda en dos columnas para una mayor legibilidad.",
-                "scrollbardesc": "Habilita las barras de desplazamiento en la pantalla de inicio y en la tienda.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Restablecer los ajustes"
             }`
             break
@@ -2976,6 +3236,7 @@ function loadLanguages(lang) {
                 "games": "Games",
                 "bundles": "Bundels",
                 "addons": "Add-ons",
+                "wishlist": "Wishlist",
                 "responsive": "Responsief",
                 "windowed": "Venster Modus",
                 "fullscreen": "Volledig Scherm",
@@ -2983,6 +3244,7 @@ function loadLanguages(lang) {
                 "onsale": "In de Uitverkoop",
                 "prodeals": "Pro Deals",
                 "allgames": "Alle Games",
+                "userprofile": "My Profile",
                 "usermedia": "Screenshots & Videos",
                 "searchbtnbase": "Zoek verder",
                 "avatarpopup": "Nieuwe avatar URL (laat leeg voor standaard):",
@@ -3051,8 +3313,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Achievements Vrijgespeeld",
                 "splitstore": "Splits Winkel Lijsten",
                 "splitstoredesc": "Splits de winkel lijsten in twee kolommen voor een beter overzicht.",
-                "scrollbar": "Scrollbalken",
-                "scrollbardesc": "Schakel scrollbalken in voor het thuisscherm en de winkel.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Reset Instellingen"
             }`
             break
@@ -3072,6 +3336,7 @@ function loadLanguages(lang) {
                 "games": "Játékok",
                 "bundles": "Csomagok",
                 "addons": "Kiegészítők",
+                "wishlist": "Wishlist",
                 "responsive": "Reszponzív",
                 "windowed": "Ablakban",
                 "fullscreen": "Teljes képernyő",
@@ -3079,6 +3344,7 @@ function loadLanguages(lang) {
                 "onsale": "Akciók",
                 "prodeals": "Pro Ajánlatok",
                 "allgames": "Összes Játék",
+                "userprofile": "My Profile",
                 "usermedia": "Képernyőképek és Videók",
                 "searchbtnbase": "Keresés",
                 "avatarpopup": "Új avatar URL (alapból üres):",
@@ -3147,8 +3413,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Megszerzett jutalom",
                 "splitstore": "Áruház oszlopos megjelenítés",
                 "splitstoredesc": "Az Áruház 2 oszlopos megjelenítése a jobb láthatóság miatt.",
-                "scrollbar": "Görgetősáv",
-                "scrollbardesc": "Bekapcsolja a görgetősávot az Áruházban és a Kezdőlapon.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Beállítások alaphelyzetbe állítása"
             }`
             break
@@ -3168,6 +3436,7 @@ function loadLanguages(lang) {
                 "games": "Spiele",
                 "bundles": "Bundles",
                 "addons": "Add-ons",
+                "wishlist": "Wunschliste",
                 "responsive": "Responsiv",
                 "windowed": "Fenster Modus",
                 "fullscreen": "Vollbild",
@@ -3175,6 +3444,7 @@ function loadLanguages(lang) {
                 "onsale": "Im Angebot",
                 "prodeals": "Pro Angebote",
                 "allgames": "Alle Spiele",
+                "userprofile": "Mein Profil",
                 "usermedia": "Fotos & Videos",
                 "searchbtnbase": "Suche auf",
                 "avatarpopup": "Neue Avatar URL (keine für Zurücksetzung):",
@@ -3225,6 +3495,8 @@ function loadLanguages(lang) {
                 "quickprevdesc": "Versteckt die Vorschau der letzten Nachricht in der Freundesliste.",
                 "quickrep": "Schnellantwort",
                 "quickrepdesc": "Versteckt die Antwortvorschläge in Chats.",
+                "inlineimage": "Bilder Vorschau",
+                "inlinedesc": "Ersetzt Links zu Bildern wenn möglich mit einer klickbaren Vorschau.",
                 "offlinefriend": "Offline Freunde",
                 "offlinefrienddesc": "Versteckt offline Freunde in der Freundesliste.",
                 "invisiblefriend": "Unsichtbare Freunde",
@@ -3243,7 +3515,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Erfolge Freigeschaltet",
                 "splitstore": "Store Listen teilen",
                 "splitstoredesc": "Teilt Listen im Store für eine bessere Übersicht in zwei Spalten.",
-                "scrollbardesc": "Aktiviert Scrollbalken im Store und dem Startbildschirm.",
+                "inlineimage": "Vorschau für Bilder",
+                "inlinedesc": "Ersetzt Bilder in gängigen Formaten (jpg/gif/png) mit einer klickbaren Vorschau.",
+                "familyelements": "Familienfreigabe Optionen",
+                "familyelementsdesc": "Versteckt die 'Dieses Spiel für die Familie freigeben' Elemente.",
                 "resetsettings": "Einstellungen zurücksetzen"
             }`
             break
@@ -3263,6 +3538,7 @@ function loadLanguages(lang) {
                 "games": "Games",
                 "bundles": "Bundles",
                 "addons": "Add-ons",
+                "wishlist": "Wishlist",
                 "responsive": "Responsive",
                 "windowed": "Windowed Mode",
                 "fullscreen": "Fullscreen",
@@ -3270,6 +3546,7 @@ function loadLanguages(lang) {
                 "onsale": "On Sale",
                 "prodeals": "Pro Deals",
                 "allgames": "All Games",
+                "userprofile": "My Profile",
                 "usermedia": "Screenshots & Videos",
                 "searchbtnbase": "Search on",
                 "avatarpopup": "New avatar URL (empty for default):",
@@ -3338,7 +3615,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Achievements Unlocked",
                 "splitstore": "Split Store Lists",
                 "splitstoredesc": "Splits store lists into two columns for a better overview.",
-                "scrollbardesc": "Enables scrollbars on the homescreen and store.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
                 "resetsettings": "Reset Settings"
             }`
     }
