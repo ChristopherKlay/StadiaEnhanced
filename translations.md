@@ -30,20 +30,20 @@ If your language is not currently supported and no translation is available unde
 Due to following Stadias language settings, languages like "en_GB"/"en_US" will currently default to "en".
 # Template
 
-## Current Template - Updated 10.01.2021
+## Current Template - Updated 02.03.2021
 ### New content
 ```
-"games": "Games"
-"bundles": "Bundles"
-"addons": "Add-ons"
-"hardware": "Hardware"
-"software": "Software"
-"decodetime": "Decoding Time"
+"wishlist": "Wishlist",
+"userprofile": "My Profile",
+"inlineimage": "Image Preview",
+"inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+"familyelements": "Family-sharing options",
+"familyelementsdesc": "Hides the 'Share this game with family' options.",
 ```
 ### Full translation
 ```
-LANG: en
-    
+"languagecode": "en",
+"languagecode": "en",
 "default": "Default",
 "native": "Native",
 "hide": "Hide",
@@ -57,6 +57,7 @@ LANG: en
 "games": "Games",
 "bundles": "Bundles",
 "addons": "Add-ons",
+"wishlist": "Wishlist",
 "responsive": "Responsive",
 "windowed": "Windowed Mode",
 "fullscreen": "Fullscreen",
@@ -64,6 +65,7 @@ LANG: en
 "onsale": "On Sale",
 "prodeals": "Pro Deals",
 "allgames": "All Games",
+"userprofile": "My Profile",
 "usermedia": "Screenshots & Videos",
 "searchbtnbase": "Search on",
 "avatarpopup": "New avatar URL (empty for default):",
@@ -125,14 +127,16 @@ LANG: en
 "popup": "Popup Effect",
 "popupdesc": "Removes the zoom-in / enlarge effect when hovering over a game on the homesceen.",
 "streammondesc": "Activate to start the monitor whenever a game starts.",
-"resolutiondesc": "The targeted resolution for games. 1440p and 2160p require VP9.",
-"codecdesc": "The codec used for games.",
+"resolutiondesc": "The targeted resolution for game streams. 1440p and 2160p require VP9.",
+"codecdesc": "The codec used for game streams.",
 "confirmreset": "Are you sure you want to reset the settings?",
 "gamesfinished": "Games Finished",
 "achievementsunlocked": "Achievements Unlocked",
 "splitstore": "Split Store Lists",
 "splitstoredesc": "Splits store lists into two columns for a better overview.",
-"scrollbar": "Scrollbars",
-"scrollbardesc": "Enables scrollbars on the homescreen and store.",
+"inlineimage": "Image Preview",
+"inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+"familyelements": "Family-sharing options",
+"familyelementsdesc": "Hides the 'Share this game with family' options.",
 "resetsettings": "Reset Settings"
 ```
