@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 1.9
+
+### 1.9.0
+* Added a shortcut to the users profile
+* Added the option to add store items to a wishlist
+* Added in-line image preview in messages
+* Added the option to hide family sharing options
+* Added resolution selector to game pop-ups on the homescreen
+* Fixed streaming mode not hiding the friendslist after changes to Stadia
+* Fixed list filtering being invisible after going back in history
+
 ## Version 1.8
 
 ### 1.8.11
