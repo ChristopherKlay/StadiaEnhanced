@@ -1459,7 +1459,7 @@ function enhanced_changeFamilySharing(opt) {
             console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Visible'", enhanced_consoleEnhanced, "");
             break
         case 1:
-            enhanced_CSS = ".HP4yJd.heSpB, .HP4yJd.AQVgjb { display: none; } #enhanced_resolutionPopup { display: flex !important; }"
+            enhanced_CSS = ".HP4yJd.heSpB, .HP4yJd.AQVgjb, .oYqfsf.heSpB { display: none; } #enhanced_resolutionPopup { display: flex !important; }"
             enhanced_hideFamilyElements.style.color = "#00e0ba";
             enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
             console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Hidden'", enhanced_consoleEnhanced, "");
@@ -1771,7 +1771,7 @@ function enhanced_switchListFilter(type) {
                 var enhanced_generateStyle = "";
 
                 for (var i = 0; i < enhanced_wishlist.length; i++) {
-                    enhanced_generateStyle += 'div[data-sku-id="' + enhanced_wishlist[i] + '"], '
+                    enhanced_generateStyle += 'div[data-sku-id*="' + enhanced_wishlist[i] + '"], '
                 }
                 enhanced_generateStyle = '.h6J22d.undefined.QAAyWd { display: none; } ' + enhanced_generateStyle.substring(0, enhanced_generateStyle.length - 2) + ' { display: grid !important }';
                 enhanced_injectStyle(enhanced_generateStyle, "enhanced_styleListFilter");
@@ -2836,7 +2836,7 @@ function loadLanguages(lang) {
                 "games": "Jocs",
                 "bundles": "Paquets",
                 "addons": "Complements",
-                "wishlist": "Wishlist",
+                "wishlist": "Llista de desitjos",
                 "responsive": "Responsiu",
                 "windowed": "Mode finestra",
                 "fullscreen": "Pantalla completa",
@@ -2844,7 +2844,7 @@ function loadLanguages(lang) {
                 "onsale": "Ofertes",
                 "prodeals": "Ofertes Pro",
                 "allgames": "Tots els jocs",
-                "userprofile": "My Profile",
+                "userprofile": "El meu perfil",
                 "usermedia": "Captures de pantalla i vídeos",
                 "searchbtnbase": "Cerca a",
                 "avatarpopup": "URL d'avatar nou (buit per defecte):",
@@ -2913,10 +2913,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Assoliments desbloquejats",
                 "splitstore": "Divideix les llistes de la botiga",
                 "splitstoredesc": "Divideix les llistes de la botiga en dues columnes per obtenir una millor visió.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "inlineimage": "Vista prèvia de la imatge",
+                "inlinedesc": "Substitueix els enllaços d'imatge per a formats de fitxer habituals (jpg/gif/png) amb una vista prèvia.",
+                "familyelements": "Opcions de compartició familiar",
+                "familyelementsdesc": "Amaga les opcions 'Comparteix aquest joc amb la família.'",
                 "resetsettings": "Restableix la configuració"
             }`
             break
@@ -3036,7 +3036,7 @@ function loadLanguages(lang) {
                 "games": "Giochi",
                 "bundles": "Bundles",
                 "addons": "Contenuti aggiuntivi",
-                "wishlist": "Wishlist",
+                "wishlist": "Lista dei desideri",
                 "responsive": "Reattivo",
                 "windowed": "Modalità Finestra",
                 "fullscreen": "Schermo Intero",
@@ -3044,7 +3044,7 @@ function loadLanguages(lang) {
                 "onsale": "In Offerta",
                 "prodeals": "Offerte del Pro",
                 "allgames": "Tutti i Giochi",
-                "userprofile": "My Profile",
+                "userprofile": "Profilo",
                 "usermedia": "Screenshot & Video",
                 "searchbtnbase": "Cerca su",
                 "avatarpopup": "Nuovo URL avatar (vuoto per impostazione predefinita):",
@@ -3113,10 +3113,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Obiettivi Sbloccati",
                 "splitstore": "Dividi Liste Store",
                 "splitstoredesc": "Divide le liste nello store in due colonne per una migliore panoramica.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "inlineimage": "Anteprima Immagine",
+                "inlinedesc": "Sostituisce i collegamenti alle immagini per i formati di file comuni (jpg / gif / png) con un'anteprima cliccabile.",
+                "familyelements": "Opzioni Gruppo-famiglia",
+                "familyelementsdesc": "Nasconde l'opzione 'Condividi questo gioco con la famiglia'.",
                 "resetsettings": "Ripristina Impostazioni"
             }`
             break
@@ -3236,7 +3236,7 @@ function loadLanguages(lang) {
                 "games": "Games",
                 "bundles": "Bundels",
                 "addons": "Add-ons",
-                "wishlist": "Wishlist",
+                "wishlist": "Verlanglijst",
                 "responsive": "Responsief",
                 "windowed": "Venster Modus",
                 "fullscreen": "Volledig Scherm",
@@ -3244,7 +3244,7 @@ function loadLanguages(lang) {
                 "onsale": "In de Uitverkoop",
                 "prodeals": "Pro Deals",
                 "allgames": "Alle Games",
-                "userprofile": "My Profile",
+                "userprofile": "Mijn Profiel",
                 "usermedia": "Screenshots & Videos",
                 "searchbtnbase": "Zoek verder",
                 "avatarpopup": "Nieuwe avatar URL (laat leeg voor standaard):",
@@ -3313,14 +3313,14 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Achievements Vrijgespeeld",
                 "splitstore": "Splits Winkel Lijsten",
                 "splitstoredesc": "Splits de winkel lijsten in twee kolommen voor een beter overzicht.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "inlineimage": "Voorvertoningsafbeelding",
+                "inlinedesc": "Vervang afbeelding links voor veelvoorkomende formaten (jpg/gif/png) door een klikbare voorvertoning.",
+                "familyelements": "Opties voor delen met gezin",
+                "familyelementsdesc": "Verbergt de 'Delen met gezin'-opties.",
                 "resetsettings": "Reset Instellingen"
             }`
             break
-        case "hu": //Github
+        case "hu": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/97
             var load = `{
                 "languagecode": "hu",
                 "default": "Alapértelmezett",
@@ -3336,7 +3336,7 @@ function loadLanguages(lang) {
                 "games": "Játékok",
                 "bundles": "Csomagok",
                 "addons": "Kiegészítők",
-                "wishlist": "Wishlist",
+                "wishlist": "Kívánságlista",
                 "responsive": "Reszponzív",
                 "windowed": "Ablakban",
                 "fullscreen": "Teljes képernyő",
@@ -3344,7 +3344,7 @@ function loadLanguages(lang) {
                 "onsale": "Akciók",
                 "prodeals": "Pro Ajánlatok",
                 "allgames": "Összes Játék",
-                "userprofile": "My Profile",
+                "userprofile": "Saját fiók",
                 "usermedia": "Képernyőképek és Videók",
                 "searchbtnbase": "Keresés",
                 "avatarpopup": "Új avatar URL (alapból üres):",
@@ -3367,7 +3367,7 @@ function loadLanguages(lang) {
                 "stream": "Stream",
                 "community": "Közösség",
                 "speedtest": "Sebesség teszt",
-                "quickaccess": "Quick Access",
+                "quickaccess": "Gyors elérés",
                 "messages": "Üzenetek",
                 "avatar": "Avatar",
                 "interface": "Megjelenítés",
@@ -3406,17 +3406,17 @@ function loadLanguages(lang) {
                 "popup": "Popup hatás",
                 "popupdesc": "Kikapcsolja a Popup effektet (játék képének nagyítása), amikor egy játék fölé viszed az egérmutatót a kezdőlapon",
                 "streammondesc": "Stream Monitor bekapcsolása játék indításánál.",
-                "resolutiondesc": "A beállított felbontáshoz (1440p, 2160pv) VP9 videó kódolás támogatás szükséges.",
+                "resolutiondesc": "Streameléshez beállított felbontás. 1440p és 2160p beállításhoz VP9 videó kódolás támogatás szükséges.",
                 "codecdesc": "A stream-hez használt videó kódoló eljárás.",
                 "confirmreset": "Biztosan vissza akarod állítani a beállításokat?",
                 "gamesfinished": "Vége a játéknak",
                 "achievementsunlocked": "Megszerzett jutalom",
                 "splitstore": "Áruház oszlopos megjelenítés",
                 "splitstoredesc": "Az Áruház 2 oszlopos megjelenítése a jobb láthatóság miatt.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "inlineimage": "Képek előnézete",
+                "inlinedesc": "Gyakori képformátum (jpg/gif/png) linkek helyettesítése kattintható előnézeti képekkel.",
+                "familyelements": "Családi megosztás",
+                "familyelementsdesc": "Elrejti 'A játék megosztása a családdal' lehetőséget a játékoknál, ha már létrehoztál családi csoportot.",
                 "resetsettings": "Beállítások alaphelyzetbe állítása"
             }`
             break
