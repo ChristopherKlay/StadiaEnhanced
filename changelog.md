@@ -2,6 +2,12 @@
 
 ## Version 1.9
 
+### 1.9.1
+* Fixed some wishlisted entries not showing up due to SKU differences
+* Fixed the family sharing filter missing some elements
+* Fixed extension error when viewing the family group
+* Updated italian, dutch, hungarian and catalan translations
+
 ### 1.9.0
 * Added a shortcut to the users profile
 * Added the option to add store items to a wishlist
