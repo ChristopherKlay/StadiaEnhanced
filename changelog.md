@@ -1,5 +1,20 @@
 # Changelog
 
+## Version 1.10
+
+### 1.10.0
+* Added the option to pin games to the start of the grid on the homescreen
+* Added total payments displayed under settings/purchases
+* Changed the main menu icon to better represent a menu
+* Changed "Pro Labels" to "Game Labels" also hiding the family sharing label
+* Updated the logo of the extension to a new design
+* Updated portuguese translation
+* Fixed overwrites to re-enable codec/resolution switching after Googles changes
+* Fixed resolution changing not being visible on family-shared titles
+* Fixed items marked as "Add-on-Bundle" not being filtered correctly
+* Optimized main loop for better performance
+* Optimized settings function for better accesibility and performance
+
 ## Version 1.9
 
 ### 1.9.1
