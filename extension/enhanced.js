@@ -5,6 +5,8 @@ var enhanced_local = document.querySelector("html").getAttribute("lang");
 var enhanced_lang = loadLanguages(enhanced_local);
 var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 var enhanced_AccountInfo = enhanced_loadUserInfo();
+
+console.groupCollapsed("Stadia Enhanced: Start-Up");
 console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountInfo[0] + "#" + enhanced_AccountInfo[1] + " (" + enhanced_AccountInfo[2] + ") (" + enhanced_local + ")", enhanced_consoleEnhanced, "");
 
 // CSS Changes - Global styles and overwrites
@@ -18,6 +20,7 @@ enhanced_CSS += "#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid
 enhanced_CSS += ".tlZCoe { margin-right: .5rem; }" // Allow for multiple buttons on popup
 enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
 enhanced_CSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
+enhanced_CSS += "#enhanced_wrapper:hover #enhanced_favorite { opacity: 1 !important; }" // Show favorite on wrapper hover
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }" // Settings menu scrollbar width
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }" // Settings menu scrollbar style
 enhanced_injectStyle(enhanced_CSS, "enhanced_styleGeneral");
@@ -108,8 +111,6 @@ function enhanced_RTCMonitor() {
         seconds -= minutes * 60;
         return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
     }
-
-    var enhanced_timerPackageLoss = window.performance.now();
 
     setInterval(function() {
         if (document.location.href.indexOf("/player/") == -1) {
@@ -562,7 +563,7 @@ var enhanced_SettingsDropdown = document.createElement("div");
 enhanced_SettingsContainer.appendChild(enhanced_SettingsDropdown);
 enhanced_SettingsDropdown.className = "ROpnrd QAAyWd wJYinb";
 enhanced_SettingsDropdown.id = "enhanced_SettingsDropdown";
-enhanced_SettingsDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>';
+enhanced_SettingsDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">menu</i>';
 enhanced_SettingsDropdown.style.cursor = "pointer";
 enhanced_SettingsDropdown.style.width = "2.5rem";
 enhanced_SettingsDropdown.style.padding = "0";
@@ -739,32 +740,9 @@ enhanced_Codec.tabIndex = "0";
 enhanced_Codec.addEventListener("click", function() {
     enhanced_currentCodec = (enhanced_currentCodec + 1) % 3;
     localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
-    enhanced_changeCodec(enhanced_currentCodec);
+    enhanced_applySettings("codec", enhanced_currentCodec);
 });
 enhanced_settingsStream.append(enhanced_Codec);
-
-function enhanced_changeCodec(c) {
-    switch (c) {
-        case 0:
-            enhanced_Codec.style.color = "";
-            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': ' + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'Automatic'.", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_Codec.style.color = "#00e0ba";
-            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': VP9<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'VP9'.", enhanced_consoleEnhanced, "");
-            break
-        case 2:
-            enhanced_currentRes = 0;
-            localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
-            enhanced_updateResolution(enhanced_currentRes)
-            enhanced_Codec.style.color = "#00e0ba";
-            enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': H264<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'H264'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 // Resolution - Control element for the stream resolution
 localStorage.setItem("enhanced_DeskWidth", window.screen.width);
@@ -781,7 +759,7 @@ enhanced_UserMedia.tabIndex = "0";
 enhanced_Resolution.addEventListener("click", function() {
     enhanced_currentRes = (enhanced_currentRes + 1) % 3;
     localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
-    enhanced_updateResolution(enhanced_currentRes)
+    enhanced_applySettings("resolution", enhanced_currentRes);
 });
 enhanced_settingsStream.append(enhanced_Resolution);
 
@@ -792,37 +770,8 @@ enhanced_resolutionPopup.style.cursor = "pointer";
 enhanced_resolutionPopup.addEventListener("click", function() {
     enhanced_currentRes = (enhanced_currentRes + 1) % 3;
     localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
-    enhanced_updateResolution(enhanced_currentRes)
+    enhanced_applySettings("resolution", enhanced_currentRes);
 });
-
-function enhanced_updateResolution(res) {
-    switch (res) {
-        case 0:
-            enhanced_Resolution.style.color = "";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
-            enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '</div>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to 'Native'.", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_currentCodec = 1;
-            localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
-            enhanced_changeCodec(enhanced_currentCodec)
-            enhanced_Resolution.style.color = "#00e0ba";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 1440p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
-            enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': 1440p</div>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '2560x1440'.", enhanced_consoleEnhanced, "");
-            break
-        case 2:
-            enhanced_currentCodec = 1;
-            localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
-            enhanced_changeCodec(enhanced_currentCodec)
-            enhanced_Resolution.style.color = "#00e0ba";
-            enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 2160p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
-            enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': 2160p</div>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '3840x2160'.", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 function enhanced_changeResolution() {
     var enhancedinject_currentResolution;
@@ -881,24 +830,9 @@ enhanced_monitorAutostart.tabIndex = "0";
 enhanced_monitorAutostart.addEventListener("click", function() {
     enhanced_autostartMonitor = (enhanced_autostartMonitor + 1) % 2;
     localStorage.setItem("enhanced_autostartMonitor", enhanced_autostartMonitor);
-    enhanced_changeMonitorAutostart(enhanced_autostartMonitor);
+    enhanced_applySettings("monitorautostart", enhanced_autostartMonitor);
 });
 enhanced_settingsStream.append(enhanced_monitorAutostart);
-
-function enhanced_changeMonitorAutostart(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_monitorAutostart.style.color = "";
-            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.manual + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Manual'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_monitorAutostart.style.color = "#00e0ba";
-            enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Auto'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 // Grid - Control element for the homescreen library grid
 var enhanced_GridSize = parseInt(localStorage.getItem("enhanced_GridSize") || 0);
@@ -912,52 +846,9 @@ enhanced_Grid.tabIndex = "0";
 enhanced_Grid.addEventListener("click", function() {
     enhanced_GridSize = (enhanced_GridSize + 1) % 6;
     localStorage.setItem("enhanced_GridSize", enhanced_GridSize);
-    enhanced_changeGridSize(enhanced_GridSize)
+    enhanced_applySettings("gridsize", enhanced_GridSize)
 });
 enhanced_settingsGeneral.append(enhanced_Grid);
-
-function enhanced_changeGridSize(size) {
-    switch (size) {
-        case 0:
-            enhanced_Grid.style.color = "";
-            enhanced_CSS = ""
-            break;
-        case 1:
-            enhanced_Grid.style.color = "#00e0ba";
-            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }"
-            break;
-        case 2:
-            enhanced_Grid.style.color = "#00e0ba";
-            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }"
-            break;
-        case 3:
-            enhanced_Grid.style.color = "#00e0ba";
-            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }"
-            break;
-        case 4:
-            enhanced_Grid.style.color = "#00e0ba";
-            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }"
-            break;
-        case 5:
-            enhanced_Grid.style.color = "#00e0ba";
-            enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }"
-            enhanced_CSS += "@media (min-width: 1280px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; } }"
-            enhanced_CSS += "@media (min-width: 1920px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; } }"
-            enhanced_CSS += "@media (min-width: 2560px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; } }"
-            enhanced_CSS += "@media (min-width: 3840px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; } }"
-    }
-
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleGrid");
-
-    if (size < 5) {
-        enhanced_gridOption = enhanced_GridSize + 2
-    } else {
-        enhanced_gridOption = enhanced_lang.responsive
-    }
-
-    enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.gridsize + ': ' + enhanced_gridOption + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.griddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': 2</span></span>';
-    console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + enhanced_gridOption + ".", enhanced_consoleEnhanced, "");
-}
 
 // Clock - Control element for the clock specific settings
 var enhanced_ClockOption = parseInt(localStorage.getItem("enhanced_ClockOption") || 0);
@@ -971,38 +862,9 @@ enhanced_Clock.tabIndex = "0";
 enhanced_Clock.addEventListener("click", function() {
     enhanced_ClockOption = (enhanced_ClockOption + 1) % 4;
     localStorage.setItem("enhanced_ClockOption", enhanced_ClockOption);
-    enhanced_changeClock(enhanced_ClockOption);
+    enhanced_applySettings("clock", enhanced_ClockOption);
 });
 enhanced_settingsGeneral.append(enhanced_Clock);
-
-function enhanced_changeClock(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_Clock.style.color = "";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            enhanced_ClockFriends.style.display = "none";
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_Clock.style.color = "#00e0ba";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.friendslist + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            enhanced_ClockFriends.style.display = "flex";
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Friendlist'", enhanced_consoleEnhanced, "");
-            break
-        case 2:
-            enhanced_Clock.style.color = "#00e0ba";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.igoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            enhanced_ClockFriends.style.display = "none";
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'In-Game Overlay'", enhanced_consoleEnhanced, "");
-            break
-        case 3:
-            enhanced_Clock.style.color = "#00e0ba";
-            enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.listoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            enhanced_ClockFriends.style.display = "flex";
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Menu & Overlay'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 // Game Filter
 var enhanced_filterOption = parseInt(localStorage.getItem("enhanced_filterOption") || 0);
@@ -1016,29 +878,9 @@ enhanced_gameFilter.tabIndex = "0";
 enhanced_gameFilter.addEventListener("click", function() {
     enhanced_filterOption = (enhanced_filterOption + 1) % 3;
     localStorage.setItem("enhanced_filterOption", enhanced_filterOption);
-    enhanced_changeFilter(enhanced_filterOption);
+    enhanced_applySettings("filter", enhanced_filterOption);
 });
-enhanced_settingsGeneral.append(enhanced_gameFilter);
-
-function enhanced_changeFilter(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_gameFilter.style.color = "";
-            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_gameFilter.style.color = "#00e0ba";
-            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filtertoggle + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Toggle'", enhanced_consoleEnhanced, "");
-            break
-        case 2:
-            enhanced_gameFilter.style.color = "#00e0ba";
-            enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filterquick + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Quick'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
+enhanced_settingsGeneral.append(enhanced_gameFilter)
 
 // Invite Link
 var enhanced_InviteURL = "https://stadia.com/link/referrals?si_rid=" + enhanced_AccountInfo[2] + "&si_rt=1";
@@ -1071,35 +913,7 @@ enhanced_resetSettings.style.userSelect = "none";
 enhanced_resetSettings.tabIndex = "0";
 enhanced_resetSettings.addEventListener("click", function() {
     if (confirm(enhanced_lang.confirmreset)) {
-        localStorage.removeItem("enhanced_messagePreview");
-        localStorage.removeItem("enhanced_hideCategory");
-        localStorage.removeItem("enhanced_DeskWidth");
-        localStorage.removeItem("enhanced_DeskHeight");
-        localStorage.removeItem("enhanced_autostartMonitor");
-        localStorage.removeItem("enhanced_hidePopupEffect");
-        localStorage.removeItem("enhanced_monitorState");
-        localStorage.removeItem("enhanced_CodecOption");
-        localStorage.removeItem("enhanced_useQuickReply");
-        localStorage.removeItem("enhanced_hideUserMedia");
-        localStorage.removeItem("enhanced_useStreamMode");
-        localStorage.removeItem("enhanced_gameFilter");
-        localStorage.removeItem("enhanced_ClockOption");
-        localStorage.removeItem("enhanced_hideLabel");
-        localStorage.removeItem("enhanced_monitorMode");
-        localStorage.removeItem("enhanced_shortcutsOption");
-        localStorage.removeItem("enhanced_hideOffline");
-        localStorage.removeItem("enhanced_monitorPosition");
-        localStorage.removeItem("enhanced_monitorOption");
-        localStorage.removeItem("enhanced_filterOption");
-        localStorage.removeItem("enhanced_GridSize");
-        localStorage.removeItem("enhanced_ResOption");
-        localStorage.removeItem("enhanced_hideInvisible");
-        localStorage.removeItem("enhanced_storeListSize");
-        localStorage.removeItem("enhanced_useInlinePreview");
-        localStorage.removeItem("enhanced_wishlist");
-        localStorage.removeItem("enhanced_familySharingElements");
-        console.log("%cStadia Enhanced" + "%c ⚙️ - Settings reverted to default.", enhanced_consoleEnhanced, "");
-        location.reload();
+        enhanced_applySettings("resetall");
     }
 });
 enhanced_settingsShortcut.append(enhanced_resetSettings)
@@ -1116,27 +930,9 @@ enhanced_hidePreview.tabIndex = "0";
 enhanced_hidePreview.addEventListener("click", function() {
     enhanced_messagePreview = (enhanced_messagePreview + 1) % 2;
     localStorage.setItem("enhanced_messagePreview", enhanced_messagePreview);
-    enhanced_changeMsgPreview(enhanced_messagePreview);
+    enhanced_applySettings("messagepreview", enhanced_messagePreview);
 });
 enhanced_settingsMessages.append(enhanced_hidePreview);
-
-function enhanced_changeMsgPreview(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_hidePreview.style.color = "";
-            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".lzIqJf .DvD76d { display: none; } .lzIqJf .xzJkDf { display: none; }"
-            enhanced_hidePreview.style.color = "#00e0ba";
-            enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleMsgPreview");
-}
 
 // Quick Reply
 var enhanced_useQuickReply = parseInt(localStorage.getItem("enhanced_useQuickReply") || 0);
@@ -1150,27 +946,9 @@ enhanced_quickReply.tabIndex = "0";
 enhanced_quickReply.addEventListener("click", function() {
     enhanced_useQuickReply = (enhanced_useQuickReply + 1) % 2;
     localStorage.setItem("enhanced_useQuickReply", enhanced_useQuickReply);
-    enhanced_changeQuickReply(enhanced_useQuickReply);
+    enhanced_applySettings("quickreply", enhanced_useQuickReply);
 });
 enhanced_settingsMessages.append(enhanced_quickReply);
-
-function enhanced_changeQuickReply(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_quickReply.style.color = "";
-            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".bbVL5c { display: none !important; }"
-            enhanced_quickReply.style.color = "#00e0ba";
-            enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleQuickReply");
-}
 
 // In-line image preview
 var enhanced_useInlinePreview = parseInt(localStorage.getItem("enhanced_useInlinePreview") || 0);
@@ -1184,24 +962,9 @@ enhanced_inlineConvert.tabIndex = "0";
 enhanced_inlineConvert.addEventListener("click", function() {
     enhanced_useInlinePreview = (enhanced_useInlinePreview + 1) % 2;
     localStorage.setItem("enhanced_useInlinePreview", enhanced_useInlinePreview);
-    enhanced_changeInlinePreview(enhanced_useInlinePreview);
+    enhanced_applySettings("inlinepreview", enhanced_useInlinePreview);
 });
 enhanced_settingsMessages.append(enhanced_inlineConvert);
-
-function enhanced_changeInlinePreview(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_inlineConvert.style.color = "";
-            enhanced_inlineConvert.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">insert_photo</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.inlineimage + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.inlinedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - In-line Image Preview: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_inlineConvert.style.color = "#00e0ba";
-            enhanced_inlineConvert.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">insert_photo</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.inlineimage + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.inlinedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - In-line Image Preview: Set to 'Enabled'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 // Hide: Offline Users
 var enhanced_hideOffline = parseInt(localStorage.getItem("enhanced_hideOffline") || 0);
@@ -1215,24 +978,9 @@ enhanced_offlineUser.tabIndex = "0";
 enhanced_offlineUser.addEventListener("click", function() {
     enhanced_hideOffline = (enhanced_hideOffline + 1) % 2;
     localStorage.setItem("enhanced_hideOffline", enhanced_hideOffline);
-    enhanced_changeOfflineUser(enhanced_hideOffline);
+    enhanced_applySettings("offlineusers", enhanced_hideOffline);
 });
 enhanced_settingsMessages.append(enhanced_offlineUser);
-
-function enhanced_changeOfflineUser(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_offlineUser.style.color = "";
-            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_offlineUser.style.color = "#00e0ba";
-            enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 // Hide: Invisible Users
 var enhanced_hideInvisible = parseInt(localStorage.getItem("enhanced_hideInvisible") || 0);
@@ -1245,58 +993,25 @@ enhanced_invisibleUser.tabIndex = "0";
 enhanced_invisibleUser.addEventListener("click", function() {
     enhanced_hideInvisible = (enhanced_hideInvisible + 1) % 2;
     localStorage.setItem("enhanced_hideInvisible", enhanced_hideInvisible);
-    enhanced_changeInvisibleUser(enhanced_hideInvisible);
+    enhanced_applySettings("invisibleusers", enhanced_hideInvisible);
 });
 enhanced_settingsMessages.append(enhanced_invisibleUser);
 
-function enhanced_changeInvisibleUser(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_invisibleUser.style.color = "";
-            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_invisibleUser.style.color = "#00e0ba";
-            enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
-
 // Pro Labels
 var enhanced_hideLabel = parseInt(localStorage.getItem("enhanced_hideLabel") || 0);
-var enhanced_proLabel = document.createElement("div");
-enhanced_proLabel.className = "pBvcyf QAAyWd";
-enhanced_proLabel.id = "enhanced_proLabel";
-enhanced_proLabel.style.cursor = "pointer";
-enhanced_proLabel.style.userSelect = "none";
-enhanced_proLabel.style.borderBottom = "1px solid rgba(255,255,255,.06)";
-enhanced_proLabel.tabIndex = "0";
-enhanced_proLabel.addEventListener("click", function() {
+var enhanced_gameLabel = document.createElement("div");
+enhanced_gameLabel.className = "pBvcyf QAAyWd";
+enhanced_gameLabel.id = "enhanced_gameLabel";
+enhanced_gameLabel.style.cursor = "pointer";
+enhanced_gameLabel.style.userSelect = "none";
+enhanced_gameLabel.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_gameLabel.tabIndex = "0";
+enhanced_gameLabel.addEventListener("click", function() {
     enhanced_hideLabel = (enhanced_hideLabel + 1) % 2;
     localStorage.setItem("enhanced_hideLabel", enhanced_hideLabel);
-    enhanced_changeProLabel(enhanced_hideLabel);
+    enhanced_applySettings("gamelabel", enhanced_hideLabel);
 });
-enhanced_settingsGeneral.append(enhanced_proLabel);
-
-function enhanced_changeProLabel(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_proLabel.style.color = "";
-            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.prolabel + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.prolabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Pro Labels: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".GqLi4d.XUBkDd .a1l9D { display: none; }"
-            enhanced_proLabel.style.color = "#00e0ba";
-            enhanced_proLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.prolabel + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.prolabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Pro Labels: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleProlabel");
-}
+enhanced_settingsGeneral.append(enhanced_gameLabel);
 
 // Hide User Media on Homescreen
 var enhanced_hideUserMedia = parseInt(localStorage.getItem("enhanced_hideUserMedia") || 0);
@@ -1310,27 +1025,9 @@ enhanced_mediaPreview.tabIndex = "0";
 enhanced_mediaPreview.addEventListener("click", function() {
     enhanced_hideUserMedia = (enhanced_hideUserMedia + 1) % 2;
     localStorage.setItem("enhanced_hideUserMedia", enhanced_hideUserMedia);
-    enhanced_changeMediaPreview(enhanced_hideUserMedia);
+    enhanced_applySettings("mediapreview", enhanced_hideUserMedia);
 });
 enhanced_settingsGeneral.append(enhanced_mediaPreview);
-
-function enhanced_changeMediaPreview(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_mediaPreview.style.color = "";
-            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".ctThpb.lEPylf { display: none; }"
-            enhanced_mediaPreview.style.color = "#00e0ba";
-            enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleMediaPreview");
-}
 
 // Category Preview
 var enhanced_hideCategory = parseInt(localStorage.getItem("enhanced_hideCategory") || 0);
@@ -1344,27 +1041,9 @@ enhanced_categoryPreview.tabIndex = "0";
 enhanced_categoryPreview.addEventListener("click", function() {
     enhanced_hideCategory = (enhanced_hideCategory + 1) % 2;
     localStorage.setItem("enhanced_hideCategory", enhanced_hideCategory);
-    enhanced_changeCategoryPreview(enhanced_hideCategory);
+    enhanced_applySettings("categorypreview", enhanced_hideCategory);
 });
 enhanced_settingsGeneral.append(enhanced_categoryPreview);
-
-function enhanced_changeCategoryPreview(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_categoryPreview.style.color = "";
-            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = "#enhanced_wrapper .ssR8Bc { display: none !important; }"
-            enhanced_categoryPreview.style.color = "#00e0ba";
-            enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleCategoryPreview");
-}
 
 // Popup on game tiles
 var enhanced_hidePopupEffect = parseInt(localStorage.getItem("enhanced_hidePopupEffect") || 0);
@@ -1378,27 +1057,9 @@ enhanced_gamePopup.tabIndex = "0";
 enhanced_gamePopup.addEventListener("click", function() {
     enhanced_hidePopupEffect = (enhanced_hidePopupEffect + 1) % 2;
     localStorage.setItem("enhanced_hidePopupEffect", enhanced_hidePopupEffect);
-    enhanced_changeGamePopup(enhanced_hidePopupEffect);
+    enhanced_applySettings("gamepopup", enhanced_hidePopupEffect);
 });
 enhanced_settingsGeneral.append(enhanced_gamePopup);
-
-function enhanced_changeGamePopup(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = "#enhanced_wrapper:hover { z-index: 3; transform: scale(1.1); transition: transform .2s cubic-bezier(0.35,0,0.15,1); }"
-            enhanced_gamePopup.style.color = "";
-            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.default+'<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Enabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = "#enhanced_wrapper:hover { z-index: unset; transform: none; transition: none; }"
-            enhanced_gamePopup.style.color = "#00e0ba";
-            enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleGamePopup");
-}
 
 // Store-List Split
 var enhanced_storeListSize = parseInt(localStorage.getItem("enhanced_storeListSize") || 0);
@@ -1412,27 +1073,9 @@ enhanced_storeList.tabIndex = "0";
 enhanced_storeList.addEventListener("click", function() {
     enhanced_storeListSize = (enhanced_storeListSize + 1) % 2;
     localStorage.setItem("enhanced_storeListSize", enhanced_storeListSize);
-    enhanced_changeStoreList(enhanced_storeListSize);
+    enhanced_applySettings("storelist", enhanced_storeListSize);
 });
 enhanced_settingsGeneral.append(enhanced_storeList);
-
-function enhanced_changeStoreList(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_storeList.style.color = "";
-            enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 1rem); margin: 0.5rem; }"
-            enhanced_storeList.style.color = "#00e0ba";
-            enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Enabled'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleStoreSplit");
-}
 
 // Family Sharing Elements
 var enhanced_familySharingElements = parseInt(localStorage.getItem("enhanced_familySharingElements") || 0);
@@ -1446,27 +1089,9 @@ enhanced_hideFamilyElements.tabIndex = "0";
 enhanced_hideFamilyElements.addEventListener("click", function() {
     enhanced_familySharingElements = (enhanced_familySharingElements + 1) % 2;
     localStorage.setItem("enhanced_familySharingElements", enhanced_familySharingElements);
-    enhanced_changeFamilySharing(enhanced_familySharingElements);
+    enhanced_applySettings("familysharing", enhanced_familySharingElements);
 });
 enhanced_settingsGeneral.append(enhanced_hideFamilyElements);
-
-function enhanced_changeFamilySharing(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_hideFamilyElements.style.color = "";
-            enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Visible'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".HP4yJd.heSpB, .HP4yJd.AQVgjb, .oYqfsf.heSpB { display: none; } #enhanced_resolutionPopup { display: flex !important; }"
-            enhanced_hideFamilyElements.style.color = "#00e0ba";
-            enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Hidden'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleFamilyElements");
-}
 
 // Shortcuts
 var enhanced_enableShortcuts = parseInt(localStorage.getItem("enhanced_enableShortcuts") || 0);
@@ -1480,24 +1105,9 @@ enhanced_showShortcut.tabIndex = "0";
 enhanced_showShortcut.addEventListener("click", function() {
     enhanced_enableShortcuts = (enhanced_enableShortcuts + 1) % 2;
     localStorage.setItem("enhanced_enableShortcuts", enhanced_enableShortcuts);
-    enhanced_changeShortcuts(enhanced_enableShortcuts);
+    enhanced_applySettings("shortcuts", enhanced_enableShortcuts);
 });
 enhanced_settingsGeneral.append(enhanced_showShortcut);
-
-function enhanced_changeShortcuts(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_showShortcut.style.color = "";
-            enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_showShortcut.style.color = "#00e0ba";
-            enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Enabled'", enhanced_consoleEnhanced, "");
-            break
-    }
-}
 
 // Stream Mode
 var enhanced_useStreamMode = parseInt(localStorage.getItem("enhanced_useStreamMode") || 0);
@@ -1510,27 +1120,9 @@ enhanced_streamMode.tabIndex = "0";
 enhanced_streamMode.addEventListener("click", function() {
     enhanced_useStreamMode = (enhanced_useStreamMode + 1) % 2;
     localStorage.setItem("enhanced_useStreamMode", enhanced_useStreamMode);
-    enhanced_changeStreamMode(enhanced_useStreamMode);
+    enhanced_applySettings("streammode", enhanced_useStreamMode);
 });
 enhanced_settingsGeneral.append(enhanced_streamMode);
-
-function enhanced_changeStreamMode(opt) {
-    switch (opt) {
-        case 0:
-            enhanced_CSS = ""
-            enhanced_streamMode.style.color = "";
-            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Disabled'", enhanced_consoleEnhanced, "");
-            break
-        case 1:
-            enhanced_CSS = ".lzIqJf .Y1rZWd, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }"
-            enhanced_streamMode.style.color = "#00e0ba";
-            enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Enabled'", enhanced_consoleEnhanced, "");
-            break
-    }
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleStreamMode");
-}
 
 // Avatar - Allows the user to set a custom avatar
 var enhanced_customAvatar = document.createElement("div");
@@ -1543,27 +1135,14 @@ enhanced_customAvatar.addEventListener("click", function() {
     enhanced_avatarURL = prompt(enhanced_lang.avatarpopup)
     if (enhanced_avatarURL != null) {
         if (enhanced_avatarURL.length < 1) {
-            enhanced_setAvatar(document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage.replace(/(url\(|\)|")/g, ''));
+            enhanced_applySettings("avatar", document.querySelector(".ksZYgc.VGZcUb").style.backgroundImage.replace(/(url\(|\)|")/g, ''));
             localStorage.removeItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"));
         } else {
             localStorage.setItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href"), enhanced_avatarURL);
-            enhanced_setAvatar(enhanced_avatarURL);
+            enhanced_applySettings("avatar", enhanced_avatarURL);
         }
     }
 });
-
-function enhanced_setAvatar(url) {
-    console.log("%cStadia Enhanced" + "%c ⚙️ - Avatar changed to: " + url, enhanced_consoleEnhanced, "");
-    enhanced_CSS = '.ksZYgc.VGZcUb { background-image: url("' + url + '") !important; }'
-    enhanced_CSS += '.rybUIf { background-image: url("' + url + '") !important; }'
-    enhanced_CSS += '.dOyvbe { background-image: url("' + url + '") !important; }'
-    enhanced_CSS += '.Nv1Sab[alt$="' + enhanced_AccountInfo[0] + '"] { content: url("' + url + '") !important; }'
-    enhanced_CSS += 'c-wiz[data-p*="' + enhanced_AccountInfo[2] + '"] .XZRzG { background-image: url("' + url + '") !important; }'
-    enhanced_CSS += '.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountInfo[2] + '"] .PwtJse { background-image: url("' + url + '") !important; }'
-    enhanced_CSS += '.Tidcwc > .Y1rZWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + url + '") !important; }' // Group Avatar
-    enhanced_CSS += '.mcaxA.ZmeF9 div:first-child { background-image: url("' + url + '") !important; }'
-    enhanced_injectStyle(enhanced_CSS, "enhanced_styleAvatar");
-}
 
 // Store Container - Container to display store buttons
 var enhanced_StoreContainer = document.createElement("div");
@@ -1730,7 +1309,7 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterAddOns.style.textDecoration = "line-through";
                 enhanced_listFilterWishlist.style.color = "grey";
                 enhanced_listFilterWishlist.style.textDecoration = "line-through";
-                enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:2'], .h6J22d.undefined.QAAyWd[jslog*='17:3'] { display: none }", "enhanced_styleListFilter");
+                enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:2'], .h6J22d.undefined.QAAyWd[jslog*='17:3'], .h6J22d.undefined.QAAyWd[jslog*='17:9'] { display: none }", "enhanced_styleListFilter");
                 break
             case 2:
                 enhanced_activeListFilter = 2;
@@ -1754,7 +1333,7 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterAddOns.style.textDecoration = "line-through";
                 enhanced_listFilterWishlist.style.color = "grey";
                 enhanced_listFilterWishlist.style.textDecoration = "line-through";
-                enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:1'], .h6J22d.undefined.QAAyWd[jslog*='17:2'] { display: none }", "enhanced_styleListFilter");
+                enhanced_injectStyle(".h6J22d.undefined.QAAyWd[jslog*='17:1'], .h6J22d.undefined.QAAyWd[jslog*='17:2'], .h6J22d.undefined.QAAyWd[jslog*='17:9'] { display: none }", "enhanced_styleListFilter");
                 break
             case 4:
                 enhanced_activeListFilter = 4;
@@ -1875,39 +1454,28 @@ enhanced_captureClip.addEventListener("click", function() {
 });
 enhanced_captureFilters.append(enhanced_captureClip)
 
+// All Payments
+var enhanced_allpayments = document.createElement("span")
+enhanced_allpayments.style.position = "absolute"
+enhanced_allpayments.style.right = "1.5rem"
+enhanced_allpayments.style.color = "rgba(255,255,255,.6)"
+enhanced_allpayments.style.fontFamily = "'Google Sans',sans-serif"
+enhanced_allpayments.style.fontSize = "1rem"
+enhanced_allpayments.style.lineHeight = "1.25rem"
+enhanced_allpayments.style.fontWeight = "500"
+
 // Load stored settings
 if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
-    enhanced_setAvatar(localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
+    enhanced_applySettings("avatar", localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
 }
-updateSettings();
 
 // Apply settings
-function updateSettings() {
-    enhanced_updateMonitor(0)
-    enhanced_changeGridSize(enhanced_GridSize);
-    enhanced_changeClock(enhanced_ClockOption);
-    enhanced_changeFilter(enhanced_filterOption);
-    enhanced_updateResolution(enhanced_currentRes);
-    enhanced_changeCodec(enhanced_currentCodec);
-    enhanced_changeMsgPreview(enhanced_messagePreview);
-    enhanced_changeProLabel(enhanced_hideLabel);
-    enhanced_changeQuickReply(enhanced_useQuickReply);
-    enhanced_changeOfflineUser(enhanced_hideOffline);
-    enhanced_changeInvisibleUser(enhanced_hideInvisible);
-    enhanced_changeMediaPreview(enhanced_hideUserMedia);
-    enhanced_changeStreamMode(enhanced_useStreamMode);
-    enhanced_changeCategoryPreview(enhanced_hideCategory);
-    enhanced_changeGamePopup(enhanced_hidePopupEffect);
-    enhanced_changeMonitorAutostart(enhanced_autostartMonitor);
-    enhanced_changeStoreList(enhanced_storeListSize);
-    enhanced_changeShortcuts(enhanced_enableShortcuts);
-    enhanced_changeInlinePreview(enhanced_useInlinePreview);
-    enhanced_changeFamilySharing(enhanced_familySharingElements);
-}
+enhanced_applySettings("updateall");
 
 // After Setup
 var enhanced_timerLoadEnd = window.performance.now() - enhanced_timerLoadStart;
 console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + enhanced_timerLoadEnd.toFixed(2) + "ms.", enhanced_consoleEnhanced, "")
+console.groupEnd();
 var enhanced_loopCount = 0;
 var enhanced_loopTotal = 0;
 var enhanced_timerLoopTotal = 0;
@@ -1918,47 +1486,19 @@ var enhanced_wrappers = [];
 setInterval(function() {
     var enhanced_timerLoopStart = window.performance.now();
 
-    // Session Time
-    if (document.location.href.indexOf("/player/") != -1) {
-        document.querySelectorAll(".OWVtN")[document.querySelectorAll(".OWVtN").length - 1].append(enhanced_sessionTimer);
-        if (enhanced_sessionStart == 0) {
-            enhanced_sessionStart = new Date().getTime();
-        } else {
-            var enhanced_sessionDur = new Date().getTime();
-            enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000);
-            enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>';
-        }
-    } else {
-        enhanced_sessionStart = 0;
-    }
-
-    // Wishlist Startup
-    if (document.location.href.indexOf("/store/details/") != -1) {
-        if (enhanced_wishlistHeart.innerHTML == "") {
-            var enhanced_wishlist = localStorage.getItem("enhanced_wishlist") || "";
-            var enhanced_currentSKU = document.location.href.split("sku/")[1].substring(0, 32);
-            if (enhanced_wishlist.includes(enhanced_currentSKU)) {
-                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>';
-                enhanced_wishlistHeart.style.color = "#ff773d";
-            } else {
-                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite_border</i>';
-                enhanced_wishlistHeart.style.color = "";
-            }
-            enhanced_wishlistContainer.style.display = "inline-block";
-        }
-    } else {
-        enhanced_wishlistContainer.style.display = "none";
-        enhanced_wishlistHeart.innerHTML = "";
-    }
-
-    // Enhanced Wrapper
+    // Location - Home
     if (document.location.href.indexOf("/home") != -1) {
+
+        // Add home elements
+        secureInsert(enhanced_resolutionPopup, ".EcfBLd", 3);
+        enhanced_Grid.style.display = "block";
+
+        // Enhanced Wrapper
         var enhanced_gameList = document.querySelectorAll(".GqLi4d");
 
         for (var i = 0; i < enhanced_gameList.length; i++) {
 
             if (enhanced_gameList[i].parentNode.id != "enhanced_wrapper") {
-                // Wrapper Element
                 var enhanced_wrapper = document.createElement("div");
                 enhanced_wrapper.id = "enhanced_wrapper";
                 enhanced_wrapper.style.position = "relative";
@@ -1981,7 +1521,7 @@ setInterval(function() {
         // Game Filter
         var enhanced_gameFilter = localStorage.getItem("enhanced_gameFilter") || "";
 
-        // Add "Show All" UI element
+        // Add UI Elements to wrappers
         var enhanced_selector = document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5");
         if (enhanced_selector.length != 0) {
             if (enhanced_selector[enhanced_selector.length - 1].contains(enhanced_showAll) === false) {
@@ -1999,12 +1539,49 @@ setInterval(function() {
 
         for (var i = 0; i < enhanced_wrappers.length; i++) {
 
+            if (!enhanced_wrappers[i].hasOwnProperty("favorite")) {
+                // Favorites
+                var enhanced_favorite = document.createElement("div");
+                enhanced_favorite.innerHTML = '<i class="material-icons-extended" aria-hidden="true">push_pin</i>';
+                enhanced_favorite.id = "enhanced_favorite";
+                enhanced_favorite.style.position = "absolute";
+                enhanced_favorite.style.display = "flex";
+                enhanced_favorite.style.margin = "0.2rem";
+                enhanced_favorite.style.borderRadius = "50%";
+                enhanced_favorite.style.opacity = "0";
+                enhanced_favorite.style.transition = "opacity .23s ease-out";
+                enhanced_favorite.style.padding = "0.2rem";
+                enhanced_favorite.style.cursor = "pointer";
+                enhanced_favorite.style.zIndex = "2";
+                enhanced_favorite.sku = enhanced_wrappers[i].sku;
+                enhanced_favorite.name = enhanced_wrappers[i].name;
+                enhanced_favorite.addEventListener("click", function() {
+                    enhanced_applySettings("favorite", this.sku);
+                });
+                enhanced_wrappers[i].wrapper.appendChild(enhanced_favorite);
+                enhanced_wrappers[i].favorite = enhanced_favorite;
+            }
+
+            var enhanced_favlist = localStorage.getItem("enhanced_favlist") || "";
+            if (enhanced_favlist.includes(enhanced_wrappers[i].sku)) {
+                enhanced_wrappers[i].wrapper.style.order = "-1";
+                enhanced_wrappers[i].favorite.style.opacity = "1";
+                enhanced_wrappers[i].favorite.style.filter = "drop-shadow(0rem 0.25rem 0.4rem rgba(0, 0, 0, 1))";
+                enhanced_wrappers[i].favorite.style.background = "transparent";
+            } else {
+                enhanced_wrappers[i].wrapper.style.order = "0";
+                enhanced_wrappers[i].favorite.style.opacity = "0";
+                enhanced_wrappers[i].favorite.style.filter = "none";
+                enhanced_wrappers[i].favorite.style.background = "#202124";
+            }
+
             if (!enhanced_wrappers[i].hasOwnProperty("visibility")) {
                 // Visibility
                 var enhanced_visibility = document.createElement("div");
                 enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>';
                 enhanced_visibility.style.position = "absolute";
                 enhanced_visibility.style.margin = "0.2rem";
+                enhanced_visibility.style.right = "0";
                 enhanced_visibility.style.background = "#202124";
                 enhanced_visibility.style.borderRadius = "50%";
                 enhanced_visibility.style.padding = "0.2rem";
@@ -2055,36 +1632,19 @@ setInterval(function() {
                 enhanced_wrappers[i].wrapper.style.display = "inherit";
             }
         }
-    }
 
-    // Captures Filter
-    if (document.location.href.indexOf("/captures") != -1) {
-        secureInsert(enhanced_captureFilters, ".dwGRGd", 0);
-    }
-
-    // List Filters
-    if (document.location.href.indexOf("/list") != -1) {
-        secureInsert(enhanced_listFilter, ".dwGRGd", 2);
-    } else if (enhanced_activeListFilter != 0) {
-        enhanced_switchListFilter(enhanced_activeListFilter);
-    }
-
-    // Resolution settings in Pop-Up
-    if (document.location.href.indexOf("/home") != -1) {
-        secureInsert(enhanced_resolutionPopup, ".HP4yJd.heSpB", 2);
-    }
-
-    // Shortcuts
-    if (document.location.href.indexOf("/home") != -1) {
+        // Shortcuts
         if (enhanced_enableShortcuts == 1) {
             enhanced_installShortcut.style.display = "inline-flex";
             enhanced_shortcutLastPlayed.style.display = "flex";
 
             // Popup
             if (document.getElementById(enhanced_installShortcut) === null && document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")) {
-                enhanced_installShortcut.gameName = document.querySelector(".Wq73hb").textContent;
-                enhanced_installShortcut.gameID = document.querySelector(".h1uihb > c-wiz").getAttribute("data-app-id");
-                enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>';
+                if (enhanced_installShortcut.gameName != document.querySelector(".Wq73hb").textContent) {
+                    enhanced_installShortcut.gameName = document.querySelector(".Wq73hb").textContent;
+                    enhanced_installShortcut.gameID = document.querySelector(".h1uihb > c-wiz").getAttribute("data-app-id");
+                    enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>';
+                }
                 secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0);
             }
 
@@ -2102,57 +1662,175 @@ setInterval(function() {
             enhanced_installShortcut.style.display = "none";
             enhanced_shortcutLastPlayed.style.display = "none";
         }
+    } else {
+        enhanced_Grid.style.display = "none";
     }
 
-    // Offline / Invisible Users
-    var enhanced_statusList = document.querySelectorAll(".eXdFqc .rtsndf.WTetv .DfyMcd");
-    for (var i = 0; i < enhanced_statusList.length; i++) {
-        if (parseInt(localStorage.getItem("enhanced_hideOffline") || 0) == 1) {
-            enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: none !important");
+    // Location - In-Game
+    if (document.location.href.indexOf("/player/") != -1) {
+        enhanced_Windowed.style.display = "flex";
+        enhanced_Monitor.style.display = "flex";
+        secureInsert(enhanced_Windowed, ".E0Zk9b", 0);
+        secureInsert(enhanced_Monitor, ".E0Zk9b", 0);
+
+        // Clock
+        if (enhanced_ClockOption == 2 || enhanced_ClockOption == 3) {
+            secureInsert(enhanced_ClockOverlay, ".bYYDgf", 0);
+            enhanced_ClockOverlay.style.display = "flex";
+        }
+
+        // Stream Monitor
+        if (enhanced_autostartMonitor == 1 && enhanced_monitorStarted == false) {
+            enhanced_monitorStarted = true;
+            enhanced_monitorState = 1;
+            enhanced_updateMonitor(enhanced_monitorState);
+        }
+
+        // Session Time
+        if (enhanced_sessionStart == 0) {
+            enhanced_sessionStart = new Date().getTime();
         } else {
-            enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: flex");
+            var enhanced_sessionDur = new Date().getTime();
+            enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000);
+            enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>';
         }
+        secureInsert(enhanced_sessionTimer, ".OWVtN", 0);
+    } else {
+        enhanced_Windowed.style.display = "none";
+        enhanced_Monitor.style.display = "none";
+        enhanced_ClockOverlay.style.display = "none";
+        enhanced_monitorStarted = false;
+        enhanced_monitorState = 0;
+        enhanced_sessionStart = 0;
+        enhanced_updateMonitor(enhanced_monitorState);
     }
 
-    var enhanced_statusList = document.querySelectorAll(".eXdFqc .UxR5ob.m8Kzt"); // Invisible Users
-    for (var i = 0; i < enhanced_statusList.length; i++) {
-        if (enhanced_statusList[i].childElementCount == 1) {
-            if (parseInt(localStorage.getItem("enhanced_hideInvisible") || 0) == 1) {
-                enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: none !important");
+    // Location - Captures
+    if (document.location.href.indexOf("/captures") != -1) {
+        // Captures Filter
+        secureInsert(enhanced_captureFilters, ".dwGRGd", 0);
+    }
+
+    // Location - Store General
+    if (window.innerWidth > 1024 && document.location.href.indexOf("/store") != -1) {
+        enhanced_StoreSearch.style.display = "flex";
+        enhanced_StoreDropdown.style.display = "flex";
+    } else {
+        enhanced_StoreSearch.style.display = "none";
+        enhanced_StoreDropdown.style.display = "none";
+    }
+
+    // Location - Store Details
+    if (document.location.href.indexOf("/store/details/") != -1) {
+
+        // Wishlist Startup
+        if (enhanced_wishlistHeart.innerHTML == "") {
+            var enhanced_wishlist = localStorage.getItem("enhanced_wishlist") || "";
+            var enhanced_currentSKU = document.location.href.split("sku/")[1].substring(0, 32);
+            if (enhanced_wishlist.includes(enhanced_currentSKU)) {
+                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>';
+                enhanced_wishlistHeart.style.color = "#ff773d";
             } else {
-                enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: flex");
+                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite_border</i>';
+                enhanced_wishlistHeart.style.color = "";
+            }
+            enhanced_wishlistContainer.style.display = "inline-block";
+        }
+
+        secureInsert(enhanced_StoreContainer, ".WjVJKd", 0);
+    } else {
+        // Wishlist Startup
+        enhanced_wishlistContainer.style.display = "none";
+        enhanced_wishlistHeart.innerHTML = "";
+    }
+
+    // Location - Store List
+    if (document.location.href.indexOf("/list") != -1) {
+        // List Filters
+        secureInsert(enhanced_listFilter, ".dwGRGd", 2);
+    } else if (enhanced_activeListFilter != 0) {
+        enhanced_switchListFilter(enhanced_activeListFilter);
+    }
+
+    // Location - All Games
+    if (document.location.href.indexOf("/store/list/3?") != -1) {
+
+        // Store Search - Example: /store/list/3?search=NBA
+        var enhanced_SearchParam = new URLSearchParams(window.location.search).get('search');
+        if (enhanced_SearchParam !== null) {
+            var enhanced_SearchResultCount = 0;
+            document.getElementsByClassName("h6J22d null QAAyWd");
+            enhanced_SearchResults = document.getElementsByClassName("h6J22d");
+            for (var i = 0; i < enhanced_SearchResults.length; i++) {
+                if (enhanced_SearchResults[i].getAttribute("aria-label").match(new RegExp(enhanced_SearchParam, 'gi')) === null) {
+                    enhanced_SearchResults[i].style.display = "none";
+                } else {
+                    enhanced_SearchResultCount += 1;
+                }
+            }
+            var enhanced_searchTitle = enhanced_lang.searchheader + " '" + enhanced_SearchParam + "' (" + enhanced_SearchResultCount + ")";
+            if (document.querySelector(".HZ5mJ").innerHTML != enhanced_searchTitle) {
+                document.querySelector(".HZ5mJ").innerHTML = enhanced_searchTitle;
             }
         }
     }
 
-    // Game Statistics
-    if (document.location.href.indexOf("/gameactivities/all") != -1 && document.querySelector(".MDSsFe") !== null) {
-        var enhanced_statsBaseQuery = document.querySelectorAll("div[jsname='jlb53b']")[document.querySelectorAll("div[jsname='jlb53b']").length - 1];
-        var enhanced_statsOwned = enhanced_statsBaseQuery.childElementCount;
-        var enhanced_statsAchievementQuery = enhanced_statsBaseQuery.querySelectorAll(".kPtFV");
+    // Location - Pro Games
+    if (document.location.href.indexOf("/store/list/2001") != -1) {
 
-        if (enhanced_statsAchievementQuery.length > 0) {
-            // Achievements
-            var enhanced_statsUnlock = 0;
-            var enhanced_statsTotal = 0;
-            var enhanced_statsFinished = 0;
-            for (var i = 0; i < enhanced_statsAchievementQuery.length; i++) {
-                var enhanced_statsTitleUnlock = parseInt(enhanced_statsAchievementQuery[i].firstChild.textContent);
-                var enhanced_statsTitleTotal = parseInt(enhanced_statsAchievementQuery[i].lastChild.textContent.substring(1));
-                if (enhanced_statsTitleUnlock == enhanced_statsTitleTotal) {
-                    enhanced_statsFinished++;
-                }
-                enhanced_statsUnlock += enhanced_statsTitleUnlock;
-                enhanced_statsTotal += enhanced_statsTitleTotal;
-
+        // UI changes and count of currently unclaimed games
+        document.querySelector(".ZECEje > li:nth-child(3) > a").classList.remove("YySNWc");
+        enhanced_ProGamesLink.classList.add("YySNWc");
+        if (document.querySelector(".alEDLe") !== null) {
+            count = document.querySelector(".alEDLe").querySelectorAll('.X5624d').length;
+            if (count != 0 && enhanced_ProGames.innerHTML.indexOf(count) == -1) {
+                enhanced_ProGamesLink.textContent = 'Pro (' + count + ")";
             }
-            var enhanced_statsUnlockRate = (enhanced_statsUnlock * 100) / enhanced_statsTotal;
-            var enhanced_statsFinishRate = (enhanced_statsFinished * 100) / enhanced_statsOwned;
+        }
+    } else {
+        enhanced_ProGamesLink.classList.remove("YySNWc");
+        if (enhanced_ProGamesLink.textContentL != "Pro") {
+            enhanced_ProGamesLink.textContent = "Pro";
+        }
+    }
 
-            if (enhanced_statsCheck != enhanced_statsUnlock) {
-                enhanced_statsCheck = enhanced_statsUnlock;
+    // Location - Personal Profile
+    if (document.location.href.indexOf("/profile/" + enhanced_AccountInfo[2]) != -1) {
 
-                var enhanced_loadStats = '\
+        //Add avatar option on own profile
+        secureInsert(enhanced_customAvatar, ".R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb", 0);
+    }
+
+    // Location - Player Statistics
+    if (document.location.href.indexOf("/gameactivities/all") != -1) {
+
+        // Game Statistics
+        if (document.querySelector(".MDSsFe") !== null) {
+            var enhanced_statsBaseQuery = document.querySelectorAll("div[jsname='jlb53b']")[document.querySelectorAll("div[jsname='jlb53b']").length - 1];
+            var enhanced_statsOwned = enhanced_statsBaseQuery.childElementCount;
+            var enhanced_statsAchievementQuery = enhanced_statsBaseQuery.querySelectorAll(".kPtFV");
+
+            if (enhanced_statsAchievementQuery.length > 0) {
+                var enhanced_statsUnlock = 0;
+                var enhanced_statsTotal = 0;
+                var enhanced_statsFinished = 0;
+                for (var i = 0; i < enhanced_statsAchievementQuery.length; i++) {
+                    var enhanced_statsTitleUnlock = parseInt(enhanced_statsAchievementQuery[i].firstChild.textContent);
+                    var enhanced_statsTitleTotal = parseInt(enhanced_statsAchievementQuery[i].lastChild.textContent.substring(1));
+                    if (enhanced_statsTitleUnlock == enhanced_statsTitleTotal) {
+                        enhanced_statsFinished++;
+                    }
+                    enhanced_statsUnlock += enhanced_statsTitleUnlock;
+                    enhanced_statsTotal += enhanced_statsTitleTotal;
+
+                }
+                var enhanced_statsUnlockRate = (enhanced_statsUnlock * 100) / enhanced_statsTotal;
+                var enhanced_statsFinishRate = (enhanced_statsFinished * 100) / enhanced_statsOwned;
+
+                if (enhanced_statsCheck != enhanced_statsUnlock) {
+                    enhanced_statsCheck = enhanced_statsUnlock;
+
+                    var enhanced_loadStats = '\
                     <div class="HZ5mJ">Statistics</div>\
                     <div class="xsbfy" style="margin-bottom: 1rem;">\
                         <div class="qKSMec">\
@@ -2186,13 +1864,103 @@ setInterval(function() {
                             </div>\
                         </div>\
                     </div>'
-                if (enhanced_statOverview.innerHTML != enhanced_loadStats) {
-                    enhanced_statOverview.innerHTML = enhanced_loadStats;
+                    if (enhanced_statOverview.innerHTML != enhanced_loadStats) {
+                        enhanced_statOverview.innerHTML = enhanced_loadStats;
+                    }
+                }
+            }
+            secureInsert(enhanced_statOverview, ".dkZt0b.qRvogc", 2);
+        }
+    }
+
+    // Location - Stadia Menu
+    if (document.querySelector(".X1asv.ahEBEd.LJni0").style.opacity == "1") {
+
+        // Offline Users
+        var enhanced_statusList = document.querySelectorAll(".eXdFqc .rtsndf.WTetv .DfyMcd");
+        for (var i = 0; i < enhanced_statusList.length; i++) {
+            if (parseInt(localStorage.getItem("enhanced_hideOffline") || 0) == 1) {
+                enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: none !important");
+            } else {
+                enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: flex");
+            }
+        }
+
+        // Invisible Users
+        var enhanced_statusList = document.querySelectorAll(".eXdFqc .UxR5ob.m8Kzt");
+        for (var i = 0; i < enhanced_statusList.length; i++) {
+            if (enhanced_statusList[i].childElementCount == 1) {
+                if (parseInt(localStorage.getItem("enhanced_hideInvisible") || 0) == 1) {
+                    enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: none !important");
+                } else {
+                    enhanced_statusList[i].closest(".Y1rZWd.PuD06d").setAttribute("style", "display: flex");
                 }
             }
         }
-        secureInsert(enhanced_statOverview, ".dkZt0b.qRvogc", 2);
+
+        // Links 2 Images
+        if (enhanced_useInlinePreview == 1) {
+            var enhanced_linkedURL = document.querySelectorAll(".lwvtBe a");
+            for (var i = 0; i < enhanced_linkedURL.length; i++) {
+                if (enhanced_linkedURL[i].href.match(/\.(jpeg|jpg|gif|png)$/) != null && enhanced_linkedURL[i].childElementCount == 0) {
+                    var enhanced_imagePreview = document.createElement("img");
+                    enhanced_imagePreview.src = enhanced_linkedURL[i].href;
+                    enhanced_imagePreview.style.width = "100%";
+                    var enhanced_imagePrevLink = document.createElement("a");
+                    enhanced_imagePrevLink.href = enhanced_linkedURL[i].href;
+                    enhanced_imagePrevLink.target = "_blank";
+                    enhanced_imagePrevLink.append(enhanced_imagePreview);
+
+                    if (enhanced_linkedURL[i].parentNode.textContent.replace(enhanced_linkedURL[i].href, "") != "") {
+                        enhanced_imagePreview.style.borderRadius = "0.5rem";
+                        enhanced_linkedURL[i].innerHTML = enhanced_imagePreview.outerHTML;
+                    } else {
+                        enhanced_imagePreview.style.borderRadius = "0.5rem 0.5rem 0 0.5rem";
+                        enhanced_linkedURL[i].closest(".wJVlXc").prepend(enhanced_imagePrevLink);
+                        enhanced_linkedURL[i].closest(".FPgvD").remove();
+                    }
+                }
+            }
+        }
+
+        // Emoji Picker
+        secureInsert(enhanced_emojiswitch, ".IRyDt", 0);
+        secureInsert(enhanced_emojiPicker, ".pwUBOe.t7snHe", 2);
+
+        // Clock
+        secureInsert(enhanced_ClockFriends, ".hxhAyf.OzUE7e.XY6ZL", 0);
     }
+
+    // Location - Settings
+    if (document.location.href.indexOf("/settings") != -1) {
+
+        // Resolution - Enable "Up to 4K" option
+        var enhanced_selector = document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")
+        if (enhanced_selector.length != 0) {
+            enhanced_selector[0].setAttribute("data-disabled", "false");
+            enhanced_selector[0].classList.remove("OWB6Me");
+        }
+
+        // Total Payments
+        var enhanced_purchases = document.querySelectorAll('.o2NwGe')
+        if (enhanced_purchases.length != 0) {
+            var enhanced_currency = document.querySelector('.o2NwGe').textContent.replace(/[+-]?([0-9]*[.,])?[0-9]+/, 'CUR')
+            var enhanced_payments = [];
+
+            for (var i = 0; i < enhanced_purchases.length; i++) {
+                enhanced_payments.push(parseFloat(enhanced_purchases[i].textContent.replace(/[^0-9,.]/g, '').replace(",", ".")))
+            }
+
+            var enhanced_paytotal = enhanced_payments.reduce((a, b) => a + b, 0).toFixed(2)
+            enhanced_paytotal = enhanced_lang.total + " " + enhanced_currency.replace('CUR', enhanced_paytotal)
+
+            enhanced_allpayments.textContent = enhanced_paytotal
+            secureInsert(enhanced_allpayments, ".Ca4K1", 0)
+        }
+    }
+
+
+    // Location - Always active
 
     // Codec - Set codec preference
     switch (parseInt(localStorage.getItem("enhanced_CodecOption") || 0)) {
@@ -2203,98 +1971,14 @@ setInterval(function() {
             break
         case 1:
             localStorage.setItem("video_codec_implementation_by_codec_key", '{"vp9":"ExternalDecoder"}');
+            localStorage.setItem("video_codec_implementation_by_codec_key_using_local_check", '{"vp9":"ExternalDecoder"}');
+            localStorage.setItem("video_codec_implementation_by_codec_key_using_media_capabilities", '{"vp9":"ExternalDecoder"}');
             break
         case 2:
             localStorage.setItem("video_codec_implementation_by_codec_key", '{"h264":"ExternalDecoder", "vp9":"libvpx", "vp9-profile0":"libvpx"}');
+            localStorage.setItem("video_codec_implementation_by_codec_key_using_local_check", '{"h264":"ExternalDecoder", "vp9":"libvpx", "vp9-profile0":"libvpx"}');
+            localStorage.setItem("video_codec_implementation_by_codec_key_using_media_capabilities", '{"h264":"ExternalDecoder", "vp9":"libvpx", "vp9-profile0":"libvpx"}');
             break
-    }
-
-    // Links 2 Images
-    if (enhanced_useInlinePreview == 1) {
-        var enhanced_linkedURL = document.querySelectorAll(".lwvtBe a");
-        for (var i = 0; i < enhanced_linkedURL.length; i++) {
-            if (enhanced_linkedURL[i].href.match(/\.(jpeg|jpg|gif|png)$/) != null && enhanced_linkedURL[i].childElementCount == 0) {
-                var enhanced_imagePreview = document.createElement("img");
-                enhanced_imagePreview.src = enhanced_linkedURL[i].href;
-                enhanced_imagePreview.style.width = "100%";
-                var enhanced_imagePrevLink = document.createElement("a");
-                enhanced_imagePrevLink.href = enhanced_linkedURL[i].href;
-                enhanced_imagePrevLink.target = "_blank";
-                enhanced_imagePrevLink.append(enhanced_imagePreview);
-
-                if (enhanced_linkedURL[i].parentNode.textContent.replace(enhanced_linkedURL[i].href, "") != "") {
-                    enhanced_imagePreview.style.borderRadius = "0.5rem";
-                    enhanced_linkedURL[i].innerHTML = enhanced_imagePreview.outerHTML;
-                } else {
-                    enhanced_imagePreview.style.borderRadius = "0.5rem 0.5rem 0 0.5rem";
-                    enhanced_linkedURL[i].closest(".wJVlXc").prepend(enhanced_imagePrevLink);
-                    enhanced_linkedURL[i].closest(".FPgvD").remove();
-                }
-            }
-        }
-    }
-
-    // Store Search
-    // Example: /store/list/3?search=NBA
-    if (document.location.href.indexOf("/store/list/3?") != -1) {
-        var enhanced_SearchParam = new URLSearchParams(window.location.search).get('search');
-        if (enhanced_SearchParam !== null) {
-            var enhanced_SearchResultCount = 0;
-            document.getElementsByClassName("h6J22d null QAAyWd");
-            enhanced_SearchResults = document.getElementsByClassName("h6J22d");
-            for (var i = 0; i < enhanced_SearchResults.length; i++) {
-                if (enhanced_SearchResults[i].getAttribute("aria-label").match(new RegExp(enhanced_SearchParam, 'gi')) === null) {
-                    enhanced_SearchResults[i].style.display = "none";
-                } else {
-                    enhanced_SearchResultCount += 1;
-                }
-            }
-            var enhanced_searchTitle = enhanced_lang.searchheader + " '" + enhanced_SearchParam + "' (" + enhanced_SearchResultCount + ")";
-            if (document.querySelector(".HZ5mJ").innerHTML != enhanced_searchTitle) {
-                document.querySelector(".HZ5mJ").innerHTML = enhanced_searchTitle;
-            }
-        }
-    }
-
-    // Resolution - Enable "Up to 4K" option
-    var enhanced_selector = document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")[0]
-    if (document.location.href.indexOf("/settings") != -1 && enhanced_selector !== undefined) {
-        enhanced_selector.setAttribute("data-disabled", "false");
-        enhanced_selector.classList.remove("OWB6Me");
-    }
-
-    // UI Elements - Add controls again when needed
-    if (document.location.href.indexOf("/player/") != -1) {
-        enhanced_Windowed.style.display = "flex";
-        enhanced_Monitor.style.display = "flex";
-        secureInsert(enhanced_Windowed, ".E0Zk9b", 0);
-        secureInsert(enhanced_Monitor, ".E0Zk9b", 0);
-    } else {
-        enhanced_Windowed.style.display = "none";
-        enhanced_Monitor.style.display = "none";
-    }
-
-    if (document.location.href.indexOf("/player/") != -1) {
-        if (enhanced_ClockOption == 2 || enhanced_ClockOption == 3) {
-            secureInsert(enhanced_ClockOverlay, ".bYYDgf", 0);
-            enhanced_ClockOverlay.style.display = "flex";
-        }
-    } else {
-        enhanced_ClockOverlay.style.display = "none";
-    }
-    secureInsert(enhanced_ClockFriends, ".hxhAyf.OzUE7e.XY6ZL", 0);
-
-    // Monitor Autostart
-    if (document.location.href.indexOf("/player/") != -1) {
-        if (enhanced_autostartMonitor == 1 && enhanced_monitorStarted == false) {
-            enhanced_monitorStarted = true;
-            enhanced_monitorState = 1;
-            enhanced_updateMonitor(enhanced_monitorState);
-        }
-    } else {
-        enhanced_monitorStarted = false;
-        enhanced_monitorState = 0;
-        enhanced_updateMonitor(enhanced_monitorState);
     }
 
     // Clock Widget - Update to current time / display option
@@ -2310,62 +1994,457 @@ setInterval(function() {
     enhanced_ClockFriends.innerHTML = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_CurrentTime;
     enhanced_ClockOverlay.innerHTML = enhanced_CurrentTime;
 
-    // Add search buttons on store page
-    if (document.location.href.indexOf("/store/details/") != -1) {
-        secureInsert(enhanced_StoreContainer, ".WjVJKd", 0);
-    }
-
-    // Add avatar option on own profile
-    if (document.location.href.indexOf("/profile/" + enhanced_AccountInfo[2]) != -1) {
-        secureInsert(enhanced_customAvatar, ".R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb", 0);
-    }
-
-    // Pro Games - UI changes and count of currently unclaimed games
-    if (document.location.href.indexOf("/store/list/2001") != -1) {
-        document.querySelector(".ZECEje > li:nth-child(3) > a").classList.remove("YySNWc");
-        enhanced_ProGamesLink.classList.add("YySNWc");
-        if (document.querySelector(".alEDLe") !== null) {
-            count = document.querySelector(".alEDLe").querySelectorAll('.X5624d').length;
-            if (count != 0 && enhanced_ProGames.innerHTML.indexOf(count) == -1) {
-                enhanced_ProGamesLink.textContent = 'Pro (' + count + ")";
-            }
-        }
-    } else {
-        enhanced_ProGamesLink.classList.remove("YySNWc");
-        if (enhanced_ProGamesLink.textContentL != "Pro") {
-            enhanced_ProGamesLink.textContent = "Pro";
-        }
-    }
-
-    // Emoji Picker
-    secureInsert(enhanced_emojiswitch, ".IRyDt", 0);
-    secureInsert(enhanced_emojiPicker, ".pwUBOe.t7snHe", 2);
-
-    // Visibility: Homescreen-only
-    if (document.location.href.indexOf("/home") != -1) {
-        enhanced_Grid.style.display = "block";
-    } else {
-        enhanced_Grid.style.display = "none";
-    }
-
-    // Visibility: Store-only
-    if (window.innerWidth > 1024 && document.location.href.indexOf("/store") != -1) {
-        enhanced_StoreSearch.style.display = "flex";
-        enhanced_StoreDropdown.style.display = "flex";
-    } else {
-        enhanced_StoreSearch.style.display = "none";
-        enhanced_StoreDropdown.style.display = "none";
-    }
-
     // Loop End
     enhanced_loopCount++;
     var enhanced_timerLoopEnd = window.performance.now();
     enhanced_timerLoopTotal += enhanced_timerLoopEnd - enhanced_timerLoopStart;
-    if (enhanced_loopCount == 300) {
-        var enhanced_timerLoopAverage = (enhanced_timerLoopTotal / 300)
+    if (enhanced_loopCount == 1000) {
+        var enhanced_timerLoopAverage = (enhanced_timerLoopTotal / 1000)
         console.log("%cStadia Enhanced" + "%c ⏲️ - Loop Time: ~" + enhanced_timerLoopAverage.toFixed(2) + "ms.", enhanced_consoleEnhanced, "");
     }
 }, 200);
+
+function enhanced_applySettings(set, opt) {
+    switch (set) {
+        case "codec":
+            switch (opt) {
+                case 0:
+                    enhanced_Codec.style.color = "";
+                    enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': ' + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'Automatic'.", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_Codec.style.color = "#00e0ba";
+                    enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': VP9<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'VP9'.", enhanced_consoleEnhanced, "");
+                    break
+                case 2:
+                    enhanced_currentRes = 0;
+                    localStorage.setItem("enhanced_ResOption", enhanced_currentRes);
+                    enhanced_applySettings("resolution", enhanced_currentRes);
+                    enhanced_Codec.style.color = "#00e0ba";
+                    enhanced_Codec.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">video_settings</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.codec + ': H264<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.codecdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.auto + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Codec Preference: Set to 'H264'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "resolution":
+            switch (opt) {
+                case 0:
+                    enhanced_Resolution.style.color = "";
+                    enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+                    enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': ' + enhanced_lang.native + '</div>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to 'Native'.", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_currentCodec = 1;
+                    localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
+                    enhanced_applySettings("codec", enhanced_currentCodec);
+                    enhanced_Resolution.style.color = "#00e0ba";
+                    enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 1440p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+                    enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': 1440p</div>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '2560x1440'.", enhanced_consoleEnhanced, "");
+                    break
+                case 2:
+                    enhanced_currentCodec = 1;
+                    localStorage.setItem("enhanced_CodecOption", enhanced_currentCodec);
+                    enhanced_applySettings("codec", enhanced_currentCodec);
+                    enhanced_Resolution.style.color = "#00e0ba";
+                    enhanced_Resolution.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">monitor</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.resolution + ': 2160p<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.resolutiondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.native + '</span></span>';
+                    enhanced_resolutionPopup.innerHTML = '<div class="oOMRTd"><i class="material-icons-extended STPv1" aria-hidden="true" style="vertical-align: bottom;">monitor</i></div><div class="zvRH1b">' + enhanced_lang.resolution + ': 2160p</div>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Resolution: Set to '3840x2160'.", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "monitorautostart":
+            switch (opt) {
+                case 0:
+                    enhanced_monitorAutostart.style.color = "";
+                    enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.manual + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Manual'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_monitorAutostart.style.color = "#00e0ba";
+                    enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Monitor Start: Set to 'Auto'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "gridsize":
+            switch (opt) {
+                case 0:
+                    enhanced_Grid.style.color = "";
+                    enhanced_CSS = ""
+                    break;
+                case 1:
+                    enhanced_Grid.style.color = "#00e0ba";
+                    enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }"
+                    break;
+                case 2:
+                    enhanced_Grid.style.color = "#00e0ba";
+                    enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }"
+                    break;
+                case 3:
+                    enhanced_Grid.style.color = "#00e0ba";
+                    enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; }"
+                    break;
+                case 4:
+                    enhanced_Grid.style.color = "#00e0ba";
+                    enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; }"
+                    break;
+                case 5:
+                    enhanced_Grid.style.color = "#00e0ba";
+                    enhanced_CSS = ".lEPylf.YOW9Fd { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }"
+                    enhanced_CSS += "@media (min-width: 1280px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; } }"
+                    enhanced_CSS += "@media (min-width: 1920px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; } }"
+                    enhanced_CSS += "@media (min-width: 2560px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(30,minmax(auto,7.8125rem)) !important; } }"
+                    enhanced_CSS += "@media (min-width: 3840px) { .lEPylf.YOW9Fd { grid-template-columns: repeat(36,minmax(auto,7.8125rem)) !important; } }"
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleGrid");
+
+            if (opt < 5) {
+                enhanced_gridOption = enhanced_GridSize + 2
+            } else {
+                enhanced_gridOption = enhanced_lang.responsive
+            }
+
+            enhanced_Grid.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_comfy</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.gridsize + ': ' + enhanced_gridOption + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.griddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': 2</span></span>';
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Library Grid Size: Set to " + enhanced_gridOption + ".", enhanced_consoleEnhanced, "");
+            break
+        case "clock":
+            switch (opt) {
+                case 0:
+                    enhanced_Clock.style.color = "";
+                    enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    enhanced_ClockFriends.style.display = "none";
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_Clock.style.color = "#00e0ba";
+                    enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.friendslist + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    enhanced_ClockFriends.style.display = "flex";
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Friendlist'", enhanced_consoleEnhanced, "");
+                    break
+                case 2:
+                    enhanced_Clock.style.color = "#00e0ba";
+                    enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.igoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    enhanced_ClockFriends.style.display = "none";
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'In-Game Overlay'", enhanced_consoleEnhanced, "");
+                    break
+                case 3:
+                    enhanced_Clock.style.color = "#00e0ba";
+                    enhanced_Clock.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">schedule</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.clock + ": " + enhanced_lang.listoverlay + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.clockdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    enhanced_ClockFriends.style.display = "flex";
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Clock Option: Set to 'Menu & Overlay'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "filter":
+            switch (opt) {
+                case 0:
+                    enhanced_gameFilter.style.color = "";
+                    enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_gameFilter.style.color = "#00e0ba";
+                    enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filtertoggle + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Toggle'", enhanced_consoleEnhanced, "");
+                    break
+                case 2:
+                    enhanced_gameFilter.style.color = "#00e0ba";
+                    enhanced_gameFilter.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">visibility</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.filter + ": " + enhanced_lang.filterquick + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.filterdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Filter Option: Set to 'Quick'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "messagepreview":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_hidePreview.style.color = "";
+                    enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = ".lzIqJf .DvD76d { display: none; } .lzIqJf .xzJkDf { display: none; }"
+                    enhanced_hidePreview.style.color = "#00e0ba";
+                    enhanced_hidePreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speaker_notes_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickprev + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Message Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleMsgPreview");
+            break
+        case "quickreply":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_quickReply.style.color = "";
+                    enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = ".bbVL5c { display: none !important; }"
+                    enhanced_quickReply.style.color = "#00e0ba";
+                    enhanced_quickReply.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subtitles_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.quickrep + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.quickrepdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Quick Reply: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleQuickReply");
+            break
+        case "inlinepreview":
+            switch (opt) {
+                case 0:
+                    enhanced_inlineConvert.style.color = "";
+                    enhanced_inlineConvert.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">insert_photo</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.inlineimage + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.inlinedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - In-line Image Preview: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_inlineConvert.style.color = "#00e0ba";
+                    enhanced_inlineConvert.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">insert_photo</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.inlineimage + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.inlinedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - In-line Image Preview: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "offlineusers":
+            switch (opt) {
+                case 0:
+                    enhanced_offlineUser.style.color = "";
+                    enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_offlineUser.style.color = "#00e0ba";
+                    enhanced_offlineUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.offlinefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.offlinefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Offline Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "invisibleusers":
+            switch (opt) {
+                case 0:
+                    enhanced_invisibleUser.style.color = "";
+                    enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_invisibleUser.style.color = "#00e0ba";
+                    enhanced_invisibleUser.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_remove</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.invisiblefriend + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.invisiblefrienddesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Invisible Users: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "gamelabel":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_gameLabel.style.color = "";
+                    enhanced_gameLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.gamelabel + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.gamelabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Game Labels: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = "#enhanced_wrapper .a1l9D, #enhanced_wrapper .D01DPc { display: none; }"
+                    enhanced_gameLabel.style.color = "#00e0ba";
+                    enhanced_gameLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.gamelabel + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.gamelabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Game Labels: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleGameLabel");
+            break
+        case "mediapreview":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_mediaPreview.style.color = "";
+                    enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = ".ctThpb.lEPylf { display: none; }"
+                    enhanced_mediaPreview.style.color = "#00e0ba";
+                    enhanced_mediaPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">image</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.homegallery + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.homegallerydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Media Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleMediaPreview");
+            break
+        case "categorypreview":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_categoryPreview.style.color = "";
+                    enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = "#enhanced_wrapper .ssR8Bc { display: none !important; }"
+                    enhanced_categoryPreview.style.color = "#00e0ba";
+                    enhanced_categoryPreview.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.catprev + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.catprevdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Category Preview: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleCategoryPreview");
+            break
+        case "gamepopup":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = "#enhanced_wrapper:hover { z-index: 3; transform: scale(1.1); transition: transform .2s cubic-bezier(0.35,0,0.15,1); }"
+                    enhanced_gamePopup.style.color = "";
+                    enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.default+'<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = "#enhanced_wrapper:hover { z-index: unset; transform: none; transition: none; }"
+                    enhanced_gamePopup.style.color = "#00e0ba";
+                    enhanced_gamePopup.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">pageview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.popup + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.popupdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Popup Effect: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleGamePopup");
+            break
+        case "storelist":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_storeList.style.color = "";
+                    enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = ".alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 1rem); margin: 0.5rem; }"
+                    enhanced_storeList.style.color = "#00e0ba";
+                    enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleStoreSplit");
+            break
+        case "familysharing":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_hideFamilyElements.style.color = "";
+                    enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Visible'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = ".HP4yJd.heSpB, .HP4yJd.AQVgjb, .oYqfsf.heSpB { display: none; } #enhanced_resolutionPopup { display: flex !important; }"
+                    enhanced_hideFamilyElements.style.color = "#00e0ba";
+                    enhanced_hideFamilyElements.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">family_restroom</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.familyelements + ': ' + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.familyelementsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Family Sharing Elements: Set to 'Hidden'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleFamilyElements");
+            break
+        case "shortcuts":
+            switch (opt) {
+                case 0:
+                    enhanced_showShortcut.style.color = "";
+                    enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_showShortcut.style.color = "#00e0ba";
+                    enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "streammode":
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ""
+                    enhanced_streamMode.style.color = "";
+                    enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_CSS = ".lzIqJf .Y1rZWd, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }"
+                    enhanced_streamMode.style.color = "#00e0ba";
+                    enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Stream Mode: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleStreamMode");
+            break
+        case "avatar":
+            enhanced_CSS = '.ksZYgc.VGZcUb { background-image: url("' + opt + '") !important; }'
+            enhanced_CSS += '.rybUIf { background-image: url("' + opt + '") !important; }'
+            enhanced_CSS += '.dOyvbe { background-image: url("' + opt + '") !important; }'
+            enhanced_CSS += '.Nv1Sab[alt$="' + enhanced_AccountInfo[0] + '"] { content: url("' + opt + '") !important; }'
+            enhanced_CSS += 'c-wiz[data-p*="' + enhanced_AccountInfo[2] + '"] .XZRzG { background-image: url("' + opt + '") !important; }'
+            enhanced_CSS += '.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountInfo[2] + '"] .PwtJse { background-image: url("' + opt + '") !important; }'
+            enhanced_CSS += '.Tidcwc > .Y1rZWd.mZLJyd .Fnd1Pd.rnWGL { background-image: url("' + opt + '") !important; }' // Group Avatar
+            enhanced_CSS += '.mcaxA.ZmeF9 div:first-child { background-image: url("' + opt + '") !important; }'
+            enhanced_injectStyle(enhanced_CSS, "enhanced_styleAvatar");
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Avatar changed to: " + opt, enhanced_consoleEnhanced, "");
+            break
+        case "favorite":
+            var enhanced_favlist = localStorage.getItem("enhanced_favlist") || "";
+            if (enhanced_favlist.includes(opt)) {
+                enhanced_favlist = enhanced_favlist.replace("(" + opt + ")", "");
+            } else {
+                enhanced_favlist += "(" + opt + ")";
+            }
+            localStorage.setItem("enhanced_favlist", enhanced_favlist);
+            break
+        case "resetall":
+            localStorage.removeItem("enhanced_messagePreview");
+            localStorage.removeItem("enhanced_hideCategory");
+            localStorage.removeItem("enhanced_DeskWidth");
+            localStorage.removeItem("enhanced_DeskHeight");
+            localStorage.removeItem("enhanced_autostartMonitor");
+            localStorage.removeItem("enhanced_hidePopupEffect");
+            localStorage.removeItem("enhanced_monitorState");
+            localStorage.removeItem("enhanced_CodecOption");
+            localStorage.removeItem("enhanced_useQuickReply");
+            localStorage.removeItem("enhanced_hideUserMedia");
+            localStorage.removeItem("enhanced_useStreamMode");
+            localStorage.removeItem("enhanced_gameFilter");
+            localStorage.removeItem("enhanced_ClockOption");
+            localStorage.removeItem("enhanced_hideLabel");
+            localStorage.removeItem("enhanced_monitorMode");
+            localStorage.removeItem("enhanced_shortcutsOption");
+            localStorage.removeItem("enhanced_hideOffline");
+            localStorage.removeItem("enhanced_monitorPosition");
+            localStorage.removeItem("enhanced_monitorOption");
+            localStorage.removeItem("enhanced_filterOption");
+            localStorage.removeItem("enhanced_GridSize");
+            localStorage.removeItem("enhanced_ResOption");
+            localStorage.removeItem("enhanced_hideInvisible");
+            localStorage.removeItem("enhanced_storeListSize");
+            localStorage.removeItem("enhanced_useInlinePreview");
+            localStorage.removeItem("enhanced_wishlist");
+            localStorage.removeItem("enhanced_familySharingElements");
+            localStorage.removeItem("enhanced_favlist");
+            console.log("%cStadia Enhanced" + "%c ⚙️ - Settings reverted to default.", enhanced_consoleEnhanced, "");
+            location.reload();
+            break
+        case "updateall":
+            enhanced_updateMonitor(0)
+            enhanced_applySettings("gridsize", enhanced_GridSize);
+            enhanced_applySettings("clock", enhanced_ClockOption);
+            enhanced_applySettings("filter", enhanced_filterOption);
+            enhanced_applySettings("resolution", enhanced_currentRes);
+            enhanced_applySettings("codec", enhanced_currentCodec);
+            enhanced_applySettings("messagepreview", enhanced_messagePreview);
+            enhanced_applySettings("gamelabel", enhanced_hideLabel);
+            enhanced_applySettings("quickreply", enhanced_useQuickReply);
+            enhanced_applySettings("offlineusers", enhanced_hideOffline);
+            enhanced_applySettings("invisibleusers", enhanced_hideInvisible);
+            enhanced_applySettings("usermedia", enhanced_hideUserMedia);
+            enhanced_applySettings("streammode", enhanced_useStreamMode);
+            enhanced_applySettings("categorypreview", enhanced_hideCategory);
+            enhanced_applySettings("popup", enhanced_hidePopupEffect);
+            enhanced_applySettings("monitorautostart", enhanced_autostartMonitor);
+            enhanced_applySettings("storelist", enhanced_storeListSize);
+            enhanced_applySettings("shortcuts", enhanced_enableShortcuts);
+            enhanced_applySettings("inlinepreview", enhanced_useInlinePreview);
+            enhanced_applySettings("familysharing", enhanced_familySharingElements);
+            enhanced_applySettings("mediapreview", enhanced_hideUserMedia);
+            break
+    }
+}
 
 function enhanced_injectStyle(content, id) {
     head = document.getElementsByTagName('head')[0];
@@ -2434,6 +2513,11 @@ function secureInsert(el, sel, opt = 0) {
                     target.parentNode.insertBefore(el, target.nextSibling);
                 }
                 break
+            case 3:
+                if (target.parentNode != el.parentNode) {
+                    target.parentNode.insertBefore(el, target);
+                }
+                break
         }
     }
 }
@@ -2499,10 +2583,10 @@ function enhanced_dragElement(el) {
 // Debugging - Call via "debugEnhanced(); on Stadia
 function debugEnhanced(opt) {
     var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
-
     switch (opt) {
-        case 0:
+        case "translation":
             // Translations
+            console.groupCollapsed("Stadia Enhanced: Translation Output");
             var languages = ["fr", "nl", "sv", "pt", "ca", "da", "it", "es", "de", "hu", "en"];
             for (var i = 0; i < languages.length; i++) {
                 console.log("%cStadia Enhanced" + "%c 🛠️ - Loading translation: '" + languages[i] + "'", enhanced_consoleEnhanced, "");
@@ -2512,6 +2596,7 @@ function debugEnhanced(opt) {
                 }
                 console.log("%cStadia Enhanced" + "%c 🛠️ - Finished loading: '" + languages[i] + "' with " + Object.keys(debug_load).length + " translation keys.", enhanced_consoleEnhanced, "");
             }
+            console.groupEnd();
             break
     }
 }
@@ -2527,6 +2612,7 @@ function loadLanguages(lang) {
                 "native": "Natif",
                 "hide": "Masquer",
                 "show": "Afficher",
+                "total": "Total",
                 "visible": "Visible",
                 "hidden": "Masqué",
                 "enabled": "Activé",
@@ -2587,8 +2673,8 @@ function loadLanguages(lang) {
                 "filterquick": "Accès rapide",
                 "invitebase": "Copier le lien d'invitation",
                 "inviteactive": "Copié!",
-                "prolabel": "Vignette Pro",
-                "prolabeldesc": "Masque la vignette 'Pro' sur les jeux dans la page d'accueil.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Galerie des Captures",
                 "homegallerydesc": "Masque la section 'Captures' en bas de la page d'accueil.",
                 "quickprev": "Prévisualisation des Messages",
@@ -2627,6 +2713,7 @@ function loadLanguages(lang) {
                 "native": "Inbyggd",
                 "hide": "Göm",
                 "show": "Visa",
+                "total": "Total",
                 "visible": "Synligt",
                 "hidden": "Gömt",
                 "enabled": "Aktiverat",
@@ -2687,8 +2774,8 @@ function loadLanguages(lang) {
                 "filterquick":"Snabbfilter",
                 "invitebase":"Kopiera inbjudningslänk",
                 "inviteactive":"Kopierat!",
-                "prolabel": "Pro-Etikett",
-                "prolabeldesc": "Gömmer 'Pro'-etiketten från spel på hemskärmen.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Användargalleri",
                 "homegallerydesc": "Gömmer 'Captures'-sektionen längst ner på hemskärmen.",
                 "quickprev": "Förhandsvisning av Meddelande",
@@ -2727,6 +2814,7 @@ function loadLanguages(lang) {
                 "native": "Nativo",
                 "hide": "Esconder",
                 "show": "Mostrar",
+                "total": "Total",
                 "visible": "Visivel",
                 "hidden": "Escondido",
                 "enabled": "Activado",
@@ -2736,7 +2824,7 @@ function loadLanguages(lang) {
                 "games": "Jogos",
                 "bundles": "Bundles",
                 "addons": "Add-ons",
-                "wishlist": "Wishlist",
+                "wishlist": "Lista de desejos",
                 "responsive": "Responsivo",
                 "windowed": "Modo Janela",
                 "fullscreen": "Ecrã completo",
@@ -2744,7 +2832,7 @@ function loadLanguages(lang) {
                 "onsale": "Em promoção",
                 "prodeals": "Promoções Pro",
                 "allgames": "Todos os jogos",
-                "userprofile": "My Profile",
+                "userprofile": "Meu Perfil",
                 "usermedia": "Screenshots & Videos",
                 "searchbtnbase": "Pesquisar em",
                 "avatarpopup": "Novo URL para avatar (vazio para o padrão):",
@@ -2787,8 +2875,8 @@ function loadLanguages(lang) {
                 "filterquick": "Rápido",
                 "invitebase": "Copiar ligação de convite",
                 "inviteactive": "Copiado!",
-                "prolabel": "Etiqueta Pro",
-                "prolabeldesc": "Remove a etiqueta 'Pro' dos jogos no ecrã inicial.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Galeria do Utilizador",
                 "homegallerydesc": "Esconde a área 'Capturas' no fundo do ecrã inicial.",
                 "quickprev": "Pré-visualização de mensagens",
@@ -2813,10 +2901,10 @@ function loadLanguages(lang) {
                 "achievementsunlocked": "Conquistas desbloqueadas",
                 "splitstore": "Dividir Listas da Loja",
                 "splitstoredesc": "Divide as listas da loja em duas colunas para uma melhor visão geral.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "inlineimage": "Prévia de imagem",
+                "inlinedesc": "Substitui links de imagem para formatos comuns de ficheiros (jpg/gif/png) com uma prévia clicável.",
+                "familyelements": "Opções de partilha de família",
+                "familyelementsdesc": "Esconder a opção 'Partilhar este jogo com a família.'",
                 "resetsettings": "Reiniciar Configurações"
             }`
             break
@@ -2827,6 +2915,7 @@ function loadLanguages(lang) {
                 "native": "Natiu",
                 "hide": "Amaga",
                 "show": "Mostra",
+                "total": "Total",
                 "visible": "Visible",
                 "hidden": "Amagat",
                 "enabled": "Activat",
@@ -2887,8 +2976,8 @@ function loadLanguages(lang) {
                 "filterquick": "Ràpid",
                 "invitebase": "Copia l'enllaç d'invitació",
                 "inviteactive": "Copiat!",
-                "prolabel": "Etiqueta Pro",
-                "prolabeldesc": "Elimina l'etiqueta 'Pro' dels jocs de la pantalla d'inici.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Galeria d'usuari",
                 "homegallerydesc": "Amaga l'àrea 'Captures' de la part inferior de la pantalla d'inici.",
                 "quickprev": "Vista prèvia del missatge",
@@ -2927,6 +3016,7 @@ function loadLanguages(lang) {
                 "native": "Hjemmehørende",
                 "hide": "Skjul",
                 "show": "Vs",
+                "total": "Total",
                 "visible": "Synlig",
                 "hidden": "Skjult",
                 "enabled": "Aktiveret",
@@ -2987,8 +3077,8 @@ function loadLanguages(lang) {
                 "filterquick": "Hurtig",
                 "invitebase": "Kopier invitationslink",
                 "inviteactive": "Kopieret!",
-                "prolabel": "Pro-mærke",
-                "prolabeldesc": "Fjerner 'Pro' -mærket fra spil på startskærmen.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Brugergalleri",
                 "homegallerydesc": "Skjuler området 'Optager' nederst på startskærmen.",
                 "quickprev": "Eksempel på besked",
@@ -3027,6 +3117,7 @@ function loadLanguages(lang) {
                 "native": "Nativo",
                 "hide": "Nascondi",
                 "show": "Mostra",
+                "total": "Total",
                 "visible": "Visibile",
                 "hidden": "Nascosto",
                 "enabled": "Abilitato",
@@ -3087,8 +3178,8 @@ function loadLanguages(lang) {
                 "filterquick": "Filtro Rapido",
                 "invitebase": "Copia link invito",
                 "inviteactive": "Copiato!",
-                "prolabel": "Etichetta Pro",
-                "prolabeldesc": "Rimuove l'etichetta 'Pro' dai giochi nella schermata home.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Galleria Utente",
                 "homegallerydesc": "Nasconde l'area 'Acquisizioni' nella parte inferiore della schermata home.",
                 "quickprev": "Anteprima Messaggio",
@@ -3127,6 +3218,7 @@ function loadLanguages(lang) {
                 "native": "Nativa",
                 "hide": "Ocultar",
                 "show": "Mostrar",
+                "total": "Total",
                 "visible": "Visible",
                 "hidden": "Oculto",
                 "enabled": "Activado",
@@ -3187,8 +3279,8 @@ function loadLanguages(lang) {
                 "filterquick": "Activado (modo rápido)",
                 "invitebase": "Copiar el enlace de invitación",
                 "inviteactive": "¡Copiado!",
-                "prolabel": "Etiqueta Pro",
-                "prolabeldesc": "Elimina la etiqueta 'Pro' de los juegos de la pantalla de inicio.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Galería de Capturas",
                 "homegallerydesc": "Oculta el área de 'Capturas' de la parte inferior de la pantalla de inicio.",
                 "quickprev": "Previsualización de Mensajes",
@@ -3227,6 +3319,7 @@ function loadLanguages(lang) {
                 "native": "Native",
                 "hide": "Verbergen",
                 "show": "Tonen",
+                "total": "Total",
                 "visible": "Zichtbaar",
                 "hidden": "Verborgen",
                 "enabled": "Ingeschakeld",
@@ -3287,8 +3380,8 @@ function loadLanguages(lang) {
                 "filterquick": "Snel",
                 "invitebase": "Kopiëer uitnodigingslink",
                 "inviteactive": "Gekopiëerd!",
-                "prolabel": "Pro Label",
-                "prolabeldesc": "Verwijderd het 'Pro' label van games op het thuisscherm.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Gebruikers Gallerij",
                 "homegallerydesc": "Verbergt het 'Captures' deel onderaan het thuisscherm.",
                 "quickprev": "Berichtvoorbeeld",
@@ -3327,6 +3420,7 @@ function loadLanguages(lang) {
                 "native": "Eredeti",
                 "hide": "Elrejt",
                 "show": "Mutat",
+                "total": "Total",
                 "visible": "Látható",
                 "hidden": "Rejtett",
                 "enabled": "Engedélyezve",
@@ -3387,8 +3481,8 @@ function loadLanguages(lang) {
                 "filterquick": "Gyors",
                 "invitebase": "Meghívási hivatkozás másolása",
                 "inviteactive": "Vágólapra másolva!",
-                "prolabel": "Pro címke",
-                "prolabeldesc": "Eltávolítja a 'Pro' címkét a kezdőlapon megjelenő játékokról.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "Felvételek és játékállások",
                 "homegallerydesc": "Elrejti a kezdőlap alján található 'Felvételek és játékállások' területet.",
                 "quickprev": "Üzenet Előnézet",
@@ -3427,6 +3521,7 @@ function loadLanguages(lang) {
                 "native": "Nativ",
                 "hide": "Verstecke",
                 "show": "Zeige",
+                "total": "Gesamt",
                 "visible": "Sichtbar",
                 "hidden": "Versteckt",
                 "enabled": "Aktiviert",
@@ -3487,8 +3582,8 @@ function loadLanguages(lang) {
                 "filterquick": "Schnell",
                 "invitebase": "Einladungslink kopieren",
                 "inviteactive": "Kopiert!",
-                "prolabel": "Pro Beschriftung",
-                "prolabeldesc": "Entfernt die 'Pro' Beschriftung von Spielen auf dem Startbildschirm.",
+                "gamelabel": "Spiele Beschriftung",
+                "gamelabeldesc": "Entfernt Beschriftungen wie 'Pro' von Spielen auf dem Startbildschirm.",
                 "homegallery": "Nutzer Galerie",
                 "homegallerydesc": "Versteckt den 'Aufnahmen' Bereich am unteren Ende des Startbildschirmes.",
                 "quickprev": "Nachrichten Vorschau",
@@ -3529,6 +3624,7 @@ function loadLanguages(lang) {
                 "native": "Native",
                 "hide": "Hide",
                 "show": "Show",
+                "total": "Total",
                 "visible": "Visible",
                 "hidden": "Hidden",
                 "enabled": "Enabled",
@@ -3589,8 +3685,8 @@ function loadLanguages(lang) {
                 "filterquick": "Quick",
                 "invitebase": "Copy invite link",
                 "inviteactive": "Copied!",
-                "prolabel": "Pro Label",
-                "prolabeldesc": "Removes the 'Pro' label from games on the homescreen.",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
                 "homegallery": "User Gallery",
                 "homegallerydesc": "Hides the 'Captures' area at the bottom of the homescreen.",
                 "quickprev": "Message Preview",
