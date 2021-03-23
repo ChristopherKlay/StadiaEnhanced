@@ -33,6 +33,14 @@ Due to following Stadias language settings, languages like "en_GB"/"en_US" will 
 ## Current Template - Updated 02.03.2021
 ### New content
 ```
+Version 1.10.x
+
+"total": "Total",
+"gamelabel": "Game Labels",
+"gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+
+Version 1.9.x
+
 "wishlist": "Wishlist",
 "userprofile": "My Profile",
 "inlineimage": "Image Preview",
@@ -43,11 +51,11 @@ Due to following Stadias language settings, languages like "en_GB"/"en_US" will 
 ### Full translation
 ```
 "languagecode": "en",
-"languagecode": "en",
 "default": "Default",
 "native": "Native",
 "hide": "Hide",
 "show": "Show",
+"total": "Total",
 "visible": "Visible",
 "hidden": "Hidden",
 "enabled": "Enabled",
@@ -108,8 +116,8 @@ Due to following Stadias language settings, languages like "en_GB"/"en_US" will 
 "filterquick": "Quick",
 "invitebase": "Copy invite link",
 "inviteactive": "Copied!",
-"prolabel": "Pro Label",
-"prolabeldesc": "Removes the 'Pro' label from games on the homescreen.",
+"gamelabel": "Game Labels",
+"gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
 "homegallery": "User Gallery",
 "homegallerydesc": "Hides the 'Captures' area at the bottom of the homescreen.",
 "quickprev": "Message Preview",
