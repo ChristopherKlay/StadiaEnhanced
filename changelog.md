@@ -2,6 +2,14 @@
 
 ## Version 1.10
 
+### 1.10.1
+* Changed the statistic overview to display playtime total again
+* Updated italian, hungarian, catalan, french, portuguese and dutch translation
+* Fixed playtime total values returning errors due to localisation issues
+* Fixed total payment calculations for some currencies
+* Fixed a bug where total payments showed a multiplied total
+* Fixed a possible error when opening the settings menu
+
 ### 1.10.0
 * Added the option to pin games to the start of the grid on the homescreen
 * Added total payments displayed under settings/purchases
