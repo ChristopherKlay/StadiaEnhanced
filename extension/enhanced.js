@@ -1398,11 +1398,18 @@ enhanced_shortcutLastPlayed.addEventListener("click", function() {
     window.open("https://stadiaicons.web.app/" + enhanced_shortcutLastPlayed.gameID + "/?fullName=" + encodeURIComponent(enhanced_shortcutLastPlayed.gameName), "_blank");
 });
 
-// Game Statistics
-var enhanced_statsCheck = 0;
+// Stats Container
 var enhanced_statOverview = document.createElement("div");
 enhanced_statOverview.className = "MDSsFe URhE4b";
 enhanced_statOverview.style.marginBottom = "3.5rem";
+
+// Achievement Statistics
+var enhanced_statAchievements = document.createElement("div");
+enhanced_statOverview.append(enhanced_statAchievements)
+
+// Playtime Statistics
+var enhanced_statPlaytime = document.createElement("div");
+enhanced_statOverview.append(enhanced_statPlaytime)
 
 // Capture Filters
 var enhanced_activeCapFilter = "none";
@@ -1806,6 +1813,65 @@ setInterval(function() {
 
         // Game Statistics
         if (document.querySelector(".MDSsFe") !== null) {
+
+            // Container
+            secureInsert(enhanced_statOverview, ".dkZt0b.qRvogc", 2)
+
+            // Playtime Calculation
+            var enhanced_statsBaseQuery = document.querySelectorAll("div[jsname='jlb53b']")[document.querySelectorAll("div[jsname='jlb53b']").length - 1];
+            var enhanced_timeQuery = enhanced_statsBaseQuery.querySelectorAll(".eUhXn");
+            var enhanced_statsPlaytime = 0;
+            var enhanced_timesAvailable = false
+
+            for (var i = 0; i < enhanced_timeQuery.length; i++) {
+                var split = enhanced_timeQuery[i].textContent.split(/[\s]/)
+                if (split.length == 4) {
+                    var enhanced_hoursLabel = split[1]
+                    var enhanced_minutesLabel = split[3]
+                    enhanced_timesAvailable = true
+                        //console.log("Hours: [" + enhanced_hoursLabel + "] Minutes: [" + enhanced_minutesLabel + "]")
+                    break
+                }
+            }
+
+            if (enhanced_timesAvailable) {
+                for (var i = 0; i < enhanced_timeQuery.length; i++) {
+                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.split(/[\s]/);
+                    switch (enhanced_titlePlaytime.length) {
+                        case 2:
+                            if (enhanced_titlePlaytime[1] == enhanced_minutesLabel) {
+                                enhanced_statsPlaytime += parseInt(enhanced_titlePlaytime[0] * 60);
+                            } else if (enhanced_titlePlaytime[1] == enhanced_hoursLabel) {
+                                enhanced_statsPlaytime += parseInt(enhanced_titlePlaytime[0] * 3600);
+                            } else {
+                                enhanced_statsPlaytime += parseInt(enhanced_titlePlaytime[0]);
+                            }
+                            break
+                        case 4:
+                            enhanced_statsPlaytime += parseInt(enhanced_titlePlaytime[0] * 3600);
+                            enhanced_statsPlaytime += parseInt(enhanced_titlePlaytime[2] * 60);
+                            break
+                    }
+                }
+                enhanced_statsPlaytime = enhanced_secondsToHms(enhanced_statsPlaytime)
+
+                var enhanced_loadStats = '\
+                    <div class="xsbfy" style="margin-bottom: 1rem;">\
+                        <div class="qKSMec">\
+                            <i class="google-material-icons QxsLuc" aria-hidden="true">schedule</i>\
+                            <div class="kPtFV">\
+                                <span class="bn3lwc">' + enhanced_statsPlaytime[0] + " " + enhanced_hoursLabel + '</span>\
+                                <span class="IBMKhc">/' + enhanced_statsPlaytime[1] + " " + enhanced_minutesLabel + ' ' + enhanced_lang.totalPlayTime + '</span>\
+                            </div>\
+                        </div>\
+                    </div>'
+
+                if (enhanced_statPlaytime.innerHTML != enhanced_loadStats) {
+                    enhanced_statPlaytime.innerHTML = enhanced_loadStats;
+                }
+            }
+
+            // Achievements
             var enhanced_statsBaseQuery = document.querySelectorAll("div[jsname='jlb53b']")[document.querySelectorAll("div[jsname='jlb53b']").length - 1];
             var enhanced_statsOwned = enhanced_statsBaseQuery.childElementCount;
             var enhanced_statsAchievementQuery = enhanced_statsBaseQuery.querySelectorAll(".kPtFV");
@@ -1827,10 +1893,7 @@ setInterval(function() {
                 var enhanced_statsUnlockRate = (enhanced_statsUnlock * 100) / enhanced_statsTotal;
                 var enhanced_statsFinishRate = (enhanced_statsFinished * 100) / enhanced_statsOwned;
 
-                if (enhanced_statsCheck != enhanced_statsUnlock) {
-                    enhanced_statsCheck = enhanced_statsUnlock;
-
-                    var enhanced_loadStats = '\
+                var enhanced_loadStats = '\
                     <div class="HZ5mJ">Statistics</div>\
                     <div class="xsbfy" style="margin-bottom: 1rem;">\
                         <div class="qKSMec">\
@@ -1864,12 +1927,10 @@ setInterval(function() {
                             </div>\
                         </div>\
                     </div>'
-                    if (enhanced_statOverview.innerHTML != enhanced_loadStats) {
-                        enhanced_statOverview.innerHTML = enhanced_loadStats;
-                    }
+                if (enhanced_statAchievements.innerHTML != enhanced_loadStats) {
+                    enhanced_statAchievements.innerHTML = enhanced_loadStats;
                 }
             }
-            secureInsert(enhanced_statOverview, ".dkZt0b.qRvogc", 2);
         }
     }
 
@@ -1942,20 +2003,27 @@ setInterval(function() {
         }
 
         // Total Payments
-        var enhanced_purchases = document.querySelectorAll('.o2NwGe')
-        if (enhanced_purchases.length != 0) {
-            var enhanced_currency = document.querySelector('.o2NwGe').textContent.replace(/[+-]?([0-9]*[.,])?[0-9]+/, 'CUR')
-            var enhanced_payments = [];
+        var enhanced_purchaseList = document.querySelectorAll(".kgmzdc")[document.querySelectorAll(".kgmzdc").length - 1]
+        if (enhanced_purchaseList) {
+            var enhanced_purchaseAmounts = enhanced_purchaseList.querySelectorAll('.o2NwGe')
+            if (enhanced_purchaseAmounts.length != 0) {
+                var enhanced_currency = enhanced_purchaseAmounts[0].textContent.replace(/[0-9].*[0-9]/, 'CUR')
+                var enhanced_payments = [];
 
-            for (var i = 0; i < enhanced_purchases.length; i++) {
-                enhanced_payments.push(parseFloat(enhanced_purchases[i].textContent.replace(/[^0-9,.]/g, '').replace(",", ".")))
+                for (var i = 0; i < enhanced_purchaseAmounts.length; i++) {
+                    if (enhanced_purchaseAmounts[i].textContent.match(/[,].*[.]/)) {
+                        enhanced_payments.push(parseFloat(enhanced_purchaseAmounts[i].textContent.replace(/[^0-9,. ]+/, '').replace(",", "")))
+                    } else {
+                        enhanced_payments.push(parseFloat(enhanced_purchaseAmounts[i].textContent.replace(/[^0-9,. ]+/, '').replace(",", ".")))
+                    }
+                }
+
+                var enhanced_paytotal = enhanced_payments.reduce((a, b) => a + b, 0).toFixed(2)
+                enhanced_paytotal = enhanced_lang.total + " " + enhanced_currency.replace('CUR', enhanced_paytotal)
+
+                enhanced_allpayments.textContent = enhanced_paytotal
+                secureInsert(enhanced_allpayments, ".Ca4K1", 0)
             }
-
-            var enhanced_paytotal = enhanced_payments.reduce((a, b) => a + b, 0).toFixed(2)
-            enhanced_paytotal = enhanced_lang.total + " " + enhanced_currency.replace('CUR', enhanced_paytotal)
-
-            enhanced_allpayments.textContent = enhanced_paytotal
-            secureInsert(enhanced_allpayments, ".Ca4K1", 0)
         }
     }
 
@@ -2545,6 +2613,14 @@ function enhanced_loadUserInfo() {
     }
 }
 
+// Convert Time
+function enhanced_secondsToHms(sec) {
+    var h = Math.floor(sec / 3600);
+    var m = Math.floor(sec % 3600 / 60);
+    var s = Math.floor(sec % 3600 % 60);
+    return [h, m, s];
+}
+
 // Dragable Objects
 function enhanced_dragElement(el) {
     var pos = [0, 0, 0, 0];
@@ -2622,7 +2698,7 @@ function loadLanguages(lang) {
                 "games": "Jeux",
                 "bundles": "Lots",
                 "addons": "Extensions",
-                "wishlist": "Wishlist",
+                "wishlist": "Liste d'Envies",
                 "responsive": "Responsive",
                 "windowed": "Mode Fenêtré",
                 "fullscreen": "Plein Écran",
@@ -2630,7 +2706,7 @@ function loadLanguages(lang) {
                 "onsale": "En Promotion",
                 "prodeals": "Offres Stadia Pro",
                 "allgames": "Tous les Jeux",
-                "userprofile": "My Profile",
+                "userprofile": "Mon Profil",
                 "usermedia": "Captures & Vidéos",
                 "searchbtnbase": "Rechercher sur",
                 "avatarpopup": "URL du nouvel avatar (vide = par défaut):",
@@ -2673,8 +2749,8 @@ function loadLanguages(lang) {
                 "filterquick": "Accès rapide",
                 "invitebase": "Copier le lien d'invitation",
                 "inviteactive": "Copié!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "gamelabel": "Étiquettes des Jeux",
+                "gamelabeldesc": "Retire les étiquettes des jeux telles que l(étiquette 'Pro' dans la page d'accueil.",
                 "homegallery": "Galerie des Captures",
                 "homegallerydesc": "Masque la section 'Captures' en bas de la page d'accueil.",
                 "quickprev": "Prévisualisation des Messages",
@@ -2697,12 +2773,13 @@ function loadLanguages(lang) {
                 "confirmreset": "Êtes-vous certain de vouloir réinitialiser les paramètres ?",
                 "gamesfinished": "Jeux Terminés",
                 "achievementsunlocked": "Succès Débloqués",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Store à 2 Colonnes",
                 "splitstoredesc": "Divise les listes du store en deux colonnes pour une meilleur lisibilité.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "inlineimage": "Prévisualisation d'Images",
+                "inlinedesc": "Remplace les liens vers des images avec un format standard (jpg/gif/png) avec une prévisualisation cliquable.",
+                "familyelements": "Options de partage familial",
+                "familyelementsdesc": "Masque l'option 'Partager ce jeu avec la famille'.",
                 "resetsettings": "Réinitialiser les Paramètres"
             }`
             break
@@ -2798,6 +2875,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Är du säker på att du vill återställa inställningarna?",
                 "gamesfinished": "Färdiga Spel",
                 "achievementsunlocked": "Prestationer Uppnådda",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Dela Butikslistor",
                 "splitstoredesc": "Delar butikslistor i två kolumner för en bättre överblick.",
                 "inlineimage": "Image Preview",
@@ -2875,8 +2953,8 @@ function loadLanguages(lang) {
                 "filterquick": "Rápido",
                 "invitebase": "Copiar ligação de convite",
                 "inviteactive": "Copiado!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "gamelabel": "Etiquetas de Jogos",
+                "gamelabeldesc": "Remove as etiquetas como por exemplo 'Pro' dos jogos da página inicial.",
                 "homegallery": "Galeria do Utilizador",
                 "homegallerydesc": "Esconde a área 'Capturas' no fundo do ecrã inicial.",
                 "quickprev": "Pré-visualização de mensagens",
@@ -2899,6 +2977,7 @@ function loadLanguages(lang) {
                 "confirmreset": "De certeza que queres reiniciar as configurações?",
                 "gamesfinished": "Jogo terminado",
                 "achievementsunlocked": "Conquistas desbloqueadas",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Dividir Listas da Loja",
                 "splitstoredesc": "Divide as listas da loja em duas colunas para uma melhor visão geral.",
                 "inlineimage": "Prévia de imagem",
@@ -2976,8 +3055,8 @@ function loadLanguages(lang) {
                 "filterquick": "Ràpid",
                 "invitebase": "Copia l'enllaç d'invitació",
                 "inviteactive": "Copiat!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "gamelabel": "Etiquetes de joc",
+                "gamelabeldesc": "Elimina etiquetes com 'Pro' dels jocs del menú principal.",
                 "homegallery": "Galeria d'usuari",
                 "homegallerydesc": "Amaga l'àrea 'Captures' de la part inferior de la pantalla d'inici.",
                 "quickprev": "Vista prèvia del missatge",
@@ -3000,6 +3079,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Segur que vols restablir la configuració?",
                 "gamesfinished": "Jocs acabats",
                 "achievementsunlocked": "Assoliments desbloquejats",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Divideix les llistes de la botiga",
                 "splitstoredesc": "Divideix les llistes de la botiga en dues columnes per obtenir una millor visió.",
                 "inlineimage": "Vista prèvia de la imatge",
@@ -3101,6 +3181,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Er du sikker på, at du vil nulstille indstillingerne?",
                 "gamesfinished": "Gennemførte spil",
                 "achievementsunlocked": "Oplåste Præstationer",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Opdel butikslister",
                 "splitstoredesc": "Opdeler butikslister i to kolonner for at få et bedre overblik.",
                 "inlineimage": "Image Preview",
@@ -3117,7 +3198,7 @@ function loadLanguages(lang) {
                 "native": "Nativo",
                 "hide": "Nascondi",
                 "show": "Mostra",
-                "total": "Total",
+                "total": "Totale",
                 "visible": "Visibile",
                 "hidden": "Nascosto",
                 "enabled": "Abilitato",
@@ -3178,8 +3259,8 @@ function loadLanguages(lang) {
                 "filterquick": "Filtro Rapido",
                 "invitebase": "Copia link invito",
                 "inviteactive": "Copiato!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "gamelabel": "Etichette Giochi",
+                "gamelabeldesc": "Rimuove le etichette "Pro" dai giochi nella schermata home.",
                 "homegallery": "Galleria Utente",
                 "homegallerydesc": "Nasconde l'area 'Acquisizioni' nella parte inferiore della schermata home.",
                 "quickprev": "Anteprima Messaggio",
@@ -3202,6 +3283,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Sei sicuro di voler ripristinare le impostazioni?",
                 "gamesfinished": "Giochi Completati",
                 "achievementsunlocked": "Obiettivi Sbloccati",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Dividi Liste Store",
                 "splitstoredesc": "Divide le liste nello store in due colonne per una migliore panoramica.",
                 "inlineimage": "Anteprima Immagine",
@@ -3303,6 +3385,7 @@ function loadLanguages(lang) {
                 "confirmreset": "¿Estás seguro de querer restablecer los ajustes?",
                 "gamesfinished": "Juegos Completados",
                 "achievementsunlocked": "Logros Desbloqueados",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Tienda a Doble Columna",
                 "splitstoredesc": "Divide la lista de la tienda en dos columnas para una mayor legibilidad.",
                 "inlineimage": "Image Preview",
@@ -3319,7 +3402,7 @@ function loadLanguages(lang) {
                 "native": "Native",
                 "hide": "Verbergen",
                 "show": "Tonen",
-                "total": "Total",
+                "total": "Totaal",
                 "visible": "Zichtbaar",
                 "hidden": "Verborgen",
                 "enabled": "Ingeschakeld",
@@ -3381,7 +3464,7 @@ function loadLanguages(lang) {
                 "invitebase": "Kopiëer uitnodigingslink",
                 "inviteactive": "Gekopiëerd!",
                 "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "gamelabeldesc": "Verwijderd labels zoals 'Pro' van games op het homescreen.",
                 "homegallery": "Gebruikers Gallerij",
                 "homegallerydesc": "Verbergt het 'Captures' deel onderaan het thuisscherm.",
                 "quickprev": "Berichtvoorbeeld",
@@ -3404,6 +3487,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Weet je zeker dat je de instellingen wilt resetten?",
                 "gamesfinished": "Games Voltooid",
                 "achievementsunlocked": "Achievements Vrijgespeeld",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Splits Winkel Lijsten",
                 "splitstoredesc": "Splits de winkel lijsten in twee kolommen voor een beter overzicht.",
                 "inlineimage": "Voorvertoningsafbeelding",
@@ -3420,7 +3504,7 @@ function loadLanguages(lang) {
                 "native": "Eredeti",
                 "hide": "Elrejt",
                 "show": "Mutat",
-                "total": "Total",
+                "total": "Összesen",
                 "visible": "Látható",
                 "hidden": "Rejtett",
                 "enabled": "Engedélyezve",
@@ -3477,12 +3561,12 @@ function loadLanguages(lang) {
                 "listoverlay": "Ismerősök listája és Játékon belüli Overlay",
                 "filter": "Szűrés",
                 "filterdesc": "Lehetővé teszi a kezdőlapon a Saját játékkönyvtár rendezését a játékok elrejtésével. A szűrő a kezdőlapon a Saját játékkönyvtár jobb felső sarkában található szimbólummal kapcsolható be.",
-                "filtertoggle": "Kapcsoló",
+                "filtertoggle": "Kapcsolható",
                 "filterquick": "Gyors",
                 "invitebase": "Meghívási hivatkozás másolása",
                 "inviteactive": "Vágólapra másolva!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "gamelabel": "Játek Címkék",
+                "gamelabeldesc": "A kezdőlapon eltávolítja a címkéket a játékokról. Pl.: 'pro'",
                 "homegallery": "Felvételek és játékállások",
                 "homegallerydesc": "Elrejti a kezdőlap alján található 'Felvételek és játékállások' területet.",
                 "quickprev": "Üzenet Előnézet",
@@ -3505,6 +3589,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Biztosan vissza akarod állítani a beállításokat?",
                 "gamesfinished": "Vége a játéknak",
                 "achievementsunlocked": "Megszerzett jutalom",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Áruház oszlopos megjelenítés",
                 "splitstoredesc": "Az Áruház 2 oszlopos megjelenítése a jobb láthatóság miatt.",
                 "inlineimage": "Képek előnézete",
@@ -3608,6 +3693,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Möchtest du die Einstellungen sicher zurücksetzen?",
                 "gamesfinished": "Spiele Abgeschlossen",
                 "achievementsunlocked": "Erfolge Freigeschaltet",
+                "totalPlayTime": "Gesamtspielzeit",
                 "splitstore": "Store Listen teilen",
                 "splitstoredesc": "Teilt Listen im Store für eine bessere Übersicht in zwei Spalten.",
                 "inlineimage": "Vorschau für Bilder",
@@ -3709,6 +3795,7 @@ function loadLanguages(lang) {
                 "confirmreset": "Are you sure you want to reset the settings?",
                 "gamesfinished": "Games Finished",
                 "achievementsunlocked": "Achievements Unlocked",
+                "totalPlayTime": "Total Playtime",
                 "splitstore": "Split Store Lists",
                 "splitstoredesc": "Splits store lists into two columns for a better overview.",
                 "inlineimage": "Image Preview",
