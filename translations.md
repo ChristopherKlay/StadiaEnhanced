@@ -33,7 +33,11 @@ Due to following Stadias language settings, languages like "en_GB"/"en_US" will 
 ## Current Template - Updated 02.03.2021
 ### New content
 ```
-Version 1.10.x
+Version 1.10.1
+
+"totalPlayTime": "Total Playtime",
+
+Version 1.10.0
 
 "total": "Total",
 "gamelabel": "Game Labels",
