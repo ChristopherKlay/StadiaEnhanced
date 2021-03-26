@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://i.imgur.com/OzmbXku.png?raw=true" alt="Stadia Enhanced Logo"/>
   <br>
-  <img src="https://img.shields.io/badge/GitHub-1.10.0-green?style=for-the-badge" alt="GitHub Version">
+  <img src="https://img.shields.io/badge/GitHub-1.10.1-green?style=for-the-badge" alt="GitHub Version">
   <img src="https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge" alt="Chrome Version"/>
   <img src="https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge" alt="Chrome user Count"/>
 </p>
@@ -50,8 +50,8 @@ Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanc
 
 ## Screenshots
 
-![](https://i.imgur.com/mKhLrPJ.png)
-![](https://i.imgur.com/loGcwYE.png)
-![](https://i.imgur.com/i2JHauj.png)
-![](https://i.imgur.com/DjwV4hk.png)
-![](https://i.imgur.com/XBplGec.png)
+![](https://i.imgur.com/UtretDf.png)
+![](https://i.imgur.com/X6bVNif.png)
+![](https://i.imgur.com/oQYH0Uv.png)
+![](https://i.imgur.com/G2u7fdw.png)
+![](https://i.imgur.com/lU9WoEA.png)
