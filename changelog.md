@@ -2,6 +2,9 @@
 
 ## Version 1.10
 
+### 1.10.2
+* Fixed italian translation
+
 ### 1.10.1
 * Changed the statistic overview to display playtime total again
 * Updated italian, hungarian, catalan, french, portuguese and dutch translation
