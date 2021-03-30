@@ -3260,7 +3260,7 @@ function loadLanguages(lang) {
                 "invitebase": "Copia link invito",
                 "inviteactive": "Copiato!",
                 "gamelabel": "Etichette Giochi",
-                "gamelabeldesc": "Rimuove le etichette "Pro" dai giochi nella schermata home.",
+                "gamelabeldesc": "Rimuove le etichette 'Pro' dai giochi nella schermata home.",
                 "homegallery": "Galleria Utente",
                 "homegallerydesc": "Nasconde l'area 'Acquisizioni' nella parte inferiore della schermata home.",
                 "quickprev": "Anteprima Messaggio",
@@ -3761,6 +3761,59 @@ function loadLanguages(lang) {
                 "gridsize": "Grid Size",
                 "griddesc": "Changes the amount of games per row on the homescreen.",
                 "clock": "Clock",
+                "clockdesc": "Displays the current time on the friends list, as a in-game overlay, or both.",
+                "friendslist": "Friends List",
+                "igoverlay": "In-Game Overlay",
+                "listoverlay": "List & Overlay",
+                "filter": "Filter",
+                "filterdesc": "Allows you to sort your homescreen by hiding games. The filter can be toggled via the symbol, top-right above your games on the homescreen.",
+                "filtertoggle": "Toggle",
+                "filterquick": "Quick",
+                "invitebase": "Copy invite link",
+                "inviteactive": "Copied!",
+                "gamelabel": "Game Labels",
+                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
+                "homegallery": "User Gallery",
+                "homegallerydesc": "Hides the 'Captures' area at the bottom of the homescreen.",
+                "quickprev": "Message Preview",
+                "quickprevdesc": "Hides the message preview in the friends list.",
+                "quickrep": "Quick Reply",
+                "quickrepdesc": "Hides the quick reply option in chats.",
+                "offlinefriend": "Offline Friends",
+                "offlinefrienddesc": "Hides offline friends in the friends list.",
+                "invisiblefriend": "Invisible Friends",
+                "invisiblefrienddesc": "Hides friends with unknown online status in the friends list.",
+                "streammode": "Streaming Mode",
+                "streammodedesc": "Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).",
+                "catprev": "Category Preview",
+                "catprevdesc": "Hides the category tags when hovering over a game.",
+                "popup": "Popup Effect",
+                "popupdesc": "Removes the zoom-in / enlarge effect when hovering over a game on the homesceen.",
+                "streammondesc": "Activate to start the monitor whenever a game starts.",
+                "resolutiondesc": "The targeted resolution for game streams. 1440p and 2160p require VP9.",
+                "codecdesc": "The codec used for game streams.",
+                "confirmreset": "Are you sure you want to reset the settings?",
+                "gamesfinished": "Games Finished",
+                "achievementsunlocked": "Achievements Unlocked",
+                "totalPlayTime": "Total Playtime",
+                "splitstore": "Split Store Lists",
+                "splitstoredesc": "Splits store lists into two columns for a better overview.",
+                "inlineimage": "Image Preview",
+                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
+                "familyelements": "Family-sharing options",
+                "familyelementsdesc": "Hides the 'Share this game with family' options.",
+                "resetsettings": "Reset Settings"
+            }`
+    }
+    try {
+        load = JSON.parse(load);
+    } catch (e) {
+        console.log("Error in " + lang + " translation.");
+        console.log(e);
+        return loadLanguages("");
+    }
+    return load;
+}        "clock": "Clock",
                 "clockdesc": "Displays the current time on the friends list, as a in-game overlay, or both.",
                 "friendslist": "Friends List",
                 "igoverlay": "In-Game Overlay",
