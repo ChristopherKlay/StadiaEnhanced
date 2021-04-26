@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 1.11
+
+### 1.11.0
+* Added a new menu category "Community Features" specifically for features maintained by members of the community
+* Added StadiaStatsGG specific shortcuts for games, profile and find-a-buddy to the community features
+* Added a letter-based filter system for quick searching on the homescreen
+* Added filter for locked achievements on detail pages
+* Added filter option via completion state on the players game list
+* Added total amount of games on homescreen
+* Added "total" next to "online" at the top of the friends list
+* Added the option to switch between languages (default/english/spanish/french for now)
+* Replaced the translation function with a new, more robust and easier to manage version
+* Moved the menu entry for shortcuts via StadiaIcons to community features and changed description
+* Fixed custom avatar not showing in livestream overview
+* Fixed extension dropdown menu icons not changing color when active
+* Fixed some menu entries showing the wrong default values
+
 ## Version 1.10
 
 ### 1.10.2
