@@ -1,13 +1,14 @@
 // Start Up
+console.groupCollapsed("Stadia Enhanced: Start-Up");
+
 var enhanced_timerLoadStart = window.performance.now();
 var enhanced_StartTimer = new Date().getTime();
 var enhanced_local = document.querySelector("html").getAttribute("lang");
-var enhanced_lang = loadLanguages(enhanced_local);
 var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 var enhanced_AccountInfo = enhanced_loadUserInfo();
-
-console.groupCollapsed("Stadia Enhanced: Start-Up");
 console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountInfo[0] + "#" + enhanced_AccountInfo[1] + " (" + enhanced_AccountInfo[2] + ") (" + enhanced_local + ")", enhanced_consoleEnhanced, "");
+var enhanced_lang = enhancedTranslate(enhanced_local, true);
+
 
 // CSS Changes - Global styles and overwrites
 enhanced_CSS = ".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }" // Remove padding above avatar
@@ -17,9 +18,11 @@ enhanced_CSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: ro
 enhanced_CSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
 enhanced_CSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" labels
 enhanced_CSS += "#enhanced_wrapper > .GqLi4d.Llx2qd, #enhanced_wrapper > .lSXaid.RjcqTc { transform: none !important; }" // Remove popup effect on game tiles
-enhanced_CSS += ".tlZCoe { margin-right: .5rem; }" // Allow for multiple buttons on popup
+enhanced_CSS += ".tlZCoe { margin-right: .5rem; margin-top: .5rem !important; }" // Allow for multiple buttons on popup
 enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
 enhanced_CSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
+enhanced_CSS += "div[jsname='ZoZH6b'] .lEPylf:hover #enhanced_letterBox { opacity: 1 !important; }" // Show letter box on hover only
+enhanced_CSS += "div[jsname='ZoZH6b'] .lEPylf:hover #enhanced_gameCounter { opacity: 1 !important; }" // Show game count on hover only
 enhanced_CSS += "#enhanced_wrapper:hover #enhanced_favorite { opacity: 1 !important; }" // Show favorite on wrapper hover
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }" // Settings menu scrollbar width
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }" // Settings menu scrollbar style
@@ -70,7 +73,7 @@ function enhanced_RTCMonitor() {
     var enhanced_streamMonitor = document.getElementById("enhanced_streamMonitor");
     var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
     var enhanced_local = document.querySelector("html").getAttribute("lang");
-    var enhanced_lang = loadLanguages(enhanced_local);
+    var enhanced_lang = enhancedTranslate(enhanced_local);
 
     // RTC Stream Inject
     var peerConnections = [];
@@ -118,10 +121,10 @@ function enhanced_RTCMonitor() {
             enhanced_lastBytes = 0;
             enhanced_lastFrames = 0;
             enhanced_sessionActive = false;
-            enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
         } else if (peerConnections.length >= 3) {
             if (!enhanced_sessionActive) {
                 enhanced_sessionStart = new Date();
+                enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
                 enhanced_sessionActive = true;
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
@@ -255,6 +258,7 @@ function enhanced_RTCMonitor() {
                                         break
                                 }
                             }
+
                             localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
                             enhanced_streamMonitor.innerHTML = enhanced_streamData;
                         });
@@ -265,7 +269,7 @@ function enhanced_RTCMonitor() {
         }
     }, 1000);
 }
-embed(loadLanguages, false);
+embed(enhancedTranslate, false);
 embed(enhanced_RTCMonitor);
 
 // Streaming Monitor
@@ -431,7 +435,7 @@ enhanced_ProGames.appendChild(enhanced_ProGamesLink);
 enhanced_ProGamesLink.className = "ROpnrd QAAyWd wJYinb";
 enhanced_ProGamesLink.textContent = 'Pro';
 enhanced_ProGamesLink.addEventListener("click", function() {
-    openStadia("store/list/2001")
+    openStadia("https://stadia.google.com/store/list/2001")
 });
 
 if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
@@ -454,7 +458,7 @@ enhanced_StoreSearch.style.background = "url('" + chrome.runtime.getURL("media/s
 enhanced_StoreSearch.style.display = "none";
 enhanced_StoreSearch.addEventListener("keypress", function() {
     if (event.keyCode == 13 && enhanced_StoreSearch.value != "") {
-        openStadia("store/list/3?search=" + enhanced_StoreSearch.value);
+        openStadia("https://stadia.google.com/store/list/3?search=" + enhanced_StoreSearch.value);
     }
 });
 if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
@@ -482,6 +486,18 @@ enhanced_StoreDropdown.addEventListener("click", function() {
         enhanced_StoreDropContent.style.display = "none";
     }
 });
+
+var enhanced_StoreDropContent = document.createElement("div");
+enhanced_StoreDropdown.append(enhanced_StoreDropContent);
+enhanced_StoreDropContent.id = "enhanced_StoreDropContent";
+enhanced_StoreDropContent.className = "us22N";
+enhanced_StoreDropContent.style.position = "absolute";
+enhanced_StoreDropContent.style.width = "auto";
+enhanced_StoreDropContent.style.top = "4.25rem";
+enhanced_StoreDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
+enhanced_StoreDropContent.style.zIndex = "20";
+enhanced_StoreDropContent.style.display = "none";
+
 if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
     document.querySelectorAll(".ZECEje")[0].append(enhanced_StoreContainer);
 }
@@ -498,21 +514,6 @@ window.addEventListener("click", function(e) {
     }
 });
 
-var enhanced_StoreDropContent = document.createElement("div");
-enhanced_StoreDropdown.append(enhanced_StoreDropContent);
-enhanced_StoreDropContent.id = "enhanced_StoreDropContent";
-enhanced_StoreDropContent.className = "us22N";
-enhanced_StoreDropContent.style.position = "absolute";
-enhanced_StoreDropContent.style.width = "auto";
-enhanced_StoreDropContent.style.top = "4.25rem";
-enhanced_StoreDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
-enhanced_StoreDropContent.style.zIndex = "20";
-enhanced_StoreDropContent.style.display = "none";
-
-if (document.querySelectorAll(".eMobNd")[0] !== undefined) {
-    document.querySelectorAll(".eMobNd")[0].append(enhanced_StoreContainer);
-}
-
 // On Sale - Quick access to the list of deals available for "Base" users
 var enhanced_OnSale = document.createElement("div");
 enhanced_OnSale.className = "pBvcyf QAAyWd";
@@ -523,7 +524,7 @@ enhanced_OnSale.style.userSelect = "none";
 enhanced_OnSale.style.paddingRight = "2rem";
 enhanced_OnSale.tabIndex = "0";
 enhanced_OnSale.addEventListener("click", function() {
-    openStadia("store/list/14");
+    openStadia("https://stadia.google.com/store/list/14");
 });
 enhanced_StoreDropContent.append(enhanced_OnSale);
 
@@ -537,7 +538,7 @@ enhanced_ProDeals.style.userSelect = "none";
 enhanced_ProDeals.style.paddingRight = "2rem";
 enhanced_ProDeals.tabIndex = "0";
 enhanced_ProDeals.addEventListener("click", function() {
-    openStadia("store/list/45");
+    openStadia("https://stadia.google.com/store/list/45");
 });
 enhanced_StoreDropContent.append(enhanced_ProDeals);
 
@@ -545,15 +546,136 @@ enhanced_StoreDropContent.append(enhanced_ProDeals);
 var enhanced_AllGames = document.createElement("div");
 enhanced_AllGames.className = "pBvcyf QAAyWd";
 enhanced_AllGames.id = "enhanced_AllGames";
-enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.allgames + '</span>';
+enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.all + ' ' + enhanced_lang.games + '</span>';
 enhanced_AllGames.style.cursor = "pointer";
 enhanced_AllGames.style.userSelect = "none";
 enhanced_AllGames.style.paddingRight = "2rem";
 enhanced_AllGames.tabIndex = "0";
 enhanced_AllGames.addEventListener("click", function() {
-    openStadia("store/list/3");
+    openStadia("https://stadia.google.com/store/list/3");
 });
 enhanced_StoreDropContent.append(enhanced_AllGames);
+
+// Language Dropdown - Adds a dropdown menu for language switching
+var enhanced_langContainer = document.createElement("li");
+enhanced_langContainer.className = "OfFb0b";
+enhanced_langContainer.id = "enhanced_langContainer";
+var enhanced_langDropdown = document.createElement("div");
+enhanced_langContainer.appendChild(enhanced_langDropdown);
+enhanced_langDropdown.className = "ROpnrd QAAyWd wJYinb";
+enhanced_langDropdown.id = "enhanced_langDropdown";
+enhanced_langDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">language</i>';
+enhanced_langDropdown.style.width = "2.5rem";
+enhanced_langDropdown.style.padding = "0";
+enhanced_langDropdown.style.cursor = "pointer";
+enhanced_langDropdown.style.userSelect = "none";
+enhanced_langDropdown.tabIndex = "0";
+enhanced_langDropdown.addEventListener("click", function() {
+    if (enhanced_langDropContent.style.display === "none") {
+        enhanced_langDropContent.style.display = "block";
+        enhanced_langDropdown.firstElementChild.style.color = "#ff773d"
+    } else {
+        enhanced_langDropContent.style.display = "none";
+        enhanced_langDropdown.firstElementChild.style.color = ""
+    }
+});
+
+var enhanced_langDropContent = document.createElement("div");
+enhanced_langDropdown.append(enhanced_langDropContent);
+enhanced_langDropContent.id = "enhanced_langDropContent";
+enhanced_langDropContent.className = "us22N";
+enhanced_langDropContent.style.position = "absolute";
+enhanced_langDropContent.style.width = "auto";
+enhanced_langDropContent.style.top = "4.25rem";
+enhanced_langDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
+enhanced_langDropContent.style.zIndex = "20";
+enhanced_langDropContent.style.display = "none";
+
+// Language Select - Default
+var enhanced_langDefault = document.createElement("div");
+enhanced_langDefault.className = "pBvcyf QAAyWd";
+enhanced_langDefault.innerHTML = '<span class="mJVLwb">' + enhanced_lang.default+'</span>';
+enhanced_langDefault.style.cursor = "pointer";
+enhanced_langDefault.style.userSelect = "none";
+enhanced_langDefault.style.padding = "0 2rem";
+enhanced_langDefault.style.textAlign = "center";
+enhanced_langDefault.tabIndex = "0";
+enhanced_langDefault.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_langDefault.addEventListener("click", function() {
+    enhanced_urlBase = new URL(window.location.href);
+    enhanced_urlBase.searchParams.delete('hl')
+    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
+    openStadia(enhanced_urlBase);
+});
+enhanced_langDropContent.append(enhanced_langDefault);
+
+// Language Select - English
+var enhanced_langEnglish = document.createElement("div");
+enhanced_langEnglish.className = "pBvcyf QAAyWd";
+enhanced_langEnglish.innerHTML = '<span class="mJVLwb">English</span>';
+enhanced_langEnglish.style.cursor = "pointer";
+enhanced_langEnglish.style.userSelect = "none";
+enhanced_langEnglish.style.padding = "0 2rem";
+enhanced_langEnglish.style.textAlign = "center";
+enhanced_langEnglish.tabIndex = "0";
+enhanced_langEnglish.addEventListener("click", function() {
+    enhanced_urlBase = new URL(window.location.href);
+    enhanced_urlBase.searchParams.set('hl', 'en')
+    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
+    openStadia(enhanced_urlBase);
+});
+enhanced_langDropContent.append(enhanced_langEnglish);
+
+// Language Select - Spanish
+var enhanced_langSpanish = document.createElement("div");
+enhanced_langSpanish.className = "pBvcyf QAAyWd";
+enhanced_langSpanish.innerHTML = '<span class="mJVLwb">Spanish</span>';
+enhanced_langSpanish.style.cursor = "pointer";
+enhanced_langSpanish.style.userSelect = "none";
+enhanced_langSpanish.style.padding = "0 2rem";
+enhanced_langSpanish.style.textAlign = "center";
+enhanced_langSpanish.tabIndex = "0";
+enhanced_langSpanish.addEventListener("click", function() {
+    enhanced_urlBase = new URL(window.location.href);
+    enhanced_urlBase.searchParams.set('hl', 'es')
+    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
+    openStadia(enhanced_urlBase);
+});
+enhanced_langDropContent.append(enhanced_langSpanish);
+
+// Language Select - French
+var enhanced_langFrench = document.createElement("div");
+enhanced_langFrench.className = "pBvcyf QAAyWd";
+enhanced_langFrench.innerHTML = '<span class="mJVLwb">French</span>';
+enhanced_langFrench.style.cursor = "pointer";
+enhanced_langFrench.style.userSelect = "none";
+enhanced_langFrench.style.padding = "0 2rem";
+enhanced_langFrench.style.textAlign = "center";
+enhanced_langFrench.tabIndex = "0";
+enhanced_langFrench.addEventListener("click", function() {
+    enhanced_urlBase = new URL(window.location.href);
+    enhanced_urlBase.searchParams.set('hl', 'fr')
+    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
+    openStadia(enhanced_urlBase);
+});
+enhanced_langDropContent.append(enhanced_langFrench);
+
+if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
+    document.querySelectorAll(".ZECEje")[1].prepend(enhanced_langContainer);
+}
+
+enhanced_langDropdown.addEventListener("keyup", function(e) {
+    if (e.keyCode === 13) {
+        enhanced_langDropdown.click();
+    }
+});
+
+window.addEventListener("click", function(e) {
+    if (e.target != enhanced_langDropdown && enhanced_langDropdown.contains(e.target) === false) {
+        enhanced_langDropContent.style.display = "none";
+        enhanced_langDropdown.firstElementChild.style.color = ""
+    }
+});
 
 // Settings Dropdown - Adds a dropdown menu for quick access
 var enhanced_SettingsContainer = document.createElement("li");
@@ -576,8 +698,10 @@ enhanced_SettingsDropdown.addEventListener("click", function(e) {
     if (e.path.indexOf(enhanced_SettingsDropContent) == -1) {
         if (enhanced_SettingsDropContent.style.display === "none") {
             enhanced_SettingsDropContent.style.display = "flex";
+            enhanced_SettingsDropdown.firstElementChild.style.color = "#ff773d"
         } else {
             enhanced_SettingsDropContent.style.display = "none";
+            enhanced_SettingsDropdown.firstElementChild.style.color = ""
         }
     }
 });
@@ -666,9 +790,24 @@ enhanced_settingsMessagesTitle.style.background = "#202124";
 enhanced_settingsMessagesTitle.style.textAlign = "center";
 enhanced_settingsMessages.append(enhanced_settingsMessagesTitle);
 
+// Settings - Community Features
+var enhanced_settingsComFeat = document.createElement("div");
+enhanced_SettingsDropContent.appendChild(enhanced_settingsComFeat);
+
+var enhanced_settingsComFeatTitle = document.createElement("div");
+enhanced_settingsComFeatTitle.className = "pBvcyf QAAyWd";
+enhanced_settingsComFeatTitle.id = "enhanced_settingsComFeatTitle";
+enhanced_settingsComFeatTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.comfeature + '</span>';
+enhanced_settingsComFeatTitle.style.cursor = "default";
+enhanced_settingsComFeatTitle.style.userSelect = "none";
+enhanced_settingsComFeatTitle.style.background = "#202124";
+enhanced_settingsComFeatTitle.style.textAlign = "center";
+enhanced_settingsComFeat.append(enhanced_settingsComFeatTitle);
+
 window.addEventListener("click", function(e) {
     if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
         enhanced_SettingsDropContent.style.display = "none";
+        enhanced_SettingsDropdown.firstElementChild.style.color = ""
     }
 });
 
@@ -682,7 +821,7 @@ enhanced_UserProfile.style.userSelect = "none";
 enhanced_UserProfile.style.borderBottom = "1px solid rgba(255,255,255,.06)";
 enhanced_UserProfile.tabIndex = "0";
 enhanced_UserProfile.addEventListener("click", function() {
-    openStadia("profile/" + enhanced_AccountInfo[2]);
+    openStadia("https://stadia.google.com/profile/" + enhanced_AccountInfo[2]);
 });
 enhanced_settingsShortcut.append(enhanced_UserProfile);
 
@@ -696,7 +835,7 @@ enhanced_UserMedia.style.userSelect = "none";
 enhanced_UserMedia.style.borderBottom = "1px solid rgba(255,255,255,.06)";
 enhanced_UserMedia.tabIndex = "0";
 enhanced_UserMedia.addEventListener("click", function() {
-    openStadia("captures");
+    openStadia("https://stadia.google.com/captures");
 });
 enhanced_settingsShortcut.append(enhanced_UserMedia);
 
@@ -1107,7 +1246,23 @@ enhanced_showShortcut.addEventListener("click", function() {
     localStorage.setItem("enhanced_enableShortcuts", enhanced_enableShortcuts);
     enhanced_applySettings("shortcuts", enhanced_enableShortcuts);
 });
-enhanced_settingsGeneral.append(enhanced_showShortcut);
+enhanced_settingsComFeat.append(enhanced_showShortcut);
+
+// StadiaStatsGG
+var enhanced_enableStadiaStats = parseInt(localStorage.getItem("enhanced_enableStadiaStats") || 0);
+var enhanced_showStadiaStats = document.createElement("div");
+enhanced_showStadiaStats.className = "pBvcyf QAAyWd";
+enhanced_showStadiaStats.id = "enhanced_showStadiaStats";
+enhanced_showStadiaStats.style.cursor = "pointer";
+enhanced_showStadiaStats.style.userSelect = "none";
+enhanced_showStadiaStats.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_showStadiaStats.tabIndex = "0";
+enhanced_showStadiaStats.addEventListener("click", function() {
+    enhanced_enableStadiaStats = (enhanced_enableStadiaStats + 1) % 2;
+    localStorage.setItem("enhanced_enableStadiaStats", enhanced_enableStadiaStats);
+    enhanced_applySettings("stadiastats", enhanced_enableStadiaStats);
+});
+enhanced_settingsComFeat.append(enhanced_showStadiaStats);
 
 // Stream Mode
 var enhanced_useStreamMode = parseInt(localStorage.getItem("enhanced_useStreamMode") || 0);
@@ -1142,6 +1297,18 @@ enhanced_customAvatar.addEventListener("click", function() {
             enhanced_applySettings("avatar", enhanced_avatarURL);
         }
     }
+});
+
+// StadiaStatsGG - Profile Link
+var enhanced_stadiaStatsProfile = document.createElement("div");
+enhanced_stadiaStatsProfile.className = "CTvDXd QAAyWd Pjpac GShPJb edaWcd";
+enhanced_stadiaStatsProfile.id = "enhanced_customAvatar";
+enhanced_stadiaStatsProfile.role = "button";
+enhanced_stadiaStatsProfile.style.display = "none"
+enhanced_stadiaStatsProfile.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">account_circle</i></span><span class="caSJV snByac">' + enhanced_lang.stadiastats + '</span></div>';
+enhanced_stadiaStatsProfile.tabIndex = "0";
+enhanced_stadiaStatsProfile.addEventListener("click", function() {
+    window.open("https://stadiastats.gg/players/" + enhanced_AccountInfo[2] + "/" + enhanced_AccountInfo[0] + "#" + enhanced_AccountInfo[1], "_blank");
 });
 
 // Store Container - Container to display store buttons
@@ -1229,10 +1396,7 @@ enhanced_sessionTimer.className = "HPX1od";
 enhanced_sessionTimer.id = "enhanced_sessionTimer";
 enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">00:00:00</span></div>';
 
-// WIP - Limit to 1080p (60fps)
-
-
-// Game Filter
+// Visibility Filter
 var enhanced_showState = false;
 enhanced_showAll = document.createElement("div");
 enhanced_showAll.id = "enhanced_showAll";
@@ -1369,6 +1533,55 @@ function enhanced_switchListFilter(type) {
     }
 }
 
+// Achievements Filter
+enhanced_achievementsFilter = document.createElement("div");
+enhanced_achievementsFilter.style.display = "flex";
+
+enhanced_unlockedFilter = document.createElement("div");
+enhanced_unlockedFilter.state = 0;
+enhanced_unlockedFilter.innerHTML = enhanced_lang.show + ": " + enhanced_lang.all;
+enhanced_unlockedFilter.className = "Adwm6c";
+enhanced_unlockedFilter.style.userSelect = "none";
+enhanced_unlockedFilter.style.marginLeft = "0.75rem";
+enhanced_unlockedFilter.addEventListener("click", function() {
+    if (this.state == 0) {
+        enhanced_injectStyle(".h6J22d.cWe8yc.QAAyWd { display: none !important } .h6J22d.cWe8yc.GIh6Af.QAAyWd { display: grid !important }", "unlockedfilter")
+        this.state = 1
+        this.innerHTML = enhanced_lang.show + ": " + enhanced_lang.locked;
+    } else {
+        enhanced_injectStyle("", "unlockedfilter")
+        this.state = 0
+        this.innerHTML = enhanced_lang.show + ": " + enhanced_lang.all;
+    }
+});
+enhanced_achievementsFilter.append(enhanced_unlockedFilter)
+
+// Gamelist Filter
+enhanced_gamelistFilter = document.createElement("div");
+enhanced_gamelistFilter.style.display = "flex";
+
+enhanced_gameStateFilter = document.createElement("div");
+enhanced_gameStateFilter.state = 0;
+enhanced_gameStateFilter.innerHTML = enhanced_lang.show + ": " + enhanced_lang.all;
+enhanced_gameStateFilter.className = "Adwm6c";
+enhanced_gameStateFilter.style.userSelect = "none";
+enhanced_gameStateFilter.style.marginLeft = "0.75rem";
+enhanced_gameStateFilter.addEventListener("click", function() {
+    this.state = (this.state + 1) % 3;
+    switch (this.state) {
+        case 0:
+            this.innerHTML = enhanced_lang.show + ": " + enhanced_lang.all;
+            break
+        case 1:
+            this.innerHTML = enhanced_lang.show + ": " + enhanced_lang.complete;
+            break
+        case 2:
+            this.innerHTML = enhanced_lang.show + ": " + enhanced_lang.incomplete;
+            break
+    }
+});
+enhanced_gamelistFilter.append(enhanced_gameStateFilter)
+
 // Shortcut - General
 var enhanced_installShortcut = document.createElement("div");
 enhanced_installShortcut.className = "CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc";
@@ -1396,6 +1609,16 @@ enhanced_shortcutLastPlayed.style.cursor = "pointer";
 enhanced_shortcutLastPlayed.style.zIndex = "2";
 enhanced_shortcutLastPlayed.addEventListener("click", function() {
     window.open("https://stadiaicons.web.app/" + enhanced_shortcutLastPlayed.gameID + "/?fullName=" + encodeURIComponent(enhanced_shortcutLastPlayed.gameName), "_blank");
+});
+
+// StadiaStatsGG - Shortcut
+var enhanced_stadiaStatsShortcut = document.createElement("div");
+enhanced_stadiaStatsShortcut.className = "CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc";
+enhanced_stadiaStatsShortcut.id = "enhanced_stadiaStatsShortcut";
+enhanced_stadiaStatsShortcut.innerHTML = enhanced_lang.stadiastatsopen
+enhanced_stadiaStatsShortcut.tabIndex = "0";
+enhanced_stadiaStatsShortcut.addEventListener("click", function() {
+    window.open("https://stadiastats.gg/games/" + enhanced_stadiaStatsShortcut.gameID, "_blank");
 });
 
 // Stats Container
@@ -1471,6 +1694,70 @@ enhanced_allpayments.style.fontSize = "1rem"
 enhanced_allpayments.style.lineHeight = "1.25rem"
 enhanced_allpayments.style.fontWeight = "500"
 
+// Game Count
+var enhanced_gameCounter = document.createElement("span")
+enhanced_gameCounter.id = "enhanced_gameCounter"
+enhanced_gameCounter.style.opacity = "0"
+enhanced_gameCounter.style.fontSize = "1rem"
+enhanced_gameCounter.style.verticalAlign = "middle"
+enhanced_gameCounter.style.transition = "opacity 0.23s ease-out 0s"
+enhanced_gameCounter.style.color = "rgba(255,255,255,.6)"
+
+// Total Friend Count
+var enhanced_friendCount = document.createElement("span")
+enhanced_friendCount.style.color = "rgba(255,255,255,.6)"
+enhanced_friendCount.style.marginLeft = "0"
+
+// Letter Box
+var enhanced_letterBox = document.createElement("div")
+enhanced_letterBox.id = "enhanced_letterBox"
+enhanced_letterBox.style.opacity = "0"
+enhanced_letterBox.style.padding = "0.2rem"
+enhanced_letterBox.style.fontSize = "1rem"
+enhanced_letterBox.style.color = "rgba(255,255,255,.6)"
+enhanced_letterBox.style.borderRadius = "0.5rem"
+enhanced_letterBox.style.background = "rgba(255,255,255,.06)"
+enhanced_letterBox.style.transition = "opacity 0.23s ease-out 0s"
+
+var enhanced_letters = [];
+for (var i = 0; i < 26; i++) {
+    var el = document.createElement("span")
+    el.textContent = String.fromCharCode(65 + i)
+    el.letter = i
+    el.state = 0
+    el.style.padding = "0 0.5rem"
+    el.style.cursor = "pointer"
+    el.style.userSelect = "none";
+    el.addEventListener("click", function() {
+        enhanced_setLetter(this.letter, this.state)
+    });
+    enhanced_letters.push(el)
+    enhanced_letterBox.append(el)
+}
+
+// Find-a-buddy - Shortcut to stadiastats.gg find-a-buddy service
+var enhanced_buddyContainer = document.createElement("li");
+enhanced_buddyContainer.className = "OfFb0b";
+enhanced_buddyContainer.id = "enhanced_buddyContainer";
+enhanced_buddyContainer.style.display = "none"
+var enhanced_openBuddy = document.createElement("div");
+enhanced_buddyContainer.appendChild(enhanced_openBuddy);
+enhanced_openBuddy.className = "ROpnrd QAAyWd wJYinb";
+enhanced_openBuddy.id = "enhanced_openBuddy";
+enhanced_openBuddy.innerHTML = '<i class="material-icons-extended" aria-hidden="true">group_add</i>';
+enhanced_openBuddy.style.width = "2.5rem";
+enhanced_openBuddy.style.padding = "0";
+enhanced_openBuddy.style.cursor = "pointer";
+enhanced_openBuddy.style.userSelect = "none";
+enhanced_openBuddy.tabIndex = "0";
+enhanced_openBuddy.addEventListener("click", function() {
+    window.open('https://stadiastats.gg/find-a-buddy', '_blank');
+});
+
+if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
+    document.querySelectorAll(".ZECEje")[1].prepend(enhanced_buddyContainer);
+}
+
 // Load stored settings
 if (localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")) !== null) {
     enhanced_applySettings("avatar", localStorage.getItem("enhanced_avatarURL_" + document.querySelector("head > base").getAttribute("href")));
@@ -1509,13 +1796,13 @@ setInterval(function() {
                 var enhanced_wrapper = document.createElement("div");
                 enhanced_wrapper.id = "enhanced_wrapper";
                 enhanced_wrapper.style.position = "relative";
-                enhanced_wrapper.style.display = "inherit";
                 enhanced_wrapper.style.gridColumn = "span 6/span 6";
 
                 enhanced_wrappers.push({
                     parent: enhanced_gameList[i].parentNode,
                     sku: enhanced_gameList[i].getAttribute("jsdata").split(";")[1],
                     name: enhanced_gameList[i].getElementsByClassName("xmcLFc")[0].textContent,
+                    letter: true,
                     wrapper: enhanced_wrapper,
                     game: enhanced_gameList[i],
                 });
@@ -1529,14 +1816,8 @@ setInterval(function() {
         var enhanced_gameFilter = localStorage.getItem("enhanced_gameFilter") || "";
 
         // Add UI Elements to wrappers
-        var enhanced_selector = document.querySelectorAll("div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5");
-        if (enhanced_selector.length != 0) {
-            if (enhanced_selector[enhanced_selector.length - 1].contains(enhanced_showAll) === false) {
-                enhanced_showAll.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
-                enhanced_selector[enhanced_selector.length - 1].append(enhanced_showAll);
-                enhanced_showState = false;
-            }
-        }
+        secureInsert(enhanced_showAll, "div[jsname='ZoZH6b'] .CVVXfc.URhE4b.ivS28e.tfyX5", 0)
+
         if (enhanced_filterOption == 0) {
             enhanced_showAll.style.display = "none";
             enhanced_showState = false;
@@ -1545,7 +1826,6 @@ setInterval(function() {
         }
 
         for (var i = 0; i < enhanced_wrappers.length; i++) {
-
             if (!enhanced_wrappers[i].hasOwnProperty("favorite")) {
                 // Favorites
                 var enhanced_favorite = document.createElement("div");
@@ -1636,8 +1916,44 @@ setInterval(function() {
                 enhanced_wrappers[i].visibility.title = enhanced_lang.show + " " + enhanced_wrappers[i].name;
                 enhanced_wrappers[i].visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>';
             } else {
-                enhanced_wrappers[i].wrapper.style.display = "inherit";
+                if (enhanced_wrappers[i].letter == true) {
+                    enhanced_wrappers[i].wrapper.style.display = "inherit"
+                } else {
+                    enhanced_wrappers[i].wrapper.style.display = "none"
+                }
             }
+        }
+
+        // Game Count
+        var enhanced_homescreenGrids = document.querySelectorAll("div[jsname='ZoZH6b'] .lEPylf.YOW9Fd")
+        if (enhanced_homescreenGrids.length > 0) {
+            enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll("#enhanced_wrapper").length
+
+            if (enhanced_homescreenGrids < 1) {
+                var enhanced_gameCount = 0
+            } else {
+                var enhanced_gameCount = enhanced_homescreenGrids + 1
+                enhanced_gameCounter.textContent = " (" + enhanced_gameCount + ")"
+                secureInsert(enhanced_gameCounter, "div[jsname='ZoZH6b'] .HZ5mJ", 0)
+            }
+        }
+
+        // Letter Box
+        secureInsert(enhanced_letterBox, "div[jsname='ZoZH6b'] .HZ5mJ", 2)
+
+        // StadiaStatsGG
+        if (enhanced_enableStadiaStats == 1) {
+            //Shortcut
+            if (document.getElementById(enhanced_stadiaStatsShortcut) === null && document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")) {
+                if (enhanced_stadiaStatsShortcut.gameName != document.querySelector(".Wq73hb").textContent) {
+                    enhanced_stadiaStatsShortcut.gameName = document.querySelector(".Wq73hb").textContent
+                    enhanced_stadiaStatsShortcut.gameID = document.querySelector(".h1uihb > c-wiz").getAttribute("data-app-id");
+                }
+                secureInsert(enhanced_stadiaStatsShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0);
+                enhanced_stadiaStatsShortcut.style.display = "inline-flex";
+            }
+        } else {
+            enhanced_stadiaStatsShortcut.style.display = "none";
         }
 
         // Shortcuts
@@ -1716,6 +2032,11 @@ setInterval(function() {
     if (document.location.href.indexOf("/captures") != -1) {
         // Captures Filter
         secureInsert(enhanced_captureFilters, ".dwGRGd", 0);
+    }
+
+    // Location - Profile Details
+    if (document.location.href.match("profile.[0-9]+.detail") != null) {
+        secureInsert(enhanced_achievementsFilter, ".dwGRGd", 2);
     }
 
     // Location - Store General
@@ -1804,8 +2125,16 @@ setInterval(function() {
     // Location - Personal Profile
     if (document.location.href.indexOf("/profile/" + enhanced_AccountInfo[2]) != -1) {
 
-        //Add avatar option on own profile
+        // Add avatar option on own profile
         secureInsert(enhanced_customAvatar, ".R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb", 0);
+
+        // Add StadiaStatsGG Profile
+        if (enhanced_enableStadiaStats == 1) {
+            secureInsert(enhanced_stadiaStatsProfile, ".R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb", 0);
+            enhanced_stadiaStatsProfile.style.display = "flex"
+        } else {
+            enhanced_stadiaStatsProfile.style.display = "none"
+        }
     }
 
     // Location - Player Statistics
@@ -1813,6 +2142,46 @@ setInterval(function() {
 
         // Game Statistics
         if (document.querySelector(".MDSsFe") !== null) {
+
+            // Gamelist Filter
+            secureInsert(enhanced_gamelistFilter, ".dwGRGd", 2)
+
+            var enhanced_gameListBaseQuery = document.querySelectorAll("div[jsname='jlb53b']")[document.querySelectorAll("div[jsname='jlb53b']").length - 1];
+            var enhanced_gameListRatioQuery = enhanced_gameListBaseQuery.querySelectorAll(".kPtFV");
+
+            for (var i = 0; i < enhanced_gameListRatioQuery.length; i++) {
+                var enhanced_compRatio = enhanced_gameListRatioQuery[i].querySelector(".bn3lwc").textContent / enhanced_gameListRatioQuery[i].querySelector(".IBMKhc").textContent.substring(1)
+                switch (enhanced_gameStateFilter.state) {
+                    case 0:
+                        enhanced_gameListRatioQuery[i].closest('c-wiz[jsrenderer="XBSGie"]').style.display = "block"
+                        break
+                    case 1:
+                        if (enhanced_compRatio != 1) {
+                            enhanced_gameListRatioQuery[i].closest('c-wiz[jsrenderer="XBSGie"]').style.display = "none"
+                        } else {
+                            enhanced_gameListRatioQuery[i].closest('c-wiz[jsrenderer="XBSGie"]').style.display = "block"
+                        }
+                        break
+                    case 2:
+                        if (enhanced_compRatio == 1) {
+                            enhanced_gameListRatioQuery[i].closest('c-wiz[jsrenderer="XBSGie"]').style.display = "none"
+                        } else {
+                            enhanced_gameListRatioQuery[i].closest('c-wiz[jsrenderer="XBSGie"]').style.display = "block"
+                        }
+                        break
+                }
+            }
+
+            var enhanced_noAchievements = document.querySelectorAll('c-wiz[jsrenderer="XBSGie"]')
+            for (var i = 0; i < enhanced_noAchievements.length; i++) {
+                if (enhanced_noAchievements[i].querySelectorAll(".kPtFV").length == 0) {
+                    if (enhanced_gameStateFilter.state > 0) {
+                        enhanced_noAchievements[i].style.display = "none"
+                    } else {
+                        enhanced_noAchievements[i].style.display = "block"
+                    }
+                }
+            }
 
             // Container
             secureInsert(enhanced_statOverview, ".dkZt0b.qRvogc", 2)
@@ -1959,6 +2328,18 @@ setInterval(function() {
             }
         }
 
+        // Total Friend Count
+        var i = document.getElementsByClassName("Y1rZWd  PuD06d").length
+        if (i > 0) {
+            var enhanced_friendStatus = document.querySelector(".VE7aje")
+            if (enhanced_friendStatus.textContent.slice(-1) == ")") {
+                enhanced_friendStatus.textContent = enhanced_friendStatus.textContent.slice(0, -1)
+            }
+
+            enhanced_friendCount.textContent = ", " + i + " " + enhanced_lang.total.toLowerCase() + ")"
+            secureInsert(enhanced_friendCount, ".VE7aje", 2)
+        }
+
         // Links 2 Images
         if (enhanced_useInlinePreview == 1) {
             var enhanced_linkedURL = document.querySelectorAll(".lwvtBe a");
@@ -2029,6 +2410,13 @@ setInterval(function() {
 
 
     // Location - Always active
+
+    // StadiaStatsGG - Find-a-buddy
+    if (enhanced_enableStadiaStats == 1) {
+        enhanced_buddyContainer.style.display = "inline-block"
+    } else {
+        enhanced_buddyContainer.style.display = "none"
+    }
 
     // Codec - Set codec preference
     switch (parseInt(localStorage.getItem("enhanced_CodecOption") || 0)) {
@@ -2413,8 +2801,22 @@ function enhanced_applySettings(set, opt) {
                     break
                 case 1:
                     enhanced_showShortcut.style.color = "#00e0ba";
-                    enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>';
+                    enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
                     console.log("%cStadia Enhanced" + "%c ⚙️ - Shortcuts: Set to 'Enabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
+        case "stadiastats":
+            switch (opt) {
+                case 0:
+                    enhanced_showStadiaStats.style.color = "";
+                    enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - StadiaStatsGG: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_showStadiaStats.style.color = "#00e0ba";
+                    enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - StadiaStatsGG: Set to 'Enabled'", enhanced_consoleEnhanced, "");
                     break
             }
             break
@@ -2439,6 +2841,7 @@ function enhanced_applySettings(set, opt) {
             enhanced_CSS = '.ksZYgc.VGZcUb { background-image: url("' + opt + '") !important; }'
             enhanced_CSS += '.rybUIf { background-image: url("' + opt + '") !important; }'
             enhanced_CSS += '.dOyvbe { background-image: url("' + opt + '") !important; }'
+            enhanced_CSS += '.RUdg0d { background-image: url("' + opt + '") !important; }' // Livestream Overview
             enhanced_CSS += '.Nv1Sab[alt$="' + enhanced_AccountInfo[0] + '"] { content: url("' + opt + '") !important; }'
             enhanced_CSS += 'c-wiz[data-p*="' + enhanced_AccountInfo[2] + '"] .XZRzG { background-image: url("' + opt + '") !important; }'
             enhanced_CSS += '.SAPaEd.bYsRUc div[jsdata*="' + enhanced_AccountInfo[2] + '"] .PwtJse { background-image: url("' + opt + '") !important; }'
@@ -2485,6 +2888,7 @@ function enhanced_applySettings(set, opt) {
             localStorage.removeItem("enhanced_wishlist");
             localStorage.removeItem("enhanced_familySharingElements");
             localStorage.removeItem("enhanced_favlist");
+            localStorage.removeItem("enhanced_enableStadiaStats");
             console.log("%cStadia Enhanced" + "%c ⚙️ - Settings reverted to default.", enhanced_consoleEnhanced, "");
             location.reload();
             break
@@ -2507,10 +2911,44 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings("monitorautostart", enhanced_autostartMonitor);
             enhanced_applySettings("storelist", enhanced_storeListSize);
             enhanced_applySettings("shortcuts", enhanced_enableShortcuts);
+            enhanced_applySettings("stadiastats", enhanced_enableStadiaStats);
             enhanced_applySettings("inlinepreview", enhanced_useInlinePreview);
             enhanced_applySettings("familysharing", enhanced_familySharingElements);
             enhanced_applySettings("mediapreview", enhanced_hideUserMedia);
             break
+    }
+}
+
+function enhanced_setLetter(l, ls) {
+    for (var i = 0; i < enhanced_letters.length; i++) {
+        if (ls < 2) {
+            enhanced_letters[i].style.textDecoration = "line-through"
+            enhanced_letters[i].style.color = "rgba(255,255,255,.2)"
+            enhanced_letters[i].state = 1
+            enhanced_letters[l].style.textDecoration = "none"
+            enhanced_letters[l].style.color = ""
+            enhanced_letters[l].state = 2
+        } else {
+            enhanced_letters[i].style.textDecoration = "none"
+            enhanced_letters[i].style.color = ""
+            enhanced_letters[i].state = 0
+        }
+    }
+
+    if (ls < 2) {
+        for (var i = 0; i < enhanced_wrappers.length; i++) {
+            if (enhanced_wrappers[i].name.charAt(0).toUpperCase() == String.fromCharCode(65 + l).toUpperCase()) {
+                enhanced_wrappers[i].letter = true
+            } else {
+                enhanced_wrappers[i].letter = false
+            }
+        }
+        enhanced_letterBox.style.opacity = "1"
+    } else {
+        for (var i = 0; i < enhanced_wrappers.length; i++) {
+            enhanced_wrappers[i].letter = true
+        }
+        enhanced_letterBox.style.opacity = "0"
     }
 }
 
@@ -2539,15 +2977,17 @@ function enhanced_injectStyle(content, id) {
     }
 }
 
-// Open pages including Stadia specific settings
 function openStadia(url) {
-    var enhanced_urlBase = document.querySelector("head > base").getAttribute("href");
-    var enhanced_urlHL = new URLSearchParams(window.location.search).get('hl');
-    var enhanced_url = new URL(enhanced_urlBase + url);
-    if (enhanced_urlHL !== null) {
-        enhanced_url.searchParams.append('hl', enhanced_urlHL);
+    // Keep hl parameter
+    enhanced_urlBase = new URL(window.location.href);
+    enhanced_urlHL = enhanced_urlBase.searchParams.get('hl')
+    if (enhanced_urlHL) {
+        enhanced_urlBase = new URL(url);
+        enhanced_urlBase.searchParams.set('hl', enhanced_urlHL)
+        window.open(enhanced_urlBase, "_self");
+    } else {
+        window.open(url, "_self");
     }
-    window.open(enhanced_url, "_self");
 }
 
 // Embed scripts to execute on the websites layer
@@ -2566,22 +3006,22 @@ function secureInsert(el, sel, opt = 0) {
     var target = selector[selector.length - 1];
     if (target && el) {
         switch (opt) {
-            case 0:
+            case 0: // Append
                 if (el.parentNode != target) {
                     target.append(el);
                 }
                 break
-            case 1:
+            case 1: // Prepend
                 if (el.parentNode != target) {
                     target.prepend(el);
                 }
                 break
-            case 2:
+            case 2: // Insert After
                 if (target.parentNode != el.parentNode) {
                     target.parentNode.insertBefore(el, target.nextSibling);
                 }
                 break
-            case 3:
+            case 3: // Insert Before
                 if (target.parentNode != el.parentNode) {
                     target.parentNode.insertBefore(el, target);
                 }
@@ -2658,19 +3098,13 @@ function enhanced_dragElement(el) {
 
 // Debugging - Call via "debugEnhanced(); on Stadia
 function debugEnhanced(opt) {
-    var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
     switch (opt) {
         case "translation":
             // Translations
             console.groupCollapsed("Stadia Enhanced: Translation Output");
-            var languages = ["fr", "nl", "sv", "pt", "ca", "da", "it", "es", "de", "hu", "en"];
+            var languages = ["fr", "nl", "sv", "pt", "ca", "da", "it", "es", "de", "ru", "hu", "en"];
             for (var i = 0; i < languages.length; i++) {
-                console.log("%cStadia Enhanced" + "%c 🛠️ - Loading translation: '" + languages[i] + "'", enhanced_consoleEnhanced, "");
-                debug_load = loadLanguages(languages[i]);
-                if (debug_load.languagecode != languages[i]) {
-                    console.error("%cStadia Enhanced" + "%c 🛠️ - Error loading translation: '" + languages[i] + "' featuring wrong language code: '" + debug_load.languagecode + "'", enhanced_consoleEnhanced, "");
-                }
-                console.log("%cStadia Enhanced" + "%c 🛠️ - Finished loading: '" + languages[i] + "' with " + Object.keys(debug_load).length + " translation keys.", enhanced_consoleEnhanced, "");
+                debug_load = enhancedTranslate(languages[i], true);
             }
             console.groupEnd();
             break
@@ -2679,1191 +3113,1330 @@ function debugEnhanced(opt) {
 embed(debugEnhanced, 0);
 
 // Translation
-function loadLanguages(lang) {
+function enhancedTranslate(lang, log = false) {
+    // Debug
+    var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
+    var lang_load = window.performance.now();
+
+    // Load defaults
+    var translation = {
+        default: 'Default',
+        native: 'Native',
+        hide: 'Hide',
+        show: 'Show',
+        total: 'Total',
+        visible: 'Visible',
+        hidden: 'Hidden',
+        enabled: 'Enabled',
+        disabled: 'Disabled',
+        auto: 'Automatic',
+        manual: 'Manual',
+        all: 'All',
+        locked: 'Locked',
+        complete: 'Complete',
+        incomplete: 'Incomplete',
+        games: 'Games',
+        bundles: 'Bundles',
+        addons: 'Add-ons',
+        wishlist: 'Wishlist',
+        responsive: 'Responsive',
+        windowed: 'Windowed Mode',
+        fullscreen: 'Fullscreen',
+        searchstore: 'Search store',
+        onsale: 'On Sale',
+        prodeals: 'Pro Deals',
+        userprofile: 'My Profile',
+        usermedia: 'Screenshots & Videos',
+        searchbtnbase: 'Search on',
+        avatarpopup: 'New avatar URL (empty for default):',
+        searchheader: 'Games including',
+        sessiontime: 'Session time',
+        codec: 'Codec',
+        resolution: 'Resolution',
+        hardware: 'Hardware',
+        software: 'Software',
+        trafficsession: 'Session traffic',
+        trafficcurrent: 'Current traffic',
+        trafficaverage: 'Average traffic',
+        packetloss: 'Packets lost',
+        framedrop: 'Frames dropped',
+        latency: 'Latency',
+        jitter: 'Jitter Buffer',
+        decodetime: 'Decoding Time',
+        compression: 'Compression',
+        streammon: 'Stream Monitor',
+        stream: 'Stream',
+        community: 'Community',
+        speedtest: 'Speedtest',
+        quickaccess: 'Quick Access',
+        messages: 'Messages',
+        comfeature: "Community Features",
+        avatar: 'Avatar',
+        interface: 'Interface',
+        shortcut: 'StadiaIcons',
+        shortcuttitle: 'Install a shortcut for',
+        shortcutdesc: 'Allows you to install a shortcut for a game on your device.',
+        stadiastats: 'StadiaStats',
+        stadiastatsopen: 'View on StadiaStats.GG',
+        stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
+        gridsize: 'Grid Size',
+        griddesc: 'Changes the amount of games per row on the homescreen.',
+        clock: 'Clock',
+        clockdesc: 'Displays the current time on the friends list, as a in-game overlay, or both.',
+        friendslist: 'Friends List',
+        igoverlay: 'In-Game Overlay',
+        listoverlay: 'List & Overlay',
+        filter: 'Filter',
+        filterdesc: 'Allows you to sort your homescreen by hiding games. The filter can be toggled via the symbol, top-right above your games on the homescreen.',
+        filtertoggle: 'Toggle',
+        filterquick: 'Quick',
+        invitebase: 'Copy invite link',
+        inviteactive: 'Copied!',
+        gamelabel: 'Game Labels',
+        gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+        homegallery: 'User Gallery',
+        homegallerydesc: 'Hides the "Captures" area at the bottom of the homescreen.',
+        quickprev: 'Message Preview',
+        quickprevdesc: 'Hides the message preview in the friends list.',
+        quickrep: 'Quick Reply',
+        quickrepdesc: 'Hides the quick reply option in chats.',
+        offlinefriend: 'Offline Friends',
+        offlinefrienddesc: 'Hides offline friends in the friends list.',
+        invisiblefriend: 'Invisible Friends',
+        invisiblefrienddesc: 'Hides friends with unknown online status in the friends list.',
+        streammode: 'Streaming Mode',
+        streammodedesc: 'Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).',
+        catprev: 'Category Preview',
+        catprevdesc: 'Hides the category tags when hovering over a game.',
+        popup: 'Popup Effect',
+        popupdesc: 'Removes the zoom-in / enlarge effect when hovering over a game on the homesceen.',
+        streammondesc: 'Activate to start the monitor whenever a game starts.',
+        resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9.',
+        codecdesc: 'The codec used for game streams.',
+        confirmreset: 'Are you sure you want to reset the settings?',
+        gamesfinished: 'Games Finished',
+        achievementsunlocked: 'Achievements Unlocked',
+        totalPlayTime: 'Total Playtime',
+        splitstore: 'Split Store Lists',
+        splitstoredesc: 'Splits store lists into two columns for a better overview.',
+        inlineimage: 'Image Preview',
+        inlinedesc: 'Replaces image links for common file formats (jpg/gif/png) with a clickable preview.',
+        familyelements: 'Family-sharing options',
+        familyelementsdesc: 'Hides the "Share this game with family" options.',
+        resetsettings: 'Reset Settings'
+    }
+
+    // Load translation
+    var translate_load = {};
     switch (lang) {
-        case "fr": //https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8
-            var load = `{
-                "languagecode": "fr",
-                "default": "Par Défaut",
-                "native": "Natif",
-                "hide": "Masquer",
-                "show": "Afficher",
-                "total": "Total",
-                "visible": "Visible",
-                "hidden": "Masqué",
-                "enabled": "Activé",
-                "disabled": "Désactivé",
-                "auto": "Automatique",
-                "manual": "Manuel",
-                "games": "Jeux",
-                "bundles": "Lots",
-                "addons": "Extensions",
-                "wishlist": "Liste d'Envies",
-                "responsive": "Responsive",
-                "windowed": "Mode Fenêtré",
-                "fullscreen": "Plein Écran",
-                "searchstore": "Rechercher dans le Store",
-                "onsale": "En Promotion",
-                "prodeals": "Offres Stadia Pro",
-                "allgames": "Tous les Jeux",
-                "userprofile": "Mon Profil",
-                "usermedia": "Captures & Vidéos",
-                "searchbtnbase": "Rechercher sur",
-                "avatarpopup": "URL du nouvel avatar (vide = par défaut):",
-                "searchheader": "Jeux avec",
-                "sessiontime": "Durée de la session",
-                "codec": "Codec",
-                "resolution": "Résolution",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Trafic de la session",
-                "trafficcurrent": "Trafic actuel",
-                "trafficaverage": "Trafic moyen",
-                "packetloss": "Paquets perdus",
-                "framedrop": "Images perdues",
-                "latency": "Latence",
-                "jitter": "Tampon de gigue",
-                "decodetime": "Decoding Time",
-                "compression": "Compression",
-                "streammon": "Moniteur de Stream",
-                "stream": "Stream",
-                "community": "Communauté",
-                "speedtest": "Test de Débit",
-                "quickaccess": "Accès Rapide",
-                "messages": "Messages",
-                "avatar": "Avatar",
-                "interface": "Interface",
-                "shortcut": "Raccourcis",
-                "shortcuttitle": "Installer un raccourcis pour",
-                "shortcutdesc": "Permet d'installer des raccourcis individuels pour vos jeux sur votre ordinateur",
-                "gridsize": "Taille de la Grille",
-                "griddesc": "Modifie le nombre de jeux affichés sur la grille de l'accueil.",
-                "clock": "Horloge",
-                "clockdesc": "Affiche l'heure dans la liste d'amis et/ou dans le menu en-jeu.",
-                "friendslist": "Liste d'amis",
-                "igoverlay": "Menu en-jeu",
-                "listoverlay": "Liste & Menu",
-                "filter": "Filtre",
-                "filterdesc": "Permet de filtrer les jeux à masquer dans l'accueil. Le filtrage peut être basculé en utilisant le symbole en haut à droite de la grille de l'accueil.",
-                "filtertoggle": "Mode Bascule",
-                "filterquick": "Accès rapide",
-                "invitebase": "Copier le lien d'invitation",
-                "inviteactive": "Copié!",
-                "gamelabel": "Étiquettes des Jeux",
-                "gamelabeldesc": "Retire les étiquettes des jeux telles que l(étiquette 'Pro' dans la page d'accueil.",
-                "homegallery": "Galerie des Captures",
-                "homegallerydesc": "Masque la section 'Captures' en bas de la page d'accueil.",
-                "quickprev": "Prévisualisation des Messages",
-                "quickprevdesc": "Masque la prévisualisation des messages dans la liste d'amis.",
-                "quickrep": "Réponse Rapide",
-                "quickrepdesc": "Masque les options de réponse rapide dans le chat.",
-                "offlinefriend": "Amis Hors-Ligne",
-                "offlinefrienddesc": "Masque les amis hors-ligne dans la liste d'amis.",
-                "invisiblefriend": "Amis Invisibles",
-                "invisiblefrienddesc": "Masque les amis dont le status en-ligne est inconnu dans la liste d'amis.",
-                "streammode": "Mode Streaming",
-                "streammodedesc": "Permet de rendre certains éléments (ex : la liste d'amis) invisibles lorsque vous streamez (via un logiciel externe comme OBS ou Discord).",
-                "catprev": "Prévisualisation des Catégories",
-                "catprevdesc": "Masque la liste des catégories présente lorsque le curseur passe sur un jeu dans la grille de l'accueil.",
-                "popup": "Effet d'Agrandissement",
-                "popupdesc": "Désactive l'effet d'agrandissement / de zoom qui advient lorsque le curseur passe sur un jeu dans la grille de l'accueil.",
-                "streammondesc": "Si activé, le moniteur de stream démarrera automatiquement au lancement d'un jeu.",
-                "resolutiondesc": "La résolution cible pour le stream de jeux. Les résolutions 1440p et 2160p nécessitent le codec VP9.",
-                "codecdesc": "Le codec utilisé pour le stream de jeux.",
-                "confirmreset": "Êtes-vous certain de vouloir réinitialiser les paramètres ?",
-                "gamesfinished": "Jeux Terminés",
-                "achievementsunlocked": "Succès Débloqués",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Store à 2 Colonnes",
-                "splitstoredesc": "Divise les listes du store en deux colonnes pour une meilleur lisibilité.",
-                "inlineimage": "Prévisualisation d'Images",
-                "inlinedesc": "Remplace les liens vers des images avec un format standard (jpg/gif/png) avec une prévisualisation cliquable.",
-                "familyelements": "Options de partage familial",
-                "familyelementsdesc": "Masque l'option 'Partager ce jeu avec la famille'.",
-                "resetsettings": "Réinitialiser les Paramètres"
-            }`
+        case 'de': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13
+            translate_load = {
+                default: 'Standard',
+                native: 'Nativ',
+                hide: 'Verstecke',
+                show: 'Zeige',
+                total: 'Gesamt',
+                visible: 'Sichtbar',
+                hidden: 'Versteckt',
+                enabled: 'Aktiviert',
+                disabled: 'Deaktiviert',
+                auto: 'Automatisch',
+                manual: 'Manuel',
+                all: 'Alle',
+                locked: "Gesperrt",
+                complete: 'Vollständig',
+                incomplete: 'Unvollständig',
+                games: 'Spiele',
+                bundles: 'Bundles',
+                addons: 'Add-ons',
+                wishlist: 'Wunschliste',
+                responsive: 'Responsiv',
+                windowed: 'Fenster Modus',
+                fullscreen: 'Vollbild',
+                searchstore: 'Im Store suchen',
+                onsale: 'Im Angebot',
+                prodeals: 'Pro Angebote',
+                userprofile: 'Mein Profil',
+                usermedia: 'Fotos & Videos',
+                searchbtnbase: 'Suche auf',
+                avatarpopup: 'Neue Avatar URL (keine für Zurücksetzung):',
+                searchheader: 'Spiele beinhalten',
+                sessiontime: 'Sitzungszeit',
+                codec: 'Codec',
+                resolution: 'Auflösung',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Sitzungs-Traffic',
+                trafficcurrent: 'Derzeitiger Traffic',
+                trafficaverage: 'Durchschnittlicher Traffic',
+                packetloss: 'Packetverlust',
+                framedrop: 'Verlorene Frames',
+                latency: 'Latenz',
+                jitter: 'Jitter-Puffer',
+                decodetime: 'Dekodierungs Zeit',
+                compression: 'Kompression',
+                streammon: 'Stream Monitor',
+                stream: 'Stream',
+                community: 'Community',
+                speedtest: 'Speedtest',
+                quickaccess: 'Schnellzugriff',
+                messages: 'Nachrichten',
+                comfeature: "Community Funktionen",
+                avatar: 'Avatar',
+                interface: 'Oberfläche',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Installiere eine Verknüpfung für',
+                shortcutdesc: 'Erlaubt das erstellen einer Verknüpfung von Spielen auf dem Gerät.',
+                stadiastats: 'StadiaStats',
+                stadiastatsopen: 'Auf StadiaStats.GG ansehen',
+                stadiastatsdesc: 'Stellt Statistiken für Spiele, eine Verknüpfung zum Profil und einen Weg Mitspieler zu finden via stadiastats.gg bereit.',
+                gridsize: 'Rastergröße',
+                griddesc: 'Ändert die Anzahl der Spiele pro Reihe auf dem Startbildschirm.',
+                clock: 'Uhr',
+                clockdesc: 'Zeigt die Uhrzeit in der Freundesliste, als Einblendung im Spiel, oder beides.',
+                friendslist: 'Freundesliste',
+                igoverlay: 'Spiel Einblendung',
+                listoverlay: 'Liste & Einblendung',
+                filter: 'Filter',
+                filterdesc: 'Erlaubt das sortieren des Startbildschirmes durch verstecken von Spielen.',
+                filtertoggle: 'Wechsel',
+                filterquick: 'Schnell',
+                invitebase: 'Einladungslink kopieren',
+                inviteactive: 'Kopiert!',
+                gamelabel: 'Spiele Beschriftung',
+                gamelabeldesc: 'Entfernt Beschriftungen wie "Pro" von Spielen auf dem Startbildschirm.',
+                homegallery: 'Nutzer Galerie',
+                homegallerydesc: 'Versteckt den "Aufnahmen" Bereich am unteren Ende des Startbildschirmes.',
+                quickprev: 'Nachrichten Vorschau',
+                quickprevdesc: 'Versteckt die Vorschau der letzten Nachricht in der Freundesliste.',
+                quickrep: 'Schnellantwort',
+                quickrepdesc: 'Versteckt die Antwortvorschläge in Chats.',
+                inlineimage: 'Bilder Vorschau',
+                inlinedesc: 'Ersetzt Links zu Bildern wenn möglich mit einer klickbaren Vorschau.',
+                offlinefriend: 'Offline Freunde',
+                offlinefrienddesc: 'Versteckt offline Freunde in der Freundesliste.',
+                invisiblefriend: 'Unsichtbare Freunde',
+                invisiblefrienddesc: 'Versteckt Freunde ohne bekannten online Status in der Freundesliste.',
+                streammode: 'Streaming Modus',
+                streammodedesc: 'Aktivieren um bestimmte Elemente (z.B. die Freundesliste) während des streamens (über z.B. OBS / Discord) unleserlich zu machen.',
+                catprev: 'Kategorie Vorschau',
+                catprevdesc: 'Entfernt die Anzeige der Kategorien bei Spielen auf dem Startbildschirm.',
+                popup: 'Popup Effekt',
+                popupdesc: 'Entfernt den vergrößern/zoomen Effekt bei Spielen auf dem Startbildschirm.',
+                streammondesc: 'Aktivieren um den Streaming Monitor beim starten von Spielen automatisch zu starten.',
+                resolutiondesc: 'Die angezielte Auflösung für Spiele. 1440p und 2160p benötigen VP9.',
+                codecdesc: 'Der für Spiele genutzte Codec.',
+                confirmreset: 'Möchtest du die Einstellungen sicher zurücksetzen?',
+                gamesfinished: 'Spiele Abgeschlossen',
+                achievementsunlocked: 'Erfolge Freigeschaltet',
+                totalPlayTime: 'Gesamtspielzeit',
+                splitstore: 'Store Listen teilen',
+                splitstoredesc: 'Teilt Listen im Store für eine bessere Übersicht in zwei Spalten.',
+                inlineimage: 'Vorschau für Bilder',
+                inlinedesc: 'Ersetzt Bilder in gängigen Formaten (jpg/gif/png) mit einer klickbaren Vorschau.',
+                familyelements: 'Familienfreigabe Optionen',
+                familyelementsdesc: 'Versteckt die "Dieses Spiel für die Familie freigeben" Elemente.',
+                resetsettings: 'Einstellungen zurücksetzen'
+            }
             break
-        case "sv": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
-            var load = `{
-                "languagecode": "sv",
-                "default": "Standard",
-                "native": "Inbyggd",
-                "hide": "Göm",
-                "show": "Visa",
-                "total": "Total",
-                "visible": "Synligt",
-                "hidden": "Gömt",
-                "enabled": "Aktiverat",
-                "disabled": "Inaktiverat",
-                "auto": "Automatisk",
-                "manual": "Manuell",
-                "games": "Spel",
-                "bundles": "Spel-paket",
-                "addons": "Tillägg",
-                "wishlist": "Wishlist",
-                "responsive": "Responsiv",
-                "windowed": "Fönsterläge",
-                "fullscreen": "Fullskärmsläge",
-                "searchstore": "Sök i butiken",
-                "onsale": "På Rea",
-                "prodeals": "Pro Deals",
-                "allgames": "Alla Spel",
-                "userprofile": "My Profile",
-                "usermedia": "Skärmdumpar & Filmer",
-                "searchbtnbase": "Sök på",
-                "avatarpopup": "Nytt avatar-URL (lämna tomt för standard):",
-                "searchheader": "Spel inklusive",
-                "sessiontime": "Sessionstid",
-                "codec": "Kodec",
-                "resolution": "Upplösning",
-                "hardware": "Hårdvara",
-                "software": "Mjukvara",
-                "trafficsession": "Sessionstrafik",
-                "trafficcurrent": "Nuvarande trafik",
-                "trafficaverage": "Genomsnittlig trafik",
-                "packetloss": "Tappade paket",
-                "framedrop": "Tappade bilder",
-                "latency": "Latens",
-                "jitter": "Jitter Buffer",
-                "decodetime": "Avkodningstid",
-                "compression": "Kompression",
-                "streammon": "Strömmonitor",
-                "stream": "Ström",
-                "community": "Gemenskap",
-                "speedtest": "Hastighetstest",
-                "quickaccess": "Snabbmeny",
-                "messages": "Meddelanden",
-                "avatar": "Avatar",
-                "interface": "Gränssnitt",
-                "shortcut": "Genvägar",
-                "shortcuttitle": "Installera en genväg för",
-                "shortcutdesc": "Låter dig installera en genväg för ett spel på din enhet",
-                "gridsize": "Rutnätsstorlek",
-                "griddesc": "Ändrar hur många spel visas per rad på hemskärmen",
-                "clock": "Klocka",
-                "clockdesc": "Visar den nuvarande tiden på vänlistan, som en spel-overlay eller båda.",
-                "friendslist":"Vänner",
-                "igoverlay":"Spelöverlägg",
-                "listoverlay":"Lista & Överlägg",
-                "filter": "Filter",
-                "filterdesc": "Låter dig sortera hemskärmen genom att gömma spel. Filtret kan växlas med symbolen uppe till höver ovanför dina spel på hemskärmen.",
-                "filtertoggle":"Växla Filter",
-                "filterquick":"Snabbfilter",
-                "invitebase":"Kopiera inbjudningslänk",
-                "inviteactive":"Kopierat!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
-                "homegallery": "Användargalleri",
-                "homegallerydesc": "Gömmer 'Captures'-sektionen längst ner på hemskärmen.",
-                "quickprev": "Förhandsvisning av Meddelande",
-                "quickprevdesc": "Gömmer förhandsvisningen av meddelanden i vänlistan.",
-                "quickrep": "Snabbsvar",
-                "quickrepdesc": "Gömmer snabbsvarsfunktionen i vänlistan",
-                "offlinefriend": "Offline-vänner",
-                "offlinefrienddesc": "Gömmer offline-vänner i vänlistan",
-                "invisiblefriend": "Osynliga Vänner",
-                "invisiblefrienddesc": "Gömmer vänner med okänd online-status i vänlistan",
-                "streammode": "Streamer-läge",
-                "streammodedesc": "Aktivera för att göra vissa delar (bl.a vänlistan) oläsbar medan du streamar (genom verktyg som OBS / Discord)",
-                "catprev": "Kategori-förhandsvisning",
-                "catprevdesc": "Gömmer kategori-taggarna när du har muspekaren över ett spel.",
-                "popup": "Popup-Effekt",
-                "popupdesc": "Tar bort inzoomingseffekten när du har muspekaren över ett spel på hemskärmen.",
-                "streammondesc": "Aktivera för att starta en monitor så fort du öppnar ett spel.",
-                "resolutiondesc": "Målupplösningen för spel. 1440p och 2160p kräver VP9.",
-                "codecdesc": "Det kodec som används för spel.",
-                "confirmreset": "Är du säker på att du vill återställa inställningarna?",
-                "gamesfinished": "Färdiga Spel",
-                "achievementsunlocked": "Prestationer Uppnådda",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Dela Butikslistor",
-                "splitstoredesc": "Delar butikslistor i två kolumner för en bättre överblick.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
-                "resetsettings": "Återställ Inställningar"
-            }`
+        case 'hu': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/97
+            translate_load = {
+                default: 'Alapértelmezett',
+                native: 'Eredeti',
+                hide: 'Elrejt',
+                show: 'Mutat',
+                total: 'Összesen',
+                visible: 'Látható',
+                hidden: 'Rejtett',
+                enabled: 'Engedélyezve',
+                disabled: 'Tiltva',
+                auto: 'Automatikus',
+                manual: 'Manuális',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Játékok',
+                bundles: 'Csomagok',
+                addons: 'Kiegészítők',
+                wishlist: 'Kívánságlista',
+                responsive: 'Reszponzív',
+                windowed: 'Ablakban',
+                fullscreen: 'Teljes képernyő',
+                searchstore: 'Keresés',
+                onsale: 'Akciók',
+                prodeals: 'Pro Ajánlatok',
+                userprofile: 'Saját fiók',
+                usermedia: 'Képernyőképek és Videók',
+                searchbtnbase: 'Keresés',
+                avatarpopup: 'Új avatar URL (alapból üres):',
+                searchheader: 'Játékok, amik tartalmazzák:',
+                sessiontime: 'Kapcsolat ideje',
+                codec: 'Videó kódolás',
+                resolution: 'Felbontás',
+                hardware: 'Hardver',
+                software: 'Szoftver',
+                trafficsession: 'Kapcsolat forgalma',
+                trafficcurrent: 'Jelenlegi sebesség',
+                trafficaverage: 'Átlag sebesség',
+                packetloss: 'Elveszett csomagok',
+                framedrop: 'Eldobott képkockák',
+                latency: 'Késleltetés',
+                jitter: 'Jitter puffer',
+                decodetime: 'Dekódolási idő',
+                compression: 'Tömörítés',
+                streammon: 'Stream Monitor',
+                stream: 'Stream',
+                community: 'Közösség',
+                speedtest: 'Sebesség teszt',
+                quickaccess: 'Gyors elérés',
+                messages: 'Üzenetek',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Megjelenítés',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Hivatkozás telepítése:',
+                shortcutdesc: 'Parancsikon létrehozása közvetlen játék indításhoz',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Rács méret',
+                griddesc: 'Megváltoztatja a kezdőlapon a soronkénti játékok mennyiségét',
+                clock: 'Óra',
+                clockdesc: 'Az aktuális idő megjelenítése az ismerősök listáján vagy a játékban.',
+                friendslist: 'Ismerősök listája',
+                igoverlay: 'Játékon belüli Overlay',
+                listoverlay: 'Ismerősök listája és Játékon belüli Overlay',
+                filter: 'Szűrés',
+                filterdesc: 'Lehetővé teszi a kezdőlapon a Saját játékkönyvtár rendezését a játékok elrejtésével. A szűrő a kezdőlapon a Saját játékkönyvtár jobb felső sarkában található szimbólummal kapcsolható be.',
+                filtertoggle: 'Kapcsolható',
+                filterquick: 'Gyors',
+                invitebase: 'Meghívási hivatkozás másolása',
+                inviteactive: 'Vágólapra másolva!',
+                gamelabel: 'Játek Címkék',
+                gamelabeldesc: 'A kezdőlapon eltávolítja a címkéket a játékokról. Pl.: "pro"',
+                homegallery: 'Felvételek és játékállások',
+                homegallerydesc: 'Elrejti a kezdőlap alján található "Felvételek és játékállások" területet.',
+                quickprev: 'Üzenet Előnézet',
+                quickprevdesc: 'Üzenet Előnézetek megjelenítése az ismerősök listáján.',
+                quickrep: 'Gyors Válasz',
+                quickrepdesc: 'A gyors válasz opciót elrejti a csevegésekben.',
+                offlinefriend: 'Offline Ismerősök',
+                offlinefrienddesc: 'Elrejti az offline ismerősöket a listából.',
+                invisiblefriend: 'Láthatatlan Ismerősök',
+                invisiblefrienddesc: 'Elrejti az ismeretlen státuszú ismerősöket a listán.',
+                streammode: 'Streaming Mód',
+                streammodedesc: 'Stream-elés közben olvashatatlanná tesz bizonyos elemeket. (pl.: ismerősök listája - OBS vagy Discord használatakor)',
+                catprev: 'Kategória megjelenítés',
+                catprevdesc: 'A kategória címkék elrejtése, amikor egy játék fölé viszed az egeret.',
+                popup: 'Popup hatás',
+                popupdesc: 'Kikapcsolja a Popup effektet (játék képének nagyítása), amikor egy játék fölé viszed az egérmutatót a kezdőlapon',
+                streammondesc: 'Stream Monitor bekapcsolása játék indításánál.',
+                resolutiondesc: 'Streameléshez beállított felbontás. 1440p és 2160p beállításhoz VP9 videó kódolás támogatás szükséges.',
+                codecdesc: 'A stream-hez használt videó kódoló eljárás.',
+                confirmreset: 'Biztosan vissza akarod állítani a beállításokat?',
+                gamesfinished: 'Vége a játéknak',
+                achievementsunlocked: 'Megszerzett jutalom',
+                totalPlayTime: 'Total Playtime',
+                splitstore: 'Áruház oszlopos megjelenítés',
+                splitstoredesc: 'Az Áruház 2 oszlopos megjelenítése a jobb láthatóság miatt.',
+                inlineimage: 'Képek előnézete',
+                inlinedesc: 'Gyakori képformátum (jpg/gif/png) linkek helyettesítése kattintható előnézeti képekkel.',
+                familyelements: 'Családi megosztás',
+                familyelementsdesc: 'Elrejti "A játék megosztása a családdal" lehetőséget a játékoknál, ha már létrehoztál családi csoportot.',
+                resetsettings: 'Beállítások alaphelyzetbe állítása'
+            }
             break
-        case "pt": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/91
-            var load = `{
-                "languagecode": "pt",
-                "default": "Padrão",
-                "native": "Nativo",
-                "hide": "Esconder",
-                "show": "Mostrar",
-                "total": "Total",
-                "visible": "Visivel",
-                "hidden": "Escondido",
-                "enabled": "Activado",
-                "disabled": "Desactivado",
-                "auto": "Automático",
-                "manual": "Manual",
-                "games": "Jogos",
-                "bundles": "Bundles",
-                "addons": "Add-ons",
-                "wishlist": "Lista de desejos",
-                "responsive": "Responsivo",
-                "windowed": "Modo Janela",
-                "fullscreen": "Ecrã completo",
-                "searchstore": "Pesquisar na loja",
-                "onsale": "Em promoção",
-                "prodeals": "Promoções Pro",
-                "allgames": "Todos os jogos",
-                "userprofile": "Meu Perfil",
-                "usermedia": "Screenshots & Videos",
-                "searchbtnbase": "Pesquisar em",
-                "avatarpopup": "Novo URL para avatar (vazio para o padrão):",
-                "searchheader": "Incluindo Jogos",
-                "sessiontime": "Tempo de sessão",
-                "codec": "Codec",
-                "resolution": "Resolução",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Tráfego da sessão",
-                "trafficcurrent": "Tráfego instantâneo",
-                "trafficaverage": "Tráfego médio",
-                "packetloss": "Pacotes perdidos",
-                "framedrop": "Frames perdidos",
-                "latency": "Latencia",
-                "jitter": "Buffer de Jitter",
-                "decodetime": "Tempo de descodificação",
-                "compression": "Compressão",
-                "streammon": "Monitor do Stream",
-                "stream": "Stream",
-                "community": "Comunidade",
-                "speedtest": "Teste de velocidade",
-                "quickaccess": "Acesso Rápido",
-                "messages": "Mensagens",
-                "avatar": "Avatar",
-                "interface": "Interface",
-                "shortcut": "Atalhos",
-                "shortcuttitle": "Instalar atalho para",
-                "shortcutdesc": "Permite-te instalar um atalho para um jogo no teu dispositivo",
-                "gridsize": "Tamanho da Grelha",
-                "griddesc": "Muda o número de jogos por linha no ecrã inicial.",
-                "clock": "Relógio",
-                "clockdesc": "Mostra a hora actual na lista de amigos, em sobreposição no jogo, ou ambos.",
-                "friendslist": "Lista de Amigos",
-                "igoverlay": "Sobreposição no jogo",
-                "listoverlay": "Lista e Sobreposição",
-                "filter": "Filtro",
-                "filterdesc": "Permite-te organizar o teu ecrã inicial escondendo jogos. O filtro pode ser alternado pelo simbolo no topo direito, acima dos teus jogos no ecrã inicial.",
-                "filtertoggle": "Alternar",
-                "filterquick": "Rápido",
-                "invitebase": "Copiar ligação de convite",
-                "inviteactive": "Copiado!",
-                "gamelabel": "Etiquetas de Jogos",
-                "gamelabeldesc": "Remove as etiquetas como por exemplo 'Pro' dos jogos da página inicial.",
-                "homegallery": "Galeria do Utilizador",
-                "homegallerydesc": "Esconde a área 'Capturas' no fundo do ecrã inicial.",
-                "quickprev": "Pré-visualização de mensagens",
-                "quickprevdesc": "Esconde a pré-visualização de mensagens na tua lista de amigos.",
-                "quickrep": "Resposta Rápida",
-                "quickrepdesc": "Esconde a opção de resposta rápida nas conversas.",
-                "offlinefriend": "Amigos Offline",
-                "offlinefrienddesc": "Esconde amigos offline na lista de amigos.",
-                "invisiblefriend": "Amigos Invisíveis",
-                "invisiblefrienddesc": "Esconde amigos com estado desconhecido na lista de amigos.",
-                "streammode": "Modo de Streaming",
-                "streammodedesc": "Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS / Discord).",
-                "catprev": "Pré-visualização da Categoria",
-                "catprevdesc": "Esconde a etiqueta da categoria ao passar por cima de um jogo.",
-                "popup": "Efeito Popup",
-                "popupdesc": "Remove o efeito de zoom-in / aumento ao passar por cima de um jogo no ecrã inicial.",
-                "streammondesc": "Activa para iniciar o monitor quando um jogo começa.",
-                "resolutiondesc": "A resolução pretendida para stream de jogos. 1440p e 2160p requerem VP9.",
-                "codecdesc": "O codec utilizado para stream de jogos.",
-                "confirmreset": "De certeza que queres reiniciar as configurações?",
-                "gamesfinished": "Jogo terminado",
-                "achievementsunlocked": "Conquistas desbloqueadas",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Dividir Listas da Loja",
-                "splitstoredesc": "Divide as listas da loja em duas colunas para uma melhor visão geral.",
-                "inlineimage": "Prévia de imagem",
-                "inlinedesc": "Substitui links de imagem para formatos comuns de ficheiros (jpg/gif/png) com uma prévia clicável.",
-                "familyelements": "Opções de partilha de família",
-                "familyelementsdesc": "Esconder a opção 'Partilhar este jogo com a família.'",
-                "resetsettings": "Reiniciar Configurações"
-            }`
+        case 'nl': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9
+            translate_load = {
+                default: 'Standaard',
+                native: 'Native',
+                hide: 'Verbergen',
+                show: 'Tonen',
+                total: 'Totaal',
+                visible: 'Zichtbaar',
+                hidden: 'Verborgen',
+                enabled: 'Ingeschakeld',
+                disabled: 'Uitgeschakeld',
+                auto: 'Automatisch',
+                manual: 'Handmatig',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Games',
+                bundles: 'Bundels',
+                addons: 'Add-ons',
+                wishlist: 'Verlanglijst',
+                responsive: 'Responsief',
+                windowed: 'Venster Modus',
+                fullscreen: 'Volledig Scherm',
+                searchstore: 'Zoek in de winkel',
+                onsale: 'In de Uitverkoop',
+                prodeals: 'Pro Deals',
+                userprofile: 'Mijn Profiel',
+                usermedia: 'Screenshots & Videos',
+                searchbtnbase: 'Zoek verder',
+                avatarpopup: 'Nieuwe avatar URL (laat leeg voor standaard):',
+                searchheader: 'Games inclusief',
+                sessiontime: 'Sessie tijd',
+                codec: 'Codec',
+                resolution: 'Resolutie',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Sessie traffic',
+                trafficcurrent: 'Huidige traffic',
+                trafficaverage: 'Gemiddelde traffic',
+                packetloss: 'Verloren pakketten',
+                framedrop: 'Frames dropped',
+                latency: 'Vertraging',
+                jitter: 'Jitter Buffer',
+                decodetime: 'Decodeer Tijd',
+                compression: 'Compressie',
+                streammon: 'Stream Monitor',
+                stream: 'Stream',
+                community: 'Gemeenschap',
+                speedtest: 'Snelheidstest',
+                quickaccess: 'Snelle Toegang',
+                messages: 'Berichten',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Interface',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Installeer een snelkoppeling voor',
+                shortcutdesc: 'Laat je een snelkoppeling voor een game installeren op je apparaat',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Rooster Grootte',
+                griddesc: 'Verander het aantal games per rij op je thuisscherm.',
+                clock: 'Klok',
+                clockdesc: 'Geef de huidige tijd weer in je vriendenlijst, als in-game overlay of allebei.',
+                friendslist: 'Vriendenlijst',
+                igoverlay: 'In-Game Overlay',
+                listoverlay: 'Lijst & Overlay',
+                filter: 'Filter',
+                filterdesc: 'Laat je het thuisscherm sorteren door games te verbergen. Dit filter kan in-/uitgeschakeld worden via het symbool, rechtsboven je games op het thuisscherm.',
+                filtertoggle: 'Omschakelen',
+                filterquick: 'Snel',
+                invitebase: 'Kopiëer uitnodigingslink',
+                inviteactive: 'Gekopiëerd!',
+                gamelabel: 'Game Labels',
+                gamelabeldesc: 'Verwijderd labels zoals "Pro" van games op het homescreen.',
+                homegallery: 'Gebruikers Gallerij',
+                homegallerydesc: 'Verbergt het "Captures" deel onderaan het thuisscherm.',
+                quickprev: 'Berichtvoorbeeld',
+                quickprevdesc: 'Verbergt het berichtvoorbeeld in de vriendenlijst.',
+                quickrep: 'Snelantwoord',
+                quickrepdesc: 'Verbergt de snelantwoord optie in chats.',
+                offlinefriend: 'Offline Vrienden',
+                offlinefrienddesc: 'Verbergt offline vrienden in de vriendenlijst.',
+                invisiblefriend: 'Onzichtbare Vrienden',
+                invisiblefrienddesc: 'Vergbergt vrienden met onbekend online status in de vriendenlijst.',
+                streammode: 'Streaming Modus',
+                streammodedesc: 'Schakel in om bepaalde elementen (zoals de vriendenlijst) onleesbaar te maken tijdens het streamen (via tools als OBS / Discord).',
+                catprev: 'Categorievoorbeeld',
+                catprevdesc: 'Verbergt de categorie tags bij het bewegen over een game.',
+                popup: 'Popup Effect',
+                popupdesc: 'Haal het zoom-in / vergroot effect weg bij het bewegen over een game op het thuisscherm.',
+                streammondesc: 'Activeer om de monitor te starten bij het starten van een game.',
+                resolutiondesc: 'De beoogde resolutio voor games. 1440p en 2160p vereisen VP9.',
+                codecdesc: 'De codec gebruikt voor games.',
+                confirmreset: 'Weet je zeker dat je de instellingen wilt resetten?',
+                gamesfinished: 'Games Voltooid',
+                achievementsunlocked: 'Achievements Vrijgespeeld',
+                totalPlayTime: 'Total Playtime',
+                splitstore: 'Splits Winkel Lijsten',
+                splitstoredesc: 'Splits de winkel lijsten in twee kolommen voor een beter overzicht.',
+                inlineimage: 'Voorvertoningsafbeelding',
+                inlinedesc: 'Vervang afbeelding links voor veelvoorkomende formaten (jpg/gif/png) door een klikbare voorvertoning.',
+                familyelements: 'Opties voor delen met gezin',
+                familyelementsdesc: 'Verbergt de "Delen met gezin"-opties.',
+                resetsettings: 'Reset Instellingen'
+            }
             break
-        case "ca": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
-            var load = `{
-                "languagecode": "ca",
-                "default": "Per defecte",
-                "native": "Natiu",
-                "hide": "Amaga",
-                "show": "Mostra",
-                "total": "Total",
-                "visible": "Visible",
-                "hidden": "Amagat",
-                "enabled": "Activat",
-                "disabled": "Desactivat",
-                "auto": "Automàtic",
-                "manual": "Manual",
-                "games": "Jocs",
-                "bundles": "Paquets",
-                "addons": "Complements",
-                "wishlist": "Llista de desitjos",
-                "responsive": "Responsiu",
-                "windowed": "Mode finestra",
-                "fullscreen": "Pantalla completa",
-                "searchstore": "Navega la botiga",
-                "onsale": "Ofertes",
-                "prodeals": "Ofertes Pro",
-                "allgames": "Tots els jocs",
-                "userprofile": "El meu perfil",
-                "usermedia": "Captures de pantalla i vídeos",
-                "searchbtnbase": "Cerca a",
-                "avatarpopup": "URL d'avatar nou (buit per defecte):",
-                "searchheader": "Jocs que incloguin",
-                "sessiontime": "Temps de sessió",
-                "codec": "Còdec",
-                "resolution": "Resolució",
-                "hardware": "Maquinari",
-                "software": "Programari",
-                "trafficsession": "Trànsit de sessió",
-                "trafficcurrent": "Trànsit actual",
-                "trafficaverage": "Trànsit de mitjana",
-                "packetloss": "Paquets perduts",
-                "framedrop": "Fotogrames perduts",
-                "latency": "Latència",
-                "jitter": "Jitter Buffer",
-                "decodetime": "Temps de descodificació",
-                "compression": "Compressió",
-                "streammon": "Monitor de retransmissió",
-                "stream": "Retransmissió",
-                "community": "Comunitat",
-                "speedtest": "Test de velocitat",
-                "quickaccess": "Accés ràpid",
-                "messages": "Missatges",
-                "avatar": "Avatar",
-                "interface": "Interfície",
-                "shortcut": "Dreceres",
-                "shortcuttitle": "Instal·la una drecera per a",
-                "shortcutdesc": "Permet instal·lar una drecera per a un joc al dispositiu",
-                "gridsize": "Tamany de la quadrícula",
-                "griddesc": "Canvia la quantitat de jocs per fila a la pantalla d'inici.",
-                "clock": "Rellotge",
-                "clockdesc": "Mostra l'hora actual a la llista d'amics, com a superposició del joc, o ambdues coses.",
-                "friendslist": "Llista d'amics",
-                "igoverlay": "Superposició dins del joc",
-                "listoverlay": "Llista i superposició",
-                "filter": "Filtre",
-                "filterdesc": "Permet ordenar la pantalla d'inici ocultant jocs. El filtre es pot alternar mitjançant el símbol situat a la part superior dreta, a sobre dels jocs, a la pantalla d'inici.",
-                "filtertoggle": "Canvia",
-                "filterquick": "Ràpid",
-                "invitebase": "Copia l'enllaç d'invitació",
-                "inviteactive": "Copiat!",
-                "gamelabel": "Etiquetes de joc",
-                "gamelabeldesc": "Elimina etiquetes com 'Pro' dels jocs del menú principal.",
-                "homegallery": "Galeria d'usuari",
-                "homegallerydesc": "Amaga l'àrea 'Captures' de la part inferior de la pantalla d'inici.",
-                "quickprev": "Vista prèvia del missatge",
-                "quickprevdesc": "Amaga la previsualització del missatge a la llista d'amics.",
-                "quickrep": "Resposta ràpida",
-                "quickrepdesc": "Amaga l'opció de resposta ràpida als xats.",
-                "offlinefriend": "Amics fora de línia",
-                "offlinefrienddesc": "Amaga els amics fora de línia a la llista d'amics.",
-                "invisiblefriend": "Amics invisibles",
-                "invisiblefrienddesc": "Amaga els amics amb estat en línia desconegut a la llista d'amics.",
-                "streammode": "Mode de retransmissió",
-                "streammodedesc": "Permet fer que alguns elements (com ara la llista d'amics) no es puguin llegir durant la retransmissió (mitjançant eines com OBS / Discord).",
-                "catprev": "Vista prèvia de la categoria",
-                "catprevdesc": "Amaga les etiquetes de categoria quan es passa el cursor per sobre d'un joc.",
-                "popup": "Efecte emergent",
-                "popupdesc": "Elimina l’efecte d’ampliació quan es passa el cursor per sobre d’un joc a la pantalla d’inici.",
-                "streammondesc": "Activa-ho per iniciar el monitor sempre que comenci un joc.",
-                "resolutiondesc": "La resolució específica per als jocs. 1440p i 2160p requereixen VP9.",
-                "codecdesc": "El còdec utilitzat per als jocs.",
-                "confirmreset": "Segur que vols restablir la configuració?",
-                "gamesfinished": "Jocs acabats",
-                "achievementsunlocked": "Assoliments desbloquejats",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Divideix les llistes de la botiga",
-                "splitstoredesc": "Divideix les llistes de la botiga en dues columnes per obtenir una millor visió.",
-                "inlineimage": "Vista prèvia de la imatge",
-                "inlinedesc": "Substitueix els enllaços d'imatge per a formats de fitxer habituals (jpg/gif/png) amb una vista prèvia.",
-                "familyelements": "Opcions de compartició familiar",
-                "familyelementsdesc": "Amaga les opcions 'Comparteix aquest joc amb la família.'",
-                "resetsettings": "Restableix la configuració"
-            }`
+        case 'es': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67
+            translate_load = {
+                default: 'Por defecto',
+                native: 'Nativa',
+                hide: 'Ocultar',
+                show: 'Mostrar',
+                total: 'Total',
+                visible: 'Visible',
+                hidden: 'Oculto',
+                enabled: 'Activado',
+                disabled: 'Desactivado',
+                auto: 'Automático',
+                manual: 'Manual',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Juegos',
+                bundles: 'Paquetes',
+                addons: 'Complementos',
+                wishlist: undefined,
+                responsive: 'Adaptativo',
+                windowed: 'Modo Ventana',
+                fullscreen: 'Pantalla Completa',
+                searchstore: 'Buscar en la Tienda',
+                onsale: 'En Oferta',
+                prodeals: 'En Oferta (Pro)',
+                userprofile: undefined,
+                usermedia: 'Capturas de pantalla y Vídeos',
+                searchbtnbase: 'Buscar en',
+                avatarpopup: 'URL del nuevo avatar (vacío por defecto):',
+                searchheader: 'Juegos que contienen en el título',
+                sessiontime: 'Duración de la sesión',
+                codec: 'Códec',
+                resolution: 'Resolución',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Tráfico de la sesión',
+                trafficcurrent: 'Tráfico actual',
+                trafficaverage: 'Tráfico promedio',
+                packetloss: 'Paquetes perdidos',
+                framedrop: 'Imágenes perdidas',
+                latency: 'Latencia',
+                jitter: 'Jitter Buffer',
+                decodetime: 'Tiempo de decodificación',
+                compression: 'Compresión',
+                streammon: 'Monitor de retransmisión',
+                stream: 'Retransmisión',
+                community: 'Comunidad',
+                speedtest: 'Test de Velocidad',
+                quickaccess: 'Acceso Rápido',
+                messages: 'Mensajes',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Interfaz',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Instala un acceso directo para',
+                shortcutdesc: 'Permite instalar un acceso directo de un juego en tu dispositivo.',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Tamaño de la cuadrícula',
+                griddesc: 'Cambia la cantidad de juegos por fila en la pantalla de inicio.',
+                clock: 'Reloj',
+                clockdesc: 'Muestra la hora actual en la lista de amigos, como superposición dentro del juego o ambas cosas.',
+                friendslist: 'Lista de amigos',
+                igoverlay: 'Superposición dentro del juego',
+                listoverlay: 'Lista y Superposición',
+                filter: 'Filtro',
+                filterdesc: 'Permite ocultar juegos de la pantalla de inicio. Activado el filtro, aparecen unos símbolos (ojos); el símbolo general, situado encima de tu colección de juegos en la parte superior derecha, aplica o desaplica los cambios en el filtro; los símbolos específicos de cada juego permiten elegir qué juegos ocultar.',
+                filtertoggle: 'Activado (modo normal)',
+                filterquick: 'Activado (modo rápido)',
+                invitebase: 'Copiar el enlace de invitación',
+                inviteactive: '¡Copiado!',
+                gamelabel: 'Game Labels',
+                gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+                homegallery: 'Galería de Capturas',
+                homegallerydesc: 'Oculta el área de "Capturas" de la parte inferior de la pantalla de inicio.',
+                quickprev: 'Previsualización de Mensajes',
+                quickprevdesc: 'Oculta la previsualización de mensajes de la lista de amigos.',
+                quickrep: 'Respuesta Rápida',
+                quickrepdesc: 'Oculta la opción de respuesta rápida del chat.',
+                offlinefriend: 'Amigos Desconectados',
+                offlinefrienddesc: 'Oculta los amigos desconectados de la lista de amigos.',
+                invisiblefriend: 'Amigos Invisibles',
+                invisiblefrienddesc: 'Oculta los amigos con un estado en línea desconocido de la lista de amigos.',
+                streammode: 'Modo Retransmisión',
+                streammodedesc: 'Permite ocultar ciertos elementos (por ejemplo: la lista de amigos) mientras retransmites (a través de un programa externo como OBS o Discord).',
+                catprev: 'Previsualización de Categorías',
+                catprevdesc: 'Oculta las etiquetas de categoría cuando el cursor pasa sobre un juego de la página de inicio.',
+                popup: 'Efecto Zoom',
+                popupdesc: 'Desactiva el efecto de ampliación (zoom-in) que se produce cuando el cursor pasa sobre un juego de la página de inicio.',
+                streammondesc: 'Activa automáticamente el monitor de retransmisión al ejecutar un juego.',
+                resolutiondesc: 'Máxima resolución a la que pueden alcanzar los juegos. Para resoluciones 1440p (Quad HD) o 2160p (4K UHD) es necesario el códec VP9.',
+                codecdesc: 'El códec usado por los juegos.',
+                confirmreset: '¿Estás seguro de querer restablecer los ajustes?',
+                gamesfinished: 'Juegos Completados',
+                achievementsunlocked: 'Logros Desbloqueados',
+                totalPlayTime: undefined,
+                splitstore: 'Tienda a Doble Columna',
+                splitstoredesc: 'Divide la lista de la tienda en dos columnas para una mayor legibilidad.',
+                inlineimage: undefined,
+                inlinedesc: undefined,
+                familyelements: undefined,
+                familyelementsdesc: undefined,
+                resetsettings: 'Restablecer los ajustes'
+            }
             break
-        case "da": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81
-            var load = `{
-                "languagecode": "da",
-                "default": "Standard",
-                "native": "Hjemmehørende",
-                "hide": "Skjul",
-                "show": "Vs",
-                "total": "Total",
-                "visible": "Synlig",
-                "hidden": "Skjult",
-                "enabled": "Aktiveret",
-                "disabled": "Deaktiveret",
-                "auto": "Automatisk",
-                "manual": "Manuelt",
-                "games": "Spil",
-                "bundles": "Bundter",
-                "addons": "Tilføjelser",
-                "wishlist": "Wishlist",
-                "responsive": "Lydhør",
-                "windowed": "Vindue-tilstand",
-                "fullscreen": "Fuld skærm",
-                "searchstore": "Søg i butik",
-                "onsale": "På Udsalg",
-                "prodeals": "Pro Tilbud",
-                "allgames": "Alle spil",
-                "userprofile": "My Profile",
-                "usermedia": "Skærmbilleder og videoer",
-                "searchbtnbase": "Søg videre",
-                "avatarpopup": "Ny avatar-URL (tom for standard):",
-                "searchheader": "Spil inkluderet",
-                "sessiontime": "Sessionstid",
-                "codec": "Codec",
-                "resolution": "Opløsning",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Sessionstrafik",
-                "trafficcurrent": "Nuværende trafik",
-                "trafficaverage": "Gennemsnitlig trafik",
-                "packetloss": "Tabte pakke",
-                "framedrop": "Rammer tabt",
-                "latency": "Netværksventetid",
-                "jitter": "Jitter Buffer",
-                "decodetime": "Afkodningstid",
-                "compression": "Kompression",
-                "streammon": "Overvågning af strøm",
-                "stream": "Strøm",
-                "community": "Fællesskab",
-                "speedtest": "Hastighedstest",
-                "quickaccess": "Hurtig adgang",
-                "messages": "Beskeder",
-                "avatar": "Inkarnation",
-                "interface": "Brugerflade",
-                "shortcut": "Genveje",
-                "shortcuttitle": "Installer en genvej for",
-                "shortcutdesc": "Giver dig mulighed for at installere en genvej til et spil på din enhed",
-                "gridsize": "Gitterstørrelse",
-                "griddesc": "Ændrer antallet af spil pr. række på startskærmen.",
-                "clock": "Ur",
-                "clockdesc": "Viser det aktuelle tidspunkt på vennelisten",
-                "friendslist": "Venneliste",
-                "igoverlay": "Overlay i spillet",
-                "listoverlay": "Liste & Overlay",
-                "filter": "Filter",
-                "filterdesc": "Giver dig mulighed for at sortere din startskærm ved at skjule spil. Filteret kan skiftes via symbolet",
-                "filtertoggle": "Skift",
-                "filterquick": "Hurtig",
-                "invitebase": "Kopier invitationslink",
-                "inviteactive": "Kopieret!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
-                "homegallery": "Brugergalleri",
-                "homegallerydesc": "Skjuler området 'Optager' nederst på startskærmen.",
-                "quickprev": "Eksempel på besked",
-                "quickprevdesc": "Skjuler beskedeksemplet på vennelisten.",
-                "quickrep": "Hurtigt svar",
-                "quickrepdesc": "Skjuler hurtigsvaret i chats.",
-                "offlinefriend": "Offline venner",
-                "offlinefrienddesc": "Skjuler offline venner på vennelisten.",
-                "invisiblefriend": "Usynlige venner",
-                "invisiblefrienddesc": "Skjuler venner med ukendt onlinestatus på vennelisten.",
-                "streammode": "Streaming Tilstand",
-                "streammodedesc": "Aktiver for at gøre visse elementer (dvs. vennelisten) ulæselige under streaming (via værktøjer som OBS / Discord).",
-                "catprev": "Eksempel på kategori",
-                "catprevdesc": "Skjuler kategoritags, når du svæver over et spil.",
-                "popup": "Popup-effekt",
-                "popupdesc": "Fjerner zoom-in / forstørrelseseffekten, når du svæver over et spil på hjemmemarkedet.",
-                "streammondesc": "Aktiver for at starte skærmen, når et spil starter.",
-                "resolutiondesc": "Den målrettede opløsning til spil. 1440p og 2160p kræver VP9.",
-                "codecdesc": "Den codec, der bruges til spil.",
-                "confirmreset": "Er du sikker på, at du vil nulstille indstillingerne?",
-                "gamesfinished": "Gennemførte spil",
-                "achievementsunlocked": "Oplåste Præstationer",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Opdel butikslister",
-                "splitstoredesc": "Opdeler butikslister i to kolonner for at få et bedre overblik.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
-                "resetsettings": "Nulstil indstillingerne"
-                }`
+        case 'it': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
+            translate_load = {
+                default: 'Predefinito',
+                native: 'Nativo',
+                hide: 'Nascondi',
+                show: 'Mostra',
+                total: 'Totale',
+                visible: 'Visibile',
+                hidden: 'Nascosto',
+                enabled: 'Abilitato',
+                disabled: 'Disabilitato',
+                auto: 'Automatico',
+                manual: 'Manuale',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Giochi',
+                bundles: 'Bundles',
+                addons: 'Contenuti aggiuntivi',
+                wishlist: 'Lista dei desideri',
+                responsive: 'Reattivo',
+                windowed: 'Modalità Finestra',
+                fullscreen: 'Schermo Intero',
+                searchstore: 'Cerca nello store',
+                onsale: 'In Offerta',
+                prodeals: 'Offerte del Pro',
+                userprofile: 'Profilo',
+                usermedia: 'Screenshot & Video',
+                searchbtnbase: 'Cerca su',
+                avatarpopup: 'Nuovo URL avatar (vuoto per impostazione predefinita):',
+                searchheader: 'Giochi che includono',
+                sessiontime: 'Tempo sessione',
+                codec: 'Codec',
+                resolution: 'Risoluzione',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Traffico sessione',
+                trafficcurrent: 'Traffico corrente',
+                trafficaverage: 'Traffico medio',
+                packetloss: 'Pacchetti persi',
+                framedrop: 'Fotogrammi persi',
+                latency: 'Latenza',
+                jitter: 'Buffer Jitter',
+                decodetime: 'Tempo di Decodifica',
+                compression: 'Compressione',
+                streammon: 'Monitor Stream',
+                stream: 'Stream',
+                community: 'Comunità',
+                speedtest: 'Speedtest',
+                quickaccess: 'Accesso Veloce',
+                messages: 'Messaggi',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Interfaccia',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Installa una scorciatoia per',
+                shortcutdesc: 'Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Dimensione Griglia',
+                griddesc: 'Modifica la quantità di giochi per riga nella schermata home.',
+                clock: 'Orologio',
+                clockdesc: 'Visualizza l\'ora corrente nell\'elenco degli amici, come un overlay di gioco o entrambi.',
+                friendslist: 'Lista Amici',
+                igoverlay: 'Overlay In-Gioco',
+                listoverlay: 'Lista & Overlay',
+                filter: 'Filtro',
+                filterdesc: 'Ti consente di ordinare la schermata home nascondendo i giochi. Il filtro può essere attivato / disattivato dal simbolo, in alto a destra sopra i tuoi giochi nella schermata home.',
+                filtertoggle: 'Attiva Filtro',
+                filterquick: 'Filtro Rapido',
+                invitebase: 'Copia link invito',
+                inviteactive: 'Copiato!',
+                gamelabel: 'Etichette Giochi',
+                gamelabeldesc: 'Rimuove le etichette "Pro" dai giochi nella schermata home.',
+                homegallery: 'Galleria Utente',
+                homegallerydesc: 'Nasconde l\'area "Acquisizioni" nella parte inferiore della schermata home.',
+                quickprev: 'Anteprima Messaggio',
+                quickprevdesc: 'Nasconde l\'anteprima dei messaggi nella lista amici.',
+                quickrep: 'Risposta Veloce',
+                quickrepdesc: 'Nasconde l\'opzione di risposta rapida nelle chat.',
+                offlinefriend: 'Amici Offline',
+                offlinefrienddesc: 'Nasconde gli amici offline nella lista amici.',
+                invisiblefriend: 'Amici Invisibili',
+                invisiblefrienddesc: 'Nasconde gli amici con stato online sconosciuto nella lista amici.',
+                streammode: 'Modalità Streaming',
+                streammodedesc: 'Abilita per rendere illeggibili alcuni elementi (ad esempio l\'elenco degli amici) durante lo streaming (tramite strumenti come OBS / Discord).',
+                catprev: 'Anteprima Categoria',
+                catprevdesc: 'Nasconde i tag di categoria quando si passa con il mouse su un gioco.',
+                popup: 'Effetto Popup',
+                popupdesc: 'Rimuove l\'effetto di zoom-in / ingrandimento quando si passa con il mouse su un gioco nella schermata home.',
+                streammondesc: 'Attiva per avviare il monitor ogni volta che apri un gioco.',
+                resolutiondesc: 'La risoluzione impostata per i giochi. 1440p e 2160p richiedono VP9.',
+                codecdesc: 'Il codec utilizzato per i giochi.',
+                confirmreset: 'Sei sicuro di voler ripristinare le impostazioni?',
+                gamesfinished: 'Giochi Completati',
+                achievementsunlocked: 'Obiettivi Sbloccati',
+                totalPlayTime: 'Total Playtime',
+                splitstore: 'Dividi Liste Store',
+                splitstoredesc: 'Divide le liste nello store in due colonne per una migliore panoramica.',
+                inlineimage: 'Anteprima Immagine',
+                inlinedesc: 'Sostituisce i collegamenti alle immagini per i formati di file comuni (jpg / gif / png) con un\'anteprima cliccabile.',
+                familyelements: 'Opzioni Gruppo-famiglia',
+                familyelementsdesc: 'Nasconde l\'opzione "Condividi questo gioco con la famiglia".',
+                resetsettings: 'Ripristina Impostazioni'
+            }
             break
-        case "it": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
-            var load = `{
-                "languagecode": "it",
-                "default": "Predefinito",
-                "native": "Nativo",
-                "hide": "Nascondi",
-                "show": "Mostra",
-                "total": "Totale",
-                "visible": "Visibile",
-                "hidden": "Nascosto",
-                "enabled": "Abilitato",
-                "disabled": "Disabilitato",
-                "auto": "Automatico",
-                "manual": "Manuale",
-                "games": "Giochi",
-                "bundles": "Bundles",
-                "addons": "Contenuti aggiuntivi",
-                "wishlist": "Lista dei desideri",
-                "responsive": "Reattivo",
-                "windowed": "Modalità Finestra",
-                "fullscreen": "Schermo Intero",
-                "searchstore": "Cerca nello store",
-                "onsale": "In Offerta",
-                "prodeals": "Offerte del Pro",
-                "allgames": "Tutti i Giochi",
-                "userprofile": "Profilo",
-                "usermedia": "Screenshot & Video",
-                "searchbtnbase": "Cerca su",
-                "avatarpopup": "Nuovo URL avatar (vuoto per impostazione predefinita):",
-                "searchheader": "Giochi che includono",
-                "sessiontime": "Tempo sessione",
-                "codec": "Codec",
-                "resolution": "Risoluzione",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Traffico sessione",
-                "trafficcurrent": "Traffico corrente",
-                "trafficaverage": "Traffico medio",
-                "packetloss": "Pacchetti persi",
-                "framedrop": "Fotogrammi persi",
-                "latency": "Latenza",
-                "jitter": "Buffer Jitter",
-                "decodetime": "Tempo di Decodifica",
-                "compression": "Compressione",
-                "streammon": "Monitor Stream",
-                "stream": "Stream",
-                "community": "Comunità",
-                "speedtest": "Speedtest",
-                "quickaccess": "Accesso Veloce",
-                "messages": "Messaggi",
-                "avatar": "Avatar",
-                "interface": "Interfaccia",
-                "shortcut": "Scorciatoie",
-                "shortcuttitle": "Installa una scorciatoia per",
-                "shortcutdesc": "Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo",
-                "gridsize": "Dimensione Griglia",
-                "griddesc": "Modifica la quantità di giochi per riga nella schermata home.",
-                "clock": "Orologio",
-                "clockdesc": "Visualizza l'ora corrente nell'elenco degli amici, come un overlay di gioco o entrambi.",
-                "friendslist": "Lista Amici",
-                "igoverlay": "Overlay In-Gioco",
-                "listoverlay": "Lista & Overlay",
-                "filter": "Filtro",
-                "filterdesc": "Ti consente di ordinare la schermata home nascondendo i giochi. Il filtro può essere attivato / disattivato dal simbolo, in alto a destra sopra i tuoi giochi nella schermata home.",
-                "filtertoggle": "Attiva Filtro",
-                "filterquick": "Filtro Rapido",
-                "invitebase": "Copia link invito",
-                "inviteactive": "Copiato!",
-                "gamelabel": "Etichette Giochi",
-                "gamelabeldesc": "Rimuove le etichette 'Pro' dai giochi nella schermata home.",
-                "homegallery": "Galleria Utente",
-                "homegallerydesc": "Nasconde l'area 'Acquisizioni' nella parte inferiore della schermata home.",
-                "quickprev": "Anteprima Messaggio",
-                "quickprevdesc": "Nasconde l'anteprima dei messaggi nella lista amici.",
-                "quickrep": "Risposta Veloce",
-                "quickrepdesc": "Nasconde l'opzione di risposta rapida nelle chat.",
-                "offlinefriend": "Amici Offline",
-                "offlinefrienddesc": "Nasconde gli amici offline nella lista amici.",
-                "invisiblefriend": "Amici Invisibili",
-                "invisiblefrienddesc": "Nasconde gli amici con stato online sconosciuto nella lista amici.",
-                "streammode": "Modalità Streaming",
-                "streammodedesc": "Abilita per rendere illeggibili alcuni elementi (ad esempio l'elenco degli amici) durante lo streaming (tramite strumenti come OBS / Discord).",
-                "catprev": "Anteprima Categoria",
-                "catprevdesc": "Nasconde i tag di categoria quando si passa con il mouse su un gioco.",
-                "popup": "Effetto Popup",
-                "popupdesc": "Rimuove l'effetto di zoom-in / ingrandimento quando si passa con il mouse su un gioco nella schermata home.",
-                "streammondesc": "Attiva per avviare il monitor ogni volta che apri un gioco.",
-                "resolutiondesc": "La risoluzione impostata per i giochi. 1440p e 2160p richiedono VP9.",
-                "codecdesc": "Il codec utilizzato per i giochi.",
-                "confirmreset": "Sei sicuro di voler ripristinare le impostazioni?",
-                "gamesfinished": "Giochi Completati",
-                "achievementsunlocked": "Obiettivi Sbloccati",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Dividi Liste Store",
-                "splitstoredesc": "Divide le liste nello store in due colonne per una migliore panoramica.",
-                "inlineimage": "Anteprima Immagine",
-                "inlinedesc": "Sostituisce i collegamenti alle immagini per i formati di file comuni (jpg / gif / png) con un'anteprima cliccabile.",
-                "familyelements": "Opzioni Gruppo-famiglia",
-                "familyelementsdesc": "Nasconde l'opzione 'Condividi questo gioco con la famiglia'.",
-                "resetsettings": "Ripristina Impostazioni"
-            }`
+        case 'da': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81
+            translate_load = {
+                default: 'Standard',
+                native: 'Hjemmehørende',
+                hide: 'Skjul',
+                show: 'Vs',
+                total: 'Total',
+                visible: 'Synlig',
+                hidden: 'Skjult',
+                enabled: 'Aktiveret',
+                disabled: 'Deaktiveret',
+                auto: 'Automatisk',
+                manual: 'Manuelt',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Spil',
+                bundles: 'Bundter',
+                addons: 'Tilføjelser',
+                wishlist: undefined,
+                responsive: 'Lydhør',
+                windowed: 'Vindue-tilstand',
+                fullscreen: 'Fuld skærm',
+                searchstore: 'Søg i butik',
+                onsale: 'På Udsalg',
+                prodeals: 'Pro Tilbud',
+                userprofile: undefined,
+                usermedia: 'Skærmbilleder og videoer',
+                searchbtnbase: 'Søg videre',
+                avatarpopup: 'Ny avatar-URL (tom for standard):',
+                searchheader: 'Spil inkluderet',
+                sessiontime: 'Sessionstid',
+                codec: 'Codec',
+                resolution: 'Opløsning',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Sessionstrafik',
+                trafficcurrent: 'Nuværende trafik',
+                trafficaverage: 'Gennemsnitlig trafik',
+                packetloss: 'Tabte pakke',
+                framedrop: 'Rammer tabt',
+                latency: 'Netværksventetid',
+                jitter: 'Jitter Buffer',
+                decodetime: 'Afkodningstid',
+                compression: 'Kompression',
+                streammon: 'Overvågning af strøm',
+                stream: 'Strøm',
+                community: 'Fællesskab',
+                speedtest: 'Hastighedstest',
+                quickaccess: 'Hurtig adgang',
+                messages: 'Beskeder',
+                comfeature: undefined,
+                avatar: 'Inkarnation',
+                interface: 'Brugerflade',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Installer en genvej for',
+                shortcutdesc: 'Giver dig mulighed for at installere en genvej til et spil på din enhed',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Gitterstørrelse',
+                griddesc: 'Ændrer antallet af spil pr. række på startskærmen.',
+                clock: 'Ur',
+                clockdesc: 'Viser det aktuelle tidspunkt på vennelisten',
+                friendslist: 'Venneliste',
+                igoverlay: 'Overlay i spillet',
+                listoverlay: 'Liste & Overlay',
+                filter: 'Filter',
+                filterdesc: 'Giver dig mulighed for at sortere din startskærm ved at skjule spil. Filteret kan skiftes via symbolet',
+                filtertoggle: 'Skift',
+                filterquick: 'Hurtig',
+                invitebase: 'Kopier invitationslink',
+                inviteactive: 'Kopieret!',
+                gamelabel: undefined,
+                gamelabeldesc: undefined,
+                homegallery: 'Brugergalleri',
+                homegallerydesc: 'Skjuler området "Optager" nederst på startskærmen.',
+                quickprev: 'Eksempel på besked',
+                quickprevdesc: 'Skjuler beskedeksemplet på vennelisten.',
+                quickrep: 'Hurtigt svar',
+                quickrepdesc: 'Skjuler hurtigsvaret i chats.',
+                offlinefriend: 'Offline venner',
+                offlinefrienddesc: 'Skjuler offline venner på vennelisten.',
+                invisiblefriend: 'Usynlige venner',
+                invisiblefrienddesc: 'Skjuler venner med ukendt onlinestatus på vennelisten.',
+                streammode: 'Streaming Tilstand',
+                streammodedesc: 'Aktiver for at gøre visse elementer (dvs. vennelisten) ulæselige under streaming (via værktøjer som OBS / Discord).',
+                catprev: 'Eksempel på kategori',
+                catprevdesc: 'Skjuler kategoritags, når du svæver over et spil.',
+                popup: 'Popup-effekt',
+                popupdesc: 'Fjerner zoom-in / forstørrelseseffekten, når du svæver over et spil på hjemmemarkedet.',
+                streammondesc: 'Aktiver for at starte skærmen, når et spil starter.',
+                resolutiondesc: 'Den målrettede opløsning til spil. 1440p og 2160p kræver VP9.',
+                codecdesc: 'Den codec, der bruges til spil.',
+                confirmreset: 'Er du sikker på, at du vil nulstille indstillingerne?',
+                gamesfinished: 'Gennemførte spil',
+                achievementsunlocked: 'Oplåste Præstationer',
+                totalPlayTime: undefined,
+                splitstore: 'Opdel butikslister',
+                splitstoredesc: 'Opdeler butikslister i to kolonner for at få et bedre overblik.',
+                inlineimage: undefined,
+                inlinedesc: undefined,
+                familyelements: undefined,
+                familyelementsdesc: undefined,
+                resetsettings: 'Nulstil indstillingerne'
+            }
             break
-        case "es": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67
-            var load = `{
-                "languagecode": "es",
-                "default": "Por defecto",
-                "native": "Nativa",
-                "hide": "Ocultar",
-                "show": "Mostrar",
-                "total": "Total",
-                "visible": "Visible",
-                "hidden": "Oculto",
-                "enabled": "Activado",
-                "disabled": "Desactivado",
-                "auto": "Automático",
-                "manual": "Manual",
-                "games": "Juegos",
-                "bundles": "Paquetes",
-                "addons": "Complementos",
-                "wishlist": "Wishlist",
-                "responsive": "Adaptativo",
-                "windowed": "Modo Ventana",
-                "fullscreen": "Pantalla Completa",
-                "searchstore": "Buscar en la Tienda",
-                "onsale": "En Oferta",
-                "prodeals": "En Oferta (Pro)",
-                "allgames": "Todos los juegos",
-                "userprofile": "My Profile",
-                "usermedia": "Capturas de pantalla y Vídeos",
-                "searchbtnbase": "Buscar en",
-                "avatarpopup": "URL del nuevo avatar (vacío por defecto):",
-                "searchheader": "Juegos que contienen en el título",
-                "sessiontime": "Duración de la sesión",
-                "codec": "Códec",
-                "resolution": "Resolución",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Tráfico de la sesión",
-                "trafficcurrent": "Tráfico actual",
-                "trafficaverage": "Tráfico promedio",
-                "packetloss": "Paquetes perdidos",
-                "framedrop": "Imágenes perdidas",
-                "latency": "Latencia",
-                "jitter": "Jitter Buffer",
-                "decodetime": "Tiempo de decodificación",
-                "compression": "Compresión",
-                "streammon": "Monitor de retransmisión",
-                "stream": "Retransmisión",
-                "community": "Comunidad",
-                "speedtest": "Test de Velocidad",
-                "quickaccess": "Acceso Rápido",
-                "messages": "Mensajes",
-                "avatar": "Avatar",
-                "interface": "Interfaz",
-                "shortcut": "Accesos Directos",
-                "shortcuttitle": "Instala un acceso directo para",
-                "shortcutdesc": "Permite instalar un acceso directo de un juego en tu dispositivo.",
-                "gridsize": "Tamaño de la cuadrícula",
-                "griddesc": "Cambia la cantidad de juegos por fila en la pantalla de inicio.",
-                "clock": "Reloj",
-                "clockdesc": "Muestra la hora actual en la lista de amigos, como superposición dentro del juego o ambas cosas.",
-                "friendslist": "Lista de amigos",
-                "igoverlay": "Superposición dentro del juego",
-                "listoverlay": "Lista y Superposición",
-                "filter": "Filtro",
-                "filterdesc": "Permite ocultar juegos de la pantalla de inicio. Activado el filtro, aparecen unos símbolos (ojos); el símbolo general, situado encima de tu colección de juegos en la parte superior derecha, aplica o desaplica los cambios en el filtro; los símbolos específicos de cada juego permiten elegir qué juegos ocultar.",
-                "filtertoggle": "Activado (modo normal)",
-                "filterquick": "Activado (modo rápido)",
-                "invitebase": "Copiar el enlace de invitación",
-                "inviteactive": "¡Copiado!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
-                "homegallery": "Galería de Capturas",
-                "homegallerydesc": "Oculta el área de 'Capturas' de la parte inferior de la pantalla de inicio.",
-                "quickprev": "Previsualización de Mensajes",
-                "quickprevdesc": "Oculta la previsualización de mensajes de la lista de amigos.",
-                "quickrep": "Respuesta Rápida",
-                "quickrepdesc": "Oculta la opción de respuesta rápida del chat.",
-                "offlinefriend": "Amigos Desconectados",
-                "offlinefrienddesc": "Oculta los amigos desconectados de la lista de amigos.",
-                "invisiblefriend": "Amigos Invisibles",
-                "invisiblefrienddesc": "Oculta los amigos con un estado en línea desconocido de la lista de amigos.",
-                "streammode": "Modo Retransmisión",
-                "streammodedesc": "Permite ocultar ciertos elementos (por ejemplo: la lista de amigos) mientras retransmites (a través de un programa externo como OBS o Discord).",
-                "catprev": "Previsualización de Categorías",
-                "catprevdesc": "Oculta las etiquetas de categoría cuando el cursor pasa sobre un juego de la página de inicio.",
-                "popup": "Efecto Zoom",
-                "popupdesc": "Desactiva el efecto de ampliación (zoom-in) que se produce cuando el cursor pasa sobre un juego de la página de inicio.",
-                "streammondesc": "Activa automáticamente el monitor de retransmisión al ejecutar un juego.",
-                "resolutiondesc": "Máxima resolución a la que pueden alcanzar los juegos. Para resoluciones 1440p (Quad HD) o 2160p (4K UHD) es necesario el códec VP9.",
-                "codecdesc": "El códec usado por los juegos.",
-                "confirmreset": "¿Estás seguro de querer restablecer los ajustes?",
-                "gamesfinished": "Juegos Completados",
-                "achievementsunlocked": "Logros Desbloqueados",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Tienda a Doble Columna",
-                "splitstoredesc": "Divide la lista de la tienda en dos columnas para una mayor legibilidad.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
-                "resetsettings": "Restablecer los ajustes"
-            }`
+        case 'ca': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
+            translate_load = {
+                default: 'Per defecte',
+                native: 'Natiu',
+                hide: 'Amaga',
+                show: 'Mostra',
+                total: 'Total',
+                visible: 'Visible',
+                hidden: 'Amagat',
+                enabled: 'Activat',
+                disabled: 'Desactivat',
+                auto: 'Automàtic',
+                manual: 'Manual',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Jocs',
+                bundles: 'Paquets',
+                addons: 'Complements',
+                wishlist: 'Llista de desitjos',
+                responsive: 'Responsiu',
+                windowed: 'Mode finestra',
+                fullscreen: 'Pantalla completa',
+                searchstore: 'Navega la botiga',
+                onsale: 'Ofertes',
+                prodeals: 'Ofertes Pro',
+                userprofile: 'El meu perfil',
+                usermedia: 'Captures de pantalla i vídeos',
+                searchbtnbase: 'Cerca a',
+                avatarpopup: 'URL d\'avatar nou (buit per defecte):',
+                searchheader: 'Jocs que incloguin',
+                sessiontime: 'Temps de sessió',
+                codec: 'Còdec',
+                resolution: 'Resolució',
+                hardware: 'Maquinari',
+                software: 'Programari',
+                trafficsession: 'Trànsit de sessió',
+                trafficcurrent: 'Trànsit actual',
+                trafficaverage: 'Trànsit de mitjana',
+                packetloss: 'Paquets perduts',
+                framedrop: 'Fotogrames perduts',
+                latency: 'Latència',
+                jitter: 'Jitter Buffer',
+                decodetime: 'Temps de descodificació',
+                compression: 'Compressió',
+                streammon: 'Monitor de retransmissió',
+                stream: 'Retransmissió',
+                community: 'Comunitat',
+                speedtest: 'Test de velocitat',
+                quickaccess: 'Accés ràpid',
+                messages: 'Missatges',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Interfície',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Instal·la una drecera per a',
+                shortcutdesc: 'Permet instal·lar una drecera per a un joc al dispositiu',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Tamany de la quadrícula',
+                griddesc: 'Canvia la quantitat de jocs per fila a la pantalla d\'inici.',
+                clock: 'Rellotge',
+                clockdesc: 'Mostra l\'hora actual a la llista d\'amics, com a superposició del joc, o ambdues coses.',
+                friendslist: 'Llista d\'amics',
+                igoverlay: 'Superposició dins del joc',
+                listoverlay: 'Llista i superposició',
+                filter: 'Filtre',
+                filterdesc: 'Permet ordenar la pantalla d\'inici ocultant jocs. El filtre es pot alternar mitjançant el símbol situat a la part superior dreta, a sobre dels jocs, a la pantalla d\'inici.',
+                filtertoggle: 'Canvia',
+                filterquick: 'Ràpid',
+                invitebase: 'Copia l\'enllaç d\'invitació',
+                inviteactive: 'Copiat!',
+                gamelabel: 'Etiquetes de joc',
+                gamelabeldesc: 'Elimina etiquetes com "Pro" dels jocs del menú principal.',
+                homegallery: 'Galeria d\'usuari',
+                homegallerydesc: 'Amaga l\'àrea "Captures" de la part inferior de la pantalla d\'inici.',
+                quickprev: 'Vista prèvia del missatge',
+                quickprevdesc: 'Amaga la previsualització del missatge a la llista d\'amics.',
+                quickrep: 'Resposta ràpida',
+                quickrepdesc: 'Amaga l\'opció de resposta ràpida als xats.',
+                offlinefriend: 'Amics fora de línia',
+                offlinefrienddesc: 'Amaga els amics fora de línia a la llista d\'amics.',
+                invisiblefriend: 'Amics invisibles',
+                invisiblefrienddesc: 'Amaga els amics amb estat en línia desconegut a la llista d\'amics.',
+                streammode: 'Mode de retransmissió',
+                streammodedesc: 'Permet fer que alguns elements (com ara la llista d\'amics) no es puguin llegir durant la retransmissió (mitjançant eines com OBS / Discord).',
+                catprev: 'Vista prèvia de la categoria',
+                catprevdesc: 'Amaga les etiquetes de categoria quan es passa el cursor per sobre d\'un joc.',
+                popup: 'Efecte emergent',
+                popupdesc: 'Elimina l’efecte d’ampliació quan es passa el cursor per sobre d’un joc a la pantalla d’inici.',
+                streammondesc: 'Activa-ho per iniciar el monitor sempre que comenci un joc.',
+                resolutiondesc: 'La resolució específica per als jocs. 1440p i 2160p requereixen VP9.',
+                codecdesc: 'El còdec utilitzat per als jocs.',
+                confirmreset: 'Segur que vols restablir la configuració?',
+                gamesfinished: 'Jocs acabats',
+                achievementsunlocked: 'Assoliments desbloquejats',
+                totalPlayTime: 'Total Playtime',
+                splitstore: 'Divideix les llistes de la botiga',
+                splitstoredesc: 'Divideix les llistes de la botiga en dues columnes per obtenir una millor visió.',
+                inlineimage: 'Vista prèvia de la imatge',
+                inlinedesc: 'Substitueix els enllaços d\'imatge per a formats de fitxer habituals (jpg/gif/png) amb una vista prèvia.',
+                familyelements: 'Opcions de compartició familiar',
+                familyelementsdesc: 'Amaga les opcions "Comparteix aquest joc amb la família."',
+                resetsettings: 'Restableix la configuració'
+            }
             break
-        case "nl": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9
-            var load = `{
-                "languagecode": "nl",
-                "default": "Standaard",
-                "native": "Native",
-                "hide": "Verbergen",
-                "show": "Tonen",
-                "total": "Totaal",
-                "visible": "Zichtbaar",
-                "hidden": "Verborgen",
-                "enabled": "Ingeschakeld",
-                "disabled": "Uitgeschakeld",
-                "auto": "Automatisch",
-                "manual": "Handmatig",
-                "games": "Games",
-                "bundles": "Bundels",
-                "addons": "Add-ons",
-                "wishlist": "Verlanglijst",
-                "responsive": "Responsief",
-                "windowed": "Venster Modus",
-                "fullscreen": "Volledig Scherm",
-                "searchstore": "Zoek in de winkel",
-                "onsale": "In de Uitverkoop",
-                "prodeals": "Pro Deals",
-                "allgames": "Alle Games",
-                "userprofile": "Mijn Profiel",
-                "usermedia": "Screenshots & Videos",
-                "searchbtnbase": "Zoek verder",
-                "avatarpopup": "Nieuwe avatar URL (laat leeg voor standaard):",
-                "searchheader": "Games inclusief",
-                "sessiontime": "Sessie tijd",
-                "codec": "Codec",
-                "resolution": "Resolutie",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Sessie traffic",
-                "trafficcurrent": "Huidige traffic",
-                "trafficaverage": "Gemiddelde traffic",
-                "packetloss": "Verloren pakketten",
-                "framedrop": "Frames dropped",
-                "latency": "Vertraging",
-                "jitter": "Jitter Buffer",
-                "decodetime": "Decodeer Tijd",
-                "compression": "Compressie",
-                "streammon": "Stream Monitor",
-                "stream": "Stream",
-                "community": "Gemeenschap",
-                "speedtest": "Snelheidstest",
-                "quickaccess": "Snelle Toegang",
-                "messages": "Berichten",
-                "avatar": "Avatar",
-                "interface": "Interface",
-                "shortcut": "Snelkoppelingen",
-                "shortcuttitle": "Installeer een snelkoppeling voor",
-                "shortcutdesc": "Laat je een snelkoppeling voor een game installeren op je apparaat",
-                "gridsize": "Rooster Grootte",
-                "griddesc": "Verander het aantal games per rij op je thuisscherm.",
-                "clock": "Klok",
-                "clockdesc": "Geef de huidige tijd weer in je vriendenlijst, als in-game overlay of allebei.",
-                "friendslist": "Vriendenlijst",
-                "igoverlay": "In-Game Overlay",
-                "listoverlay": "Lijst & Overlay",
-                "filter": "Filter",
-                "filterdesc": "Laat je het thuisscherm sorteren door games te verbergen. Dit filter kan in-/uitgeschakeld worden via het symbool, rechtsboven je games op het thuisscherm.",
-                "filtertoggle": "Omschakelen",
-                "filterquick": "Snel",
-                "invitebase": "Kopiëer uitnodigingslink",
-                "inviteactive": "Gekopiëerd!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Verwijderd labels zoals 'Pro' van games op het homescreen.",
-                "homegallery": "Gebruikers Gallerij",
-                "homegallerydesc": "Verbergt het 'Captures' deel onderaan het thuisscherm.",
-                "quickprev": "Berichtvoorbeeld",
-                "quickprevdesc": "Verbergt het berichtvoorbeeld in de vriendenlijst.",
-                "quickrep": "Snelantwoord",
-                "quickrepdesc": "Verbergt de snelantwoord optie in chats.",
-                "offlinefriend": "Offline Vrienden",
-                "offlinefrienddesc": "Verbergt offline vrienden in de vriendenlijst.",
-                "invisiblefriend": "Onzichtbare Vrienden",
-                "invisiblefrienddesc": "Vergbergt vrienden met onbekend online status in de vriendenlijst.",
-                "streammode": "Streaming Modus",
-                "streammodedesc": "Schakel in om bepaalde elementen (zoals de vriendenlijst) onleesbaar te maken tijdens het streamen (via tools als OBS / Discord).",
-                "catprev": "Categorievoorbeeld",
-                "catprevdesc": "Verbergt de categorie tags bij het bewegen over een game.",
-                "popup": "Popup Effect",
-                "popupdesc": "Haal het zoom-in / vergroot effect weg bij het bewegen over een game op het thuisscherm.",
-                "streammondesc": "Activeer om de monitor te starten bij het starten van een game.",
-                "resolutiondesc": "De beoogde resolutio voor games. 1440p en 2160p vereisen VP9.",
-                "codecdesc": "De codec gebruikt voor games.",
-                "confirmreset": "Weet je zeker dat je de instellingen wilt resetten?",
-                "gamesfinished": "Games Voltooid",
-                "achievementsunlocked": "Achievements Vrijgespeeld",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Splits Winkel Lijsten",
-                "splitstoredesc": "Splits de winkel lijsten in twee kolommen voor een beter overzicht.",
-                "inlineimage": "Voorvertoningsafbeelding",
-                "inlinedesc": "Vervang afbeelding links voor veelvoorkomende formaten (jpg/gif/png) door een klikbare voorvertoning.",
-                "familyelements": "Opties voor delen met gezin",
-                "familyelementsdesc": "Verbergt de 'Delen met gezin'-opties.",
-                "resetsettings": "Reset Instellingen"
-            }`
+        case 'pt': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/91
+            translate_load = {
+                default: 'Padrão',
+                native: 'Nativo',
+                hide: 'Esconder',
+                show: 'Mostrar',
+                total: 'Total',
+                visible: 'Visivel',
+                hidden: 'Escondido',
+                enabled: 'Activado',
+                disabled: 'Desactivado',
+                auto: 'Automático',
+                manual: 'Manual',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Jogos',
+                bundles: 'Bundles',
+                addons: 'Add-ons',
+                wishlist: 'Lista de desejos',
+                responsive: 'Responsivo',
+                windowed: 'Modo Janela',
+                fullscreen: 'Ecrã completo',
+                searchstore: 'Pesquisar na loja',
+                onsale: 'Em promoção',
+                prodeals: 'Promoções Pro',
+                userprofile: 'Meu Perfil',
+                usermedia: 'Screenshots & Videos',
+                searchbtnbase: 'Pesquisar em',
+                avatarpopup: 'Novo URL para avatar (vazio para o padrão):',
+                searchheader: 'Incluindo Jogos',
+                sessiontime: 'Tempo de sessão',
+                codec: 'Codec',
+                resolution: 'Resolução',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Tráfego da sessão',
+                trafficcurrent: 'Tráfego instantâneo',
+                trafficaverage: 'Tráfego médio',
+                packetloss: 'Pacotes perdidos',
+                framedrop: 'Frames perdidos',
+                latency: 'Latencia',
+                jitter: 'Buffer de Jitter',
+                decodetime: 'Tempo de descodificação',
+                compression: 'Compressão',
+                streammon: 'Monitor do Stream',
+                stream: 'Stream',
+                community: 'Comunidade',
+                speedtest: 'Teste de velocidade',
+                quickaccess: 'Acesso Rápido',
+                messages: 'Mensagens',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Interface',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Instalar atalho para',
+                shortcutdesc: 'Permite-te instalar um atalho para um jogo no teu dispositivo',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Tamanho da Grelha',
+                griddesc: 'Muda o número de jogos por linha no ecrã inicial.',
+                clock: 'Relógio',
+                clockdesc: 'Mostra a hora actual na lista de amigos, em sobreposição no jogo, ou ambos.',
+                friendslist: 'Lista de Amigos',
+                igoverlay: 'Sobreposição no jogo',
+                listoverlay: 'Lista e Sobreposição',
+                filter: 'Filtro',
+                filterdesc: 'Permite-te organizar o teu ecrã inicial escondendo jogos. O filtro pode ser alternado pelo simbolo no topo direito, acima dos teus jogos no ecrã inicial.',
+                filtertoggle: 'Alternar',
+                filterquick: 'Rápido',
+                invitebase: 'Copiar ligação de convite',
+                inviteactive: 'Copiado!',
+                gamelabel: 'Etiquetas de Jogos',
+                gamelabeldesc: 'Remove as etiquetas como por exemplo "Pro" dos jogos da página inicial.',
+                homegallery: 'Galeria do Utilizador',
+                homegallerydesc: 'Esconde a área "Capturas" no fundo do ecrã inicial.',
+                quickprev: 'Pré-visualização de mensagens',
+                quickprevdesc: 'Esconde a pré-visualização de mensagens na tua lista de amigos.',
+                quickrep: 'Resposta Rápida',
+                quickrepdesc: 'Esconde a opção de resposta rápida nas conversas.',
+                offlinefriend: 'Amigos Offline',
+                offlinefrienddesc: 'Esconde amigos offline na lista de amigos.',
+                invisiblefriend: 'Amigos Invisíveis',
+                invisiblefrienddesc: 'Esconde amigos com estado desconhecido na lista de amigos.',
+                streammode: 'Modo de Streaming',
+                streammodedesc: 'Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS / Discord).',
+                catprev: 'Pré-visualização da Categoria',
+                catprevdesc: 'Esconde a etiqueta da categoria ao passar por cima de um jogo.',
+                popup: 'Efeito Popup',
+                popupdesc: 'Remove o efeito de zoom-in / aumento ao passar por cima de um jogo no ecrã inicial.',
+                streammondesc: 'Activa para iniciar o monitor quando um jogo começa.',
+                resolutiondesc: 'A resolução pretendida para stream de jogos. 1440p e 2160p requerem VP9.',
+                codecdesc: 'O codec utilizado para stream de jogos.',
+                confirmreset: 'De certeza que queres reiniciar as configurações?',
+                gamesfinished: 'Jogo terminado',
+                achievementsunlocked: 'Conquistas desbloqueadas',
+                totalPlayTime: 'Total Playtime',
+                splitstore: 'Dividir Listas da Loja',
+                splitstoredesc: 'Divide as listas da loja em duas colunas para uma melhor visão geral.',
+                inlineimage: 'Prévia de imagem',
+                inlinedesc: 'Substitui links de imagem para formatos comuns de ficheiros (jpg/gif/png) com uma prévia clicável.',
+                familyelements: 'Opções de partilha de família',
+                familyelementsdesc: 'Esconder a opção "Partilhar este jogo com a família."',
+                resetsettings: 'Reiniciar Configurações'
+            }
             break
-        case "hu": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/97
-            var load = `{
-                "languagecode": "hu",
-                "default": "Alapértelmezett",
-                "native": "Eredeti",
-                "hide": "Elrejt",
-                "show": "Mutat",
-                "total": "Összesen",
-                "visible": "Látható",
-                "hidden": "Rejtett",
-                "enabled": "Engedélyezve",
-                "disabled": "Tiltva",
-                "auto": "Automatikus",
-                "manual": "Manuális",
-                "games": "Játékok",
-                "bundles": "Csomagok",
-                "addons": "Kiegészítők",
-                "wishlist": "Kívánságlista",
-                "responsive": "Reszponzív",
-                "windowed": "Ablakban",
-                "fullscreen": "Teljes képernyő",
-                "searchstore": "Keresés",
-                "onsale": "Akciók",
-                "prodeals": "Pro Ajánlatok",
-                "allgames": "Összes Játék",
-                "userprofile": "Saját fiók",
-                "usermedia": "Képernyőképek és Videók",
-                "searchbtnbase": "Keresés",
-                "avatarpopup": "Új avatar URL (alapból üres):",
-                "searchheader": "Játékok, amik tartalmazzák:",
-                "sessiontime": "Kapcsolat ideje",
-                "codec": "Videó kódolás",
-                "resolution": "Felbontás",
-                "hardware": "Hardver",
-                "software": "Szoftver",
-                "trafficsession": "Kapcsolat forgalma",
-                "trafficcurrent": "Jelenlegi sebesség",
-                "trafficaverage": "Átlag sebesség",
-                "packetloss": "Elveszett csomagok",
-                "framedrop": "Eldobott képkockák",
-                "latency": "Késleltetés",
-                "jitter": "Jitter puffer",
-                "decodetime": "Dekódolási idő",
-                "compression": "Tömörítés",
-                "streammon": "Stream Monitor",
-                "stream": "Stream",
-                "community": "Közösség",
-                "speedtest": "Sebesség teszt",
-                "quickaccess": "Gyors elérés",
-                "messages": "Üzenetek",
-                "avatar": "Avatar",
-                "interface": "Megjelenítés",
-                "shortcut": "Parancsikon",
-                "shortcuttitle": "Hivatkozás telepítése:",
-                "shortcutdesc": "Parancsikon létrehozása közvetlen játék indításhoz",
-                "gridsize": "Rács méret",
-                "griddesc": "Megváltoztatja a kezdőlapon a soronkénti játékok mennyiségét",
-                "clock": "Óra",
-                "clockdesc": "Az aktuális idő megjelenítése az ismerősök listáján vagy a játékban.",
-                "friendslist": "Ismerősök listája",
-                "igoverlay": "Játékon belüli Overlay",
-                "listoverlay": "Ismerősök listája és Játékon belüli Overlay",
-                "filter": "Szűrés",
-                "filterdesc": "Lehetővé teszi a kezdőlapon a Saját játékkönyvtár rendezését a játékok elrejtésével. A szűrő a kezdőlapon a Saját játékkönyvtár jobb felső sarkában található szimbólummal kapcsolható be.",
-                "filtertoggle": "Kapcsolható",
-                "filterquick": "Gyors",
-                "invitebase": "Meghívási hivatkozás másolása",
-                "inviteactive": "Vágólapra másolva!",
-                "gamelabel": "Játek Címkék",
-                "gamelabeldesc": "A kezdőlapon eltávolítja a címkéket a játékokról. Pl.: 'pro'",
-                "homegallery": "Felvételek és játékállások",
-                "homegallerydesc": "Elrejti a kezdőlap alján található 'Felvételek és játékállások' területet.",
-                "quickprev": "Üzenet Előnézet",
-                "quickprevdesc": "Üzenet Előnézetek megjelenítése az ismerősök listáján.",
-                "quickrep": "Gyors Válasz",
-                "quickrepdesc": "A gyors válasz opciót elrejti a csevegésekben.",
-                "offlinefriend": "Offline Ismerősök",
-                "offlinefrienddesc": "Elrejti az offline ismerősöket a listából.",
-                "invisiblefriend": "Láthatatlan Ismerősök",
-                "invisiblefrienddesc": "Elrejti az ismeretlen státuszú ismerősöket a listán.",
-                "streammode": "Streaming Mód",
-                "streammodedesc": "Stream-elés közben olvashatatlanná tesz bizonyos elemeket. (pl.: ismerősök listája - OBS vagy Discord használatakor)",
-                "catprev": "Kategória megjelenítés",
-                "catprevdesc": "A kategória címkék elrejtése, amikor egy játék fölé viszed az egeret.",
-                "popup": "Popup hatás",
-                "popupdesc": "Kikapcsolja a Popup effektet (játék képének nagyítása), amikor egy játék fölé viszed az egérmutatót a kezdőlapon",
-                "streammondesc": "Stream Monitor bekapcsolása játék indításánál.",
-                "resolutiondesc": "Streameléshez beállított felbontás. 1440p és 2160p beállításhoz VP9 videó kódolás támogatás szükséges.",
-                "codecdesc": "A stream-hez használt videó kódoló eljárás.",
-                "confirmreset": "Biztosan vissza akarod állítani a beállításokat?",
-                "gamesfinished": "Vége a játéknak",
-                "achievementsunlocked": "Megszerzett jutalom",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Áruház oszlopos megjelenítés",
-                "splitstoredesc": "Az Áruház 2 oszlopos megjelenítése a jobb láthatóság miatt.",
-                "inlineimage": "Képek előnézete",
-                "inlinedesc": "Gyakori képformátum (jpg/gif/png) linkek helyettesítése kattintható előnézeti képekkel.",
-                "familyelements": "Családi megosztás",
-                "familyelementsdesc": "Elrejti 'A játék megosztása a családdal' lehetőséget a játékoknál, ha már létrehoztál családi csoportot.",
-                "resetsettings": "Beállítások alaphelyzetbe állítása"
-            }`
+        case 'sv': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
+            translate_load = {
+                default: "Standard",
+                native: "Inbyggd",
+                hide: "Göm",
+                show: "Visa",
+                total: "Total",
+                visible: "Synligt",
+                hidden: "Gömt",
+                enabled: "Aktiverat",
+                disabled: "Inaktiverat",
+                auto: "Automatisk",
+                manual: "Manuell",
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: "Spel",
+                bundles: "Spel-paket",
+                addons: "Tillägg",
+                wishlist: undefined,
+                responsive: "Responsiv",
+                windowed: "Fönsterläge",
+                fullscreen: "Fullskärmsläge",
+                searchstore: "Sök i butiken",
+                onsale: "På Rea",
+                prodeals: "Pro Deals",
+                userprofile: undefined,
+                usermedia: "Skärmdumpar & Filmer",
+                searchbtnbase: "Sök på",
+                avatarpopup: "Nytt avatar-URL (lämna tomt för standard):",
+                searchheader: "Spel inklusive",
+                sessiontime: "Sessionstid",
+                codec: "Kodec",
+                resolution: "Upplösning",
+                hardware: "Hårdvara",
+                software: "Mjukvara",
+                trafficsession: "Sessionstrafik",
+                trafficcurrent: "Nuvarande trafik",
+                trafficaverage: "Genomsnittlig trafik",
+                packetloss: "Tappade paket",
+                framedrop: "Tappade bilder",
+                latency: "Latens",
+                jitter: "Jitter Buffer",
+                decodetime: "Avkodningstid",
+                compression: "Kompression",
+                streammon: "Strömmonitor",
+                stream: "Ström",
+                community: "Gemenskap",
+                speedtest: "Hastighetstest",
+                quickaccess: "Snabbmeny",
+                messages: "Meddelanden",
+                comfeature: undefined,
+                avatar: "Avatar",
+                interface: "Gränssnitt",
+                shortcut: "StadiaIcons",
+                shortcuttitle: "Installera en genväg för",
+                shortcutdesc: "Låter dig installera en genväg för ett spel på din enhet",
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: "Rutnätsstorlek",
+                griddesc: "Ändrar hur många spel visas per rad på hemskärmen",
+                clock: "Klocka",
+                clockdesc: "Visar den nuvarande tiden på vänlistan, som en spel-overlay eller båda.",
+                friendslist: "Vänner",
+                igoverlay: "Spelöverlägg",
+                listoverlay: "Lista & Överlägg",
+                filter: "Filter",
+                filterdesc: "Låter dig sortera hemskärmen genom att gömma spel. Filtret kan växlas med symbolen uppe till höver ovanför dina spel på hemskärmen.",
+                filtertoggle: "Växla Filter",
+                filterquick: "Snabbfilter",
+                invitebase: "Kopiera inbjudningslänk",
+                inviteactive: "Kopierat!",
+                gamelabel: undefined,
+                gamelabeldesc: "Removes labels like 'Pro' from games on the homescreen.",
+                homegallery: "Användargalleri",
+                homegallerydesc: "Gömmer 'Captures'-sektionen längst ner på hemskärmen.",
+                quickprev: "Förhandsvisning av Meddelande",
+                quickprevdesc: "Gömmer förhandsvisningen av meddelanden i vänlistan.",
+                quickrep: "Snabbsvar",
+                quickrepdesc: "Gömmer snabbsvarsfunktionen i vänlistan",
+                offlinefriend: "Offline-vänner",
+                offlinefrienddesc: "Gömmer offline-vänner i vänlistan",
+                invisiblefriend: "Osynliga Vänner",
+                invisiblefrienddesc: "Gömmer vänner med okänd online-status i vänlistan",
+                streammode: "Streamer-läge",
+                streammodedesc: "Aktivera för att göra vissa delar (bl.a vänlistan) oläsbar medan du streamar (genom verktyg som OBS / Discord)",
+                catprev: "Kategori-förhandsvisning",
+                catprevdesc: "Gömmer kategori-taggarna när du har muspekaren över ett spel.",
+                popup: "Popup-Effekt",
+                popupdesc: "Tar bort inzoomingseffekten när du har muspekaren över ett spel på hemskärmen.",
+                streammondesc: "Aktivera för att starta en monitor så fort du öppnar ett spel.",
+                resolutiondesc: "Målupplösningen för spel. 1440p och 2160p kräver VP9.",
+                codecdesc: "Det kodec som används för spel.",
+                confirmreset: "Är du säker på att du vill återställa inställningarna?",
+                gamesfinished: "Färdiga Spel",
+                achievementsunlocked: "Prestationer Uppnådda",
+                totalPlayTime: undefined,
+                splitstore: "Dela Butikslistor",
+                splitstoredesc: "Delar butikslistor i två kolumner för en bättre överblick.",
+                inlineimage: "Image Preview",
+                inlinedesc: undefined,
+                familyelements: undefined,
+                familyelementsdesc: undefined,
+                resetsettings: "Återställ Inställningar"
+            }
             break
-        case "de": // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/13
-            var load = `{
-                "languagecode": "de",
-                "default": "Standard",
-                "native": "Nativ",
-                "hide": "Verstecke",
-                "show": "Zeige",
-                "total": "Gesamt",
-                "visible": "Sichtbar",
-                "hidden": "Versteckt",
-                "enabled": "Aktiviert",
-                "disabled": "Deaktiviert",
-                "auto": "Automatisch",
-                "manual": "Manuel",
-                "games": "Spiele",
-                "bundles": "Bundles",
-                "addons": "Add-ons",
-                "wishlist": "Wunschliste",
-                "responsive": "Responsiv",
-                "windowed": "Fenster Modus",
-                "fullscreen": "Vollbild",
-                "searchstore": "Im Store suchen",
-                "onsale": "Im Angebot",
-                "prodeals": "Pro Angebote",
-                "allgames": "Alle Spiele",
-                "userprofile": "Mein Profil",
-                "usermedia": "Fotos & Videos",
-                "searchbtnbase": "Suche auf",
-                "avatarpopup": "Neue Avatar URL (keine für Zurücksetzung):",
-                "searchheader": "Spiele beinhalten",
-                "sessiontime": "Sitzungszeit",
-                "codec": "Codec",
-                "resolution": "Auflösung",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Sitzungs-Traffic",
-                "trafficcurrent": "Derzeitiger Traffic",
-                "trafficaverage": "Durchschnittlicher Traffic",
-                "packetloss": "Packetverlust",
-                "framedrop": "Verlorene Frames",
-                "latency": "Latenz",
-                "jitter": "Jitter-Puffer",
-                "decodetime": "Dekodierungs Zeit",
-                "compression": "Kompression",
-                "streammon": "Stream Monitor",
-                "stream": "Stream",
-                "community": "Community",
-                "speedtest": "Speedtest",
-                "quickaccess": "Schnellzugriff",
-                "messages": "Nachrichten",
-                "avatar": "Avatar",
-                "interface": "Oberfläche",
-                "shortcut": "Verknüpfungen",
-                "shortcuttitle": "Installiere eine Verknüpfung für",
-                "shortcutdesc": "Erlaubt das erstellen einer Verknüpfung von Spielen auf dem Gerät.",
-                "gridsize": "Rastergröße",
-                "griddesc": "Ändert die Anzahl der Spiele pro Reihe auf dem Startbildschirm.",
-                "clock": "Uhr",
-                "clockdesc": "Zeigt die Uhrzeit in der Freundesliste, als Einblendung im Spiel, oder beides.",
-                "friendslist": "Freundesliste",
-                "igoverlay": "Spiel Einblendung",
-                "listoverlay": "Liste & Einblendung",
-                "filter": "Filter",
-                "filterdesc": "Erlaubt das sortieren des Startbildschirmes durch verstecken von Spielen.",
-                "filtertoggle": "Wechsel",
-                "filterquick": "Schnell",
-                "invitebase": "Einladungslink kopieren",
-                "inviteactive": "Kopiert!",
-                "gamelabel": "Spiele Beschriftung",
-                "gamelabeldesc": "Entfernt Beschriftungen wie 'Pro' von Spielen auf dem Startbildschirm.",
-                "homegallery": "Nutzer Galerie",
-                "homegallerydesc": "Versteckt den 'Aufnahmen' Bereich am unteren Ende des Startbildschirmes.",
-                "quickprev": "Nachrichten Vorschau",
-                "quickprevdesc": "Versteckt die Vorschau der letzten Nachricht in der Freundesliste.",
-                "quickrep": "Schnellantwort",
-                "quickrepdesc": "Versteckt die Antwortvorschläge in Chats.",
-                "inlineimage": "Bilder Vorschau",
-                "inlinedesc": "Ersetzt Links zu Bildern wenn möglich mit einer klickbaren Vorschau.",
-                "offlinefriend": "Offline Freunde",
-                "offlinefrienddesc": "Versteckt offline Freunde in der Freundesliste.",
-                "invisiblefriend": "Unsichtbare Freunde",
-                "invisiblefrienddesc": "Versteckt Freunde ohne bekannten online Status in der Freundesliste.",
-                "streammode": "Streaming Modus",
-                "streammodedesc": "Aktivieren um bestimmte Elemente (z.B. die Freundesliste) während des streamens (über z.B. OBS / Discord) unleserlich zu machen.",
-                "catprev": "Kategorie Vorschau",
-                "catprevdesc": "Entfernt die Anzeige der Kategorien bei Spielen auf dem Startbildschirm.",
-                "popup": "Popup Effekt",
-                "popupdesc": "Entfernt den vergrößern/zoomen Effekt bei Spielen auf dem Startbildschirm.",
-                "streammondesc": "Aktivieren um den Streaming Monitor beim starten von Spielen automatisch zu starten.",
-                "resolutiondesc": "Die angezielte Auflösung für Spiele. 1440p und 2160p benötigen VP9.",
-                "codecdesc": "Der für Spiele genutzte Codec.",
-                "confirmreset": "Möchtest du die Einstellungen sicher zurücksetzen?",
-                "gamesfinished": "Spiele Abgeschlossen",
-                "achievementsunlocked": "Erfolge Freigeschaltet",
-                "totalPlayTime": "Gesamtspielzeit",
-                "splitstore": "Store Listen teilen",
-                "splitstoredesc": "Teilt Listen im Store für eine bessere Übersicht in zwei Spalten.",
-                "inlineimage": "Vorschau für Bilder",
-                "inlinedesc": "Ersetzt Bilder in gängigen Formaten (jpg/gif/png) mit einer klickbaren Vorschau.",
-                "familyelements": "Familienfreigabe Optionen",
-                "familyelementsdesc": "Versteckt die 'Dieses Spiel für die Familie freigeben' Elemente.",
-                "resetsettings": "Einstellungen zurücksetzen"
-            }`
+        case 'fr': //https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8
+            translate_load = {
+                default: 'Par Défaut',
+                native: 'Natif',
+                hide: 'Masquer',
+                show: 'Afficher',
+                total: 'Total',
+                visible: 'Visible',
+                hidden: 'Masqué',
+                enabled: 'Activé',
+                disabled: 'Désactivé',
+                auto: 'Automatique',
+                manual: 'Manuel',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Jeux',
+                bundles: 'Lots',
+                addons: 'Extensions',
+                wishlist: 'Liste d\'Envies',
+                responsive: 'Responsive',
+                windowed: 'Mode Fenêtré',
+                fullscreen: 'Plein Écran',
+                searchstore: 'Rechercher dans le Store',
+                onsale: 'En Promotion',
+                prodeals: 'Offres Stadia Pro',
+                userprofile: 'Mon Profil',
+                usermedia: 'Captures & Vidéos',
+                searchbtnbase: 'Rechercher sur',
+                avatarpopup: 'URL du nouvel avatar (vide = par défaut):',
+                searchheader: 'Jeux avec',
+                sessiontime: 'Durée de la session',
+                codec: 'Codec',
+                resolution: 'Résolution',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Trafic de la session',
+                trafficcurrent: 'Trafic actuel',
+                trafficaverage: 'Trafic moyen',
+                packetloss: 'Paquets perdus',
+                framedrop: 'Images perdues',
+                latency: 'Latence',
+                jitter: 'Tampon de gigue',
+                decodetime: 'Decoding Time',
+                compression: 'Compression',
+                streammon: 'Moniteur de Stream',
+                stream: 'Stream',
+                community: 'Communauté',
+                speedtest: 'Test de Débit',
+                quickaccess: 'Accès Rapide',
+                messages: 'Messages',
+                comfeature: undefined,
+                avatar: 'Avatar',
+                interface: 'Interface',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Installer un raccourcis pour',
+                shortcutdesc: 'Permet d\'installer des raccourcis individuels pour vos jeux sur votre ordinateur',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Taille de la Grille',
+                griddesc: 'Modifie le nombre de jeux affichés sur la grille de l\'accueil.',
+                clock: 'Horloge',
+                clockdesc: 'Affiche l\'heure dans la liste d\'amis et/ou dans le menu en-jeu.',
+                friendslist: 'Liste d\'amis',
+                igoverlay: 'Menu en-jeu',
+                listoverlay: 'Liste & Menu',
+                filter: 'Filtre',
+                filterdesc: 'Permet de filtrer les jeux à masquer dans l\'accueil. Le filtrage peut être basculé en utilisant le symbole en haut à droite de la grille de l\'accueil.',
+                filtertoggle: 'Mode Bascule',
+                filterquick: 'Accès rapide',
+                invitebase: 'Copier le lien d\'invitation',
+                inviteactive: 'Copié!',
+                gamelabel: 'Étiquettes des Jeux',
+                gamelabeldesc: 'Retire les étiquettes des jeux telles que l(étiquette "Pro" dans la page d\'accueil.',
+                homegallery: 'Galerie des Captures',
+                homegallerydesc: 'Masque la section "Captures" en bas de la page d\'accueil.',
+                quickprev: 'Prévisualisation des Messages',
+                quickprevdesc: 'Masque la prévisualisation des messages dans la liste d\'amis.',
+                quickrep: 'Réponse Rapide',
+                quickrepdesc: 'Masque les options de réponse rapide dans le chat.',
+                offlinefriend: 'Amis Hors-Ligne',
+                offlinefrienddesc: 'Masque les amis hors-ligne dans la liste d\'amis.',
+                invisiblefriend: 'Amis Invisibles',
+                invisiblefrienddesc: 'Masque les amis dont le status en-ligne est inconnu dans la liste d\'amis.',
+                streammode: 'Mode Streaming',
+                streammodedesc: 'Permet de rendre certains éléments (ex : la liste d\'amis) invisibles lorsque vous streamez (via un logiciel externe comme OBS ou Discord).',
+                catprev: 'Prévisualisation des Catégories',
+                catprevdesc: 'Masque la liste des catégories présente lorsque le curseur passe sur un jeu dans la grille de l\'accueil.',
+                popup: 'Effet d\'Agrandissement',
+                popupdesc: 'Désactive l\'effet d\'agrandissement / de zoom qui advient lorsque le curseur passe sur un jeu dans la grille de l\'accueil.',
+                streammondesc: 'Si activé, le moniteur de stream démarrera automatiquement au lancement d\'un jeu.',
+                resolutiondesc: 'La résolution cible pour le stream de jeux. Les résolutions 1440p et 2160p nécessitent le codec VP9.',
+                codecdesc: 'Le codec utilisé pour le stream de jeux.',
+                confirmreset: 'Êtes-vous certain de vouloir réinitialiser les paramètres ?',
+                gamesfinished: 'Jeux Terminés',
+                achievementsunlocked: 'Succès Débloqués',
+                totalPlayTime: 'Total Playtime',
+                splitstore: 'Store à 2 Colonnes',
+                splitstoredesc: 'Divise les listes du store en deux colonnes pour une meilleur lisibilité.',
+                inlineimage: 'Prévisualisation d\'Images',
+                inlinedesc: 'Remplace les liens vers des images avec un format standard (jpg/gif/png) avec une prévisualisation cliquable.',
+                familyelements: 'Options de partage familial',
+                familyelementsdesc: 'Masque l\'option "Partager ce jeu avec la famille".',
+                resetsettings: 'Réinitialiser les Paramètres'
+            }
             break
-        default:
-            var load = `{
-                "languagecode": "en",
-                "default": "Default",
-                "native": "Native",
-                "hide": "Hide",
-                "show": "Show",
-                "total": "Total",
-                "visible": "Visible",
-                "hidden": "Hidden",
-                "enabled": "Enabled",
-                "disabled": "Disabled",
-                "auto": "Automatic",
-                "manual": "Manual",
-                "games": "Games",
-                "bundles": "Bundles",
-                "addons": "Add-ons",
-                "wishlist": "Wishlist",
-                "responsive": "Responsive",
-                "windowed": "Windowed Mode",
-                "fullscreen": "Fullscreen",
-                "searchstore": "Search store",
-                "onsale": "On Sale",
-                "prodeals": "Pro Deals",
-                "allgames": "All Games",
-                "userprofile": "My Profile",
-                "usermedia": "Screenshots & Videos",
-                "searchbtnbase": "Search on",
-                "avatarpopup": "New avatar URL (empty for default):",
-                "searchheader": "Games including",
-                "sessiontime": "Session time",
-                "codec": "Codec",
-                "resolution": "Resolution",
-                "hardware": "Hardware",
-                "software": "Software",
-                "trafficsession": "Session traffic",
-                "trafficcurrent": "Current traffic",
-                "trafficaverage": "Average traffic",
-                "packetloss": "Packets lost",
-                "framedrop": "Frames dropped",
-                "latency": "Latency",
-                "jitter": "Jitter Buffer",
-                "decodetime": "Decoding Time",
-                "compression": "Compression",
-                "streammon": "Stream Monitor",
-                "stream": "Stream",
-                "community": "Community",
-                "speedtest": "Speedtest",
-                "quickaccess": "Quick Access",
-                "messages": "Messages",
-                "avatar": "Avatar",
-                "interface": "Interface",
-                "shortcut": "Shortcuts",
-                "shortcuttitle": "Install a shortcut for",
-                "shortcutdesc": "Allows you to install a shortcut for a game on your device",
-                "gridsize": "Grid Size",
-                "griddesc": "Changes the amount of games per row on the homescreen.",
-                "clock": "Clock",
-                "clockdesc": "Displays the current time on the friends list, as a in-game overlay, or both.",
-                "friendslist": "Friends List",
-                "igoverlay": "In-Game Overlay",
-                "listoverlay": "List & Overlay",
-                "filter": "Filter",
-                "filterdesc": "Allows you to sort your homescreen by hiding games. The filter can be toggled via the symbol, top-right above your games on the homescreen.",
-                "filtertoggle": "Toggle",
-                "filterquick": "Quick",
-                "invitebase": "Copy invite link",
-                "inviteactive": "Copied!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
-                "homegallery": "User Gallery",
-                "homegallerydesc": "Hides the 'Captures' area at the bottom of the homescreen.",
-                "quickprev": "Message Preview",
-                "quickprevdesc": "Hides the message preview in the friends list.",
-                "quickrep": "Quick Reply",
-                "quickrepdesc": "Hides the quick reply option in chats.",
-                "offlinefriend": "Offline Friends",
-                "offlinefrienddesc": "Hides offline friends in the friends list.",
-                "invisiblefriend": "Invisible Friends",
-                "invisiblefrienddesc": "Hides friends with unknown online status in the friends list.",
-                "streammode": "Streaming Mode",
-                "streammodedesc": "Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).",
-                "catprev": "Category Preview",
-                "catprevdesc": "Hides the category tags when hovering over a game.",
-                "popup": "Popup Effect",
-                "popupdesc": "Removes the zoom-in / enlarge effect when hovering over a game on the homesceen.",
-                "streammondesc": "Activate to start the monitor whenever a game starts.",
-                "resolutiondesc": "The targeted resolution for game streams. 1440p and 2160p require VP9.",
-                "codecdesc": "The codec used for game streams.",
-                "confirmreset": "Are you sure you want to reset the settings?",
-                "gamesfinished": "Games Finished",
-                "achievementsunlocked": "Achievements Unlocked",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Split Store Lists",
-                "splitstoredesc": "Splits store lists into two columns for a better overview.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
-                "resetsettings": "Reset Settings"
-            }`
+        case 'ru':
+            translate_load = {
+                default: 'Стандарт',
+                native: 'Нативное',
+                hide: 'Спрятать',
+                show: 'Показать',
+                total: 'Всего',
+                visible: 'Видимый',
+                hidden: 'Спрятан',
+                enabled: 'Включён',
+                disabled: 'Отключён',
+                auto: 'Автоматический',
+                manual: 'Ручной',
+                all: undefined,
+                locked: undefined,
+                complete: undefined,
+                incomplete: undefined,
+                games: 'Игры',
+                bundles: 'Бандлы',
+                addons: 'Дополнения',
+                wishlist: 'Список желаемого',
+                responsive: 'Отзыв',
+                windowed: 'Оконный режим',
+                fullscreen: 'Полноэкранный режим',
+                searchstore: 'Поиск в магазине',
+                onsale: 'На распродаже',
+                prodeals: 'Эксклюзивные скидки',
+                userprofile: 'Мой профиль',
+                usermedia: 'Скриншоты и Видео',
+                searchbtnbase: 'Найти на',
+                avatarpopup: 'Ссылка на новый аватар (изначатьно пусто):',
+                searchheader: 'Включает игры',
+                sessiontime: 'Время сессии',
+                codec: 'Кодек',
+                resolution: 'Разрешение',
+                hardware: 'Аппаратный',
+                software: 'Программный',
+                trafficsession: 'Трафик сессии',
+                trafficcurrent: 'Данный трафик',
+                trafficaverage: 'Средний трафик',
+                packetloss: 'Порерянных пакетов',
+                framedrop: 'Потерянных кадров',
+                latency: 'Задежка',
+                jitter: 'Задежка буфера',
+                decodetime: 'Время декодирования',
+                compression: 'Сжатие',
+                streammon: 'Монитор',
+                stream: 'Поток',
+                community: 'Сообщество',
+                speedtest: 'Проверка скорости',
+                quickaccess: 'Быстрый доступ',
+                messages: 'Сообщения',
+                comfeature: undefined,
+                avatar: 'Аватар',
+                interface: 'Интерфейс',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Установить скриншот на',
+                shortcutdesc: 'Разрешить делать скриншоты в играх',
+                stadiastats: undefined,
+                stadiastatsopen: undefined,
+                stadiastatsdesc: undefined,
+                gridsize: 'Размер сетки',
+                griddesc: 'Меняет количество игр в столбце.',
+                clock: 'Часы',
+                clockdesc: 'Отображать время на списке друзей, как наложение или с боку.',
+                friendslist: 'Список друзей',
+                igoverlay: 'Игровой оверлей',
+                listoverlay: 'Список и наложение',
+                filter: 'Фильтер',
+                filterdesc: 'Позволяет сортировать домашний экран, скрывая игры. Фильтр можно переключать с помощью символа в правом верхнем углу над вашими играми на рабочем столе.',
+                filtertoggle: 'Переключатель',
+                filterquick: 'Быстро',
+                invitebase: 'Скопировать реферальную ссылку',
+                inviteactive: 'Скопированно!',
+                gamelabel: 'Названия игр',
+                gamelabeldesc: 'Убирает яркие надписи "pro: " с главного экрана.',
+                homegallery: 'Галлерея пользователя',
+                homegallerydesc: 'Прячет галлерею под низ главного экрана.',
+                quickprev: 'Предпросмотр сообщения',
+                quickprevdesc: 'Прячет превью сообжений из чата.',
+                quickrep: 'Быстрый ответ',
+                quickrepdesc: 'Прячет вариант быстрого ответа в чатах.',
+                offlinefriend: 'Друзья офлайн',
+                offlinefrienddesc: 'Прячет оффлайн друзей из списка.',
+                invisiblefriend: 'Невидимые друзья',
+                invisiblefrienddesc: 'Прячет друзей с неизвестным статусом из списка.',
+                streammode: 'Режим стриминга',
+                streammodedesc: 'Сделать личные эллементы невидимыми для программ вроде Obs или Twitch Studio',
+                catprev: 'Категория превью',
+                catprevdesc: 'Прячет теги категорий при наведении курсора на игру.',
+                popup: 'Всплывающий эффект',
+                popupdesc: 'Убирает эффект увеличения при наведении на игру.',
+                streammondesc: 'Активировать монитор при старте игры.',
+                resolutiondesc: 'Целевое разрешенеие. 1440p и 2160p требуют VP9.',
+                codecdesc: 'Кодек используемый для игры.',
+                confirmreset: 'Вы уверенны что хотите сбросить настройки?',
+                gamesfinished: 'Игр пройденно',
+                achievementsunlocked: 'Достижений открыто',
+                totalPlayTime: undefined,
+                splitstore: 'Разделить списки магазинов',
+                splitstoredesc: 'Разделить списки магазинов на две колонны.',
+                inlineimage: 'Предпросмотр фото',
+                inlinedesc: 'Заменяет ссылки на изображения для распространенных форматов файлов (jpg/gif/png) на предварительный просмотр.',
+                familyelements: 'Семейные настройки',
+                familyelementsdesc: 'Прячеть опцию "поделится играми " из настроек.',
+                resetsettings: 'Сбросить настройки'
+            }
+            break
     }
-    try {
-        load = JSON.parse(load);
-    } catch (e) {
-        console.log("Error in " + lang + " translation.");
-        console.log(e);
-        return loadLanguages("");
+
+    // Merge fix entries
+    var lang_filled = 0;
+    if (Object.keys(translate_load).length != 0) {
+        Object.entries(translate_load).forEach(([key, value]) => {
+            if (value != undefined) {
+                translation[key] = translate_load[key]
+            } else {
+                lang_filled++
+            }
+        });
     }
-    return load;
-}        "clock": "Clock",
-                "clockdesc": "Displays the current time on the friends list, as a in-game overlay, or both.",
-                "friendslist": "Friends List",
-                "igoverlay": "In-Game Overlay",
-                "listoverlay": "List & Overlay",
-                "filter": "Filter",
-                "filterdesc": "Allows you to sort your homescreen by hiding games. The filter can be toggled via the symbol, top-right above your games on the homescreen.",
-                "filtertoggle": "Toggle",
-                "filterquick": "Quick",
-                "invitebase": "Copy invite link",
-                "inviteactive": "Copied!",
-                "gamelabel": "Game Labels",
-                "gamelabeldesc": "Removes labels like 'Pro' from games on the homescreen.",
-                "homegallery": "User Gallery",
-                "homegallerydesc": "Hides the 'Captures' area at the bottom of the homescreen.",
-                "quickprev": "Message Preview",
-                "quickprevdesc": "Hides the message preview in the friends list.",
-                "quickrep": "Quick Reply",
-                "quickrepdesc": "Hides the quick reply option in chats.",
-                "offlinefriend": "Offline Friends",
-                "offlinefrienddesc": "Hides offline friends in the friends list.",
-                "invisiblefriend": "Invisible Friends",
-                "invisiblefrienddesc": "Hides friends with unknown online status in the friends list.",
-                "streammode": "Streaming Mode",
-                "streammodedesc": "Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).",
-                "catprev": "Category Preview",
-                "catprevdesc": "Hides the category tags when hovering over a game.",
-                "popup": "Popup Effect",
-                "popupdesc": "Removes the zoom-in / enlarge effect when hovering over a game on the homesceen.",
-                "streammondesc": "Activate to start the monitor whenever a game starts.",
-                "resolutiondesc": "The targeted resolution for game streams. 1440p and 2160p require VP9.",
-                "codecdesc": "The codec used for game streams.",
-                "confirmreset": "Are you sure you want to reset the settings?",
-                "gamesfinished": "Games Finished",
-                "achievementsunlocked": "Achievements Unlocked",
-                "totalPlayTime": "Total Playtime",
-                "splitstore": "Split Store Lists",
-                "splitstoredesc": "Splits store lists into two columns for a better overview.",
-                "inlineimage": "Image Preview",
-                "inlinedesc": "Replaces image links for common file formats (jpg/gif/png) with a clickable preview.",
-                "familyelements": "Family-sharing options",
-                "familyelementsdesc": "Hides the 'Share this game with family' options.",
-                "resetsettings": "Reset Settings"
-            }`
+
+    lang_load = window.performance.now() - lang_load
+
+    if (log) {
+        console.log("%cStadia Enhanced" + "%c ⚙️ - Loading translation '" + lang + "' - " + Object.keys(translate_load).length + " keys in " + lang_load.toFixed(2) + "ms, " + lang_filled + " strings defaulting to 'en'.", enhanced_consoleEnhanced, "");
     }
-    try {
-        load = JSON.parse(load);
-    } catch (e) {
-        console.log("Error in " + lang + " translation.");
-        console.log(e);
-        return loadLanguages("");
-    }
-    return load;
+    return translation
 }
