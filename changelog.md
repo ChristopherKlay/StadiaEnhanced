@@ -2,6 +2,10 @@
 
 ## Version 1.11
 
+### 1.11.1
+* Fixed shortcuts when using multiple accounts
+* Updated catalan translation
+
 ### 1.11.0
 * Added a new menu category "Community Features" specifically for features maintained by members of the community
 * Added StadiaStatsGG specific shortcuts for games, profile and find-a-buddy to the community features
