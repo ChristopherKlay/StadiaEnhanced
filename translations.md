@@ -2,7 +2,7 @@
 # Translations
 
 # Important Note
-Version `1.11` changed the translation function. All existing and newly submitted languages have been adjusted to the new format. The benefit of this new format is that instead of defaulting to english when a line isn't working or not defined, only those specific lines will now use default values. Which in return means that translations won't be english by default for new values, but "undefied". Updating translations also just became a lot easier, because you can just check what lines still show "undefined" in the current version, instead of having to check which ones are featuring default values.
+Version `1.11` changed the translation function. All existing and newly submitted languages have been adjusted to the new format. The benefit of this new format is that instead of defaulting to english when a line isn't working or not defined, only those specific lines will now use default values. Which in return means that translations won't be english by default for new values, but "undefined". Updating translations also just became a lot easier, because you can just check what lines still show "undefined" in the current version, instead of having to check which ones are featuring default values.
 
 The command `debugEnhanced("translation")` can also be used via the console on the Stadia website (with Stadia Enhanced installed) to show the loading output of all available translations and the amount of keys that are not defined yet (in other words, defaulting to english).
 
