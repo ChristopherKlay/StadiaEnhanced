@@ -2,6 +2,13 @@
 
 ## Version 1.11
 
+### 1.11.2
+* Updated the extension to work with Googles UI changes
+* Removed the now by default supported search function
+* Switched pin/filter options from game tiles to pop-up window due to compatibility issues with the family quick-select
+* Changed styling of pinned item marker and game filter elements
+* Updated italian translation
+
 ### 1.11.1
 * Fixed shortcuts when using multiple accounts
 * Updated catalan translation
