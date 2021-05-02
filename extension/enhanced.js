@@ -438,8 +438,8 @@ enhanced_ProGamesLink.addEventListener("click", function() {
     openStadia("store/list/2001")
 });
 
-if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
-    document.querySelectorAll(".ZECEje")[0].append(enhanced_ProGames);
+if (document.getElementsByClassName("ZECEje")[0] !== undefined) {
+    document.getElementsByClassName("ZECEje")[0].append(enhanced_ProGames);
 }
 
 // Store Dropdown - Adds a dropdown menu for quick access
@@ -475,8 +475,8 @@ enhanced_StoreDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 
 enhanced_StoreDropContent.style.zIndex = "20";
 enhanced_StoreDropContent.style.display = "none";
 
-if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
-    document.querySelectorAll(".ZECEje")[0].append(enhanced_StoreContainer);
+if (document.getElementsByClassName("ZECEje")[0] !== undefined) {
+    document.getElementsByClassName("ZECEje")[0].append(enhanced_StoreContainer);
 }
 
 enhanced_StoreDropdown.addEventListener("keyup", function(e) {
@@ -636,10 +636,7 @@ enhanced_langFrench.addEventListener("click", function() {
     openStadia("home");
 });
 enhanced_langDropContent.append(enhanced_langFrench);
-
-if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
-    document.querySelectorAll(".ZECEje")[1].prepend(enhanced_langContainer);
-}
+secureInsert(enhanced_langContainer, ".ZECEje", 1)
 
 enhanced_langDropdown.addEventListener("keyup", function(e) {
     if (e.keyCode === 13) {
@@ -707,9 +704,7 @@ enhanced_SettingsDropContent.style.display = "none";
 enhanced_SettingsDropContent.style.borderRadius = "0.5rem";
 enhanced_SettingsDropContent.style.overflowY = "auto";
 enhanced_SettingsDropContent.style.overflowX = "hidden";
-if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
-    document.querySelectorAll(".ZECEje")[1].prepend(enhanced_SettingsContainer);
-}
+secureInsert(enhanced_SettingsContainer, ".ZECEje", 1)
 
 // Settings - Shortcut
 var enhanced_settingsShortcut = document.createElement("div");
@@ -1343,9 +1338,7 @@ enhanced_wishlistHeart.addEventListener("click", function() {
     }
     localStorage.setItem("enhanced_wishlist", enhanced_wishlist);
 });
-if (document.querySelectorAll(".ZECEje")[0] !== undefined) {
-    document.querySelectorAll(".ZECEje")[0].append(enhanced_wishlistContainer);
-}
+secureInsert(enhanced_wishlistContainer, ".ZECEje", 0)
 
 // Account Menu - Changes to the account menu behaviour
 enhanced_AccountMenu = document.querySelector(".Zxyh9c");
@@ -1719,10 +1712,7 @@ enhanced_openBuddy.tabIndex = "0";
 enhanced_openBuddy.addEventListener("click", function() {
     window.open('https://stadiastats.gg/find-a-buddy', '_blank');
 });
-
-if (document.querySelectorAll(".ZECEje")[1] !== undefined) {
-    document.querySelectorAll(".ZECEje")[1].prepend(enhanced_buddyContainer);
-}
+secureInsert(enhanced_buddyContainer, ".ZECEje", 1)
 
 // Favorites
 var enhanced_favorite = document.createElement("div");
@@ -1809,14 +1799,15 @@ var enhanced_wrappers = [];
 
 // Main Loop
 setInterval(function() {
-    var enhanced_timerLoopStart = window.performance.now();
-
-    // Location - Home
+    // Location - Home & Library
     if (document.location.href.indexOf("/home") != -1 || document.location.href.indexOf("/library") != -1) {
 
-        // Add home elements
+        // Game List
+        var enhanced_gameList = document.getElementsByClassName("GqLi4d");
+        var enhanced_favlist = localStorage.getItem("enhanced_favlist") || "";
+
+        // Resolution change on pop-ups
         secureInsert(enhanced_resolutionPopup, ".EcfBLd", 3);
-        enhanced_Grid.style.display = "block";
 
         // StadiaStatsGG
         if (enhanced_enableStadiaStats == 1) {
@@ -1849,7 +1840,7 @@ setInterval(function() {
             }
 
             // Last Played
-            var enhanced_selector = document.querySelectorAll(".mGdxHb.ltdNmc");
+            var enhanced_selector = document.getElementsByClassName("mGdxHb ltdNmc");
             if (enhanced_selector[enhanced_selector.length - 1] !== undefined) {
                 if (enhanced_selector[enhanced_selector.length - 1].contains(enhanced_shortcutLastPlayed) === false) {
                     enhanced_shortcutLastPlayed.gameName = enhanced_selector[enhanced_selector.length - 1].getAttribute("aria-label").split(": ")[1]
@@ -1862,15 +1853,33 @@ setInterval(function() {
             enhanced_installShortcut.style.display = "none";
             enhanced_shortcutLastPlayed.style.display = "none";
         }
-    } else {
-        enhanced_Grid.style.display = "none";
+    }
+
+    // Location - Home
+    if (document.location.href.indexOf("/home") != -1) {
+        // Remove filter elements
+        for (var i = 0; i < enhanced_gameList.length; i++) {
+            if (enhanced_gameList[i].style.display = "none") {
+                enhanced_gameList[i].style.display = ""
+            }
+            if (enhanced_gameList[i].style.order = "-1") {
+                enhanced_gameList[i].style.order = ""
+            }
+            var enhanced_hasEmbed = enhanced_gameList[i].getElementsByClassName("enhanced_favIcon")
+            if (enhanced_hasEmbed.length != 0) {
+                enhanced_hasEmbed[0].remove()
+            }
+        }
     }
 
     // Location - Library
     if (document.location.href.indexOf("/library") != -1) {
 
+        // Enable grid size option
+        enhanced_Grid.style.display = "block";
+
         // Game Count
-        var enhanced_homescreenGrids = document.querySelectorAll(".lEPylf.KnM5Wc")
+        var enhanced_homescreenGrids = document.getElementsByClassName("lEPylf KnM5Wc")
         if (enhanced_homescreenGrids.length > 0) {
             enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll(".GqLi4d").length
             enhanced_gameCounter.textContent = " (" + enhanced_homescreenGrids + ")"
@@ -1888,10 +1897,6 @@ setInterval(function() {
         } else {
             enhanced_showAll.style.display = "inline-block";
         }
-
-        // Game List
-        var enhanced_gameList = document.querySelectorAll(".GqLi4d");
-        var enhanced_favlist = localStorage.getItem("enhanced_favlist") || "";
 
         // Favorite - Last Played
         if (document.querySelector(".CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc")) {
@@ -1994,6 +1999,8 @@ setInterval(function() {
                 enhanced_gameList[i].style.filter = "none";
             }
         }
+    } else {
+        enhanced_Grid.style.display = "none";
     }
 
     // Location - In-Game
@@ -2359,7 +2366,7 @@ setInterval(function() {
     if (document.location.href.indexOf("/settings") != -1) {
 
         // Resolution - Enable "Up to 4K" option
-        var enhanced_selector = document.querySelectorAll(".sx2eZe.QAAyWd.aKIhz.OWB6Me")
+        var enhanced_selector = document.getElementsByClassName("sx2eZe QAAyWd aKIhz OWB6Me")
         if (enhanced_selector.length != 0) {
             enhanced_selector[0].setAttribute("data-disabled", "false");
             enhanced_selector[0].classList.remove("OWB6Me");
@@ -2431,12 +2438,6 @@ setInterval(function() {
     }
     enhanced_ClockFriends.innerHTML = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_CurrentTime;
     enhanced_ClockOverlay.innerHTML = enhanced_CurrentTime;
-
-    // Loop End
-    enhanced_loopCount++;
-    var enhanced_timerLoopEnd = window.performance.now();
-    enhanced_timerLoopTotal += enhanced_timerLoopEnd - enhanced_timerLoopStart;
-    localStorage.setItem("enhanced_performAvg", enhanced_timerLoopTotal / enhanced_loopCount)
 }, 200);
 
 function enhanced_applySettings(set, opt) {
@@ -2894,16 +2895,12 @@ function enhanced_applySettings(set, opt) {
 }
 
 function enhanced_injectStyle(content, id) {
-    head = document.getElementsByTagName('head')[0];
-    if (!head) {
-        return;
-    }
     if (content) {
         if (document.getElementById(id)) {
             var el = document.getElementById(id);
         } else {
             var el = document.createElement('style');
-            head.appendChild(el);
+            document.head.appendChild(el);
         }
         el.type = 'text/css';
         el.id = id;
@@ -3049,9 +3046,6 @@ function debugEnhanced(opt) {
                 debug_load = enhancedTranslate(languages[i], true);
             }
             console.groupEnd();
-            break
-        case "performance":
-            console.log("%cStadia Enhanced" + "%c ⏲️ - Loop Time Average: ~" + parseFloat(localStorage.getItem("enhanced_performAvg")).toFixed(2) + "ms.", enhanced_consoleEnhanced, "");
             break
     }
 }
@@ -3893,25 +3887,25 @@ function enhancedTranslate(lang, log = false) {
                 total: 'Total',
                 visible: 'Visivel',
                 hidden: 'Escondido',
-                enabled: 'Activado',
-                disabled: 'Desactivado',
+                enabled: 'Ativado',
+                disabled: 'Desativado',
                 auto: 'Automático',
                 manual: 'Manual',
-                all: undefined,
-                locked: undefined,
-                complete: undefined,
-                incomplete: undefined,
+                all: 'Todos',
+                locked: 'Bloqueado',
+                complete: 'Completo',
+                incomplete: 'Incompleto',
                 games: 'Jogos',
-                bundles: 'Bundles',
-                addons: 'Add-ons',
-                wishlist: 'Lista de desejos',
+                bundles: 'Pacotes',
+                addons: 'Suplementos',
+                wishlist: 'Lista de Desejos',
                 responsive: 'Responsivo',
                 windowed: 'Modo Janela',
-                fullscreen: 'Ecrã completo',
-                onsale: 'Em promoção',
+                fullscreen: 'Ecrã Completo',
+                onsale: 'Em Promoção',
                 prodeals: 'Promoções Pro',
                 userprofile: 'Meu Perfil',
-                usermedia: 'Screenshots & Videos',
+                usermedia: 'Capturas e Vídeos',
                 searchbtnbase: 'Pesquisar em',
                 avatarpopup: 'Novo URL para avatar (vazio para o padrão):',
                 sessiontime: 'Tempo de sessão',
@@ -3920,7 +3914,7 @@ function enhancedTranslate(lang, log = false) {
                 hardware: 'Hardware',
                 software: 'Software',
                 trafficsession: 'Tráfego da sessão',
-                trafficcurrent: 'Tráfego instantâneo',
+                trafficcurrent: 'Tráfego atual',
                 trafficaverage: 'Tráfego médio',
                 packetloss: 'Pacotes perdidos',
                 framedrop: 'Frames perdidos',
@@ -3928,34 +3922,34 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Buffer de Jitter',
                 decodetime: 'Tempo de descodificação',
                 compression: 'Compressão',
-                streammon: 'Monitor do Stream',
+                streammon: 'Monitor de Streaming',
                 stream: 'Stream',
                 community: 'Comunidade',
                 speedtest: 'Teste de velocidade',
                 quickaccess: 'Acesso Rápido',
                 messages: 'Mensagens',
-                comfeature: undefined,
+                comfeature: 'Ferramentas da Comunidade',
                 avatar: 'Avatar',
                 interface: 'Interface',
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instalar atalho para',
                 shortcutdesc: 'Permite-te instalar um atalho para um jogo no teu dispositivo',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
+                stadiastats: 'StadiaStats',
+                stadiastatsopen: 'Ver em StadiaStats.gg',
+                stadiastatsdesc: 'Ativa atalhos para estatísticas de jogos, link para o perfil e um sistema para encontrar amigos em StadiaStats.gg',
                 gridsize: 'Tamanho da Grelha',
-                griddesc: undefined,
+                griddesc: 'Muda a quantidade de jogos em cada linha na biblioteca',
                 clock: 'Relógio',
-                clockdesc: 'Mostra a hora actual na lista de amigos, em sobreposição no jogo, ou ambos.',
+                clockdesc: 'Mostra a hora atual na lista de amigos, em sobreposição no jogo, ou ambos.',
                 friendslist: 'Lista de Amigos',
                 igoverlay: 'Sobreposição no jogo',
                 listoverlay: 'Lista e Sobreposição',
-                filter: undefined,
-                filterdesc: undefined,
-                invitebase: 'Copiar ligação de convite',
+                filter: 'Filtro de Jogos',
+                filterdesc: 'Permite organizar a biblioteca de jogos, escondendo jogos. O filtro pode ser ativado/desativado através do símbolo, no canto superior direito acima dos jogos na biblioteca.',
+                invitebase: 'Copiar ligação de Convite',
                 inviteactive: 'Copiado!',
                 gamelabel: 'Etiquetas de Jogos',
-                gamelabeldesc: 'Remove as etiquetas como por exemplo "Pro" dos jogos da página inicial.',
+                gamelabeldesc: 'Remove as Etiquetas como por exemplo "Pro" dos jogos da página inicial.',
                 homegallery: 'Galeria do Utilizador',
                 homegallerydesc: 'Esconde a área "Capturas" no fundo do ecrã inicial.',
                 quickprev: 'Pré-visualização de mensagens',
@@ -3967,16 +3961,16 @@ function enhancedTranslate(lang, log = false) {
                 invisiblefriend: 'Amigos Invisíveis',
                 invisiblefrienddesc: 'Esconde amigos com estado desconhecido na lista de amigos.',
                 streammode: 'Modo de Streaming',
-                streammodedesc: 'Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS / Discord).',
+                streammodedesc: 'Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS ou Discord).',
                 catprev: 'Pré-visualização da Categoria',
                 catprevdesc: 'Esconde a etiqueta da categoria ao passar por cima de um jogo.',
-                streammondesc: 'Activa para iniciar o monitor quando um jogo começa.',
-                resolutiondesc: 'A resolução pretendida para stream de jogos. 1440p e 2160p requerem VP9.',
-                codecdesc: 'O codec utilizado para stream de jogos.',
+                streammondesc: 'Ativa para iniciar o Monitor quando um jogo começa.',
+                resolutiondesc: 'A resolução pretendida para stream de jogos. (1440p e 2160p utilizam o Codec VP9)',
+                codecdesc: 'O Codec utilizado para stream de jogos.',
                 confirmreset: 'De certeza que queres reiniciar as configurações?',
-                gamesfinished: 'Jogo terminado',
-                achievementsunlocked: 'Conquistas desbloqueadas',
-                totalPlayTime: 'Total Playtime',
+                gamesfinished: 'Jogo Terminado',
+                achievementsunlocked: 'Conquistas Desbloqueadas',
+                totalPlayTime: 'Tempo Total de Jogo',
                 splitstore: 'Dividir Listas da Loja',
                 splitstoredesc: 'Divide as listas da loja em duas colunas para uma melhor visão geral.',
                 inlineimage: 'Prévia de imagem',
