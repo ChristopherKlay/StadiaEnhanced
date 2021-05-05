@@ -2,6 +2,16 @@
 
 ## Version 1.11
 
+### 1.11.4
+* Fixed wishlisting icon position
+* Fixed total payments including refunded/cancelled purchases
+
+### 1.11.3
+* Optimized element selection to increase performance
+* Fixed letterbox hiding games on homescreen
+* Fixed games transfering the "pinned" status to the homescreen
+* Updated portuguese translation
+
 ### 1.11.2
 * Updated the extension to work with Googles UI changes
 * Removed the now by default supported search function
