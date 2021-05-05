@@ -2,7 +2,7 @@
 console.groupCollapsed("Stadia Enhanced: Start-Up");
 
 var enhanced_timerLoadStart = window.performance.now();
-var enhanced_StartTimer = new Date().getTime();
+var enhanced_supportedLang = "en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi"
 var enhanced_local = document.querySelector("html").getAttribute("lang");
 var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 var enhanced_AccountInfo = enhanced_loadUserInfo();
@@ -437,7 +437,6 @@ enhanced_ProGamesLink.textContent = 'Pro';
 enhanced_ProGamesLink.addEventListener("click", function() {
     openStadia("store/list/2001")
 });
-
 if (document.getElementsByClassName("ZECEje")[0] !== undefined) {
     document.getElementsByClassName("ZECEje")[0].append(enhanced_ProGames);
 }
@@ -1338,7 +1337,9 @@ enhanced_wishlistHeart.addEventListener("click", function() {
     }
     localStorage.setItem("enhanced_wishlist", enhanced_wishlist);
 });
-secureInsert(enhanced_wishlistContainer, ".ZECEje", 0)
+if (document.getElementsByClassName("ZECEje")[0] !== undefined) {
+    document.getElementsByClassName("ZECEje")[0].append(enhanced_wishlistContainer);
+}
 
 // Account Menu - Changes to the account menu behaviour
 enhanced_AccountMenu = document.querySelector(".Zxyh9c");
@@ -1664,13 +1665,12 @@ enhanced_friendCount.style.marginLeft = "0"
 
 // Letter Box
 var enhanced_activeLetter = false
-var enhanced_supportedLetterLang = "en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi"
 var enhanced_letterBox = document.createElement("div")
 enhanced_letterBox.id = "enhanced_letterBox"
 enhanced_letterBox.className = "jkwub bJBQjf QAAyWd"
 enhanced_letterBox.style.marginRight = "auto"
 enhanced_letterBox.style.textIndent = "-0.5rem"
-if (!enhanced_supportedLetterLang.includes(enhanced_local)) {
+if (!enhanced_supportedLang.includes(enhanced_local)) {
     enhanced_letterBox.style.display = "none"
 }
 
@@ -2373,18 +2373,21 @@ setInterval(function() {
         }
 
         // Total Payments
-        var enhanced_purchaseList = document.querySelectorAll(".kgmzdc")[document.querySelectorAll(".kgmzdc").length - 1]
+        var enhanced_purchaseList = document.getElementsByClassName("kgmzdc")[document.getElementsByClassName("kgmzdc").length - 1]
         if (enhanced_purchaseList) {
-            var enhanced_purchaseAmounts = enhanced_purchaseList.querySelectorAll('.o2NwGe')
-            if (enhanced_purchaseAmounts.length != 0) {
-                var enhanced_currency = enhanced_purchaseAmounts[0].textContent.replace(/[0-9].*[0-9]/, 'CUR')
+            var enhanced_purchaseEntries = enhanced_purchaseList.getElementsByClassName('l6cQMc')
+            if (enhanced_purchaseEntries.length != 0) {
+                var enhanced_currency = enhanced_purchaseEntries[0].querySelector('.o2NwGe').textContent.replace(/[0-9].*[0-9]/, 'CUR')
                 var enhanced_payments = [];
 
-                for (var i = 0; i < enhanced_purchaseAmounts.length; i++) {
-                    if (enhanced_purchaseAmounts[i].textContent.match(/[,].*[.]/)) {
-                        enhanced_payments.push(parseFloat(enhanced_purchaseAmounts[i].textContent.replace(/[^0-9,. ]+/, '').replace(",", "")))
-                    } else {
-                        enhanced_payments.push(parseFloat(enhanced_purchaseAmounts[i].textContent.replace(/[^0-9,. ]+/, '').replace(",", ".")))
+                for (var i = 0; i < enhanced_purchaseEntries.length; i++) {
+                    if (enhanced_purchaseEntries[i].querySelector(".v3rApc.Wh3gGb") == null) {
+                        var enhanced_purchaseAmount = enhanced_purchaseEntries[i].querySelector('.o2NwGe')
+                        if (enhanced_purchaseAmount.textContent.match(/[,].*[.]/)) {
+                            enhanced_payments.push(parseFloat(enhanced_purchaseAmount.textContent.replace(/[^0-9,. ]+/, '').replace(",", "")))
+                        } else {
+                            enhanced_payments.push(parseFloat(enhanced_purchaseAmount.textContent.replace(/[^0-9,. ]+/, '').replace(",", ".")))
+                        }
                     }
                 }
 
