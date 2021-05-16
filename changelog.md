@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.12
+
+### 1.12.0
+* Replaced the settings menu with a new version
+* Added stream infos to the Stadia menu during games (alt+tab) for quick and controller supported access
+* Added the option to open a new popup with the current streaming monitor settings via doubleclick in the Stadia menu
+* Added "Leaving Pro" to store shortcut menu
+* Added "Stadia Enhanced" menu category, featuring GitHub, changelog and other shortcuts
+* Changed store shortcuts to always be visible
+* Changed stream monitor to automatically reset when outside available screen space
+* Optimized the function to reset all settings, to include any possible variables set by the extension
+
 ## Version 1.11
 
 ### 1.11.4
