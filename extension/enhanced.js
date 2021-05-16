@@ -14,6 +14,7 @@ var enhanced_lang = enhancedTranslate(enhanced_local, true);
 // CSS Changes - Global styles and overwrites
 enhanced_CSS = ".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }" // Remove padding above avatar
 enhanced_CSS += ".DGX7fe { display: none }" // Hide the invite menu
+enhanced_CSS += ".VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }" // Fix searchbar text cutoff
 enhanced_CSS += ".qE7X4e { margin-right: 0.625rem; }" // Fix searchbar margin
 enhanced_CSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }" // Wrap menu items
 enhanced_CSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
@@ -22,8 +23,6 @@ enhanced_CSS += ".tlZCoe { margin-right: .5rem; margin-top: .5rem !important; }"
 enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
 enhanced_CSS += "#enhanced_showAll div { margin-left: 0 !important; }" // Fix show/hide filter margin
 enhanced_CSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
-enhanced_CSS += "#enhanced_wrapper:hover #enhanced_favorite { opacity: 1 !important; }" // Show favorite on wrapper hover
-enhanced_CSS += "#enhanced_wrapper:hover #enhanced_visibility { opacity: 1 !important; }" // Show filter on wrapper hover
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }" // Settings menu scrollbar width
 enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }" // Settings menu scrollbar style
 enhanced_injectStyle(enhanced_CSS, "enhanced_styleGeneral");
@@ -52,6 +51,40 @@ enhanced_streamMonitor.addEventListener("dblclick", function() {
 });
 document.body.appendChild(enhanced_streamMonitor);
 enhanced_dragElement(enhanced_streamMonitor);
+
+// Minified Menu Monitor
+var enhanced_menuMonitor = document.createElement("div");
+enhanced_menuMonitor.style.position = "fixed"
+enhanced_menuMonitor.style.bottom = "0" // "1.875rem"
+enhanced_menuMonitor.style.whiteSpace = "nowrap"
+
+// Codec + Resolution
+var enhanced_menuMonitorCodecRes = document.createElement("div");
+enhanced_menuMonitorCodecRes.id = "enhanced_menuMonitorCodecRes"
+enhanced_menuMonitorCodecRes.className = "HPX1od";
+enhanced_menuMonitorCodecRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + ' | ' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + "- | -" + '</span></div>';
+enhanced_menuMonitor.append(enhanced_menuMonitorCodecRes);
+
+// Latency + Fps
+var enhanced_menuMonitorLatFps = document.createElement("div");
+enhanced_menuMonitorLatFps.id = "enhanced_menuMonitorLatFps"
+enhanced_menuMonitorLatFps.className = "HPX1od";
+enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + "- | -" + '</span></div>';
+enhanced_menuMonitor.append(enhanced_menuMonitorLatFps);
+
+// Frame Drop
+var enhanced_menuMonitorFDrop = document.createElement("div");
+enhanced_menuMonitorFDrop.id = "enhanced_menuMonitorFDrop"
+enhanced_menuMonitorFDrop.className = "HPX1od";
+enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + "-" + '</span></div>';
+enhanced_menuMonitor.append(enhanced_menuMonitorFDrop);
+
+// Decode
+var enhanced_menuMonitorDecode = document.createElement("div");
+enhanced_menuMonitorDecode.id = "enhanced_menuMonitorDecode"
+enhanced_menuMonitorDecode.className = "HPX1od";
+enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + "-" + '</span></div>';
+enhanced_menuMonitor.append(enhanced_menuMonitorDecode)
 
 function enhanced_updateMonitor(opt) {
     switch (opt) {
@@ -257,6 +290,19 @@ function enhanced_RTCMonitor() {
                                         enhanced_streamData = decodingType + " " + codec + "&ensp;|&ensp;" + resolution + "&ensp;|&ensp;" + framesReceivedPerSecond.toFixed(1) + "fps&ensp;|&ensp;" + latency + "ms&ensp;|&ensp;" + decodingTime.toFixed(1) + "ms&ensp;|&ensp;<span style='color: " + enhanced_connectionStatus + ";'>⬤</span>";
                                         break
                                 }
+
+                                // Menu Monitor
+                                document.getElementById("enhanced_menuMonitorCodecRes").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + ' | ' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + decodingType + " " + codec + ' | ' + resolution + '</span></div>';
+                                document.getElementById("enhanced_menuMonitorLatFps").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + latency + 'ms | ' + framesReceivedPerSecond.toFixed(1) + '</span></div>';
+                                document.getElementById("enhanced_menuMonitorFDrop").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + framesDropped + ' (' + framesDroppedPerc + '%)</span></div>';
+                                document.getElementById("enhanced_menuMonitorDecode").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + decodingTime.toFixed(2) + 'ms</span></div>';
+                            }
+
+                            // Reset outside of viewport
+                            var enhanced_boundingBox = enhanced_streamMonitor.getBoundingClientRect()
+                            if (enhanced_boundingBox.top <= 0 && enhanced_boundingBox.left <= 0 && enhanced_boundingBox.bottom >= window.availHeight && enhanced_boundingBox.right >= window.availWidth) {
+                                document.getElementById("enhanced_streamMonitor").style.top = "1rem";
+                                document.getElementById("enhanced_streamMonitor").style.left = "1rem";
                             }
 
                             localStorage.setItem("enhanced_monitorPosition", enhanced_streamMonitor.style.top + "|" + enhanced_streamMonitor.style.left);
@@ -285,8 +331,16 @@ enhanced_Monitor.addEventListener("click", function() {
     enhanced_updateMonitor(enhanced_monitorState);
 });
 enhanced_Monitor.addEventListener("dblclick", function() {
-    document.getElementById("enhanced_streamMonitor").style.top = "1rem";
-    document.getElementById("enhanced_streamMonitor").style.left = "1rem";
+    var enhanced_popMonitor = window.open('', '_blank', 'width=350,height=350,toolbar=0');
+    enhanced_popMonitor.document.body.style.background = "#000"
+    enhanced_popMonitor.document.body.style.color = "#fff"
+    enhanced_upPop = setInterval(function() {
+        if (enhanced_popMonitor.closed) {
+            clearInterval(enhanced_upPop);
+        } else {
+            enhanced_popMonitor.document.body.innerHTML = enhanced_streamMonitor.innerHTML
+        }
+    }, 1000);
 });
 
 // Windowed Mode
@@ -532,6 +586,20 @@ enhanced_AllGames.addEventListener("click", function() {
 });
 enhanced_StoreDropContent.append(enhanced_AllGames);
 
+// Leaving Pro - Quick access to a list of games leaving Pro soon
+var enhanced_leavePro = document.createElement("div");
+enhanced_leavePro.className = "pBvcyf QAAyWd";
+enhanced_leavePro.id = "enhanced_leavePro";
+enhanced_leavePro.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">event</i><span class="mJVLwb">' + enhanced_lang.leavepro + '</span>';
+enhanced_leavePro.style.cursor = "pointer";
+enhanced_leavePro.style.userSelect = "none";
+enhanced_leavePro.style.paddingRight = "2rem";
+enhanced_leavePro.tabIndex = "0";
+enhanced_leavePro.addEventListener("click", function() {
+    openStadia("store/list/36");
+});
+enhanced_StoreDropContent.append(enhanced_leavePro);
+
 // Language Dropdown - Adds a dropdown menu for language switching
 var enhanced_langContainer = document.createElement("li");
 enhanced_langContainer.className = "OfFb0b";
@@ -668,12 +736,14 @@ enhanced_SettingsDropdown.addEventListener("click", function(e) {
     if (document.querySelector(".X1asv.ahEBEd.LJni0").style.opacity == "1") {
         document.querySelector(".hBNsYe.QAAyWd.wJYinb.YySNWc").click();
     }
-    if (e.path.indexOf(enhanced_SettingsDropContent) == -1) {
-        if (enhanced_SettingsDropContent.style.display === "none") {
-            enhanced_SettingsDropContent.style.display = "flex";
+    if (e.path.indexOf(enhanced_settingsFrame) == -1) {
+        if (enhanced_settingsFrame.style.display === "none") {
+            enhanced_settingsFrame.style.display = "flex";
             enhanced_SettingsDropdown.firstElementChild.style.color = "#ff773d"
         } else {
-            enhanced_SettingsDropContent.style.display = "none";
+            enhanced_settingsFrame.style.display = "none";
+            enhanced_settingsContent.innerHTML = ""
+            enhanced_settingsContent.append(enhanced_settingsShortcut)
             enhanced_SettingsDropdown.firstElementChild.style.color = ""
         }
     }
@@ -685,99 +755,158 @@ enhanced_SettingsDropdown.addEventListener("keyup", function(e) {
     }
 });
 
-// Settings - Dropdown
-var enhanced_SettingsDropContent = document.createElement("div");
-enhanced_SettingsDropdown.append(enhanced_SettingsDropContent);
-enhanced_SettingsDropContent.id = "enhanced_SettingsDropContent";
-enhanced_SettingsDropContent.className = "us22N";
-enhanced_SettingsDropContent.style.position = "fixed";
-enhanced_SettingsDropContent.style.width = "30rem";
-enhanced_SettingsDropContent.style.top = "4rem";
-enhanced_SettingsDropContent.style.left = "auto";
-enhanced_SettingsDropContent.style.right = "1.5rem";
-enhanced_SettingsDropContent.style.bottom = "1rem";
-enhanced_SettingsDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
-enhanced_SettingsDropContent.style.zIndex = "20";
-enhanced_SettingsDropContent.style.flexFlow = "column";
-enhanced_SettingsDropContent.style.display = "none";
-enhanced_SettingsDropContent.style.borderRadius = "0.5rem";
-enhanced_SettingsDropContent.style.overflowY = "auto";
-enhanced_SettingsDropContent.style.overflowX = "hidden";
+// Settings - Frame
+var enhanced_settingsFrame = document.createElement("div")
+enhanced_settingsFrame.style.display = "none"
+enhanced_settingsFrame.style.position = "fixed"
+enhanced_settingsFrame.style.top = "4rem";
+enhanced_settingsFrame.style.left = "auto";
+enhanced_settingsFrame.style.right = "1.5rem";
+enhanced_settingsFrame.style.width = "auto"
+enhanced_settingsFrame.style.height = "auto"
+enhanced_settingsFrame.style.maxHeight = "50%"
+enhanced_settingsFrame.style.color = "rgba(255,255,255,.9)"
+enhanced_settingsFrame.style.borderRadius = "0.5rem"
+enhanced_settingsFrame.style.overflow = "hidden"
+enhanced_settingsFrame.style.boxShadow = "0 0.125rem 0.75rem rgb(0 0 0 / 32%), 0 0.0625rem 0.375rem rgb(0 0 0 / 18%)"
+
+// Settings - Navigation
+var enhanced_settingsNav = document.createElement("div")
+enhanced_settingsNav.className = "us22N";
+enhanced_settingsNav.style.display = "flex"
+enhanced_settingsNav.style.width = "auto"
+enhanced_settingsNav.style.flexDirection = "column"
+enhanced_settingsNav.style.alignItems = "stretch"
+enhanced_settingsNav.style.flexWrap = "nowrap"
+enhanced_settingsNav.style.borderRadius = "0"
+enhanced_settingsNav.style.background = "#212224"
+enhanced_settingsNav.style.borderRight = "1px solid rgba(255, 255, 255, 0.06)"
+enhanced_settingsFrame.append(enhanced_settingsNav)
+
+// Settings - Content
+var enhanced_settingsContent = document.createElement("div")
+enhanced_settingsContent.className = "us22N";
+enhanced_settingsContent.style.width = "30rem"
+enhanced_settingsContent.style.cursor = "default"
+enhanced_settingsContent.style.overflowY = "auto"
+enhanced_settingsContent.style.overflowX = "hidden"
+enhanced_settingsContent.style.background = "#2d2e30"
+enhanced_settingsContent.style.borderRadius = "0"
+enhanced_settingsFrame.append(enhanced_settingsContent)
+
+enhanced_SettingsDropdown.append(enhanced_settingsFrame);
 secureInsert(enhanced_SettingsContainer, ".ZECEje", 1)
 
-// Settings - Shortcut
+// Settings - Groups
 var enhanced_settingsShortcut = document.createElement("div");
-enhanced_SettingsDropContent.appendChild(enhanced_settingsShortcut);
+var enhanced_settingsStream = document.createElement("div");
+var enhanced_settingsGeneral = document.createElement("div");
+var enhanced_settingsMessages = document.createElement("div");
+var enhanced_settingsComFeat = document.createElement("div");
+var enhanced_settingsEnhanced = document.createElement("div");
+enhanced_settingsContent.appendChild(enhanced_settingsShortcut);
 
+// Navigation - Shortcuts
 var enhanced_settingsShortcutTitle = document.createElement("div");
 enhanced_settingsShortcutTitle.className = "pBvcyf QAAyWd";
-enhanced_settingsShortcutTitle.id = "enhanced_settingsShortcutTitle";
 enhanced_settingsShortcutTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.quickaccess + '</span>';
-enhanced_settingsShortcutTitle.style.cursor = "default";
+enhanced_settingsShortcutTitle.style.cursor = "pointer";
 enhanced_settingsShortcutTitle.style.userSelect = "none";
-enhanced_settingsShortcutTitle.style.background = "#202124";
 enhanced_settingsShortcutTitle.style.textAlign = "center";
-enhanced_settingsShortcut.append(enhanced_settingsShortcutTitle);
+enhanced_settingsShortcutTitle.style.padding = "0 1rem"
+enhanced_settingsShortcutTitle.style.borderBottom = "1px solid rgba(255, 255, 255, 0)"
+enhanced_settingsShortcutTitle.addEventListener("click", function() {
+    enhanced_settingsContent.innerHTML = ""
+    enhanced_settingsContent.scrollTop = 0;
+    enhanced_settingsContent.append(enhanced_settingsShortcut)
+});
+enhanced_settingsNav.append(enhanced_settingsShortcutTitle);
 
-// Settings - Stream
-var enhanced_settingsStream = document.createElement("div");
-enhanced_SettingsDropContent.appendChild(enhanced_settingsStream);
-
+// Navigation - Streaming
 var enhanced_settingsStreamTitle = document.createElement("div");
 enhanced_settingsStreamTitle.className = "pBvcyf QAAyWd";
-enhanced_settingsStreamTitle.id = "enhanced_settingsStreamTitle";
 enhanced_settingsStreamTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.stream + '</span>';
-enhanced_settingsStreamTitle.style.cursor = "default";
+enhanced_settingsStreamTitle.style.cursor = "pointer";
 enhanced_settingsStreamTitle.style.userSelect = "none";
-enhanced_settingsStreamTitle.style.background = "#202124";
 enhanced_settingsStreamTitle.style.textAlign = "center";
-enhanced_settingsStream.append(enhanced_settingsStreamTitle);
+enhanced_settingsStreamTitle.style.padding = "0 1rem"
+enhanced_settingsStreamTitle.style.borderBottom = "1px solid rgba(255, 255, 255, 0)"
+enhanced_settingsStreamTitle.addEventListener("click", function() {
+    enhanced_settingsContent.innerHTML = ""
+    enhanced_settingsContent.scrollTop = 0;
+    enhanced_settingsContent.append(enhanced_settingsStream)
+});
+enhanced_settingsNav.append(enhanced_settingsStreamTitle);
 
-// Settings - Interface
-var enhanced_settingsGeneral = document.createElement("div");
-enhanced_SettingsDropContent.appendChild(enhanced_settingsGeneral);
-
+// Navigation - Interface
 var enhanced_settingsGeneralTitle = document.createElement("div");
 enhanced_settingsGeneralTitle.className = "pBvcyf QAAyWd";
-enhanced_settingsGeneralTitle.id = "enhanced_settingsGeneralHead";
 enhanced_settingsGeneralTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.interface + '</span>';
-enhanced_settingsGeneralTitle.style.cursor = "default";
+enhanced_settingsGeneralTitle.style.cursor = "pointer";
 enhanced_settingsGeneralTitle.style.userSelect = "none";
-enhanced_settingsGeneralTitle.style.background = "#202124";
 enhanced_settingsGeneralTitle.style.textAlign = "center";
-enhanced_settingsGeneral.append(enhanced_settingsGeneralTitle);
+enhanced_settingsGeneralTitle.style.padding = "0 1rem"
+enhanced_settingsGeneralTitle.style.borderBottom = "1px solid rgba(255, 255, 255, 0)"
+enhanced_settingsGeneralTitle.addEventListener("click", function() {
+    enhanced_settingsContent.innerHTML = ""
+    enhanced_settingsContent.scrollTop = 0;
+    enhanced_settingsContent.append(enhanced_settingsGeneral)
+});
+enhanced_settingsNav.append(enhanced_settingsGeneralTitle);
 
-// Settings - Messages
-var enhanced_settingsMessages = document.createElement("div");
-enhanced_SettingsDropContent.appendChild(enhanced_settingsMessages);
-
+// Navigation - Messages
 var enhanced_settingsMessagesTitle = document.createElement("div");
 enhanced_settingsMessagesTitle.className = "pBvcyf QAAyWd";
-enhanced_settingsMessagesTitle.id = "enhanced_settingsMessagesTitle";
 enhanced_settingsMessagesTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.messages + '</span>';
-enhanced_settingsMessagesTitle.style.cursor = "default";
+enhanced_settingsMessagesTitle.style.cursor = "pointer";
 enhanced_settingsMessagesTitle.style.userSelect = "none";
-enhanced_settingsMessagesTitle.style.background = "#202124";
 enhanced_settingsMessagesTitle.style.textAlign = "center";
-enhanced_settingsMessages.append(enhanced_settingsMessagesTitle);
+enhanced_settingsMessagesTitle.style.padding = "0 1rem"
+enhanced_settingsMessagesTitle.style.borderBottom = "1px solid rgba(255, 255, 255, 0)"
+enhanced_settingsMessagesTitle.addEventListener("click", function() {
+    enhanced_settingsContent.innerHTML = ""
+    enhanced_settingsContent.scrollTop = 0;
+    enhanced_settingsContent.append(enhanced_settingsMessages)
+});
+enhanced_settingsNav.append(enhanced_settingsMessagesTitle);
 
-// Settings - Community Features
-var enhanced_settingsComFeat = document.createElement("div");
-enhanced_SettingsDropContent.appendChild(enhanced_settingsComFeat);
-
+// Navigation - Community Features
 var enhanced_settingsComFeatTitle = document.createElement("div");
 enhanced_settingsComFeatTitle.className = "pBvcyf QAAyWd";
-enhanced_settingsComFeatTitle.id = "enhanced_settingsComFeatTitle";
 enhanced_settingsComFeatTitle.innerHTML = '<span class="mJVLwb">' + enhanced_lang.comfeature + '</span>';
-enhanced_settingsComFeatTitle.style.cursor = "default";
+enhanced_settingsComFeatTitle.style.cursor = "pointer";
 enhanced_settingsComFeatTitle.style.userSelect = "none";
-enhanced_settingsComFeatTitle.style.background = "#202124";
 enhanced_settingsComFeatTitle.style.textAlign = "center";
-enhanced_settingsComFeat.append(enhanced_settingsComFeatTitle);
+enhanced_settingsComFeatTitle.style.padding = "0 1rem"
+enhanced_settingsComFeatTitle.style.borderBottom = "1px solid rgba(255, 255, 255, 0)"
+enhanced_settingsComFeatTitle.addEventListener("click", function() {
+    enhanced_settingsContent.innerHTML = ""
+    enhanced_settingsContent.scrollTop = 0;
+    enhanced_settingsContent.append(enhanced_settingsComFeat)
+});
+enhanced_settingsNav.append(enhanced_settingsComFeatTitle);
+
+// Navigation - Project Shortcuts
+var enhanced_settingsEnhancedTitle = document.createElement("div");
+enhanced_settingsEnhancedTitle.className = "pBvcyf QAAyWd";
+enhanced_settingsEnhancedTitle.innerHTML = '<span class="mJVLwb">Stadia Enhanced</span>';
+enhanced_settingsEnhancedTitle.style.cursor = "pointer";
+enhanced_settingsEnhancedTitle.style.userSelect = "none";
+enhanced_settingsEnhancedTitle.style.textAlign = "center";
+enhanced_settingsEnhancedTitle.style.padding = "0 1rem"
+enhanced_settingsEnhancedTitle.style.borderBottom = "1px solid rgba(255, 255, 255, 0)"
+enhanced_settingsEnhancedTitle.addEventListener("click", function() {
+    enhanced_settingsContent.innerHTML = ""
+    enhanced_settingsContent.scrollTop = 0;
+    enhanced_settingsContent.append(enhanced_settingsEnhanced)
+});
+enhanced_settingsNav.append(enhanced_settingsEnhancedTitle);
 
 window.addEventListener("click", function(e) {
     if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
-        enhanced_SettingsDropContent.style.display = "none";
+        enhanced_settingsFrame.style.display = "none";
+        enhanced_settingsContent.innerHTML = ""
+        enhanced_settingsContent.append(enhanced_settingsShortcut)
         enhanced_SettingsDropdown.firstElementChild.style.color = ""
     }
 });
@@ -837,6 +966,62 @@ enhanced_communityPage.addEventListener("click", function() {
     window.open("https://community.stadia.com/", "_blank");
 });
 enhanced_settingsShortcut.append(enhanced_communityPage)
+
+// GitHub - Shortcut to GitHub project
+var enhanced_GitHubLink = document.createElement("div");
+enhanced_GitHubLink.className = "pBvcyf QAAyWd";
+enhanced_GitHubLink.id = "enhanced_GitHubLink";
+enhanced_GitHubLink.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">code</i><span class="mJVLwb">GitHub</span>';
+enhanced_GitHubLink.style.cursor = "pointer";
+enhanced_GitHubLink.style.userSelect = "none";
+enhanced_GitHubLink.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_GitHubLink.tabIndex = "0";
+enhanced_GitHubLink.addEventListener("click", function() {
+    window.open("https://github.com/ChristopherKlay/StadiaEnhanced", "_blank");
+});
+enhanced_settingsEnhanced.append(enhanced_GitHubLink);
+
+// Changelog - Shortcut to changelog
+var enhanced_ChangelogLink = document.createElement("div");
+enhanced_ChangelogLink.className = "pBvcyf QAAyWd";
+enhanced_ChangelogLink.id = "enhanced_ChangelogLink";
+enhanced_ChangelogLink.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">description</i><span class="mJVLwb">Changelog</span>';
+enhanced_ChangelogLink.style.cursor = "pointer";
+enhanced_ChangelogLink.style.userSelect = "none";
+enhanced_ChangelogLink.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_ChangelogLink.tabIndex = "0";
+enhanced_ChangelogLink.addEventListener("click", function() {
+    window.open("https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md", "_blank");
+});
+enhanced_settingsEnhanced.append(enhanced_ChangelogLink);
+
+// Bug Report
+var enhanced_ReportIssue = document.createElement("div");
+enhanced_ReportIssue.className = "pBvcyf QAAyWd";
+enhanced_ReportIssue.id = "enhanced_ReportIssue";
+enhanced_ReportIssue.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">bug_report</i><span class="mJVLwb">' + enhanced_lang.reportbug + '</span>';
+enhanced_ReportIssue.style.cursor = "pointer";
+enhanced_ReportIssue.style.userSelect = "none";
+enhanced_ReportIssue.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_ReportIssue.tabIndex = "0";
+enhanced_ReportIssue.addEventListener("click", function() {
+    window.open("https://github.com/ChristopherKlay/StadiaEnhanced/issues", "_blank");
+});
+enhanced_settingsEnhanced.append(enhanced_ReportIssue);
+
+// BuyMeACoffee - Shortcut to donations
+var enhanced_CoffeeLink = document.createElement("div");
+enhanced_CoffeeLink.className = "pBvcyf QAAyWd";
+enhanced_CoffeeLink.id = "enhanced_ChangelogLink";
+enhanced_CoffeeLink.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">coffee</i><span class="mJVLwb">' + enhanced_lang.donations + '</span>';
+enhanced_CoffeeLink.style.cursor = "pointer";
+enhanced_CoffeeLink.style.userSelect = "none";
+enhanced_CoffeeLink.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_CoffeeLink.tabIndex = "0";
+enhanced_CoffeeLink.addEventListener("click", function() {
+    window.open("https://www.buymeacoffee.com/christopherklay", "_blank");
+});
+enhanced_settingsEnhanced.append(enhanced_CoffeeLink);
 
 // Codec - Control element for the stream codec
 var enhanced_currentCodec = parseInt(localStorage.getItem("enhanced_CodecOption") || 0);
@@ -1026,7 +1211,7 @@ enhanced_resetSettings.addEventListener("click", function() {
         enhanced_applySettings("resetall");
     }
 });
-enhanced_settingsShortcut.append(enhanced_resetSettings)
+enhanced_settingsEnhanced.append(enhanced_resetSettings)
 
 // Message Preview
 var enhanced_messagePreview = parseInt(localStorage.getItem("enhanced_messagePreview") || 0);
@@ -1210,7 +1395,6 @@ enhanced_showStadiaStats.className = "pBvcyf QAAyWd";
 enhanced_showStadiaStats.id = "enhanced_showStadiaStats";
 enhanced_showStadiaStats.style.cursor = "pointer";
 enhanced_showStadiaStats.style.userSelect = "none";
-enhanced_showStadiaStats.style.borderBottom = "1px solid rgba(255,255,255,.06)";
 enhanced_showStadiaStats.tabIndex = "0";
 enhanced_showStadiaStats.addEventListener("click", function() {
     enhanced_enableStadiaStats = (enhanced_enableStadiaStats + 1) % 2;
@@ -2032,6 +2216,9 @@ setInterval(function() {
             enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>';
         }
         secureInsert(enhanced_sessionTimer, ".OWVtN", 0);
+
+        // Menu Monitor
+        secureInsert(enhanced_menuMonitor, ".OWVtN", 0);
     } else {
         enhanced_Windowed.style.display = "none";
         enhanced_Monitor.style.display = "none";
@@ -2051,13 +2238,6 @@ setInterval(function() {
     // Location - Profile Details
     if (document.location.href.match("profile.[0-9]+.detail") != null) {
         secureInsert(enhanced_achievementsFilter, ".dwGRGd", 2);
-    }
-
-    // Location - Store General
-    if (window.innerWidth > 1024 && document.location.href.indexOf("/store") != -1) {
-        enhanced_StoreDropdown.style.display = "flex";
-    } else {
-        enhanced_StoreDropdown.style.display = "none";
     }
 
     // Location - Store Details
@@ -2840,35 +3020,11 @@ function enhanced_applySettings(set, opt) {
             localStorage.setItem("enhanced_favlist", enhanced_favlist);
             break
         case "resetall":
-            localStorage.removeItem("enhanced_messagePreview");
-            localStorage.removeItem("enhanced_hideCategory");
-            localStorage.removeItem("enhanced_DeskWidth");
-            localStorage.removeItem("enhanced_DeskHeight");
-            localStorage.removeItem("enhanced_autostartMonitor");
-            localStorage.removeItem("enhanced_monitorState");
-            localStorage.removeItem("enhanced_CodecOption");
-            localStorage.removeItem("enhanced_useQuickReply");
-            localStorage.removeItem("enhanced_hideUserMedia");
-            localStorage.removeItem("enhanced_useStreamMode");
-            localStorage.removeItem("enhanced_gameFilter");
-            localStorage.removeItem("enhanced_ClockOption");
-            localStorage.removeItem("enhanced_hideLabel");
-            localStorage.removeItem("enhanced_monitorMode");
-            localStorage.removeItem("enhanced_shortcutsOption");
-            localStorage.removeItem("enhanced_hideOffline");
-            localStorage.removeItem("enhanced_monitorPosition");
-            localStorage.removeItem("enhanced_monitorOption");
-            localStorage.removeItem("enhanced_filterOption");
-            localStorage.removeItem("enhanced_GridSize");
-            localStorage.removeItem("enhanced_ResOption");
-            localStorage.removeItem("enhanced_hideInvisible");
-            localStorage.removeItem("enhanced_storeListSize");
-            localStorage.removeItem("enhanced_useInlinePreview");
-            localStorage.removeItem("enhanced_wishlist");
-            localStorage.removeItem("enhanced_familySharingElements");
-            localStorage.removeItem("enhanced_favlist");
-            localStorage.removeItem("enhanced_enableStadiaStats");
-            console.log("%cStadia Enhanced" + "%c ⚙️ - Settings reverted to default.", enhanced_consoleEnhanced, "");
+            Object.keys(localStorage).forEach(function(key) {
+                if (key.includes("enhanced")) {
+                    console.log(localStorage.removeItem(key));
+                }
+            });
             location.reload();
             break
         case "updateall":
@@ -3078,6 +3234,7 @@ function enhancedTranslate(lang, log = false) {
         complete: 'Complete',
         incomplete: 'Incomplete',
         games: 'Games',
+        leavepro: 'Leaving Pro',
         bundles: 'Bundles',
         addons: 'Add-ons',
         wishlist: 'Wishlist',
@@ -3087,7 +3244,7 @@ function enhancedTranslate(lang, log = false) {
         onsale: 'On Sale',
         prodeals: 'Pro Deals',
         userprofile: 'My Profile',
-        usermedia: 'Screenshots & Videos',
+        usermedia: 'Captures & game states',
         searchbtnbase: 'Search on',
         avatarpopup: 'New avatar URL (empty for default):',
         sessiontime: 'Session time',
@@ -3159,6 +3316,8 @@ function enhancedTranslate(lang, log = false) {
         inlinedesc: 'Replaces image links for common file formats (jpg/gif/png) with a clickable preview.',
         familyelements: 'Family-sharing options',
         familyelementsdesc: 'Hides the "Share this game with family" options.',
+        donations: 'Donations',
+        reportbug: 'Report a bug',
         resetsettings: 'Reset Settings'
     }
 
@@ -3183,6 +3342,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Vollständig',
                 incomplete: 'Unvollständig',
                 games: 'Spiele',
+                leavepro: 'Verlässt Pro',
                 bundles: 'Bundles',
                 addons: 'Add-ons',
                 wishlist: 'Wunschliste',
@@ -3192,7 +3352,7 @@ function enhancedTranslate(lang, log = false) {
                 onsale: 'Im Angebot',
                 prodeals: 'Pro Angebote',
                 userprofile: 'Mein Profil',
-                usermedia: 'Fotos & Videos',
+                usermedia: 'Aufnahmen und Spielstatus',
                 searchbtnbase: 'Suche auf',
                 avatarpopup: 'Neue Avatar URL (keine für Zurücksetzung):',
                 sessiontime: 'Sitzungszeit',
@@ -3212,7 +3372,7 @@ function enhancedTranslate(lang, log = false) {
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
                 community: 'Community',
-                speedtest: 'Speedtest',
+                speedtest: 'Geschwindigkeitstest',
                 quickaccess: 'Schnellzugriff',
                 messages: 'Nachrichten',
                 comfeature: "Community Funktionen",
@@ -3266,6 +3426,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Ersetzt Bilder in gängigen Formaten (jpg/gif/png) mit einer klickbaren Vorschau.',
                 familyelements: 'Familienfreigabe Optionen',
                 familyelementsdesc: 'Versteckt die "Dieses Spiel für die Familie freigeben" Elemente.',
+                donations: 'Spenden',
+                reportbug: 'Melde einen Fehler',
                 resetsettings: 'Einstellungen zurücksetzen'
             }
             break
@@ -3287,6 +3449,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Játékok',
+                leavepro: undefined,
                 bundles: 'Csomagok',
                 addons: 'Kiegészítők',
                 wishlist: 'Kívánságlista',
@@ -3368,6 +3531,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Gyakori képformátum (jpg/gif/png) linkek helyettesítése kattintható előnézeti képekkel.',
                 familyelements: 'Családi megosztás',
                 familyelementsdesc: 'Elrejti "A játék megosztása a családdal" lehetőséget a játékoknál, ha már létrehoztál családi csoportot.',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Beállítások alaphelyzetbe állítása'
             }
             break
@@ -3389,6 +3554,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Games',
+                leavepro: undefined,
                 bundles: 'Bundels',
                 addons: 'Add-ons',
                 wishlist: 'Verlanglijst',
@@ -3470,6 +3636,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Vervang afbeelding links voor veelvoorkomende formaten (jpg/gif/png) door een klikbare voorvertoning.',
                 familyelements: 'Opties voor delen met gezin',
                 familyelementsdesc: 'Verbergt de "Delen met gezin"-opties.',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Reset Instellingen'
             }
             break
@@ -3491,6 +3659,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Juegos',
+                leavepro: undefined,
                 bundles: 'Paquetes',
                 addons: 'Complementos',
                 wishlist: undefined,
@@ -3572,6 +3741,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: undefined,
                 familyelements: undefined,
                 familyelementsdesc: undefined,
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Restablecer los ajustes'
             }
             break
@@ -3593,6 +3764,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Completati',
                 incomplete: 'Incompleti',
                 games: 'Giochi',
+                leavepro: undefined,
                 bundles: 'Bundles',
                 addons: 'Contenuti aggiuntivi',
                 wishlist: 'Lista dei desideri',
@@ -3674,6 +3846,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Sostituisce i collegamenti alle immagini per i formati di file comuni (jpg / gif / png) con un\'anteprima cliccabile.',
                 familyelements: 'Opzioni Gruppo-famiglia',
                 familyelementsdesc: 'Nasconde l\'opzione "Condividi questo gioco con la famiglia".',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Ripristina Impostazioni'
             }
             break
@@ -3695,6 +3869,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Spil',
+                leavepro: undefined,
                 bundles: 'Bundter',
                 addons: 'Tilføjelser',
                 wishlist: undefined,
@@ -3776,6 +3951,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: undefined,
                 familyelements: undefined,
                 familyelementsdesc: undefined,
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Nulstil indstillingerne'
             }
             break
@@ -3797,6 +3974,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Complet',
                 incomplete: 'Incomplet',
                 games: 'Jocs',
+                leavepro: undefined,
                 bundles: 'Paquets',
                 addons: 'Complements',
                 wishlist: 'Llista de desitjos',
@@ -3878,6 +4056,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Substitueix els enllaços d\'imatge per a formats de fitxer habituals (jpg/gif/png) amb una vista prèvia.',
                 familyelements: 'Opcions de compartició familiar',
                 familyelementsdesc: 'Amaga les opcions "Comparteix aquest joc amb la família."',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Restableix la configuració'
             }
             break
@@ -3899,6 +4079,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Completo',
                 incomplete: 'Incompleto',
                 games: 'Jogos',
+                leavepro: undefined,
                 bundles: 'Pacotes',
                 addons: 'Suplementos',
                 wishlist: 'Lista de Desejos',
@@ -3980,6 +4161,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Substitui links de imagem para formatos comuns de ficheiros (jpg/gif/png) com uma prévia clicável.',
                 familyelements: 'Opções de partilha de família',
                 familyelementsdesc: 'Esconder a opção "Partilhar este jogo com a família."',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Reiniciar Configurações'
             }
             break
@@ -4001,6 +4184,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Spel',
+                leavepro: undefined,
                 bundles: 'Spel-paket',
                 addons: 'Tillägg',
                 wishlist: undefined,
@@ -4082,6 +4266,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: undefined,
                 familyelements: undefined,
                 familyelementsdesc: undefined,
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Återställ Inställningar'
             }
             break
@@ -4103,6 +4289,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Jeux',
+                leavepro: undefined,
                 bundles: 'Lots',
                 addons: 'Extensions',
                 wishlist: 'Liste d\'Envies',
@@ -4184,6 +4371,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Remplace les liens vers des images avec un format standard (jpg/gif/png) avec une prévisualisation cliquable.',
                 familyelements: 'Options de partage familial',
                 familyelementsdesc: 'Masque l\'option "Partager ce jeu avec la famille".',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Réinitialiser les Paramètres'
             }
             break
@@ -4205,6 +4394,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Игры',
+                leavepro: undefined,
                 bundles: 'Бандлы',
                 addons: 'Дополнения',
                 wishlist: 'Список желаемого',
@@ -4286,6 +4476,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Заменяет ссылки на изображения для распространенных форматов файлов (jpg/gif/png) на предварительный просмотр.',
                 familyelements: 'Семейные настройки',
                 familyelementsdesc: 'Прячеть опцию "поделится играми " из настроек.',
+                donations: undefined,
+                reportbug: undefined,
                 resetsettings: 'Сбросить настройки'
             }
             break
