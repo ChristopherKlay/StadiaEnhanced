@@ -50,8 +50,8 @@ Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanc
 
 ## Screenshots
 
-![](https://i.imgur.com/UtretDf.png)
-![](https://i.imgur.com/X6bVNif.png)
-![](https://i.imgur.com/oQYH0Uv.png)
-![](https://i.imgur.com/G2u7fdw.png)
-![](https://i.imgur.com/lU9WoEA.png)
+![](https://i.imgur.com/ydbWMVU.png)
+![](https://i.imgur.com/s6i9xnt.png)
+![](https://i.imgur.com/bKJ8vSy.png)
+![](https://i.imgur.com/r8d48h4.png)
+![](https://i.imgur.com/Q3xp1Uh.png)
