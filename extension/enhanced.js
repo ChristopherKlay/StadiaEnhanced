@@ -54,16 +54,21 @@ enhanced_dragElement(enhanced_streamMonitor);
 
 // Minified Menu Monitor
 var enhanced_menuMonitor = document.createElement("div");
-enhanced_menuMonitor.style.position = "fixed"
-enhanced_menuMonitor.style.bottom = "0" // "1.875rem"
 enhanced_menuMonitor.style.whiteSpace = "nowrap"
 
-// Codec + Resolution
-var enhanced_menuMonitorCodecRes = document.createElement("div");
-enhanced_menuMonitorCodecRes.id = "enhanced_menuMonitorCodecRes"
-enhanced_menuMonitorCodecRes.className = "HPX1od";
-enhanced_menuMonitorCodecRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + ' | ' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + "- | -" + '</span></div>';
-enhanced_menuMonitor.append(enhanced_menuMonitorCodecRes);
+// Codec
+var enhanced_menuMonitorCodec = document.createElement("div");
+enhanced_menuMonitorCodec.id = "enhanced_menuMonitorCodecRes"
+enhanced_menuMonitorCodec.className = "HPX1od";
+enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">' + "-" + '</span></div>';
+enhanced_menuMonitor.append(enhanced_menuMonitorCodec);
+
+// Resolution
+var enhanced_menuMonitorRes = document.createElement("div");
+enhanced_menuMonitorRes.id = "enhanced_menuMonitorRes"
+enhanced_menuMonitorRes.className = "HPX1od";
+enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + "-" + '</span></div>';
+enhanced_menuMonitor.append(enhanced_menuMonitorRes);
 
 // Latency + Fps
 var enhanced_menuMonitorLatFps = document.createElement("div");
@@ -292,7 +297,8 @@ function enhanced_RTCMonitor() {
                                 }
 
                                 // Menu Monitor
-                                document.getElementById("enhanced_menuMonitorCodecRes").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + ' | ' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + decodingType + " " + codec + ' | ' + resolution + '</span></div>';
+                                document.getElementById("enhanced_menuMonitorCodecRes").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">' + decodingType + " " + codec + '</span></div>';
+                                document.getElementById("enhanced_menuMonitorRes").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + resolution + '</span></div>';
                                 document.getElementById("enhanced_menuMonitorLatFps").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + latency + 'ms | ' + framesReceivedPerSecond.toFixed(1) + '</span></div>';
                                 document.getElementById("enhanced_menuMonitorFDrop").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + framesDropped + ' (' + framesDroppedPerc + '%)</span></div>';
                                 document.getElementById("enhanced_menuMonitorDecode").innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + decodingTime.toFixed(2) + 'ms</span></div>';
@@ -2215,6 +2221,8 @@ setInterval(function() {
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000);
             enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>';
         }
+
+        // Session Timer
         secureInsert(enhanced_sessionTimer, ".OWVtN", 0);
 
         // Menu Monitor
@@ -3234,6 +3242,7 @@ function enhancedTranslate(lang, log = false) {
         complete: 'Complete',
         incomplete: 'Incomplete',
         games: 'Games',
+        allgames: 'All Games',
         leavepro: 'Leaving Pro',
         bundles: 'Bundles',
         addons: 'Add-ons',
@@ -3342,6 +3351,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Vollständig',
                 incomplete: 'Unvollständig',
                 games: 'Spiele',
+                allgames: 'Alle Spiele',
                 leavepro: 'Verlässt Pro',
                 bundles: 'Bundles',
                 addons: 'Add-ons',
@@ -3449,6 +3459,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Játékok',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Csomagok',
                 addons: 'Kiegészítők',
@@ -3554,6 +3565,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Games',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Bundels',
                 addons: 'Add-ons',
@@ -3659,6 +3671,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Juegos',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Paquetes',
                 addons: 'Complementos',
@@ -3764,7 +3777,8 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Completati',
                 incomplete: 'Incompleti',
                 games: 'Giochi',
-                leavepro: undefined,
+                allgames: 'Tutti i Giochi',
+                leavepro: 'Ultimi giorni su Stadia Pro',
                 bundles: 'Bundles',
                 addons: 'Contenuti aggiuntivi',
                 wishlist: 'Lista dei desideri',
@@ -3807,14 +3821,14 @@ function enhancedTranslate(lang, log = false) {
                 stadiastatsopen: 'Visualizza su StadiaStats.GG',
                 stadiastatsdesc: 'Abilita scorciatoie dirette alle statistiche di gioco, link al tuo profilo e al sistema trova un amico su stadiastats.gg.',
                 gridsize: 'Dimensione Griglia',
-                griddesc: undefined,
+                griddesc: 'Modifica la quantità di giochi per riga nella libreria.',
                 clock: 'Orologio',
                 clockdesc: 'Visualizza l\'ora corrente nell\'elenco degli amici, come un overlay di gioco o entrambi.',
                 friendslist: 'Lista Amici',
                 igoverlay: 'Overlay In-Gioco',
                 listoverlay: 'Lista & Overlay',
-                filter: undefined,
-                filterdesc: undefined,
+                filter: 'Filtro Giochi',
+                filterdesc: 'Ti permette di ordinare la tua libreria, nascondendo i giochi. Il filtro può essere attivato/disattivato tramite il simbolo, in alto a destra sopra i tuoi giochi nella libreria.',
                 invitebase: 'Copia link invito',
                 inviteactive: 'Copiato!',
                 gamelabel: 'Etichette Giochi',
@@ -3846,8 +3860,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Sostituisce i collegamenti alle immagini per i formati di file comuni (jpg / gif / png) con un\'anteprima cliccabile.',
                 familyelements: 'Opzioni Gruppo-famiglia',
                 familyelementsdesc: 'Nasconde l\'opzione "Condividi questo gioco con la famiglia".',
-                donations: undefined,
-                reportbug: undefined,
+                donations: 'Donazioni',
+                reportbug: 'Segnala un bug',
                 resetsettings: 'Ripristina Impostazioni'
             }
             break
@@ -3869,6 +3883,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Spil',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Bundter',
                 addons: 'Tilføjelser',
@@ -3974,6 +3989,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Complet',
                 incomplete: 'Incomplet',
                 games: 'Jocs',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Paquets',
                 addons: 'Complements',
@@ -4079,6 +4095,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Completo',
                 incomplete: 'Incompleto',
                 games: 'Jogos',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Pacotes',
                 addons: 'Suplementos',
@@ -4184,6 +4201,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Spel',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Spel-paket',
                 addons: 'Tillägg',
@@ -4289,6 +4307,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Jeux',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Lots',
                 addons: 'Extensions',
@@ -4394,6 +4413,7 @@ function enhancedTranslate(lang, log = false) {
                 complete: undefined,
                 incomplete: undefined,
                 games: 'Игры',
+                allgames: undefined,
                 leavepro: undefined,
                 bundles: 'Бандлы',
                 addons: 'Дополнения',
