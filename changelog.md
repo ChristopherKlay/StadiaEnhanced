@@ -2,6 +2,11 @@
 
 ## Version 1.12
 
+### 1.12.1
+* Adjusted monitor display position and structure next to the Stadia menu
+* Fixed errors, typos and issues based on translation strings
+* Updated italian translation
+
 ### 1.12.0
 * Replaced the settings menu with a new version
 * Added stream infos to the Stadia menu during games (alt+tab) for quick and controller supported access
