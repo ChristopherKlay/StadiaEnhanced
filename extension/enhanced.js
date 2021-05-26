@@ -641,10 +641,21 @@ enhanced_langDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0
 enhanced_langDropContent.style.zIndex = "20";
 enhanced_langDropContent.style.display = "none";
 
+
+var enhanced_currentLanguage = new URL(window.location.href).searchParams.get("hl");
+
+// Support for Default Language is here
+if (!enhanced_currentLanguage && localStorage.getItem("enhanced_Language")) {
+    enhanced_urlBase = new URL(window.location.href);
+    enhanced_urlBase.searchParams.set('hl', localStorage.getItem("enhanced_Language"))
+    history.replaceState(null, null, enhanced_urlBase.pathname + "?" + enhanced_urlBase.searchParams);
+    openStadia(enhanced_urlBase.pathname.substring(1));
+}
+
 // Language Select - Default
 var enhanced_langDefault = document.createElement("div");
 enhanced_langDefault.className = "pBvcyf QAAyWd";
-enhanced_langDefault.innerHTML = '<span class="mJVLwb">' + enhanced_lang.default+'</span>';
+enhanced_langDefault.innerHTML = '<span class="mJVLwb">' + enhanced_lang.default +  (!enhanced_currentLanguage ? ' ✔️' : '') + '</span>';
 enhanced_langDefault.style.cursor = "pointer";
 enhanced_langDefault.style.userSelect = "none";
 enhanced_langDefault.style.padding = "0 2rem";
@@ -655,6 +666,7 @@ enhanced_langDefault.addEventListener("click", function() {
     enhanced_urlBase = new URL(window.location.href);
     enhanced_urlBase.searchParams.delete('hl')
     history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
+    localStorage.removeItem("enhanced_Language");
     openStadia("home");
 });
 enhanced_langDropContent.append(enhanced_langDefault);
@@ -662,7 +674,7 @@ enhanced_langDropContent.append(enhanced_langDefault);
 // Language Select - English
 var enhanced_langEnglish = document.createElement("div");
 enhanced_langEnglish.className = "pBvcyf QAAyWd";
-enhanced_langEnglish.innerHTML = '<span class="mJVLwb">English</span>';
+enhanced_langEnglish.innerHTML = '<span class="mJVLwb">English' + (enhanced_currentLanguage === 'en' ? ' ✔️' : '') + '</span>';
 enhanced_langEnglish.style.cursor = "pointer";
 enhanced_langEnglish.style.userSelect = "none";
 enhanced_langEnglish.style.padding = "0 2rem";
@@ -679,7 +691,7 @@ enhanced_langDropContent.append(enhanced_langEnglish);
 // Language Select - Spanish
 var enhanced_langSpanish = document.createElement("div");
 enhanced_langSpanish.className = "pBvcyf QAAyWd";
-enhanced_langSpanish.innerHTML = '<span class="mJVLwb">Spanish</span>';
+enhanced_langSpanish.innerHTML = '<span class="mJVLwb">Spanish' + (enhanced_currentLanguage === 'es' ? ' ✔️' : '') + '</span>';
 enhanced_langSpanish.style.cursor = "pointer";
 enhanced_langSpanish.style.userSelect = "none";
 enhanced_langSpanish.style.padding = "0 2rem";
@@ -696,7 +708,7 @@ enhanced_langDropContent.append(enhanced_langSpanish);
 // Language Select - French
 var enhanced_langFrench = document.createElement("div");
 enhanced_langFrench.className = "pBvcyf QAAyWd";
-enhanced_langFrench.innerHTML = '<span class="mJVLwb">French</span>';
+enhanced_langFrench.innerHTML = '<span class="mJVLwb">French' + (enhanced_currentLanguage === 'fr' ? ' ✔️' : '') + '</span>';
 enhanced_langFrench.style.cursor = "pointer";
 enhanced_langFrench.style.userSelect = "none";
 enhanced_langFrench.style.padding = "0 2rem";
@@ -709,6 +721,25 @@ enhanced_langFrench.addEventListener("click", function() {
     openStadia("home");
 });
 enhanced_langDropContent.append(enhanced_langFrench);
+
+// Language Select - Save
+if (localStorage.getItem("enhanced_Language") !== enhanced_currentLanguage) {
+    var enhanced_langSave = document.createElement("div");
+    enhanced_langSave.className = "pBvcyf QAAyWd";
+    enhanced_langSave.innerHTML = '<span class="mJVLwb">Always load with "' + enhanced_currentLanguage + '"</span>';
+    enhanced_langSave.style.cursor = "pointer";
+    enhanced_langSave.style.userSelect = "none";
+    enhanced_langSave.style.padding = "0 2rem";
+    enhanced_langSave.style.textAlign = "center";
+    enhanced_langSave.tabIndex = "0";
+    enhanced_langSave.addEventListener("click", function() {
+        enhanced_urlBase = new URL(window.location.href);
+        localStorage.setItem("enhanced_Language", enhanced_urlBase.searchParams.get('hl'));
+        enhanced_langDropContent.removeChild(enhanced_langSave);
+    });
+    enhanced_langDropContent.append(enhanced_langSave);
+}
+
 secureInsert(enhanced_langContainer, ".ZECEje", 1)
 
 enhanced_langDropdown.addEventListener("keyup", function(e) {
@@ -3085,7 +3116,7 @@ function enhanced_injectStyle(content, id) {
 function openStadia(url) {
     // Keep hl parameter
     enhanced_urlBase = document.querySelector("head > base").getAttribute("href")
-    enhanced_urlHL = new URL(window.location.href).searchParams.get('hl')
+    enhanced_urlHL = new URL(window.location.href).searchParams.get('hl') || localStorage.getItem("enhanced_Language");
     if (enhanced_urlHL) {
         enhanced_urlBase = new URL(enhanced_urlBase + url);
         enhanced_urlBase.searchParams.set('hl', enhanced_urlHL)
