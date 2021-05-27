@@ -649,7 +649,6 @@ if (!enhanced_currentLanguage && localStorage.getItem("enhanced_Language")) {
     enhanced_urlBase = new URL(window.location.href);
     enhanced_urlBase.searchParams.set('hl', localStorage.getItem("enhanced_Language"))
     history.replaceState(null, null, enhanced_urlBase.pathname + "?" + enhanced_urlBase.searchParams);
-    openStadia(enhanced_urlBase.pathname.substring(1));
 }
 
 // Language Select - Default
@@ -723,10 +722,10 @@ enhanced_langFrench.addEventListener("click", function() {
 enhanced_langDropContent.append(enhanced_langFrench);
 
 // Language Select - Save
-if (localStorage.getItem("enhanced_Language") !== enhanced_currentLanguage) {
+if (!!localStorage.getItem("enhanced_Language") && localStorage.getItem("enhanced_Language") !== enhanced_currentLanguage) {
     var enhanced_langSave = document.createElement("div");
     enhanced_langSave.className = "pBvcyf QAAyWd";
-    enhanced_langSave.innerHTML = '<span class="mJVLwb">Always load with "' + enhanced_currentLanguage + '"</span>';
+    enhanced_langSave.innerHTML = '<span class="mJVLwb">' + enhanced_lang.default + ' "' + enhanced_currentLanguage + '"</span>';
     enhanced_langSave.style.cursor = "pointer";
     enhanced_langSave.style.userSelect = "none";
     enhanced_langSave.style.padding = "0 2rem";
@@ -3358,7 +3357,8 @@ function enhancedTranslate(lang, log = false) {
         familyelementsdesc: 'Hides the "Share this game with family" options.',
         donations: 'Donations',
         reportbug: 'Report a bug',
-        resetsettings: 'Reset Settings'
+        resetsettings: 'Reset Settings',
+        alwaysLoadWith: 'Always load with',
     }
 
     // Load translation
@@ -3469,7 +3469,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Versteckt die "Dieses Spiel für die Familie freigeben" Elemente.',
                 donations: 'Spenden',
                 reportbug: 'Melde einen Fehler',
-                resetsettings: 'Einstellungen zurücksetzen'
+                resetsettings: 'Einstellungen zurücksetzen',
+                alwaysLoadWith: undefined
             }
             break
         case 'hu': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/97
@@ -3575,7 +3576,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Elrejti "A játék megosztása a családdal" lehetőséget a játékoknál, ha már létrehoztál családi csoportot.',
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Beállítások alaphelyzetbe állítása'
+                resetsettings: 'Beállítások alaphelyzetbe állítása',
+                alwaysLoadWith: undefined
             }
             break
         case 'nl': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9
@@ -3681,7 +3683,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Verbergt de "Delen met gezin"-opties.',
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Reset Instellingen'
+                resetsettings: 'Reset Instellingen',
+                alwaysLoadWith: undefined
             }
             break
         case 'es': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67
@@ -3787,7 +3790,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: undefined,
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Restablecer los ajustes'
+                resetsettings: 'Restablecer los ajustes',
+                alwaysLoadWith: undefined
             }
             break
         case 'it': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
@@ -3893,7 +3897,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Nasconde l\'opzione "Condividi questo gioco con la famiglia".',
                 donations: 'Donazioni',
                 reportbug: 'Segnala un bug',
-                resetsettings: 'Ripristina Impostazioni'
+                resetsettings: 'Ripristina Impostazioni',
+                alwaysLoadWith: undefined
             }
             break
         case 'da': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/81
@@ -3999,7 +4004,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: undefined,
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Nulstil indstillingerne'
+                resetsettings: 'Nulstil indstillingerne',
+                alwaysLoadWith: undefined
             }
             break
         case 'ca': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/60
@@ -4105,7 +4111,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Amaga les opcions "Comparteix aquest joc amb la família."',
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Restableix la configuració'
+                resetsettings: 'Restableix la configuració',
+                alwaysLoadWith: undefined
             }
             break
         case 'pt': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/91
@@ -4211,7 +4218,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Esconder a opção "Partilhar este jogo com a família."',
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Reiniciar Configurações'
+                resetsettings: 'Reiniciar Configurações',
+                alwaysLoadWith: undefined
             }
             break
         case 'sv': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
@@ -4317,7 +4325,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: undefined,
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Återställ Inställningar'
+                resetsettings: 'Återställ Inställningar',
+                alwaysLoadWith: undefined
             }
             break
         case 'fr': //https://github.com/ChristopherKlay/StadiaEnhanced/discussions/8
@@ -4423,7 +4432,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Masque l\'option "Partager ce jeu avec la famille".',
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Réinitialiser les Paramètres'
+                resetsettings: 'Réinitialiser les Paramètres',
+                alwaysLoadWith: "Toujours charger avec"
             }
             break
         case 'ru':
@@ -4529,7 +4539,8 @@ function enhancedTranslate(lang, log = false) {
                 familyelementsdesc: 'Прячеть опцию "поделится играми " из настроек.',
                 donations: undefined,
                 reportbug: undefined,
-                resetsettings: 'Сбросить настройки'
+                resetsettings: 'Сбросить настройки',
+                alwaysLoadWith: undefined
             }
             break
     }

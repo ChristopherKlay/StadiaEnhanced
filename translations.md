@@ -138,6 +138,7 @@ var translation = {
     familyelementsdesc: 'Hides the "Share this game with family" options.',
     donations: 'Donations',
     reportbug: 'Report a bug',
-    resetsettings: 'Reset Settings'
+    resetsettings: 'Reset Settings',
+    alwaysLoadWith: 'Always load with'
 }
 ```
