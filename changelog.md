@@ -1,6 +1,72 @@
 # Changelog
 
+## Version 1.12
+
+### 1.12.1
+* Adjusted monitor display position and structure next to the Stadia menu
+* Fixed errors, typos and issues based on translation strings
+* Updated italian translation
+
+### 1.12.0
+* Replaced the settings menu with a new version
+* Added stream infos to the Stadia menu during games (alt+tab) for quick and controller supported access
+* Added the option to open a new popup with the current streaming monitor settings via doubleclick in the Stadia menu
+* Added "Leaving Pro" to store shortcut menu
+* Added "Stadia Enhanced" menu category, featuring GitHub, changelog and other shortcuts
+* Changed store shortcuts to always be visible
+* Changed stream monitor to automatically reset when outside available screen space
+* Optimized the function to reset all settings, to include any possible variables set by the extension
+
+## Version 1.11
+
+### 1.11.4
+* Fixed wishlisting icon position
+* Fixed total payments including refunded/cancelled purchases
+
+### 1.11.3
+* Optimized element selection to increase performance
+* Fixed letterbox hiding games on homescreen
+* Fixed games transfering the "pinned" status to the homescreen
+* Updated portuguese translation
+
+### 1.11.2
+* Updated the extension to work with Googles UI changes
+* Removed the now by default supported search function
+* Switched pin/filter options from game tiles to pop-up window due to compatibility issues with the family quick-select
+* Changed styling of pinned item marker and game filter elements
+* Updated italian translation
+
+### 1.11.1
+* Fixed shortcuts when using multiple accounts
+* Updated catalan translation
+
+### 1.11.0
+* Added a new menu category "Community Features" specifically for features maintained by members of the community
+* Added StadiaStatsGG specific shortcuts for games, profile and find-a-buddy to the community features
+* Added a letter-based filter system for quick searching on the homescreen
+* Added filter for locked achievements on detail pages
+* Added filter option via completion state on the players game list
+* Added total amount of games on homescreen
+* Added "total" next to "online" at the top of the friends list
+* Added the option to switch between languages (default/english/spanish/french for now)
+* Replaced the translation function with a new, more robust and easier to manage version
+* Moved the menu entry for shortcuts via StadiaIcons to community features and changed description
+* Fixed custom avatar not showing in livestream overview
+* Fixed extension dropdown menu icons not changing color when active
+* Fixed some menu entries showing the wrong default values
+
 ## Version 1.10
+
+### 1.10.2
+* Fixed italian translation
+
+### 1.10.1
+* Changed the statistic overview to display playtime total again
+* Updated italian, hungarian, catalan, french, portuguese and dutch translation
+* Fixed playtime total values returning errors due to localisation issues
+* Fixed total payment calculations for some currencies
+* Fixed a bug where total payments showed a multiplied total
+* Fixed a possible error when opening the settings menu
 
 ### 1.10.0
 * Added the option to pin games to the start of the grid on the homescreen
