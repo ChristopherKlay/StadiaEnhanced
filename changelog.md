@@ -2,6 +2,10 @@
 
 ## Version 1.12
 
+### 1.12.2
+* Fixed streaming monitor not updating due to changes on Googles side
+* Updated french translation
+
 ### 1.12.1
 * Adjusted monitor display position and structure next to the Stadia menu
 * Fixed errors, typos and issues based on translation strings
