@@ -159,13 +159,14 @@ function enhanced_RTCMonitor() {
             enhanced_lastBytes = 0;
             enhanced_lastFrames = 0;
             enhanced_sessionActive = false;
-        } else if (peerConnections.length >= 3) {
+        } else if (peerConnections.length >= 2) {
             if (!enhanced_sessionActive) {
                 enhanced_sessionStart = new Date();
                 enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
                 enhanced_sessionActive = true;
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
+            console.log(openConnections)
             openConnections[1].getStats().then(function(stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf("RTCIceCandidatePair") != -1) {
@@ -4362,7 +4363,7 @@ function enhancedTranslate(lang, log = false) {
                 invitebase: 'Copier le lien d\'invitation',
                 inviteactive: 'Copié!',
                 gamelabel: 'Étiquettes des Jeux',
-                gamelabeldesc: 'Retire les étiquettes des jeux telles que l\'étiquette "Pro" dans la page d\'accueil.',
+                gamelabeldesc: 'Retire les étiquettes des jeux telles que l(étiquette "Pro" dans la page d\'accueil.',
                 homegallery: 'Galerie des Captures',
                 homegallerydesc: 'Masque la section "Captures" en bas de la page d\'accueil.',
                 quickprev: 'Prévisualisation des Messages',
