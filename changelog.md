@@ -2,6 +2,12 @@
 
 ## Version 1.12
 
+### 1.12.4
+* Fixed logo reverting to the old version (oopsie!)
+* Fixed the grid size option displaying the wrong default value on smaller screens
+* Fixed multiple aspects of the extension on smaller (mobile) screens
+* Changed the letterbox filter to be hidden on smaller (mobile) screens
+
 ### 1.12.3
 * Fixed the game labels function not hiding ubisoft+ labels correctly
 
