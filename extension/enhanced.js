@@ -18,7 +18,7 @@ enhanced_CSS += ".VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }" // Fix searc
 enhanced_CSS += ".qE7X4e { margin-right: 0.625rem; }" // Fix searchbar margin
 enhanced_CSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }" // Wrap menu items
 enhanced_CSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
-enhanced_CSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" labels
+enhanced_CSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" lables
 enhanced_CSS += ".tlZCoe { margin-right: .5rem; margin-top: .5rem !important; }" // Allow for multiple buttons on popup
 enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
 enhanced_CSS += "#enhanced_showAll div { margin-left: 0 !important; }" // Fix show/hide filter margin
@@ -1299,7 +1299,7 @@ enhanced_invisibleUser.addEventListener("click", function() {
 });
 enhanced_settingsMessages.append(enhanced_invisibleUser);
 
-// Pro Labels
+// Hide Labels
 var enhanced_hideLabel = parseInt(localStorage.getItem("enhanced_hideLabel") || 0);
 var enhanced_gameLabel = document.createElement("div");
 enhanced_gameLabel.className = "pBvcyf QAAyWd";
@@ -2866,7 +2866,7 @@ function enhanced_applySettings(set, opt) {
                     console.log("%cStadia Enhanced" + "%c ⚙️ - Game Labels: Set to 'Visible'", enhanced_consoleEnhanced, "");
                     break
                 case 1:
-                    enhanced_CSS = ".lEPylf.YOW9Fd .a1l9D, .lEPylf.YOW9Fd .D01DPc, .lEPylf.KnM5Wc .a1l9D, .lEPylf.KnM5Wc .D01DPc { display: none; }"
+                    enhanced_CSS = ".lEPylf.YOW9Fd .a1l9D, .X9cRic, .lEPylf.YOW9Fd .D01DPc, .lEPylf.KnM5Wc .a1l9D, .lEPylf.KnM5Wc .D01DPc { display: none; }"
                     enhanced_gameLabel.style.color = "#00e0ba";
                     enhanced_gameLabel.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">label_off</i><span class="mJVLwb" style="width: 24rem; white-space: normal;">' + enhanced_lang.gamelabel + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.gamelabeldesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>';
                     console.log("%cStadia Enhanced" + "%c ⚙️ - Game Labels: Set to 'Hidden'", enhanced_consoleEnhanced, "");
