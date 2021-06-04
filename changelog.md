@@ -2,6 +2,9 @@
 
 ## Version 1.12
 
+### 1.12.3
+* Fixed the game labels function not hiding ubisoft+ labels correctly
+
 ### 1.12.2
 * Fixed streaming monitor not updating due to changes on Googles side
 * Updated french translation
