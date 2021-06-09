@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 1.13
+
+### 1.13.0
+* Added extended game infos (max resolution, framerate @ 4K, HDR, ..) to store detail pages
+* Added a ubisoft+ shortcut
+* Updated the friend invite url to the current standard
+* Fixed wishlisting sometimes using the wrong SKU
+* Fixed  playtime calculation errors when a single title has more than 1000 hours
+
 ## Version 1.12
 
 ### 1.12.4
