@@ -34,6 +34,21 @@ enhanced_CSS += "@media screen and (max-width: 639px) {\
 // Inject CSS
 enhanced_injectStyle(enhanced_CSS, "enhanced_styleGeneral");
 
+// Stadia Public Database by OriginalPenguin
+// Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
+var enhanced_database;
+fetch('https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/database.csv')
+    .then(response => response.text())
+    .then(result => enhanced_loadDatabase(result));
+
+// Extended Details
+var enhanced_extendedDetails = document.createElement("div")
+enhanced_extendedDetails.className = "b2MCG"
+
+var enhanced_extendedDisclaimer = document.createElement("div")
+enhanced_extendedDisclaimer.className = "uM5FUc"
+enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
+
 // Stream Monitor by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 var enhanced_monitorState = 0;
@@ -173,7 +188,6 @@ function enhanced_RTCMonitor() {
                 enhanced_sessionActive = true;
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
-            console.log(openConnections)
             openConnections[1].getStats().then(function(stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf("RTCIceCandidatePair") != -1) {
@@ -586,20 +600,6 @@ enhanced_ProDeals.addEventListener("click", function() {
 });
 enhanced_StoreDropContent.append(enhanced_ProDeals);
 
-// All games - Quick access to a list of all games currently available on Stadia
-var enhanced_AllGames = document.createElement("div");
-enhanced_AllGames.className = "pBvcyf QAAyWd";
-enhanced_AllGames.id = "enhanced_AllGames";
-enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.all + ' ' + enhanced_lang.games + '</span>';
-enhanced_AllGames.style.cursor = "pointer";
-enhanced_AllGames.style.userSelect = "none";
-enhanced_AllGames.style.paddingRight = "2rem";
-enhanced_AllGames.tabIndex = "0";
-enhanced_AllGames.addEventListener("click", function() {
-    openStadia("store/list/3");
-});
-enhanced_StoreDropContent.append(enhanced_AllGames);
-
 // Leaving Pro - Quick access to a list of games leaving Pro soon
 var enhanced_leavePro = document.createElement("div");
 enhanced_leavePro.className = "pBvcyf QAAyWd";
@@ -613,6 +613,34 @@ enhanced_leavePro.addEventListener("click", function() {
     openStadia("store/list/36");
 });
 enhanced_StoreDropContent.append(enhanced_leavePro);
+
+// Ubisoft+
+var enhanced_ubiPlus = document.createElement("div");
+enhanced_ubiPlus.className = "pBvcyf QAAyWd";
+enhanced_ubiPlus.id = "enhanced_ubiPlus";
+enhanced_ubiPlus.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">subscriptions</i><span class="mJVLwb">Ubisoft+</span>';
+enhanced_ubiPlus.style.cursor = "pointer";
+enhanced_ubiPlus.style.userSelect = "none";
+enhanced_ubiPlus.style.paddingRight = "2rem";
+enhanced_ubiPlus.tabIndex = "0";
+enhanced_ubiPlus.addEventListener("click", function() {
+    openStadia("store/list/2002");
+});
+enhanced_StoreDropContent.append(enhanced_ubiPlus);
+
+// All games - Quick access to a list of all games currently available on Stadia
+var enhanced_AllGames = document.createElement("div");
+enhanced_AllGames.className = "pBvcyf QAAyWd";
+enhanced_AllGames.id = "enhanced_AllGames";
+enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.all + ' ' + enhanced_lang.games + '</span>';
+enhanced_AllGames.style.cursor = "pointer";
+enhanced_AllGames.style.userSelect = "none";
+enhanced_AllGames.style.paddingRight = "2rem";
+enhanced_AllGames.tabIndex = "0";
+enhanced_AllGames.addEventListener("click", function() {
+    openStadia("store/list/3");
+});
+enhanced_StoreDropContent.append(enhanced_AllGames);
 
 // Language Dropdown - Adds a dropdown menu for language switching
 var enhanced_langContainer = document.createElement("li");
@@ -1191,7 +1219,7 @@ enhanced_useFilter.addEventListener("click", function() {
 enhanced_settingsGeneral.append(enhanced_useFilter)
 
 // Invite Link
-var enhanced_InviteURL = "https://stadia.com/link/referrals?si_rid=" + enhanced_AccountInfo[2] + "&si_rt=1";
+var enhanced_InviteURL = "https://stadia.com/link/home?si_rid=" + enhanced_AccountInfo[2];
 var enhanced_Invite = document.createElement("div");
 enhanced_Invite.className = "pBvcyf QAAyWd";
 enhanced_Invite.id = "enhanced_Invite";
@@ -2260,10 +2288,38 @@ setInterval(function() {
     // Location - Store Details
     if (document.location.href.indexOf("/store/details/") != -1) {
 
+        // Database Infos
+        if (enhanced_database) {
+            for (var i = 0; i < enhanced_database.length; i++) {
+                if (enhanced_database[i].id == document.location.href.split("/")[5]) {
+                    var enhanced_databaseDetails = '<div class="CVVXfc"><h2 class="HZ5mJ">' + enhanced_lang.extdetail + '</h2></div>'
+
+                    if (enhanced_database[i].maxRes != "") {
+                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.maxresolution + '</div><div class="tM4Phe">' + enhanced_database[i].maxRes + '</div></div>'
+                    }
+                    if (enhanced_database[i].fps4K != "") {
+                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.fps4K + '</div><div class="tM4Phe">' + enhanced_database[i].fps4K + '</div></div>'
+                    }
+                    if (enhanced_database[i].hdr != "") {
+                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">HDR/SDR</div><div class="tM4Phe">' + enhanced_database[i].hdr + '</div></div>'
+                    }
+                    if (enhanced_database[i].note != "") {
+                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Notes</div><div class="tM4Phe">' + enhanced_database[i].note + '</div></div>'
+                    }
+
+                    if (enhanced_extendedDetails.innerHTML != enhanced_databaseDetails) {
+                        enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
+                    }
+                }
+            }
+            secureInsert(enhanced_extendedDetails, ".Dbr3vb.URhE4b.bqgeJc.wGziQb", 0)
+            secureInsert(enhanced_extendedDisclaimer, ".Dbr3vb.URhE4b.bqgeJc.wGziQb", 0)
+        }
+
         // Wishlist Startup
         if (enhanced_wishlistHeart.innerHTML == "") {
             var enhanced_wishlist = localStorage.getItem("enhanced_wishlist") || "";
-            var enhanced_currentSKU = document.location.href.split("sku/")[1].substring(0, 32);
+            var enhanced_currentSKU = document.location.href.split("sku/")[1].split('?')[0];
             if (enhanced_wishlist.includes(enhanced_currentSKU)) {
                 enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>';
                 enhanced_wishlistHeart.style.color = "#ff773d";
@@ -2276,6 +2332,9 @@ setInterval(function() {
 
         secureInsert(enhanced_StoreContainer, ".WjVJKd", 0);
     } else {
+        // Reset extended game info
+        enhanced_extendedDetails.innerHTML = "";
+
         // Wishlist Startup
         enhanced_wishlistContainer.style.display = "none";
         enhanced_wishlistHeart.innerHTML = "";
@@ -2391,7 +2450,8 @@ setInterval(function() {
 
             if (enhanced_timesAvailable) {
                 for (var i = 0; i < enhanced_timeQuery.length; i++) {
-                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.split(/[\s]/);
+                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.replace(".", "").split(/[\s]/);
+
                     switch (enhanced_titlePlaytime.length) {
                         case 2:
                             if (enhanced_titlePlaytime[1] == enhanced_minutesLabel) {
@@ -3146,6 +3206,33 @@ function secureInsert(el, sel, opt = 0) {
     }
 }
 
+function enhanced_loadDatabase(csv) {
+    // Load and process data
+    var result = [];
+    var data = csv.split("\n")
+    for (var i = 1; i < data.length; i++) {
+        split = data[i].split(",")
+        var json = {
+            name: split[0],
+            maxRes: split[1],
+            fps4K: split[2],
+            hdr: split[3],
+            id: split[4],
+            note: split[5]
+                .replace("Specs confirmed by devs/pubs", enhanced_lang.noteOne)
+                .replace("Pixel Count", enhanced_lang.noteTwo)
+                .replace("60FPS in 1080p mode", enhanced_lang.noteThree)
+                .replace("30FPS in 1080p mode", enhanced_lang.noteFour)
+                .replace("Performance/Quality toggle", enhanced_lang.noteFive)
+                .replace("No HDR settings", enhanced_lang.noteSix)
+                .replace("Not compatible with 4K mode", enhanced_lang.noteSeven)
+                .replaceAll(" | ", ", ")
+        }
+        result.push(json)
+    }
+    enhanced_database = result
+}
+
 function enhanced_formatTime(seconds) {
     var hours = Math.floor(seconds / 3600);
     seconds -= hours * 3600;
@@ -3283,6 +3370,20 @@ function enhancedTranslate(lang, log = false) {
         compression: 'Compression',
         streammon: 'Stream Monitor',
         stream: 'Stream',
+        extdetail: 'Extended Details',
+        maxresolution: 'Maximum Resolution',
+        fps4K: 'Framerate @ 4K',
+        datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
+                    On games with a resolution/framerate toggle, resolution was picked. \
+                    This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+        noteOne: 'Specs confirmed by devs/pubs',
+        noteTwo: 'Pixel Count',
+        noteThree: '60FPS in 1080p mode',
+        noteFour: '30FPS in 1080p mode',
+        noteFive: 'Performance/Quality toggle',
+        noteSix: 'No HDR settings',
+        noteSeven: 'Not compatible with 4K mode',
         community: 'Community',
         speedtest: 'Speedtest',
         quickaccess: 'Quick Access',
@@ -3392,6 +3493,20 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Kompression',
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
+                extdetail: 'Erweiterte Details',
+                maxresolution: 'Maximale Auflösung',
+                fps4K: 'Framerate @ 4K',
+                datadiscl: 'Dies ist die im 4K Modus (Stadia Pro benötigt) maximal erreichbare Framerate.\
+                            In Spielen mit Qualität/Performance Option, wurde Qualität gewählt. \
+                            Diese Daten werden durch <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> bereitgestellt, \
+                            die vollständige Ansicht befindet sich <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">hier</a>.',
+                noteOne: 'Spezifikationen von Entwickler/Publisher bestätigt',
+                noteTwo: 'Pixel Zählung',
+                noteThree: '60 FPS im 1080p Modus',
+                noteFour: '30 FPS im 1080p Modus',
+                noteFive: 'Leistung / Qualität umschaltbar',
+                noteSix: 'Keine HDR Einstellungen',
+                noteSeven: 'Nicht kompatibel mit 4K Modus',
                 community: 'Community',
                 speedtest: 'Geschwindigkeitstest',
                 quickaccess: 'Schnellzugriff',
@@ -3500,6 +3615,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Tömörítés',
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: undefined,
+                noteTwo: undefined,
+                noteThree: undefined,
+                noteFour: undefined,
+                noteFive: undefined,
+                noteSix: undefined,
+                noteSeven: undefined,
                 community: 'Közösség',
                 speedtest: 'Sebesség teszt',
                 quickaccess: 'Gyors elérés',
@@ -3606,6 +3732,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compressie',
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: 'Specificaties bevestigd door Ontwikkelaar/Uitgever',
+                noteTwo: 'Aantal pixels',
+                noteThree: '60FPS in 1080p modus',
+                noteFour: '30FPS in 1080p modus',
+                noteFive: 'Prestatie/Kwaliteit optie',
+                noteSix: 'Geen HDR instellingen',
+                noteSeven: 'Ondersteunt geen 4K modus',
                 community: 'Gemeenschap',
                 speedtest: 'Snelheidstest',
                 quickaccess: 'Snelle Toegang',
@@ -3712,6 +3849,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compresión',
                 streammon: 'Monitor de retransmisión',
                 stream: 'Retransmisión',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: 'Especificaciones confirmadas por desarrolladores y/o editores',
+                noteTwo: 'Cuenta de píxeles',
+                noteThree: '60FPS en modo 1080p',
+                noteFour: '30FPS en modo 1080p',
+                noteFive: 'Selección Rendimiento/gráficos',
+                noteSix: 'Sin soporte para HDR',
+                noteSeven: 'No es compatible con modo 4K',
                 community: 'Comunidad',
                 speedtest: 'Test de Velocidad',
                 quickaccess: 'Acceso Rápido',
@@ -3818,6 +3966,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compressione',
                 streammon: 'Monitor Stream',
                 stream: 'Stream',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: 'Specifiche confermate dagli sviluppatori/editori',
+                noteTwo: 'Conto dei pixel',
+                noteThree: '60 FPS in modalità 1080p',
+                noteFour: '30 FPS in modalità 1080p',
+                noteFive: 'Alterna Prestazioni/Qualità',
+                noteSix: 'Nessuna impostazione HDR',
+                noteSeven: 'Non compatibile con la modalità 4K',
                 community: 'Comunità',
                 speedtest: 'Speedtest',
                 quickaccess: 'Accesso Veloce',
@@ -3924,6 +4083,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Kompression',
                 streammon: 'Overvågning af strøm',
                 stream: 'Strøm',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: undefined,
+                noteTwo: undefined,
+                noteThree: undefined,
+                noteFour: undefined,
+                noteFive: undefined,
+                noteSix: undefined,
+                noteSeven: undefined,
                 community: 'Fællesskab',
                 speedtest: 'Hastighedstest',
                 quickaccess: 'Hurtig adgang',
@@ -4030,6 +4200,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compressió',
                 streammon: 'Monitor de retransmissió',
                 stream: 'Retransmissió',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: undefined,
+                noteTwo: undefined,
+                noteThree: undefined,
+                noteFour: undefined,
+                noteFive: undefined,
+                noteSix: undefined,
+                noteSeven: undefined,
                 community: 'Comunitat',
                 speedtest: 'Prova de velocitat',
                 quickaccess: 'Accés ràpid',
@@ -4136,6 +4317,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compressão',
                 streammon: 'Monitor de Streaming',
                 stream: 'Stream',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: undefined,
+                noteTwo: undefined,
+                noteThree: undefined,
+                noteFour: undefined,
+                noteFive: undefined,
+                noteSix: undefined,
+                noteSeven: undefined,
                 community: 'Comunidade',
                 speedtest: 'Teste de velocidade',
                 quickaccess: 'Acesso Rápido',
@@ -4242,6 +4434,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Kompression',
                 streammon: 'Strömmonitor',
                 stream: 'Ström',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: 'Specifikationer bekräftade av utvecklare/utgivare',
+                noteTwo: 'Pixelräkning',
+                noteThree: '60FPS i 1080p-läge',
+                noteFour: '30FPS i 1080p-läge',
+                noteFive: 'Prestanda/Grafik-inställning',
+                noteSix: 'Ej HDR-inställningar',
+                noteSeven: 'Ej kompatibelt med 4K-läge',
                 community: 'Gemenskap',
                 speedtest: 'Hastighetstest',
                 quickaccess: 'Snabbmeny',
@@ -4348,6 +4551,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compression',
                 streammon: 'Moniteur de Stream',
                 stream: 'Stream',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: undefined,
+                noteTwo: undefined,
+                noteThree: undefined,
+                noteFour: undefined,
+                noteFive: undefined,
+                noteSix: undefined,
+                noteSeven: undefined,
                 community: 'Communauté',
                 speedtest: 'Test de Débit',
                 quickaccess: 'Accès Rapide',
@@ -4454,6 +4668,17 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Сжатие',
                 streammon: 'Монитор',
                 stream: 'Поток',
+                extdetail: undefined,
+                maxresolution: undefined,
+                fps4K: undefined,
+                datadiscl: undefined,
+                noteOne: undefined,
+                noteTwo: undefined,
+                noteThree: undefined,
+                noteFour: undefined,
+                noteFive: undefined,
+                noteSix: undefined,
+                noteSeven: undefined,
                 community: 'Сообщество',
                 speedtest: 'Проверка скорости',
                 quickaccess: 'Быстрый доступ',
