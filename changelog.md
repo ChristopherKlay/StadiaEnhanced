@@ -2,6 +2,9 @@
 
 ## Version 1.13
 
+### 1.13.1
+* Restricted the extensions access to the projects own GitHub repository only
+
 ### 1.13.0
 * Added extended game infos (max resolution, framerate @ 4K, HDR, ..) to store detail pages
 * Added a ubisoft+ shortcut
