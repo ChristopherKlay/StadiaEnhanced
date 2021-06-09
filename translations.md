@@ -54,6 +54,7 @@ var translation = {
     complete: 'Complete',
     incomplete: 'Incomplete',
     games: 'Games',
+    allgames: 'All Games',
     leavepro: 'Leaving Pro',
     bundles: 'Bundles',
     addons: 'Add-ons',
@@ -83,6 +84,20 @@ var translation = {
     compression: 'Compression',
     streammon: 'Stream Monitor',
     stream: 'Stream',
+    extdetail: 'Extended Details',
+    maxresolution: 'Maximum Resolution',
+    fps4K: 'Framerate @ 4K',
+    datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
+                On games with a resolution/framerate toggle, resolution was picked. \
+                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+    noteOne: 'Specs confirmed by devs/pubs',
+    noteTwo: 'Pixel Count',
+    noteThree: '60FPS in 1080p mode',
+    noteFour: '30FPS in 1080p mode',
+    noteFive: 'Performance/Quality toggle',
+    noteSix: 'No HDR settings',
+    noteSeven: 'Not compatible with 4K mode',
     community: 'Community',
     speedtest: 'Speedtest',
     quickaccess: 'Quick Access',
