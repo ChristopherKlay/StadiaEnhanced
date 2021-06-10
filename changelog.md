@@ -2,6 +2,9 @@
 
 ## Version 1.13
 
+### 1.13.2
+* Fixed extended details not loading with multiple accounts
+
 ### 1.13.1
 * Restricted the extensions access to the projects own GitHub repository only
 
