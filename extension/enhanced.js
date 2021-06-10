@@ -2291,7 +2291,7 @@ setInterval(function() {
         // Database Infos
         if (enhanced_database) {
             for (var i = 0; i < enhanced_database.length; i++) {
-                if (enhanced_database[i].id == document.location.href.split("/")[5]) {
+                if (enhanced_database[i].id == document.location.href.split("details/")[1].split('/')[0]) {
                     var enhanced_databaseDetails = '<div class="CVVXfc"><h2 class="HZ5mJ">' + enhanced_lang.extdetail + '</h2></div>'
 
                     if (enhanced_database[i].maxRes != "") {
@@ -2311,9 +2311,9 @@ setInterval(function() {
                         enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
                     }
                 }
+                secureInsert(enhanced_extendedDetails, ".Dbr3vb.URhE4b.bqgeJc.wGziQb", 0)
+                secureInsert(enhanced_extendedDisclaimer, ".Dbr3vb.URhE4b.bqgeJc.wGziQb", 0)
             }
-            secureInsert(enhanced_extendedDetails, ".Dbr3vb.URhE4b.bqgeJc.wGziQb", 0)
-            secureInsert(enhanced_extendedDisclaimer, ".Dbr3vb.URhE4b.bqgeJc.wGziQb", 0)
         }
 
         // Wishlist Startup
