@@ -2,6 +2,9 @@
 
 ## Version 1.13
 
+### 1.13.3
+* Fixed the letterbox filter not accepting inputs anymore
+
 ### 1.13.2
 * Fixed extended details not loading with multiple accounts
 
