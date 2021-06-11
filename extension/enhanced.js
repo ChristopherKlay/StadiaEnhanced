@@ -1894,7 +1894,7 @@ enhanced_friendCount.style.marginLeft = "0"
 var enhanced_activeLetter = false
 var enhanced_letterBox = document.createElement("div")
 enhanced_letterBox.id = "enhanced_letterBox"
-enhanced_letterBox.className = "jkwub bJBQjf QAAyWd"
+enhanced_letterBox.className = "jkwub bJBQjf"
 enhanced_letterBox.style.marginRight = "auto"
 enhanced_letterBox.style.textIndent = "-0.5rem"
 if (!enhanced_supportedLang.includes(enhanced_local)) {
