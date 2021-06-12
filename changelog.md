@@ -2,6 +2,11 @@
 
 ## Version 1.13
 
+### 1.13.4
+* Changed the language picker into a scrollable list and added more options
+* Fixed the language picker always loading the home screen
+* Updated catalan translation
+
 ### 1.13.3
 * Fixed the letterbox filter not accepting inputs anymore
 
