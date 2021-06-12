@@ -659,6 +659,7 @@ enhanced_langDropdown.tabIndex = "0";
 enhanced_langDropdown.addEventListener("click", function() {
     if (enhanced_langDropContent.style.display === "none") {
         enhanced_langDropContent.style.display = "block";
+        enhanced_langDropContent.scrollTop = 0;
         enhanced_langDropdown.firstElementChild.style.color = "#ff773d"
     } else {
         enhanced_langDropContent.style.display = "none";
@@ -672,6 +673,8 @@ enhanced_langDropContent.id = "enhanced_langDropContent";
 enhanced_langDropContent.className = "us22N";
 enhanced_langDropContent.style.position = "absolute";
 enhanced_langDropContent.style.width = "auto";
+enhanced_langDropContent.style.height = "20rem";
+enhanced_langDropContent.style.overflowY = "scroll";
 enhanced_langDropContent.style.top = "4.25rem";
 enhanced_langDropContent.style.boxShadow = "0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)";
 enhanced_langDropContent.style.zIndex = "20";
@@ -680,7 +683,7 @@ enhanced_langDropContent.style.display = "none";
 // Language Select - Default
 var enhanced_langDefault = document.createElement("div");
 enhanced_langDefault.className = "pBvcyf QAAyWd";
-enhanced_langDefault.innerHTML = '<span class="mJVLwb">' + enhanced_lang.default+'</span>';
+enhanced_langDefault.innerHTML = '<span class="mJVLwb" style="padding: 0.75rem 0;">' + enhanced_lang.default+'</span>';
 enhanced_langDefault.style.cursor = "pointer";
 enhanced_langDefault.style.userSelect = "none";
 enhanced_langDefault.style.padding = "0 2rem";
@@ -688,63 +691,49 @@ enhanced_langDefault.style.textAlign = "center";
 enhanced_langDefault.tabIndex = "0";
 enhanced_langDefault.style.borderBottom = "1px solid rgba(255,255,255,.06)";
 enhanced_langDefault.addEventListener("click", function() {
+    enhanced_urlGoal = document.location.pathname.substring(1)
     enhanced_urlBase = new URL(window.location.href);
     enhanced_urlBase.searchParams.delete('hl')
     history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
-    openStadia("home");
+    openStadia(enhanced_urlGoal);
 });
 enhanced_langDropContent.append(enhanced_langDefault);
 
-// Language Select - English
-var enhanced_langEnglish = document.createElement("div");
-enhanced_langEnglish.className = "pBvcyf QAAyWd";
-enhanced_langEnglish.innerHTML = '<span class="mJVLwb">English</span>';
-enhanced_langEnglish.style.cursor = "pointer";
-enhanced_langEnglish.style.userSelect = "none";
-enhanced_langEnglish.style.padding = "0 2rem";
-enhanced_langEnglish.style.textAlign = "center";
-enhanced_langEnglish.tabIndex = "0";
-enhanced_langEnglish.addEventListener("click", function() {
-    enhanced_urlBase = new URL(window.location.href);
-    enhanced_urlBase.searchParams.set('hl', 'en')
-    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
-    openStadia("home");
-});
-enhanced_langDropContent.append(enhanced_langEnglish);
+// Language Select - Options
+var enhanced_langCodes = {
+    Catalan: 'ca',
+    Danish: 'da',
+    Dutch: 'nl',
+    English: 'en',
+    French: 'fr',
+    German: 'de',
+    Italian: 'it',
+    Portuguese: 'pt',
+    Spanish: 'es',
+    Swedish: 'sv'
+}
 
-// Language Select - Spanish
-var enhanced_langSpanish = document.createElement("div");
-enhanced_langSpanish.className = "pBvcyf QAAyWd";
-enhanced_langSpanish.innerHTML = '<span class="mJVLwb">Spanish</span>';
-enhanced_langSpanish.style.cursor = "pointer";
-enhanced_langSpanish.style.userSelect = "none";
-enhanced_langSpanish.style.padding = "0 2rem";
-enhanced_langSpanish.style.textAlign = "center";
-enhanced_langSpanish.tabIndex = "0";
-enhanced_langSpanish.addEventListener("click", function() {
-    enhanced_urlBase = new URL(window.location.href);
-    enhanced_urlBase.searchParams.set('hl', 'es')
-    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
-    openStadia("home");
-});
-enhanced_langDropContent.append(enhanced_langSpanish);
+for (const [key, value] of Object.entries(enhanced_langCodes)) {
+    if (value != enhanced_local) {
+        var enhanced_langOption = document.createElement("div");
+        enhanced_langOption.className = "pBvcyf QAAyWd";
+        enhanced_langOption.innerHTML = '<span class="mJVLwb" style="padding: 0.75rem 0;">' + key + '</span>';
+        enhanced_langOption.style.cursor = "pointer";
+        enhanced_langOption.style.userSelect = "none";
+        enhanced_langOption.style.padding = "0 2rem";
+        enhanced_langOption.style.textAlign = "center";
+        enhanced_langOption.tabIndex = "0";
+        enhanced_langOption.addEventListener("click", function() {
+            enhanced_urlGoal = document.location.pathname.substring(1)
+            enhanced_urlBase = new URL(window.location.href);
+            enhanced_urlBase.searchParams.set('hl', value)
+            history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
+            openStadia(enhanced_urlGoal);
+        });
+        enhanced_langDropContent.append(enhanced_langOption);
+    }
+}
 
-// Language Select - French
-var enhanced_langFrench = document.createElement("div");
-enhanced_langFrench.className = "pBvcyf QAAyWd";
-enhanced_langFrench.innerHTML = '<span class="mJVLwb">French</span>';
-enhanced_langFrench.style.cursor = "pointer";
-enhanced_langFrench.style.userSelect = "none";
-enhanced_langFrench.style.padding = "0 2rem";
-enhanced_langFrench.style.textAlign = "center";
-enhanced_langFrench.tabIndex = "0";
-enhanced_langFrench.addEventListener("click", function() {
-    enhanced_urlBase = new URL(window.location.href);
-    enhanced_urlBase.searchParams.set('hl', 'fr')
-    history.replaceState(null, null, "?" + enhanced_urlBase.searchParams);
-    openStadia("home");
-});
-enhanced_langDropContent.append(enhanced_langFrench);
 secureInsert(enhanced_langContainer, ".ZECEje", 1)
 
 enhanced_langDropdown.addEventListener("keyup", function(e) {
@@ -4170,8 +4159,8 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Complet',
                 incomplete: 'Incomplet',
                 games: 'Jocs',
-                allgames: undefined,
-                leavepro: undefined,
+                allgames: 'Tots els jocs',
+                leavepro: 'Abandonden Pro',
                 bundles: 'Paquets',
                 addons: 'Complements',
                 wishlist: 'Llista de desitjos',
@@ -4200,17 +4189,20 @@ function enhancedTranslate(lang, log = false) {
                 compression: 'Compressió',
                 streammon: 'Monitor de retransmissió',
                 stream: 'Retransmissió',
-                extdetail: undefined,
-                maxresolution: undefined,
-                fps4K: undefined,
-                datadiscl: undefined,
-                noteOne: undefined,
-                noteTwo: undefined,
-                noteThree: undefined,
-                noteFour: undefined,
-                noteFive: undefined,
-                noteSix: undefined,
-                noteSeven: undefined,
+                extdetail: 'Més detalls',
+                maxresolution: 'Resolució màxima',
+                fps4K: 'Fotogrames per segon en 4K',
+                datadiscl: 'Aquest és el màxim de fotogrames per segon aconseguit quan es juga un joc en mode 4K (cal ser subscriptor Pro).\
+                En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
+                Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                i es pot trobar la base de dades completa <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">aquí</a>.',
+                noteOne: 'Especificacions confirmades pels desenvolupadors/distribuïdors',
+                noteTwo: 'Recompte de píxels',
+                noteThree: '60FPS en mode 1080p',
+                noteFour: '30FPS en mode 1080p',
+                noteFive: 'Permet seleccionar entre mode resolució o velocitat de fotogrames',
+                noteSix: 'Sense opcions d\'HDR',
+                noteSeven: 'No compatible amb el mode 4K',
                 community: 'Comunitat',
                 speedtest: 'Prova de velocitat',
                 quickaccess: 'Accés ràpid',
@@ -4225,14 +4217,14 @@ function enhancedTranslate(lang, log = false) {
                 stadiastatsopen: 'Veure a StadiaStats.GG',
                 stadiastatsdesc: 'Permet les dreceres directes a les estadístiques dels jocs, l\'enllaç al vostre perfil i el sistema de cerca d\'altres jugadors/es a stadiastats.gg.',
                 gridsize: 'Tamany de la quadrícula',
-                griddesc: undefined,
+                griddesc: 'Canvia la quantitat de jocs per fila a la biblioteca.',
                 clock: 'Rellotge',
                 clockdesc: 'Mostra l\'hora actual a la llista d\'amics, com a superposició del joc, o ambdues coses.',
                 friendslist: 'Llista d\'amics',
                 igoverlay: 'Superposició dins del joc',
                 listoverlay: 'Llista i superposició',
-                filter: undefined,
-                filterdesc: undefined,
+                filter: 'Filtre de jocs',
+                filterdesc: 'Permet ordenar la biblioteca amagant jocs. El filtre es pot alternar mitjançant el símbol, a la part superior dreta, a sobre dels jocs de la biblioteca.',
                 invitebase: 'Copia l\'enllaç d\'invitació',
                 inviteactive: 'Copiat!',
                 gamelabel: 'Etiquetes de joc',
@@ -4264,8 +4256,8 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Substitueix els enllaços d\'imatge per a formats de fitxer habituals (jpg/gif/png) amb una vista prèvia.',
                 familyelements: 'Opcions de compartició familiar',
                 familyelementsdesc: 'Amaga les opcions "Comparteix aquest joc amb la família."',
-                donations: undefined,
-                reportbug: undefined,
+                donations: 'Donacions',
+                reportbug: 'Reporta un error',
                 resetsettings: 'Restableix la configuració'
             }
             break
