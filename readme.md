@@ -4,7 +4,7 @@
   <img src="https://i.imgur.com/OzmbXku.png?raw=true" alt="Stadia Enhanced Logo"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.13.4-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.13.5-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 

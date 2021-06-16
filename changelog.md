@@ -2,6 +2,10 @@
 
 ## Version 1.13
 
+### 1.13.5
+* Changed content requests to background fetching, to avoid GitHub permission uncertainties
+* Fixed playtime not displaying correctly, when the user has it's playtime set to private
+
 ### 1.13.4
 * Changed the language picker into a scrollable list and added more options
 * Fixed the language picker always loading the home screen

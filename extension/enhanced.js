@@ -37,9 +37,10 @@ enhanced_injectStyle(enhanced_CSS, "enhanced_styleGeneral");
 // Stadia Public Database by OriginalPenguin
 // Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
 var enhanced_database;
-fetch('https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/database.csv')
-    .then(response => response.text())
-    .then(result => enhanced_loadDatabase(result));
+chrome.runtime.sendMessage({
+        contentScriptQuery: "database"
+    },
+    result => enhanced_loadDatabase(result));
 
 // Extended Details
 var enhanced_extendedDetails = document.createElement("div")
@@ -2536,6 +2537,8 @@ setInterval(function() {
                 }
             }
         }
+    } else {
+        enhanced_statPlaytime.innerHTML = "";
     }
 
     // Location - Stadia Menu
@@ -3220,6 +3223,7 @@ function enhanced_loadDatabase(csv) {
         result.push(json)
     }
     enhanced_database = result
+    console.log("%cStadia Enhanced" + "%c ⚙️ - GitHub Database: " + result.length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
 }
 
 function enhanced_formatTime(seconds) {
