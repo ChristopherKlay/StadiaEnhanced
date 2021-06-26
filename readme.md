@@ -1,7 +1,7 @@
 # Stadia Enhanced
 
 <p align="center">
-  <img src="https://i.imgur.com/5gZzikP.gif"/>
+  <img src="https://i.imgur.com/9OrS3nO.gif"/>
 </p>
 
 ![](https://img.shields.io/badge/GitHub-1.13.5-green?style=for-the-badge)
