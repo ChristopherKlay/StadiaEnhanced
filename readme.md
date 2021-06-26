@@ -1,7 +1,7 @@
 # Stadia Enhanced
 
 <p align="center">
-  <img src="https://i.imgur.com/9OrS3nO.gif"/>
+  <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/header-mockup.gif"/>
 </p>
 
 ![](https://img.shields.io/badge/GitHub-1.13.5-green?style=for-the-badge)
@@ -56,8 +56,8 @@ Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanc
 
 ## Screenshots
 
-![](https://i.imgur.com/ydbWMVU.png)
-![](https://i.imgur.com/s6i9xnt.png)
-![](https://i.imgur.com/bKJ8vSy.png)
-![](https://i.imgur.com/r8d48h4.png)
-![](https://i.imgur.com/Q3xp1Uh.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot1.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot2.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot3.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot4.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot5.png)
