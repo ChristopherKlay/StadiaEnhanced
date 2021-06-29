@@ -103,7 +103,7 @@ Nanotale - Typing Chronicles,3840x2160,30,SDR,4108770e33414848ae849cb6ad14e685rc
 NBA 2K20,3840x2160,30,HDR,2afad3696b394f669b49e4c0b6016958rcp1,Pixel Count | 60FPS in 1080p mode
 NBA 2K21,3840x2160,30,HDR,b0a2ab7cdc194582bc4d111c07c2e30drcp1,Pixel Count | 60FPS in 1080p mode
 OCTOPATH TRAVELER,Pixel Art/Retro,60,SDR,48ead86182b14fe0afcc5f2927dbed51rcp1,
-Olympic Games Tokyo 2020,,,,#ERROR!,
+Olympic Games Tokyo 2020,,,,b5b149105b1e4a38b1c43484d2d4dc22rcp1,
 One Hand Clapping,3840x2160,60,HDR,76309b9f2f294b07b410e8b6aa879273rcp1,Pixel Count
 Orcs Must Die 3,3840x2160,60,HDR,c1928530515748da9f55afc7243fd3e1rcp1,Pixel Count | Specs confirmed by devs/pubs
 Outcasters,,60,HDR,8533fb04b9174c3f8dce10a2fec7b062rcp1,No HDR settings
@@ -161,22 +161,22 @@ The Darkside Detective,Pixel Art/Retro,60,,b465998ccc1c48aaa2fb74f331ebbdd7rcp1,
 The Darkside Detective: A Fumble in the Dark,Pixel Art/Retro,,,4e9c4e089aa5410cbffb3c1869d68925rcp1,
 The Elder Scrolls Online,3840x2160,30,HDR,b17f16d4a4f94c0a85e07f54dbdedbb6rcp1,30FPS in 1080p mode | Pixel Count | Specs confirmed by devs/pubs
 The Gardens Between,3840x2160,60,SDR,cf65dc95d523465493d6fbc482452227rcp1,Pixel Count | Specs confirmed by devs/pubs
-The Legend of Heroes: Trails of Cold Steel III,,,SDR,5de3aed0b1b4439887e1cb4458f9cec8rcp1,
+The Legend of Heroes: Trails of Cold Steel III,3840x2160,60,SDR,5de3aed0b1b4439887e1cb4458f9cec8rcp1,Pixel Count
 The Legend of Heroes: Trails of Cold Steel IV,,,,95d975e630f5443ca402b5d67c31323drcp1,
 The Turing Test,3200x1800,60,SDR,cfd2977e1b9f412387ca2f44848400acrcp1,Pixel Count
 Thumper,3840x2160,60,SDR,c121d8b3fa744b52b71bf3599cb3da7frcp1,Pixel Count | Specs confirmed by devs/pubs
 TOHU,,60,SDR,df0f55ed73d946b8a70398fea9805e2drcp1,
 Tom Clancy's Ghost Recon Breakpoint,3840x2160,30,HDR,11c9ece5b3a045908d77cf2b66adb010rcp1,Pixel Count | Specs confirmed by devs/pubs | 60FPS in 1080p mode
 Tom Clancy's Ghost Recon Wildlands,3200x1800,30,HDR,a1ce1274a83244f1a099bebef7ae1233rcp1,Pixel Count | Performance/Quality toggle | 60FPS in 1080p mode | No HDR settings
-Tom Clancy's The Division 2,3840x2160,60,HDR,d43cd46c81734ca48e1a615310d0237crcp1,Pixel Count | Specs confirmed by devs/pubs
+The Division 2,3840x2160,60,HDR,d43cd46c81734ca48e1a615310d0237crcp1,Pixel Count | Specs confirmed by devs/pubs
 Tomb Raider: Definitive Edition,3456x1944,30,HDR,42503ac2cfcf40018c15c86b86a5508drcp1,Pixel Count | Performance/Quality toggle | 60FPS in 1080p mode | No HDR settings
 Trials Rising,3840x2160,60,SDR,a031419410cc48469ff8954ea0732640rcp1,Pixel Count | Specs confirmed by devs/pubs
 Trine 4: The Nightmare Prince,2304x1296,60,SDR,30fd580936bb43b782ec2dbdac8b2f45rcp1,Pixel Count
 UNO,3840x2160,60,SDR,1694aaa3968344228424092f180a3e0ercp1,Pixel Count
 Unto The End,3840x2160,60,SDR,a089691b36254f77bc66a75052fc7cf6rcp1,Pixel Count
 Valkyria Chronicles 4,1920x1080,60,HDR,b00e2f20b91e43c8a0597b07fc80ca84rcp1,Pixel Count
-Watch Dogs,3840x2160,30,SDR,b7503867ccbc4ac7be7093fe3ba1523crcp1,Pixel Count | Performance/Quality toggle | 60FPS in 1080p mode
-Watch Dogs 2,,30,SDR,e6005e58d6d3458abd01bcf68e264ccercp1,Performance/Quality toggle | 60FPS in 1080p mode
+Watch_Dogs,3840x2160,30,SDR,b7503867ccbc4ac7be7093fe3ba1523crcp1,Pixel Count | Performance/Quality toggle | 60FPS in 1080p mode
+Watch_Dogs 2,,30,SDR,e6005e58d6d3458abd01bcf68e264ccercp1,Performance/Quality toggle | 60FPS in 1080p mode
 Watch Dogs: Legion,2304x1296,30,HDR,deb490c166544813bf2ab73f4c6e2aa0rcp1,Pixel Count | 30FPS in 1080p mode
 Wave Break,,30,HDR,3e7b24085e704c10ab03f93a19947c14rcp1,60FPS in 1080p mode
 Welcome to Elk,1920x1080,60,SDR,9fb7a46ff38a4c1d842e9ddd35b24d00rcp1,Pixel Count | Not compatible with 4K mode
@@ -190,6 +190,9 @@ Zombie Army 4: Dead War,2560x1440,60,HDR,cba537cccfe3470b8784f88660ea5f09rcp1,Pi
 GRIME,,,,#ERROR!,
 Tom Clancy's Rainbow Six Siege,,,,#ERROR!,
 RAINBOW SIX: EXTRACTION,,,,e219615d926c4e6e92fae3b567fac94ercp1,
-Riders Republic,,,,#ERROR!,
+Riders Republic,,,,a173ab7957e243d5a2a5668c6edd94b6rcp1,
 Just Dance 2022,,,,#ERROR!,
 Madden NFL 22,,,,451f31e0ce9e4ac4b928f4f6a9d2b3d0rcp1,
+Hello Engineer - Early Access,,,,e85d550899de407e996a8a2d9dfbc7efrcp1,
+Life is Strange Remastered,,,,09011184da8446c1b6fafb8c010888bfrcp1,
+Life is Strange: Before the Storm Remastered,,,,e8eaa376059b43d5a3007c13589e8a1drcp1,
