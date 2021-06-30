@@ -1,7 +1,7 @@
 {
     "name": "Stadia Enhanced",
     "description": "Various new features for Google Stadia.",
-    "version": "1.13.5",
+    "version": "1.14.0",
     "manifest_version": 2,
     "author": "Christopher Klay",
     "homepage_url": "https://github.com/ChristopherKlay/StadiaEnhanced",
@@ -13,7 +13,7 @@
     },
     "browser_action": {
         "default_popup": "popup.html",
-        "default_title": "Stadia Enhanced v1.13.5",
+        "default_title": "Stadia Enhanced v1.14.0",
         "default_icon": {
             "16": "media/logo/16.png",
             "32": "media/logo/32.png",
@@ -24,7 +24,7 @@
     "content_scripts": [{
         "run_at": "document_end",
         "matches": ["*://stadia.google.com/*"],
-        "exclude_matches": ["*://stadia.google.com/capture/*", "*://stadia.google.com/families"],
+        "exclude_matches": ["*://stadia.google.com/capture/*", "*://stadia.google.com/families", "*://stadia.google.com/couch", "*://stadia.google.com/tv"],
         "js": ["enhanced.js"]
     }],
     "background": {

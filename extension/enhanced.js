@@ -1,6 +1,8 @@
-// Start Up
-console.groupCollapsed("Stadia Enhanced: Start-Up");
+// Version Info
+var enhanced_manifest = chrome.runtime.getManifest();
 
+// Start Up
+console.groupCollapsed("Stadia Enhanced " + enhanced_manifest.version + ": Start-Up");
 var enhanced_timerLoadStart = window.performance.now();
 var enhanced_supportedLang = "en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi"
 var enhanced_local = document.querySelector("html").getAttribute("lang");
@@ -12,27 +14,83 @@ if (enhanced_AccountInfo) {
 var enhanced_lang = enhancedTranslate(enhanced_local, true);
 
 // CSS Changes - Global styles and overwrites
-enhanced_CSS = ".lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }" // Remove padding above avatar
-enhanced_CSS += ".DGX7fe { display: none }" // Hide the invite menu
-enhanced_CSS += ".VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }" // Fix searchbar text cutoff
-enhanced_CSS += ".qE7X4e { margin-right: 0.625rem; }" // Fix searchbar margin
-enhanced_CSS += ".E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }" // Wrap menu items
-enhanced_CSS += ".hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }" // Adjust menu height
-enhanced_CSS += ".GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }" // Less padding on "Pro" lables
-enhanced_CSS += ".tlZCoe { margin-right: .5rem; margin-top: .5rem !important; }" // Allow for multiple buttons on popup
-enhanced_CSS += ".ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }" // Fix store list padding for scrollbars
-enhanced_CSS += "#enhanced_showAll div { margin-left: 0 !important; }" // Fix show/hide filter margin
-enhanced_CSS += ".mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }" // Show last-played shortcut on hover only
-enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }" // Settings menu scrollbar width
-enhanced_CSS += "#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }" // Settings menu scrollbar style
+var enhanced_CSS = '.lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }' // Remove padding above avatar
+enhanced_CSS += '.DGX7fe { display: none }' // Hide the invite menu
+enhanced_CSS += '.VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }' // Fix searchbar text cutoff
+enhanced_CSS += '.qE7X4e { margin-right: 0.625rem; }' // Fix searchbar margin
+enhanced_CSS += '.E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }' // Wrap menu items
+enhanced_CSS += '.hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }' // Adjust menu height
+enhanced_CSS += '.GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }' // Less padding on "Pro" lables
+enhanced_CSS += '.tlZCoe { margin-right: .5rem; margin-top: .5rem !important; }' // Allow for multiple buttons on popup
+enhanced_CSS += '.ozpmIc.lEPylf.sfe1Ff { padding: 4.25rem 0 4.5rem 0 !important; }' // Fix store list padding for scrollbars
+enhanced_CSS += '#enhanced_showAll div { margin-left: 0 !important; }' // Fix show/hide filter margin
+enhanced_CSS += '.mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }' // Show last-played shortcut on hover only
+enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }' // Settings menu scrollbar width
+enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }' // Settings menu scrollbar style
+enhanced_CSS += "@media screen and (min-width: 1080px) { .ZjQyU { display: flex !important; } .uSz8se { display: none !important; } }" // Searchbar displayed at >1080px
 
 // CSS Changes - Mobile Mode
 enhanced_CSS += "@media screen and (max-width: 639px) {\
                     #enhanced_letterBox { display: none; }\
                 }"
 
+// Stream Monitor
+var enhanced_monitorStyle = '\
+                #enhanced_streamMonitor {\
+                    position: fixed;\
+                    width: fit-content;\
+                    color: rgba(255,255,255,0.9);\
+                    font-family: "Roboto", sans-serif;\
+                    font-size: 0.6875rem;\
+                    z-index: 1000;\
+                    cursor: pointer;\
+                    text-shadow: 1px 1px rgba(0,0,0,0.5);\
+                }\
+                #enhanced_streamMonitor section {\
+                    background: rgba(32,33,36,0.8);\
+                    border-radius: 0.5rem;\
+                    margin-bottom: 0.5rem;\
+                    padding: 0.5rem;\
+                }\
+                #enhanced_streamMonitor section:last-of-type {\
+                    margin-bottom: 0;\
+                }\
+                #enhanced_streamMonitor .grid {\
+                    display: grid;\
+                    grid-gap: 0.2rem 0.5rem;\
+                    grid-template-columns: auto auto 1rem;\
+                    grid-template-rows: auto;\
+                    padding: 0 0.5rem;\
+                }\
+                #enhanced_streamMonitor .grid > span:nth-child(2n) {\
+                    padding-left: 0.5rem;\
+                }\
+                #enhanced_streamMonitor .connection {\
+                    position: relative;\
+                    text-align: center;\
+                    top: -2px;\
+                }\
+                #enhanced_streamMonitor .border {\
+                    border-top: 1px solid rgba(255,255,255,0.15);\
+                    grid-column: 1 / 4;\
+                }\
+                #enhanced_streamMonitor .split {\
+                    display: inline-block;\
+                    color: rgba(255,255,255,0.3);\
+                    padding: 0 0.2rem;\
+                }\
+                #enhanced_streamMonitor .tag {\
+                    padding: 0.2rem;\
+                    margin: 0 0 0.5rem 0;\
+                    text-align: center;\
+                    font-size: 0.875rem;\
+                    border-radius: 0.5rem;\
+                    background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);\
+                }'
+
 // Inject CSS
 enhanced_injectStyle(enhanced_CSS, "enhanced_styleGeneral");
+enhanced_injectStyle(enhanced_monitorStyle, "enhanced_styleMonitor");
 
 // Stadia Public Database by OriginalPenguin
 // Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
@@ -50,7 +108,26 @@ var enhanced_extendedDisclaimer = document.createElement("div")
 enhanced_extendedDisclaimer.className = "uM5FUc"
 enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 
-// Stream Monitor by AquaRegia
+// Check for update
+window.addEventListener('load', function() {
+    window.addEventListener('click', function() {
+        if (enhanced_newVersion(localStorage.getItem("enhanced_currentVersion") || "0.0.0", enhanced_manifest.version)) {
+            switch (parseInt(localStorage.getItem("enhanced_showNotifications") || 0)) {
+                case 0:
+                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png');
+                    break
+                case 1:
+                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png', 5);
+            }
+            localStorage.setItem("enhanced_currentVersion", enhanced_manifest.version)
+        }
+    }, {
+        once: true
+    });
+});
+
+// Stream Monitor
+// Credits to the base by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 var enhanced_monitorState = 0;
 var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
@@ -58,15 +135,8 @@ var enhanced_monitorPos = localStorage.getItem("enhanced_monitorPosition") || "1
 var enhanced_streamMonitor = document.createElement("div");
 enhanced_streamMonitor.id = "enhanced_streamMonitor";
 enhanced_streamMonitor.style.position = "fixed";
-enhanced_streamMonitor.style.width = "auto";
 enhanced_streamMonitor.style.top = enhanced_monitorPos.split("|")[0];
 enhanced_streamMonitor.style.left = enhanced_monitorPos.split("|")[1];
-enhanced_streamMonitor.style.zIndex = 1000;
-enhanced_streamMonitor.style.borderRadius = "0.5rem";
-enhanced_streamMonitor.style.background = "rgba(32,33,36,0.7)";
-enhanced_streamMonitor.style.padding = "0.5rem";
-enhanced_streamMonitor.style.fontSize = "0.7rem";
-enhanced_streamMonitor.style.cursor = "pointer";
 enhanced_streamMonitor.style.display = "block";
 enhanced_streamMonitor.addEventListener("dblclick", function() {
     enhanced_monitorMode = (enhanced_monitorMode + 1) % 2;
@@ -185,7 +255,12 @@ function enhanced_RTCMonitor() {
         } else if (peerConnections.length >= 2) {
             if (!enhanced_sessionActive) {
                 enhanced_sessionStart = new Date();
-                enhanced_streamMonitor.innerHTML = "Waiting for game detection.";
+                enhanced_streamMonitor.innerHTML = '\
+                <section>\
+                    <div class="grid">\
+                        <span style="grid-column: 1 / 4;">Loading stream data.</span>\
+                    </div>\
+                </section>'
                 enhanced_sessionActive = true;
             }
             const openConnections = peerConnections.filter(x => x.connectionState == "connected");
@@ -213,7 +288,7 @@ function enhanced_RTCMonitor() {
                             var framesReceivedPerSecond = (framesReceived - enhanced_lastFrames) / timeSinceUpdate;
                             var framesDecoded = tmp2.framesDecoded;
                             var codec = tmp3.stat("googCodecName");
-                            var bytesReceived = tmp1.bytesReceived;
+                            var bytesReceived = tmp4.bytesReceived;
                             var bytesReceivedPerSecond = (bytesReceived - enhanced_lastBytes) / timeSinceUpdate;
                             var averageData = ((((bytesReceived / sessionDuration) * 3600) / 1024) / 1024) / 1024;
                             var packetsLost = tmp1.packetsLost;
@@ -249,7 +324,13 @@ function enhanced_RTCMonitor() {
                             var enhanced_connectionStatus = "white";
                             var enhanced_monitorMode = parseInt(localStorage.getItem("enhanced_monitorMode") || 0);
 
-                            var enhanced_streamData = "Loading stream data.";
+                            var enhanced_streamData = '\
+                                        <section>\
+                                            <div class="grid">\
+                                                <span style="grid-column: 1 / 4;">Loading stream data.</span>\
+                                            </div>\
+                                        </section>'
+
                             if (framesReceived > 0) {
 
                                 // Connection Check
@@ -267,55 +348,94 @@ function enhanced_RTCMonitor() {
 
                                 switch (enhanced_monitorMode) {
                                     case 0:
-                                        enhanced_streamData = '<center><svg height="30" width="45" viewBox="0 0 120 80" fill="white"><path d="M1.00857143,23.3413856 C0.362857143,23.8032807 0.00285714286,24.5360402 0,25.2901838 L0,25.2901838 L0,25.3201215 C0.00285714286,25.6380308 0.0685714286,25.9602169 0.204285714,26.2667213 L0.204285714,26.2667213 L11.69,52.2882388 C12.1985714,53.441551 13.5114286,54.0060895 14.7014286,53.5841112 L14.7014286,53.5841112 C22.2214286,50.9025535 48.2628571,42.4187946 65.1157143,46.9949777 L65.1157143,46.9949777 C65.1157143,46.9949777 48.21,47.9729409 32.9228571,59.96083 L32.9228571,59.96083 C32.0614286,60.6379911 31.7742857,61.8155385 32.2157143,62.8163113 L32.2157143,62.8163113 C33.4571429,65.6204709 35.9485714,71.2573021 37.3585714,74.4435231 L37.3585714,74.4435231 L39.3385714,79.0881351 C39.81,80.1901256 41.3157143,80.3227066 41.98,79.3247851 L41.98,79.3247851 C45.5471429,73.9531159 51.5614286,71.2701325 57.3385714,68.927868 L57.3385714,68.927868 C63.2571429,66.5300051 69.4328571,64.7408743 75.7328571,63.6759494 L75.7328571,63.6759494 C82.4457143,62.54117 89.3,62.2375168 96.0842857,62.8376953 L96.0842857,62.8376953 C97.2142857,62.9374875 98.2628571,62.2446448 98.6,61.1640383 L98.6,61.1640383 L103.788571,44.5814332 C104.094286,43.6006188 103.742857,42.528566 102.908571,41.9255362 L102.908571,41.9255362 C97.1228571,37.7342657 74.2042857,23.6564437 33.9014286,29.3118077 L33.9014286,29.3118077 C33.9014286,29.3118077 68.2928571,9.55581202 111.954286,31.2577547 L111.954286,31.2577547 C113.277143,31.916383 114.874286,31.2249659 115.315714,29.8193221 L115.315714,29.8193221 L119.89,15.1954944 C119.961429,14.9688237 119.995714,14.7393017 120,14.512631 L120,14.512631 L120,14.4427765 C119.987143,13.6102248 119.541429,12.8204411 118.784286,12.3913349 L118.784286,12.3913349 C113.304286,9.29065 94.7514286,2.79222317e-07 69.23,2.79222317e-07 L69.23,2.79222317e-07 C49.6685714,-0.00142532301 26.0157143,5.45578001 1.00857143,23.3413856"/></svg><br/>'
-                                        enhanced_streamData += "<b>" + time + "</b><br/>" + enhanced_lang.sessiontime + ": " + enhanced_formatTime(sessionDuration) + "</center><br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.resolution + ":</b> " + resolution + "<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.codec + ":</b> " + decodingType + " " + codec + "<br/>";
-                                        if (codec == "VP9") {
-                                            enhanced_streamData += "<b>" + enhanced_lang.compression + ":</b> " + compression;
-                                            enhanced_streamData += "<br/>";
-                                        }
-                                        enhanced_streamData += "<b>FPS:</b> " + framesReceivedPerSecond.toFixed(1) + "<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.trafficsession + ":</b> " + enhanced_formatBytes(bytesReceived, 2) + "<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.trafficcurrent + ":</b> " + enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + "b/s<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.trafficaverage + ":</b> " + averageData.toFixed(2) + " GB/h<br/>";
-                                        enhanced_streamData += "<b>" + enhanced_lang.packetloss + ":</b> " + packetsLost + " (" + ((packetsLost / packetsReceived) * 100).toFixed(3) + "%)<br/>";
+                                        enhanced_streamData = '\
+                                        <section>\
+                                            <div class="tag">' + enhanced_lang.session + '</div>\
+                                            <div class="grid">\
+                                                <span>Date</span><span>25.06.2021</span><span></span>\
+                                                <div class="border"></div>\
+                                                <span>Time</span><span>17:42:59</span><span></span>\
+                                                <div class="border"></div>\
+                                                <span>' + enhanced_lang.sessiontime + '</span><span>' + enhanced_formatTime(sessionDuration) + '</span><span></span>\
+                                            </div>\
+                                        </section>\
+                                        <section>\
+                                            <div class="tag">' + enhanced_lang.stream + '</div>\
+                                                <div class="grid">\
+                                                  <span>' + enhanced_lang.codec + '</span><span>' + decodingType + " " + codec + '</span><span></span>\
+                                                  <div class="border"></div>\
+                                                  <span>' + enhanced_lang.resolution + '</span><span>' + resolution + '</span><span></span>\
+                                                  <div class="border"></div>\
+                                                  <span>FPS</span><span>' + framesReceivedPerSecond.toFixed(1) + '</span><span></span>\
+                                                  <div class="border"></div>'
 
-                                        if (framesDroppedPerc > 1) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #FF7070;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
-                                        } else if (framesDroppedPerc > 0.5) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #FFB83D;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
-                                        } else if (framesDroppedPerc > 0.2) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #00E0BA;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
-                                        } else {
-                                            enhanced_streamData += "<b>" + enhanced_lang.framedrop + ":</b><span style='color: #44BBD8;'> " + framesDropped + " (" + framesDroppedPerc + "%)</span><br/>";
+                                        if (codec == "VP9") {
+                                            enhanced_streamData += '<span>' + enhanced_lang.compression + '</span><span>' + compression + '</span><span></span>'
                                         }
+
+                                        enhanced_streamData += '<div class="border"></div>'
 
                                         if (decodingTime > 12) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #FF7070;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
                                         } else if (decodingTime > 10) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #FFB83D;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
                                         } else if (decodingTime > 8.33) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #00E0BA;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
                                         } else {
-                                            enhanced_streamData += "<b>" + enhanced_lang.decodetime + ": </b><span style='color: #44BBD8;'> " + decodingTime.toFixed(2) + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
                                         }
+
+                                        enhanced_streamData += '<div class="border"></div>'
+
+                                        if (framesDroppedPerc > 1) {
+                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #FF7070;">⬤</span>'
+                                        } else if (framesDroppedPerc > 0.5) {
+                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #FFB83D;">⬤</span>'
+                                        } else if (framesDroppedPerc > 0.2) {
+                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #00E0BA;">⬤</span>'
+                                        } else {
+                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #44BBD8;">⬤</span>'
+                                        }
+
+                                        enhanced_streamData += '\
+                                            </div>\
+                                        </section>\
+                                        <section>\
+                                            <div class="tag">' + enhanced_lang.network + '</div>\
+                                                <div class="grid">\
+                                                    <span>' + enhanced_lang.trafficsession + '</span><span>' + enhanced_formatBytes(bytesReceived, 2) + '</span><span></span>\
+                                                    <div class="border"></div>\
+                                                    <span>' + enhanced_lang.trafficcurrent + '</span><span>' + enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + 'b/s</span><span></span>\
+                                                    <div class="border"></div>\
+                                                    <span>' + enhanced_lang.trafficaverage + '</span><span>' + averageData.toFixed(2) + ' GB/h</span><span></span>\
+                                                    <div class="border"></div>\
+                                                    <span>' + enhanced_lang.packetloss + '</span><span>' + packetsLost + ' (' + ((packetsLost / packetsReceived) * 100).toFixed(3) + '%)</span><span></span>\
+                                                    <div class="border"></div>'
 
                                         if (latency > 100) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #FF7070;'> " + latency + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
                                         } else if (latency > 75) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #FFB83D;'> " + latency + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
                                         } else if (latency > 40) {
-                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #00E0BA;'> " + latency + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
                                         } else {
-                                            enhanced_streamData += "<b>" + enhanced_lang.latency + ":</b><span style='color: #44BBD8;'> " + latency + " ms</span><br/>";
+                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
                                         }
 
-                                        enhanced_streamData += "<b>" + enhanced_lang.jitter + ":</b> " + jitterBuffer.toPrecision(4) + " ms<br/>";
-                                        enhanced_streamData += "<hr style='height: 4px; border: none; border-radius: 0.5rem; background: " + enhanced_connectionStatus + ";'></hr>";
+                                        enhanced_streamData += '\
+                                                    <div class="border"></div>\
+                                                    <span>' + enhanced_lang.jitter + '</span><span>' + jitterBuffer.toPrecision(4) + ' ms</span><span></span>\
+                                                </div>\
+                                            </div>\
+                                        </section>'
                                         break
                                     case 1:
-                                        enhanced_streamData = decodingType + " " + codec + "&ensp;|&ensp;" + resolution + "&ensp;|&ensp;" + framesReceivedPerSecond.toFixed(1) + "fps&ensp;|&ensp;" + latency + "ms&ensp;|&ensp;" + decodingTime.toFixed(1) + "ms&ensp;|&ensp;<span style='color: " + enhanced_connectionStatus + ";'>⬤</span>";
+                                        enhanced_streamData = '\
+                                        <section>\
+                                            <div class="grid">\
+                                                <span style="grid-column: 1 / 4;">' + decodingType + ' ' + codec + '<div class="split">|</div>' + resolution + '<div class="split">|</div>' + framesReceivedPerSecond.toFixed(1) + 'fps<div class="split">|</div>' + latency + 'ms<div class="split">|</div>' + decodingTime.toFixed(1) + 'ms<div class="split">|</div><span style="color: ' + enhanced_connectionStatus + ';">⬤</span></span>\
+                                            </div>\
+                                        </section>'
                                         break
                                 }
 
@@ -360,17 +480,26 @@ enhanced_Monitor.addEventListener("click", function() {
     enhanced_updateMonitor(enhanced_monitorState);
 });
 enhanced_Monitor.addEventListener("dblclick", function() {
+    // Generate new Window
     var enhanced_popMonitor = window.open('', '_blank', 'width=350,height=350,toolbar=0');
     enhanced_popMonitor.document.body.style.background = "#000"
     enhanced_popMonitor.document.body.style.color = "#fff"
+
+    // Copy styles
+    var el = document.createElement('style');
+    enhanced_popMonitor.document.head.appendChild(el);
+    el.innerHTML = enhanced_monitorStyle;
+
+    // Update
     enhanced_upPop = setInterval(function() {
         if (enhanced_popMonitor.closed) {
             clearInterval(enhanced_upPop);
         } else {
-            enhanced_popMonitor.document.body.innerHTML = enhanced_streamMonitor.innerHTML
+            enhanced_popMonitor.document.body.innerHTML = enhanced_streamMonitor.outerHTML
         }
     }, 1000);
 });
+
 
 // Windowed Mode
 // Source: Mafrans - https://github.com/Mafrans/StadiaPlus
@@ -645,7 +774,7 @@ enhanced_StoreDropContent.append(enhanced_AllGames);
 
 // Language Dropdown - Adds a dropdown menu for language switching
 var enhanced_langContainer = document.createElement("li");
-enhanced_langContainer.className = "OfFb0b";
+enhanced_langContainer.className = "OfFb0b tj2D";
 enhanced_langContainer.id = "enhanced_langContainer";
 var enhanced_langDropdown = document.createElement("div");
 enhanced_langContainer.appendChild(enhanced_langDropdown);
@@ -752,7 +881,7 @@ window.addEventListener("click", function(e) {
 
 // Settings Dropdown - Adds a dropdown menu for quick access
 var enhanced_SettingsContainer = document.createElement("li");
-enhanced_SettingsContainer.className = "OfFb0b";
+enhanced_SettingsContainer.className = "OfFb0b tj2D";
 enhanced_SettingsContainer.id = "enhanced_SettingsContainer";
 var enhanced_SettingsDropdown = document.createElement("div");
 enhanced_SettingsContainer.appendChild(enhanced_SettingsDropdown);
@@ -774,8 +903,6 @@ enhanced_SettingsDropdown.addEventListener("click", function(e) {
             enhanced_SettingsDropdown.firstElementChild.style.color = "#ff773d"
         } else {
             enhanced_settingsFrame.style.display = "none";
-            enhanced_settingsContent.innerHTML = ""
-            enhanced_settingsContent.append(enhanced_settingsShortcut)
             enhanced_SettingsDropdown.firstElementChild.style.color = ""
         }
     }
@@ -784,6 +911,13 @@ enhanced_SettingsDropdown.addEventListener("click", function(e) {
 enhanced_SettingsDropdown.addEventListener("keyup", function(e) {
     if (e.keyCode === 13) {
         enhanced_SettingsDropdown.click();
+    }
+});
+
+window.addEventListener("click", function(e) {
+    if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
+        enhanced_settingsFrame.style.display = "none";
+        enhanced_SettingsDropdown.firstElementChild.style.color = ""
     }
 });
 
@@ -932,15 +1066,6 @@ enhanced_settingsEnhancedTitle.addEventListener("click", function() {
     enhanced_settingsContent.append(enhanced_settingsEnhanced)
 });
 enhanced_settingsNav.append(enhanced_settingsEnhancedTitle);
-
-window.addEventListener("click", function(e) {
-    if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
-        enhanced_settingsFrame.style.display = "none";
-        enhanced_settingsContent.innerHTML = ""
-        enhanced_settingsContent.append(enhanced_settingsShortcut)
-        enhanced_SettingsDropdown.firstElementChild.style.color = ""
-    }
-});
 
 // My Profile - Shortcut to the users profile
 var enhanced_UserProfile = document.createElement("div");
@@ -1120,24 +1245,23 @@ function enhanced_changeResolution() {
                     break
             }
 
-            Object.defineProperty(window.screen, "availWidth", {
-                value: x,
-                configurable: true
-            });
-            Object.defineProperty(window.screen, "width", {
-                value: x,
-                configurable: true
-            });
-            Object.defineProperty(window.screen, "availHeight", {
-                value: y,
-                configurable: true
-            });
-            Object.defineProperty(window.screen, "height", {
-                value: y,
-                configurable: true
-            });
-            Object.defineProperty(window.screen, "colorDepth", {
-                value: 48
+            Object.defineProperties(window.screen, {
+                "availWidth": {
+                    value: x,
+                    configurable: true
+                },
+                "width": {
+                    value: x,
+                    configurable: true
+                },
+                "availHeight": {
+                    value: y,
+                    configurable: true
+                },
+                "height": {
+                    value: y,
+                    configurable: true
+                }
             });
         }
     }, 200);
@@ -1434,6 +1558,22 @@ enhanced_showStadiaStats.addEventListener("click", function() {
 });
 enhanced_settingsComFeat.append(enhanced_showStadiaStats);
 
+// Show Notifications
+var enhanced_showNotifications = parseInt(localStorage.getItem("enhanced_showNotifications") || 0);
+var enhanced_setNotification = document.createElement("div");
+enhanced_setNotification.className = "pBvcyf QAAyWd";
+enhanced_setNotification.id = "enhanced_setNotification";
+enhanced_setNotification.style.cursor = "pointer";
+enhanced_setNotification.style.userSelect = "none";
+enhanced_setNotification.style.borderBottom = "1px solid rgba(255,255,255,.06)";
+enhanced_setNotification.tabIndex = "0";
+enhanced_setNotification.addEventListener("click", function() {
+    enhanced_showNotifications = (enhanced_showNotifications + 1) % 3;
+    localStorage.setItem("enhanced_showNotifications", enhanced_showNotifications);
+    enhanced_applySettings("notification", enhanced_showNotifications)
+});
+enhanced_settingsGeneral.append(enhanced_setNotification);
+
 // Stream Mode
 var enhanced_useStreamMode = parseInt(localStorage.getItem("enhanced_useStreamMode") || 0);
 var enhanced_streamMode = document.createElement("div");
@@ -1524,7 +1664,7 @@ enhanced_StoreContainer.append(enhanced_Metacritic);
 
 // Wishlisting
 var enhanced_wishlistContainer = document.createElement("li");
-enhanced_wishlistContainer.className = "OfFb0b";
+enhanced_wishlistContainer.className = "OfFb0b tj2D";
 enhanced_wishlistContainer.id = "enhanced_wishlistContainer";
 enhanced_wishlistContainer.style.display = "none";
 var enhanced_wishlistHeart = document.createElement("div");
@@ -1913,7 +2053,7 @@ for (var i = 0; i < 26; i++) {
 
 // Find-a-buddy - Shortcut to stadiastats.gg find-a-buddy service
 var enhanced_buddyContainer = document.createElement("li");
-enhanced_buddyContainer.className = "OfFb0b";
+enhanced_buddyContainer.className = "OfFb0b tj2D";
 enhanced_buddyContainer.id = "enhanced_buddyContainer";
 enhanced_buddyContainer.style.display = "none"
 var enhanced_openBuddy = document.createElement("div");
@@ -2758,6 +2898,25 @@ function enhanced_applySettings(set, opt) {
                     break
             }
             break
+        case "notification":
+            switch (opt) {
+                case 0:
+                    enhanced_setNotification.style.color = "#00e0ba";
+                    enhanced_setNotification.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">notifications</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.notification + ": " + enhanced_lang.manual + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.notificationdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Notifications: Set to 'Manual'", enhanced_consoleEnhanced, "");
+                    break
+                case 1:
+                    enhanced_setNotification.style.color = "#00e0ba";
+                    enhanced_setNotification.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">notifications</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.notification + ": " + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.notificationdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Notifications: Set to 'Auto'", enhanced_consoleEnhanced, "");
+                    break
+                case 2:
+                    enhanced_setNotification.style.color = "";
+                    enhanced_setNotification.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">notifications_off</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.notification + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.notificationdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>';
+                    console.log("%cStadia Enhanced" + "%c ⚙️ - Notifications: Set to 'Disabled'", enhanced_consoleEnhanced, "");
+                    break
+            }
+            break
         case "gridsize":
             switch (opt) {
                 case 0:
@@ -2979,7 +3138,7 @@ function enhanced_applySettings(set, opt) {
                     console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Disabled'", enhanced_consoleEnhanced, "");
                     break
                 case 1:
-                    enhanced_CSS = ".alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 1rem); margin: 0.5rem; }"
+                    enhanced_CSS = "@media screen and (min-width: 1080px) { .alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 1rem); margin: 0.5rem; } }"
                     enhanced_storeList.style.color = "#00e0ba";
                     enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>';
                     console.log("%cStadia Enhanced" + "%c ⚙️ - Split Store Lists: Set to 'Enabled'", enhanced_consoleEnhanced, "");
@@ -3092,14 +3251,15 @@ function enhanced_applySettings(set, opt) {
             break
         case "resetall":
             Object.keys(localStorage).forEach(function(key) {
-                if (key.includes("enhanced")) {
-                    console.log(localStorage.removeItem(key));
+                console.log(key)
+                if (key.includes("enhanced") && !key.includes("currentVersion")) {
+                    localStorage.removeItem(key);
                 }
             });
             location.reload();
             break
         case "updateall":
-            enhanced_updateMonitor(0)
+            enhanced_updateMonitor(0);
             enhanced_applySettings("gridsize", enhanced_GridSize);
             enhanced_applySettings("clock", enhanced_ClockOption);
             enhanced_applySettings("filter", enhanced_filterOption);
@@ -3120,6 +3280,7 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings("inlinepreview", enhanced_useInlinePreview);
             enhanced_applySettings("familysharing", enhanced_familySharingElements);
             enhanced_applySettings("mediapreview", enhanced_hideUserMedia);
+            enhanced_applySettings("notification", enhanced_showNotifications);
             break
     }
 }
@@ -3257,6 +3418,87 @@ function enhanced_secondsToHms(sec) {
     return [h, m, s];
 }
 
+// Version Difference
+function enhanced_newVersion(installed, current) {
+    const oldParts = installed.split('.')
+    const newParts = current.split('.')
+    for (var i = 0; i < newParts.length; i++) {
+        const a = ~~newParts[i]
+        const b = ~~oldParts[i]
+        if (a > b) return true
+        if (a < b) return false
+    }
+    return false
+}
+
+// Notifications
+function enhanced_pushNotification(content, image, dura) {
+    // Audio
+    this.sound = new Audio("https://ssl.gstatic.com/stadia/gamers/assets/sound_notification_v3.ogg")
+    this.sound.volume = 0.25;
+
+    // Define Notification
+    this.activeNotification = document.getElementById("enhanced_notification");
+    if (this.activeNotification) {
+        this.notification = this.activeNotification;
+    } else {
+        this.notification = document.createElement("div");
+        this.notification.id = "enhanced_notification";
+        this.notification.className = "OFe4V";
+        this.notification.style.position = "fixed";
+        this.notification.style.bottom = 0;
+        this.notification.style.left = 0;
+        this.notification.style.zIndex = 1004;
+        this.notification.style.marginBottom = "4rem";
+        this.notification.style.transition = "all 0.7s";
+        this.notification.style.opacity = 0;
+        this.notification.style.visibility = "inherit";
+        this.notification.style.pointerEvents = "none";
+        document.body.append(this.notification)
+    }
+
+    // Set Content
+    this.notification.innerHTML = '\
+    <div class="lWnUzb">\
+        <div class="NbJOkd">' + content + '</div>\
+    </div>\
+    <div class="dyknFc BYsype">\
+        <div class="zHwKDd" style="background-image:url(' + image + ')"></div>\
+    </div>'
+
+    setTimeout(function() {
+        // State - Show
+        this.notification.className = "OFe4V kVaHpd";
+        this.notification.style.visibility = "visible";
+        this.notification.style.opacity = 1;
+        this.notification.style.pointerEvents = "auto";
+        this.active = true;
+        this.sound.play();
+    }, 1000);
+
+    if (dura) {
+        setTimeout(function() {
+            // State - Hide
+            this.notification.className = "OFe4V";
+            this.notification.style.opacity = 0;
+            this.notification.style.visibility = "inherit";
+            this.notification.style.pointerEvents = "none";
+            this.active = false
+        }, (dura * 1000) + 1000);
+    } else {
+        window.addEventListener("click", function(e) {
+            if (e.path.indexOf(this.notification) == -1 && this.active) {
+                // State - Hide
+                this.notification.className = "OFe4V";
+                this.notification.style.opacity = 0;
+                this.notification.style.visibility = "inherit";
+                this.notification.style.pointerEvents = "none";
+                this.active = false
+            }
+        });
+    }
+}
+
 // Dragable Objects
 function enhanced_dragElement(el) {
     var pos = [0, 0, 0, 0];
@@ -3361,8 +3603,11 @@ function enhancedTranslate(lang, log = false) {
         jitter: 'Jitter Buffer',
         decodetime: 'Decoding Time',
         compression: 'Compression',
+        bitrate: 'Bitrate',
         streammon: 'Stream Monitor',
         stream: 'Stream',
+        network: 'Network',
+        session: 'Session',
         extdetail: 'Extended Details',
         maxresolution: 'Maximum Resolution',
         fps4K: 'Framerate @ 4K',
@@ -3413,6 +3658,8 @@ function enhancedTranslate(lang, log = false) {
         offlinefrienddesc: 'Hides offline friends in the friends list.',
         invisiblefriend: 'Invisible Friends',
         invisiblefrienddesc: 'Hides friends with unknown online status in the friends list.',
+        notification: 'Notifications',
+        notificationdesc: 'Display a notification when Stadia Enhanced updated to a new version ("Auto" hides after 5 seconds, "Manual" stays until user interaction).',
         streammode: 'Streaming Mode',
         streammodedesc: 'Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).',
         catprev: 'Category Preview',
@@ -3484,8 +3731,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter-Puffer',
                 decodetime: 'Dekodierungs Zeit',
                 compression: 'Kompression',
+                bitrate: 'Bitrate',
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
+                network: 'Netzwerk',
+                session: 'Sitzung',
                 extdetail: 'Erweiterte Details',
                 maxresolution: 'Maximale Auflösung',
                 fps4K: 'Framerate @ 4K',
@@ -3538,6 +3788,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Versteckt offline Freunde in der Freundesliste.',
                 invisiblefriend: 'Unsichtbare Freunde',
                 invisiblefrienddesc: 'Versteckt Freunde ohne bekannten online Status in der Freundesliste.',
+                notification: 'Benachrichtigungen',
+                notificationdesc: 'Zeige eine Benachrichtigung wenn Stadia Enhanced auf eine neue Version geupdated wurde ("Automatisch" versteckt diese nach 5 Sekunden, "Manuell" zeigt sie, bis der Nutzer mit der Seite interagiert).',
                 streammode: 'Streaming Modus',
                 streammodedesc: 'Aktivieren um bestimmte Elemente (z.B. die Freundesliste) während des Streamens (über z.B. OBS / Discord) unleserlich zu machen.',
                 catprev: 'Kategorie Vorschau',
@@ -3606,8 +3858,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter puffer',
                 decodetime: 'Dekódolási idő',
                 compression: 'Tömörítés',
+                bitrate: undefined,
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -3655,6 +3910,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Elrejti az offline ismerősöket a listából.',
                 invisiblefriend: 'Láthatatlan Ismerősök',
                 invisiblefrienddesc: 'Elrejti az ismeretlen státuszú ismerősöket a listán.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Streaming Mód',
                 streammodedesc: 'Stream-elés közben olvashatatlanná tesz bizonyos elemeket. (pl.: ismerősök listája - OBS vagy Discord használatakor)',
                 catprev: 'Kategória megjelenítés',
@@ -3723,8 +3980,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter Buffer',
                 decodetime: 'Decodeer Tijd',
                 compression: 'Compressie',
+                bitrate: undefined,
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -3772,6 +4032,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Verbergt offline vrienden in de vriendenlijst.',
                 invisiblefriend: 'Onzichtbare Vrienden',
                 invisiblefrienddesc: 'Vergbergt vrienden met onbekend online status in de vriendenlijst.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Streaming Modus',
                 streammodedesc: 'Schakel in om bepaalde elementen (zoals de vriendenlijst) onleesbaar te maken tijdens het streamen (via tools als OBS / Discord).',
                 catprev: 'Categorievoorbeeld',
@@ -3840,8 +4102,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter Buffer',
                 decodetime: 'Tiempo de decodificación',
                 compression: 'Compresión',
+                bitrate: undefined,
                 streammon: 'Monitor de retransmisión',
                 stream: 'Retransmisión',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -3889,6 +4154,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Oculta los amigos desconectados de la lista de amigos.',
                 invisiblefriend: 'Amigos Invisibles',
                 invisiblefrienddesc: 'Oculta los amigos con un estado en línea desconocido de la lista de amigos.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Modo Retransmisión',
                 streammodedesc: 'Permite ocultar ciertos elementos (por ejemplo: la lista de amigos) mientras retransmites (a través de un programa externo como OBS o Discord).',
                 catprev: 'Previsualización de Categorías',
@@ -3957,8 +4224,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Buffer Jitter',
                 decodetime: 'Tempo di Decodifica',
                 compression: 'Compressione',
+                bitrate: undefined,
                 streammon: 'Monitor Stream',
                 stream: 'Stream',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -4006,6 +4276,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Nasconde gli amici offline nella lista amici.',
                 invisiblefriend: 'Amici Invisibili',
                 invisiblefrienddesc: 'Nasconde gli amici con stato online sconosciuto nella lista amici.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Modalità Streaming',
                 streammodedesc: 'Abilita per rendere illeggibili alcuni elementi (ad esempio l\'elenco degli amici) durante lo streaming (tramite strumenti come OBS / Discord).',
                 catprev: 'Anteprima Categoria',
@@ -4074,8 +4346,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter Buffer',
                 decodetime: 'Afkodningstid',
                 compression: 'Kompression',
+                bitrate: undefined,
                 streammon: 'Overvågning af strøm',
                 stream: 'Strøm',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -4123,6 +4398,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Skjuler offline venner på vennelisten.',
                 invisiblefriend: 'Usynlige venner',
                 invisiblefrienddesc: 'Skjuler venner med ukendt onlinestatus på vennelisten.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Streaming Tilstand',
                 streammodedesc: 'Aktiver for at gøre visse elementer (dvs. vennelisten) ulæselige under streaming (via værktøjer som OBS / Discord).',
                 catprev: 'Eksempel på kategori',
@@ -4191,8 +4468,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter Buffer',
                 decodetime: 'Temps de descodificació',
                 compression: 'Compressió',
+                bitrate: undefined,
                 streammon: 'Monitor de retransmissió',
                 stream: 'Retransmissió',
+                network: undefined,
+                session: undefined,
                 extdetail: 'Més detalls',
                 maxresolution: 'Resolució màxima',
                 fps4K: 'Fotogrames per segon en 4K',
@@ -4243,6 +4523,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Amaga els amics fora de línia a la llista d\'amics.',
                 invisiblefriend: 'Amics invisibles',
                 invisiblefrienddesc: 'Amaga els amics amb estat en línia desconegut a la llista d\'amics.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Mode de d\'emissió en directe',
                 streammodedesc: 'Permet fer que alguns elements (com ara la llista d\'amics) no es puguin llegir durant l\'emissió en directe (mitjançant eines com OBS / Discord).',
                 catprev: 'Vista prèvia de la categoria',
@@ -4311,8 +4593,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Buffer de Jitter',
                 decodetime: 'Tempo de descodificação',
                 compression: 'Compressão',
+                bitrate: undefined,
                 streammon: 'Monitor de Streaming',
                 stream: 'Stream',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -4360,6 +4645,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Esconde amigos offline na lista de amigos.',
                 invisiblefriend: 'Amigos Invisíveis',
                 invisiblefrienddesc: 'Esconde amigos com estado desconhecido na lista de amigos.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Modo de Streaming',
                 streammodedesc: 'Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS ou Discord).',
                 catprev: 'Pré-visualização da Categoria',
@@ -4428,8 +4715,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter Buffer',
                 decodetime: 'Avkodningstid',
                 compression: 'Kompression',
+                bitrate: undefined,
                 streammon: 'Strömmonitor',
                 stream: 'Ström',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -4477,6 +4767,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Gömmer offline-vänner i vänlistan',
                 invisiblefriend: 'Osynliga Vänner',
                 invisiblefrienddesc: 'Gömmer vänner med okänd online-status i vänlistan',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Streamer-läge',
                 streammodedesc: 'Aktivera för att göra vissa delar (bl.a vänlistan) oläsbar medan du streamar (genom verktyg som OBS / Discord)',
                 catprev: 'Kategori-förhandsvisning',
@@ -4545,8 +4837,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Tampon de gigue',
                 decodetime: 'Decoding Time',
                 compression: 'Compression',
+                bitrate: undefined,
                 streammon: 'Moniteur de Stream',
                 stream: 'Stream',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -4594,6 +4889,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Masque les amis hors-ligne dans la liste d\'amis.',
                 invisiblefriend: 'Amis Invisibles',
                 invisiblefrienddesc: 'Masque les amis dont le status en-ligne est inconnu dans la liste d\'amis.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Mode Streaming',
                 streammodedesc: 'Permet de rendre certains éléments (ex : la liste d\'amis) invisibles lorsque vous streamez (via un logiciel externe comme OBS ou Discord).',
                 catprev: 'Prévisualisation des Catégories',
@@ -4662,8 +4959,11 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Задежка буфера',
                 decodetime: 'Время декодирования',
                 compression: 'Сжатие',
+                bitrate: undefined,
                 streammon: 'Монитор',
                 stream: 'Поток',
+                network: undefined,
+                session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
@@ -4711,6 +5011,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Прячет оффлайн друзей из списка.',
                 invisiblefriend: 'Невидимые друзья',
                 invisiblefrienddesc: 'Прячет друзей с неизвестным статусом из списка.',
+                notification: undefined,
+                notificationdesc: undefined,
                 streammode: 'Режим стриминга',
                 streammodedesc: 'Сделать личные эллементы невидимыми для программ вроде Obs или Twitch Studio',
                 catprev: 'Категория превью',
