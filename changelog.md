@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.14
+
+### 1.14.0
+* Updated the streaming monitor with a more refined look
+* Added a new notification on updates to the extension
+* Changed the popup to a simpler, easier to maintain one
+* Changed "average traffic" in the stream monitor to display the full bandwidth usage, not just incoming video
+* Changed the searchbar to fully display at lower resolutions, instead of 1440p and above only
+* Fixed possible conflicts with tv/couch related pages
+* Fixed the searchbar not responding in minified mode
+* Fixed the store split function breaking the layout in smaller windows, by adjusting to screen sizes
+
 ## Version 1.13
 
 ### 1.13.5
