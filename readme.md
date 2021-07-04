@@ -4,7 +4,7 @@
   <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/header-mockup.gif"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.14.0-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.14.1-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 
