@@ -96,7 +96,7 @@ enhanced_injectStyle(enhanced_monitorStyle, "enhanced_styleMonitor");
 // Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
 var enhanced_database;
 chrome.runtime.sendMessage({
-        contentScriptQuery: "database"
+        target: "database"
     },
     result => enhanced_loadDatabase(result));
 
@@ -352,9 +352,9 @@ function enhanced_RTCMonitor() {
                                         <section>\
                                             <div class="tag">' + enhanced_lang.session + '</div>\
                                             <div class="grid">\
-                                                <span>Date</span><span>25.06.2021</span><span></span>\
+                                                <span>Date</span><span>' + time.split(" ")[0] + '</span><span></span>\
                                                 <div class="border"></div>\
-                                                <span>Time</span><span>17:42:59</span><span></span>\
+                                                <span>Time</span><span>' + time.split(" ")[1] + '</span><span></span>\
                                                 <div class="border"></div>\
                                                 <span>' + enhanced_lang.sessiontime + '</span><span>' + enhanced_formatTime(sessionDuration) + '</span><span></span>\
                                             </div>\
@@ -2146,7 +2146,7 @@ enhanced_applySettings("updateall");
 
 // After Setup
 var enhanced_timerLoadEnd = window.performance.now() - enhanced_timerLoadStart;
-console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + enhanced_timerLoadEnd.toFixed(2) + "ms.", enhanced_consoleEnhanced, "")
+console.log("%cStadia Enhanced" + "%c ⏲️ - Start Up: Loaded in " + enhanced_timerLoadEnd.toFixed(3) + "ms.", enhanced_consoleEnhanced, "")
 console.groupEnd();
 var enhanced_loopCount = 0;
 var enhanced_loopTotal = 0;
@@ -3387,14 +3387,6 @@ function enhanced_loadDatabase(csv) {
     console.log("%cStadia Enhanced" + "%c ⚙️ - GitHub Database: " + result.length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
 }
 
-function enhanced_formatTime(seconds) {
-    var hours = Math.floor(seconds / 3600);
-    seconds -= hours * 3600;
-    var minutes = Math.floor(seconds / 60);
-    seconds -= minutes * 60;
-    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
-}
-
 function enhanced_loadUserInfo() {
     var enhanced_scriptLoad = document.querySelectorAll("script[nonce]");
     var info = [];
@@ -3416,6 +3408,14 @@ function enhanced_secondsToHms(sec) {
     var m = Math.floor(sec % 3600 / 60);
     var s = Math.floor(sec % 3600 % 60);
     return [h, m, s];
+}
+
+function enhanced_formatTime(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    seconds -= hours * 3600;
+    var minutes = Math.floor(seconds / 60);
+    seconds -= minutes * 60;
+    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + Math.floor(seconds);
 }
 
 // Version Difference
