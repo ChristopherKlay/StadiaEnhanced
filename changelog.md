@@ -2,6 +2,9 @@
 
 ## Version 1.14
 
+### 1.14.1
+* Fixed issues related to date & time in the streaming monitor
+
 ### 1.14.0
 * Updated the streaming monitor with a more refined look
 * Added a new notification on updates to the extension
