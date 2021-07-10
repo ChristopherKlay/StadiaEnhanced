@@ -5,7 +5,7 @@
 ### 1.15.0
 * Added the ability to showcase the currently played title via DiscordRPC
 * Added custom display images for over 50 games to the discord presence
-* Updated portoguese translation
+* Updated portuguese translation
 * Fixed the statistic header not being translated
 
 ## Version 1.14
