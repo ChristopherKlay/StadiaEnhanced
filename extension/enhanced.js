@@ -2,18 +2,38 @@
 var enhanced_manifest = chrome.runtime.getManifest();
 
 // Start Up
-console.groupCollapsed("Stadia Enhanced " + enhanced_manifest.version + ": Start-Up");
+var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
+console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - " + enhanced_manifest.version + ": Start-Up", enhanced_consoleEnhanced, "");
 var enhanced_timerLoadStart = window.performance.now();
 var enhanced_supportedLang = "en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi"
 var enhanced_local = document.querySelector("html").getAttribute("lang");
-var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 var enhanced_AccountInfo = enhanced_loadUserInfo();
+var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 if (enhanced_AccountInfo) {
     console.log("%cStadia Enhanced" + "%c ⚙️ - User: " + enhanced_AccountInfo[0] + "#" + enhanced_AccountInfo[1] + " (" + enhanced_AccountInfo[2] + ") (" + enhanced_local + ")", enhanced_consoleEnhanced, "");
 }
 var enhanced_lang = enhancedTranslate(enhanced_local, true);
 
+// Check for update
+window.addEventListener('load', function() {
+    window.addEventListener('click', function() {
+        if (enhanced_newVersion(localStorage.getItem("enhanced_currentVersion") || "0.0.0", enhanced_manifest.version)) {
+            switch (parseInt(localStorage.getItem("enhanced_showNotifications") || 0)) {
+                case 0:
+                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png');
+                    break
+                case 1:
+                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png', 5);
+            }
+            localStorage.setItem("enhanced_currentVersion", enhanced_manifest.version)
+        }
+    }, {
+        once: true
+    });
+});
+
 // CSS Changes - Global styles and overwrites
+var enhanced_discordActive = false
 var enhanced_CSS = '.lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }' // Remove padding above avatar
 enhanced_CSS += '.DGX7fe { display: none }' // Hide the invite menu
 enhanced_CSS += '.VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }' // Fix searchbar text cutoff
@@ -96,9 +116,10 @@ enhanced_injectStyle(enhanced_monitorStyle, "enhanced_styleMonitor");
 // Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
 var enhanced_database;
 chrome.runtime.sendMessage({
-        target: "database"
-    },
-    result => enhanced_loadDatabase(result));
+    action: "extdatabase"
+}, function(response) {
+    enhanced_database = enhanced_loadDatabase(response)
+});
 
 // Extended Details
 var enhanced_extendedDetails = document.createElement("div")
@@ -108,22 +129,36 @@ var enhanced_extendedDisclaimer = document.createElement("div")
 enhanced_extendedDisclaimer.className = "uM5FUc"
 enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 
-// Check for update
-window.addEventListener('load', function() {
-    window.addEventListener('click', function() {
-        if (enhanced_newVersion(localStorage.getItem("enhanced_currentVersion") || "0.0.0", enhanced_manifest.version)) {
-            switch (parseInt(localStorage.getItem("enhanced_showNotifications") || 0)) {
-                case 0:
-                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png');
-                    break
-                case 1:
-                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png', 5);
-            }
-            localStorage.setItem("enhanced_currentVersion", enhanced_manifest.version)
-        }
-    }, {
-        once: true
-    });
+// Discord Presence
+// Via DiscordRPC - https://github.com/lolamtisch/Discord-RPC-Extension/
+
+// Get presence data
+var enhanced_discordPresence = {}
+var enhanced_presenceData;
+chrome.runtime.sendMessage({
+    action: "presencedata"
+}, function(response) {
+    enhanced_presenceData = response
+    console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - DiscordRPC: " + Object.keys(response).length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
+    console.log(response)
+    console.groupEnd();
+});
+
+// Register
+chrome.runtime.sendMessage("agnaejlkbiiggajjmnpmeheigkflbnoo", {
+    mode: 'active'
+}, function(response) {
+    if (chrome.runtime.lastError || !response) {
+        console.log("%cStadia Enhanced" + "%c ⚙️ - DiscordRPC: To use the Discord presence, install: https://chrome.google.com/webstore/detail/discord-rich-presence/agnaejlkbiiggajjmnpmeheigkflbnoo", enhanced_consoleEnhanced, "");
+    } else {
+        console.log("%cStadia Enhanced" + "%c ⚙️ - DiscordRPC: Presence active.", enhanced_consoleEnhanced, "");
+    }
+});
+
+// Wait for presence requests
+chrome.runtime.onMessage.addListener(function(info, sender, sendResponse) {
+    //console.log('Presence requested', info);
+    sendResponse(enhanced_discordPresence);
 });
 
 // Stream Monitor
@@ -2382,9 +2417,9 @@ setInterval(function() {
 
         // Session Time
         if (enhanced_sessionStart == 0) {
-            enhanced_sessionStart = new Date().getTime();
+            enhanced_sessionStart = Date.now();
         } else {
-            var enhanced_sessionDur = new Date().getTime();
+            var enhanced_sessionDur = Date.now();
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000);
             enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>';
         }
@@ -2392,9 +2427,47 @@ setInterval(function() {
         // Session Timer
         secureInsert(enhanced_sessionTimer, ".OWVtN", 0);
 
+        // Discord Presence
+        var enhanced_currentlyPlayed = document.querySelector(".HDKZKb.LiQ6Hb");
+        if (enhanced_currentlyPlayed && enhanced_presenceData) {
+            var enhanced_gameCheck = enhanced_currentlyPlayed.textContent.substr(0, enhanced_currentlyPlayed.textContent.indexOf(' '));
+            var enhanced_presenceTitle = enhanced_currentlyPlayed.textContent.substr(enhanced_currentlyPlayed.textContent.indexOf(' ') + 1);
+            if (enhanced_gameCheck != "") {
+                var enhanced_currentGame = document.getElementsByClassName('n4qZSd')[0];
+                var enhanced_currentID = document.location.href.split("/")[4];
+
+                if (enhanced_presenceData[enhanced_currentID]) {
+                    enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID];
+                } else {
+                    enhanced_presenceLargeImage = "stadialogo";
+                }
+
+                console.log(enhanced_presenceData[enhanced_currentID] + " - " + enhanced_currentID)
+
+                enhanced_discordPresence = {
+                    clientId: '667381280656064544',
+                    presence: {
+                        details: 'Currently playing',
+                        state: enhanced_presenceTitle,
+                        largeImageKey: enhanced_presenceLargeImage,
+                        startTimestamp: enhanced_sessionStart,
+                        instance: true,
+                        buttons: [{
+                            label: 'Open Stadia',
+                            url: 'https://stadia.google.com/home'
+                        }, {
+                            label: 'Get Stadia Enhanced',
+                            url: 'https://github.com/ChristopherKlay/StadiaEnhanced'
+                        }]
+                    }
+                }
+            }
+        }
+
         // Menu Monitor
         secureInsert(enhanced_menuMonitor, ".OWVtN", 0);
     } else {
+        enhanced_discordPresence = {}
         enhanced_Windowed.style.display = "none";
         enhanced_Monitor.style.display = "none";
         enhanced_ClockOverlay.style.display = "none";
@@ -2639,7 +2712,7 @@ setInterval(function() {
                 var enhanced_statsFinishRate = (enhanced_statsFinished * 100) / enhanced_statsOwned;
 
                 var enhanced_loadStats = '\
-                    <div class="HZ5mJ">Statistics</div>\
+                    <div class="HZ5mJ">' + enhanced_lang.statistics + '</div>\
                     <div class="xsbfy" style="margin-bottom: 1rem;">\
                         <div class="qKSMec">\
                             <i class="google-material-icons QxsLuc" aria-hidden="true">stars</i>\
@@ -3383,8 +3456,10 @@ function enhanced_loadDatabase(csv) {
         }
         result.push(json)
     }
-    enhanced_database = result
-    console.log("%cStadia Enhanced" + "%c ⚙️ - GitHub Database: " + result.length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
+    console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - GitHub Database: " + result.length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
+    console.log(result)
+    console.groupEnd()
+    return result
 }
 
 function enhanced_loadUserInfo() {
@@ -3612,9 +3687,9 @@ function enhancedTranslate(lang, log = false) {
         maxresolution: 'Maximum Resolution',
         fps4K: 'Framerate @ 4K',
         datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
-                    On games with a resolution/framerate toggle, resolution was picked. \
-                    This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                    and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+                On games with a resolution/framerate toggle, resolution was picked. \
+                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
         noteOne: 'Specs confirmed by devs/pubs',
         noteTwo: 'Pixel Count',
         noteThree: '60FPS in 1080p mode',
@@ -3668,6 +3743,7 @@ function enhancedTranslate(lang, log = false) {
         resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9.',
         codecdesc: 'The codec used for game streams.',
         confirmreset: 'Are you sure you want to reset the settings?',
+        statistics: 'Statistics',
         gamesfinished: 'Games Finished',
         achievementsunlocked: 'Achievements Unlocked',
         totalPlayTime: 'Total Playtime',
@@ -3798,6 +3874,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Die angezielte Auflösung für Spiele. 1440p und 2160p benötigen VP9.',
                 codecdesc: 'Der für Spiele genutzte Codec.',
                 confirmreset: 'Möchtest du die Einstellungen sicher zurücksetzen?',
+                statistics: 'Statistiken',
                 gamesfinished: 'Spiele Abgeschlossen',
                 achievementsunlocked: 'Erfolge Freigeschaltet',
                 totalPlayTime: 'Gesamtspielzeit',
@@ -3920,6 +3997,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Streameléshez beállított felbontás. 1440p és 2160p beállításhoz VP9 videó kódolás támogatás szükséges.',
                 codecdesc: 'A stream-hez használt videó kódoló eljárás.',
                 confirmreset: 'Biztosan vissza akarod állítani a beállításokat?',
+                statistics: undefined,
                 gamesfinished: 'Vége a játéknak',
                 achievementsunlocked: 'Megszerzett jutalom',
                 totalPlayTime: 'Total Playtime',
@@ -4042,6 +4120,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'De beoogde resolutio voor games. 1440p en 2160p vereisen VP9.',
                 codecdesc: 'De codec gebruikt voor games.',
                 confirmreset: 'Weet je zeker dat je de instellingen wilt resetten?',
+                statistics: undefined,
                 gamesfinished: 'Games Voltooid',
                 achievementsunlocked: 'Achievements Vrijgespeeld',
                 totalPlayTime: 'Total Playtime',
@@ -4164,6 +4243,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Máxima resolución a la que pueden alcanzar los juegos. Para resoluciones 1440p (Quad HD) o 2160p (4K UHD) es necesario el códec VP9.',
                 codecdesc: 'El códec usado por los juegos.',
                 confirmreset: '¿Estás seguro de querer restablecer los ajustes?',
+                statistics: undefined,
                 gamesfinished: 'Juegos Completados',
                 achievementsunlocked: 'Logros Desbloqueados',
                 totalPlayTime: undefined,
@@ -4286,6 +4366,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'La risoluzione impostata per i giochi. 1440p e 2160p richiedono VP9.',
                 codecdesc: 'Il codec utilizzato per i giochi.',
                 confirmreset: 'Sei sicuro di voler ripristinare le impostazioni?',
+                statistics: undefined,
                 gamesfinished: 'Giochi Completati',
                 achievementsunlocked: 'Obiettivi Sbloccati',
                 totalPlayTime: 'Tempo di gioco totale',
@@ -4408,6 +4489,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Den målrettede opløsning til spil. 1440p og 2160p kræver VP9.',
                 codecdesc: 'Den codec, der bruges til spil.',
                 confirmreset: 'Er du sikker på, at du vil nulstille indstillingerne?',
+                statistics: undefined,
                 gamesfinished: 'Gennemførte spil',
                 achievementsunlocked: 'Oplåste Præstationer',
                 totalPlayTime: undefined,
@@ -4533,6 +4615,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'La resolució específica per als jocs. 1440p i 2160p requereixen VP9.',
                 codecdesc: 'El còdec utilitzat per als jocs.',
                 confirmreset: 'Segur que vols restablir la configuració?',
+                statistics: undefined,
                 gamesfinished: 'Jocs acabats',
                 achievementsunlocked: 'Assoliments desbloquejats',
                 totalPlayTime: 'Total Playtime',
@@ -4554,7 +4637,7 @@ function enhancedTranslate(lang, log = false) {
                 hide: 'Esconder',
                 show: 'Mostrar',
                 total: 'Total',
-                visible: 'Visivel',
+                visible: 'Visível',
                 hidden: 'Escondido',
                 enabled: 'Ativado',
                 disabled: 'Desativado',
@@ -4565,8 +4648,8 @@ function enhancedTranslate(lang, log = false) {
                 complete: 'Completo',
                 incomplete: 'Incompleto',
                 games: 'Jogos',
-                allgames: undefined,
-                leavepro: undefined,
+                allgames: 'Todos os Jogos',
+                leavepro: 'A sair do PRO',
                 bundles: 'Pacotes',
                 addons: 'Suplementos',
                 wishlist: 'Lista de Desejos',
@@ -4574,46 +4657,49 @@ function enhancedTranslate(lang, log = false) {
                 windowed: 'Modo Janela',
                 fullscreen: 'Ecrã Completo',
                 onsale: 'Em Promoção',
-                prodeals: 'Promoções Pro',
+                prodeals: 'Promoções PRO',
                 userprofile: 'Meu Perfil',
                 usermedia: 'Capturas e Vídeos',
                 searchbtnbase: 'Pesquisar em',
                 avatarpopup: 'Novo URL para avatar (vazio para o padrão):',
-                sessiontime: 'Tempo de sessão',
+                sessiontime: 'Tempo da Sessão',
                 codec: 'Codec',
                 resolution: 'Resolução',
                 hardware: 'Hardware',
                 software: 'Software',
-                trafficsession: 'Tráfego da sessão',
-                trafficcurrent: 'Tráfego atual',
-                trafficaverage: 'Tráfego médio',
-                packetloss: 'Pacotes perdidos',
-                framedrop: 'Frames perdidos',
-                latency: 'Latencia',
+                trafficsession: 'Tráfego da Sessão',
+                trafficcurrent: 'Tráfego Atual',
+                trafficaverage: 'Tráfego Médio',
+                packetloss: 'Pacotes Perdidos',
+                framedrop: 'Frames Perdidos',
+                latency: 'Latência',
                 jitter: 'Buffer de Jitter',
-                decodetime: 'Tempo de descodificação',
+                decodetime: 'Tempo de Descodificação',
                 compression: 'Compressão',
-                bitrate: undefined,
-                streammon: 'Monitor de Streaming',
+                bitrate: 'Bitrate',
+                streammon: 'Monitor do Streaming',
                 stream: 'Stream',
-                network: undefined,
-                session: undefined,
-                extdetail: undefined,
-                maxresolution: undefined,
-                fps4K: undefined,
-                datadiscl: undefined,
-                noteOne: undefined,
-                noteTwo: undefined,
-                noteThree: undefined,
-                noteFour: undefined,
-                noteFive: undefined,
-                noteSix: undefined,
-                noteSeven: undefined,
+                network: 'Internet',
+                session: 'Sessão',
+                extdetail: 'Mais Detalhes',
+                maxresolution: 'Resolução Máxima',
+                fps4K: 'Fotogramas a 4K',
+                datadiscl: 'Esta é a taxa máxima de fotogramas alcançada ao jogar um jogo em modo 4K (deve ser um subscritor PRO). \
+            Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
+            Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+            e a base de dados completa pode ser encontrada <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">aqui</a>.',
+                noteOne: 'Especificações confirmadas pelos desenvolvedores',
+                noteTwo: 'Contador de Pixel',
+                noteThree: '60FPS em 1080P',
+                noteFour: '30FPS em 1080P',
+                noteFive: 'Opção Performance/Qualidade',
+                noteSix: 'Sem opções HDR',
+                noteSeven: 'Não é compatível com 4K',
                 community: 'Comunidade',
-                speedtest: 'Teste de velocidade',
+                speedtest: 'Teste de Velocidade',
                 quickaccess: 'Acesso Rápido',
                 messages: 'Mensagens',
-                comfeature: 'Ferramentas da Comunidade',
+                comfeature: 'Ferramentas',
                 avatar: 'Avatar',
                 interface: 'Interface',
                 shortcut: 'StadiaIcons',
@@ -4627,7 +4713,7 @@ function enhancedTranslate(lang, log = false) {
                 clock: 'Relógio',
                 clockdesc: 'Mostra a hora atual na lista de amigos, em sobreposição no jogo, ou ambos.',
                 friendslist: 'Lista de Amigos',
-                igoverlay: 'Sobreposição no jogo',
+                igoverlay: 'Sobreposição no Jogo',
                 listoverlay: 'Lista e Sobreposição',
                 filter: 'Filtro de Jogos',
                 filterdesc: 'Permite organizar a biblioteca de jogos, escondendo jogos. O filtro pode ser ativado/desativado através do símbolo, no canto superior direito acima dos jogos na biblioteca.',
@@ -4637,7 +4723,7 @@ function enhancedTranslate(lang, log = false) {
                 gamelabeldesc: 'Remove as Etiquetas como por exemplo "Pro" dos jogos da página inicial.',
                 homegallery: 'Galeria do Utilizador',
                 homegallerydesc: 'Esconde a área "Capturas" no fundo do ecrã inicial.',
-                quickprev: 'Pré-visualização de mensagens',
+                quickprev: 'Pré-visualização de Mensagens',
                 quickprevdesc: 'Esconde a pré-visualização de mensagens na tua lista de amigos.',
                 quickrep: 'Resposta Rápida',
                 quickrepdesc: 'Esconde a opção de resposta rápida nas conversas.',
@@ -4645,8 +4731,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Esconde amigos offline na lista de amigos.',
                 invisiblefriend: 'Amigos Invisíveis',
                 invisiblefrienddesc: 'Esconde amigos com estado desconhecido na lista de amigos.',
-                notification: undefined,
-                notificationdesc: undefined,
+                notification: 'Notificações',
+                notificationdesc: 'Apresentar uma notificação quando o Stadia Enhanced é atualizado para uma nova versão ("Auto" esconde após 5 segundos, "Manual" permanece até à interação do utilizador).',
                 streammode: 'Modo de Streaming',
                 streammodedesc: 'Torna certos elementos (p.e. a lista de amigos) não legíveis enquanto estás a fazer streaming (via ferramentas como OBS ou Discord).',
                 catprev: 'Pré-visualização da Categoria',
@@ -4655,18 +4741,19 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'A resolução pretendida para stream de jogos. (1440p e 2160p utilizam o Codec VP9)',
                 codecdesc: 'O Codec utilizado para stream de jogos.',
                 confirmreset: 'De certeza que queres reiniciar as configurações?',
-                gamesfinished: 'Jogo Terminado',
+                statistics: 'Estatísticas',
+                gamesfinished: 'Jogos Terminados',
                 achievementsunlocked: 'Conquistas Desbloqueadas',
                 totalPlayTime: 'Tempo Total de Jogo',
                 splitstore: 'Dividir Listas da Loja',
                 splitstoredesc: 'Divide as listas da loja em duas colunas para uma melhor visão geral.',
-                inlineimage: 'Prévia de imagem',
+                inlineimage: 'Prévia de Imagem',
                 inlinedesc: 'Substitui links de imagem para formatos comuns de ficheiros (jpg/gif/png) com uma prévia clicável.',
-                familyelements: 'Opções de partilha de família',
+                familyelements: 'Opções de Partilha de Família',
                 familyelementsdesc: 'Esconder a opção "Partilhar este jogo com a família."',
-                donations: undefined,
-                reportbug: undefined,
-                resetsettings: 'Reiniciar Configurações'
+                donations: 'Doações',
+                reportbug: 'Reportar problemas da extensão Stadia Enhanced',
+                resetsettings: 'Reiniciar Configurações',
             }
             break
         case 'sv': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
@@ -4777,6 +4864,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Målupplösningen för spel. 1440p och 2160p kräver VP9.',
                 codecdesc: 'Det kodec som används för spel.',
                 confirmreset: 'Är du säker på att du vill återställa inställningarna?',
+                statistics: undefined,
                 gamesfinished: 'Färdiga Spel',
                 achievementsunlocked: 'Prestationer Uppnådda',
                 totalPlayTime: undefined,
@@ -4899,6 +4987,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'La résolution cible pour le stream de jeux. Les résolutions 1440p et 2160p nécessitent le codec VP9.',
                 codecdesc: 'Le codec utilisé pour le stream de jeux.',
                 confirmreset: 'Êtes-vous certain de vouloir réinitialiser les paramètres ?',
+                statistics: undefined,
                 gamesfinished: 'Jeux Terminés',
                 achievementsunlocked: 'Succès Débloqués',
                 totalPlayTime: 'Total Playtime',
@@ -5021,6 +5110,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Целевое разрешенеие. 1440p и 2160p требуют VP9.',
                 codecdesc: 'Кодек используемый для игры.',
                 confirmreset: 'Вы уверенны что хотите сбросить настройки?',
+                statistics: undefined,
                 gamesfinished: 'Игр пройденно',
                 achievementsunlocked: 'Достижений открыто',
                 totalPlayTime: undefined,
