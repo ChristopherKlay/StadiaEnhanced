@@ -91,9 +91,9 @@ var translation = {
     maxresolution: 'Maximum Resolution',
     fps4K: 'Framerate @ 4K',
     datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
-                On games with a resolution/framerate toggle, resolution was picked. \
-                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+            On games with a resolution/framerate toggle, resolution was picked. \
+            This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+            and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
     noteOne: 'Specs confirmed by devs/pubs',
     noteTwo: 'Pixel Count',
     noteThree: '60FPS in 1080p mode',
@@ -147,6 +147,7 @@ var translation = {
     resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9.',
     codecdesc: 'The codec used for game streams.',
     confirmreset: 'Are you sure you want to reset the settings?',
+    statistics: 'Statistics',
     gamesfinished: 'Games Finished',
     achievementsunlocked: 'Achievements Unlocked',
     totalPlayTime: 'Total Playtime',
