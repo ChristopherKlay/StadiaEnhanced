@@ -2,10 +2,15 @@
 
 ## Version 1.15
 
+### 1.15.1
+* Added the ability to directly view the loaded translation data via `debugEnhanced("translation")`
+* Added slovak translation
+* Changed DiscordRPC from "active" to "passive" temporarily to avoid activation issues
+
 ### 1.15.0
 * Added the ability to showcase the currently played title via DiscordRPC
 * Added custom display images for over 50 games to the discord presence
-* Updated portuguese translation
+* Updated portoguese translation
 * Fixed the statistic header not being translated
 
 ## Version 1.14

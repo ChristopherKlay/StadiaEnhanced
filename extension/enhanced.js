@@ -5,7 +5,7 @@ var enhanced_manifest = chrome.runtime.getManifest();
 var enhanced_consoleEnhanced = "background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;";
 console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - " + enhanced_manifest.version + ": Start-Up", enhanced_consoleEnhanced, "");
 var enhanced_timerLoadStart = window.performance.now();
-var enhanced_supportedLang = "en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi"
+var enhanced_supportedLang = "en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi|sk"
 var enhanced_local = document.querySelector("html").getAttribute("lang");
 var enhanced_AccountInfo = enhanced_loadUserInfo();
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
@@ -118,7 +118,31 @@ var enhanced_database;
 chrome.runtime.sendMessage({
     action: "extdatabase"
 }, function(response) {
-    enhanced_database = enhanced_loadDatabase(response)
+    var enhanced_database = [];
+    var data = response.split("\n")
+    for (var i = 1; i < data.length; i++) {
+        split = data[i].split(",")
+        var json = {
+            name: split[0],
+            maxRes: split[1],
+            fps4K: split[2],
+            hdr: split[3],
+            id: split[4],
+            note: split[5]
+                .replace("Specs confirmed by devs/pubs", enhanced_lang.noteOne)
+                .replace("Pixel Count", enhanced_lang.noteTwo)
+                .replace("60FPS in 1080p mode", enhanced_lang.noteThree)
+                .replace("30FPS in 1080p mode", enhanced_lang.noteFour)
+                .replace("Performance/Quality toggle", enhanced_lang.noteFive)
+                .replace("No HDR settings", enhanced_lang.noteSix)
+                .replace("Not compatible with 4K mode", enhanced_lang.noteSeven)
+                .replaceAll(" | ", ", ")
+        }
+        enhanced_database.push(json)
+    }
+    console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - GitHub Database: " + enhanced_database.length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
+    console.log(enhanced_database)
+    console.groupEnd()
 });
 
 // Extended Details
@@ -134,6 +158,7 @@ enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 
 // Get presence data
 var enhanced_discordPresence = {}
+
 var enhanced_presenceData;
 chrome.runtime.sendMessage({
     action: "presencedata"
@@ -146,7 +171,7 @@ chrome.runtime.sendMessage({
 
 // Register
 chrome.runtime.sendMessage("agnaejlkbiiggajjmnpmeheigkflbnoo", {
-    mode: 'active'
+    mode: 'passive'
 }, function(response) {
     if (chrome.runtime.lastError || !response) {
         console.log("%cStadia Enhanced" + "%c ⚙️ - DiscordRPC: To use the Discord presence, install: https://chrome.google.com/webstore/detail/discord-rich-presence/agnaejlkbiiggajjmnpmeheigkflbnoo", enhanced_consoleEnhanced, "");
@@ -157,7 +182,6 @@ chrome.runtime.sendMessage("agnaejlkbiiggajjmnpmeheigkflbnoo", {
 
 // Wait for presence requests
 chrome.runtime.onMessage.addListener(function(info, sender, sendResponse) {
-    //console.log('Presence requested', info);
     sendResponse(enhanced_discordPresence);
 });
 
@@ -875,6 +899,7 @@ var enhanced_langCodes = {
     Italian: 'it',
     Portuguese: 'pt',
     Spanish: 'es',
+    Slovak: 'sk',
     Swedish: 'sv'
 }
 
@@ -2370,6 +2395,8 @@ setInterval(function() {
                         enhanced_ariaLetter = enhanced_ariaLabel.split(" ")[1].charAt(0).toUpperCase()
                     } else if ('pl'.includes(enhanced_local)) {
                         enhanced_ariaLetter = enhanced_ariaLabel.split(" ")[2].charAt(0).toUpperCase()
+                    } else if ('sk'.includes(enhanced_local)) {
+                        enhanced_ariaLetter = enhanced_ariaLabel.split(" ")[3].charAt(0).toUpperCase()
                     } else if ('de|hu|nl'.includes(enhanced_local)) {
                         enhanced_ariaLetter = enhanced_ariaLabel.charAt(0).toUpperCase()
                     }
@@ -2428,38 +2455,29 @@ setInterval(function() {
         secureInsert(enhanced_sessionTimer, ".OWVtN", 0);
 
         // Discord Presence
-        var enhanced_currentlyPlayed = document.querySelector(".HDKZKb.LiQ6Hb");
-        if (enhanced_currentlyPlayed && enhanced_presenceData) {
-            var enhanced_gameCheck = enhanced_currentlyPlayed.textContent.substr(0, enhanced_currentlyPlayed.textContent.indexOf(' '));
-            var enhanced_presenceTitle = enhanced_currentlyPlayed.textContent.substr(enhanced_currentlyPlayed.textContent.indexOf(' ') + 1);
-            if (enhanced_gameCheck != "") {
-                var enhanced_currentGame = document.getElementsByClassName('n4qZSd')[0];
-                var enhanced_currentID = document.location.href.split("/")[4];
+        var enhanced_currentStatus = document.querySelector(".HDKZKb.LiQ6Hb");
+        var enhanced_currentID = document.location.href.split("/")[4];
+        if (enhanced_currentStatus && enhanced_presenceData) {
+            if (enhanced_presenceData[enhanced_currentID]) {
+                enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID];
+            } else {
+                enhanced_presenceLargeImage = "stadialogo";
+            }
 
-                if (enhanced_presenceData[enhanced_currentID]) {
-                    enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID];
-                } else {
-                    enhanced_presenceLargeImage = "stadialogo";
-                }
-
-                console.log(enhanced_presenceData[enhanced_currentID] + " - " + enhanced_currentID)
-
-                enhanced_discordPresence = {
-                    clientId: '667381280656064544',
-                    presence: {
-                        details: 'Currently playing',
-                        state: enhanced_presenceTitle,
-                        largeImageKey: enhanced_presenceLargeImage,
-                        startTimestamp: enhanced_sessionStart,
-                        instance: true,
-                        buttons: [{
-                            label: 'Open Stadia',
-                            url: 'https://stadia.google.com/home'
-                        }, {
-                            label: 'Get Stadia Enhanced',
-                            url: 'https://github.com/ChristopherKlay/StadiaEnhanced'
-                        }]
-                    }
+            enhanced_discordPresence = {
+                clientId: '667381280656064544',
+                presence: {
+                    state: enhanced_currentStatus.textContent.replace(/[™®]/g, ' '),
+                    largeImageKey: enhanced_presenceLargeImage,
+                    startTimestamp: enhanced_sessionStart,
+                    instance: true,
+                    buttons: [{
+                        label: 'Open Stadia',
+                        url: 'https://stadia.google.com/home'
+                    }, {
+                        label: 'Get Stadia Enhanced',
+                        url: 'https://github.com/ChristopherKlay/StadiaEnhanced'
+                    }]
                 }
             }
         }
@@ -3432,36 +3450,6 @@ function secureInsert(el, sel, opt = 0) {
     }
 }
 
-function enhanced_loadDatabase(csv) {
-    // Load and process data
-    var result = [];
-    var data = csv.split("\n")
-    for (var i = 1; i < data.length; i++) {
-        split = data[i].split(",")
-        var json = {
-            name: split[0],
-            maxRes: split[1],
-            fps4K: split[2],
-            hdr: split[3],
-            id: split[4],
-            note: split[5]
-                .replace("Specs confirmed by devs/pubs", enhanced_lang.noteOne)
-                .replace("Pixel Count", enhanced_lang.noteTwo)
-                .replace("60FPS in 1080p mode", enhanced_lang.noteThree)
-                .replace("30FPS in 1080p mode", enhanced_lang.noteFour)
-                .replace("Performance/Quality toggle", enhanced_lang.noteFive)
-                .replace("No HDR settings", enhanced_lang.noteSix)
-                .replace("Not compatible with 4K mode", enhanced_lang.noteSeven)
-                .replaceAll(" | ", ", ")
-        }
-        result.push(json)
-    }
-    console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - GitHub Database: " + result.length + " entries loaded successfully.", enhanced_consoleEnhanced, "");
-    console.log(result)
-    console.groupEnd()
-    return result
-}
-
 function enhanced_loadUserInfo() {
     var enhanced_scriptLoad = document.querySelectorAll("script[nonce]");
     var info = [];
@@ -4010,6 +3998,131 @@ function enhancedTranslate(lang, log = false) {
                 donations: undefined,
                 reportbug: undefined,
                 resetsettings: 'Beállítások alaphelyzetbe állítása'
+            }
+            break
+        case 'sk': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/142
+            var translation = {
+                default: 'Pôvodné',
+                native: 'Natívne',
+                hide: 'Skry',
+                show: 'Zobraz',
+                total: 'Celkovo',
+                visible: 'Viditeľné',
+                hidden: 'Skryté',
+                enabled: 'Povolené',
+                disabled: 'Zakázané',
+                auto: 'Automatické',
+                manual: 'Manuálne',
+                all: 'Všetky',
+                locked: 'Uzamknuté',
+                complete: 'Kompletné',
+                incomplete: 'Nekompletné',
+                games: 'Hry',
+                allgames: 'Všetky hry',
+                leavepro: 'Hry čoskoro opúšťajúce Pro',
+                bundles: 'Balíčky',
+                addons: 'Prídavky',
+                wishlist: 'Wishlist',
+                responsive: 'Responsívne',
+                windowed: 'V okne',
+                fullscreen: 'Na celú obrazovku',
+                onsale: 'V akcii',
+                prodeals: 'Pro deals',
+                userprofile: 'Môj profil',
+                usermedia: 'Screenshoty a uložené stavy hier',
+                searchbtnbase: 'Vyhľadaj',
+                avatarpopup: 'URL ku novému avataru (ponechaj prázdne pre základný):',
+                sessiontime: 'Uplynutý čas',
+                codec: 'Kodek',
+                resolution: 'Rozlíšenie',
+                hardware: 'Hardware',
+                software: 'Software',
+                trafficsession: 'Session prenos',
+                trafficcurrent: 'Aktuálny prenos',
+                trafficaverage: 'Priemerný prenos',
+                packetloss: 'Stratené pakety',
+                framedrop: 'Stratené frejmy',
+                latency: 'Odozva',
+                jitter: 'Jitter buffer',
+                decodetime: 'Trvanie dekódovania',
+                compression: 'Kompresia',
+                bitrate: 'Bitrate',
+                streammon: 'Monitor streamovania',
+                stream: 'Stream',
+                network: 'Sieť',
+                session: 'Session',
+                extdetail: 'Rozšírené detaily',
+                maxresolution: 'Maximálne rozlíšenie',
+                fps4K: 'Framerate pri 4K',
+                datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro predplatné).\
+                            Pri hrách ktoré majú rozlíšenie/framerate možnosť, je uprednostnené rozlíšenie.\
+                            Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                            a <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">kompletná databáza</a> sa nachádza tu.',
+                noteOne: 'Špecifikácie potvrdené vývojármi / distribútorom',
+                noteTwo: 'Na základe presného počtu pixelov',
+                noteThree: '60FPS pri 1080p móde',
+                noteFour: '30FPS pri 1080p móde',
+                noteFive: 'Výkon/Kvalita možnosť',
+                noteSix: 'Žiadne HDR nastavenia',
+                noteSeven: 'Nekompatibilné so 4K módom',
+                community: 'Komunita',
+                speedtest: 'Test rýchlosti',
+                quickaccess: 'Rýchly prístup',
+                messages: 'Správy',
+                comfeature: 'Komunitné funkcie',
+                avatar: 'Avatar',
+                interface: 'Rozhranie',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Nainštaluj skratku pre',
+                shortcutdesc: 'Umožňuje inštaláciu skratky do hry na tomto zariadení.',
+                stadiastats: 'StadiaStats',
+                stadiastatsopen: 'Pozri na StadiaStats.GG',
+                stadiastatsdesc: 'Umožňuje priamu skratku do hernej štatistiky, link do Tvojho profilu a "Nájdi kamoša" funkciu na stadiastats.gg.',
+                gridsize: 'Veľkosť mriežky herných ikon',
+                griddesc: 'Nastavuje počet herných ikon na riadok v zozname hier.',
+                clock: 'Hodiny',
+                clockdesc: 'Zobrazuje aktuálny čas v zozname priateľov, v hernom info panely, alebo v oboch.',
+                friendslist: 'Zoznam priateľov',
+                igoverlay: 'Herný info panel',
+                listoverlay: 'Priatelia a info panel',
+                filter: 'Filter hier',
+                filterdesc: 'Filter umožňuje sprehľadnenie zoznamu tým že skryje nechcené hry pomocou prepínača. Prepínač sa nachádza v pravo hore nad zoznamom hier.',
+                invitebase: 'Skopíruj pozývací link',
+                inviteactive: 'Skopírované!',
+                gamelabel: 'Visačky',
+                gamelabeldesc: 'Odstráni "Pro" a iné visačky z hier na domovskej obrazovke.',
+                homegallery: 'Používateľova galérie',
+                homegallerydesc: 'Skryje sekciu "Screenshoty" na spodku domovskej obrazovky.',
+                quickprev: 'Náhľad správ',
+                quickprevdesc: 'Skryje náhľady správ v zozname priateľov.',
+                quickrep: 'Rýchla odpoveď',
+                quickrepdesc: 'Skryje možnosť rýchlej odpovede v čete.',
+                offlinefriend: 'Offline priatelia',
+                offlinefrienddesc: 'Skryje offline priateľov v zozname.',
+                invisiblefriend: '"Neviditeľní" priatelia',
+                invisiblefrienddesc: 'Skryje priateľov s "neznámym" statusom v zozname.',
+                notification: 'Notifikácie',
+                notificationdesc: 'Zobrazenie notifikácií keď je Stadia Enhanced aktualizovaná na novú verziu. ("Automatické" skrytie notifikácie po 5 sekundách, "Manuálne" skrytie notifikácie po prvej používateľovej interakcii).',
+                streammode: 'Streaming mód',
+                streammodedesc: 'Zahmlí niektoré elementy používateľovho rozhrania (napr. Zoznam priateľov, atď.) počas streamovania na iné platformy a cez streamovacie nástroje (napr. OBS / Discord).',
+                catprev: 'Visačky kategórií',
+                catprevdesc: 'Skryje visačky herných kategórií v info náhľade hry pod kurzorom myši.',
+                streammondesc: 'Aktivuj Monitor streamovania ihneď ako sa spustí hra.',
+                resolutiondesc: 'Požadované rozlíšenie. 1440p a 2160p módy vyžadujú VP9 kodek.',
+                codecdesc: 'Kodek použitý počas hrania.',
+                confirmreset: 'Si si istý že chceš vymazať nastavenia?',
+                gamesfinished: 'Prejdené hry',
+                achievementsunlocked: 'Dosiahnuté ačívmenty',
+                totalPlayTime: 'Celkový čas hrania',
+                splitstore: 'Viacej hier na stranu',
+                splitstoredesc: 'Zobrazí hry v obchode do dvoch stĺpcov. Prehľadnejšie, menej skrolovania.',
+                inlineimage: 'Náhľad obrázku',
+                inlinedesc: 'Nahradí linky ku obrázkom v štandardných formátoch za kliknuteľné náhľady.',
+                familyelements: 'Zdieľanie v rámci rodiny',
+                familyelementsdesc: 'Skryje "Share this game with family" možnosť.',
+                donations: 'Prispej!',
+                reportbug: 'Nahlásiť chybu',
+                resetsettings: 'Vymazať nastavenia'
             }
             break
         case 'nl': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/9
@@ -5142,7 +5255,9 @@ function enhancedTranslate(lang, log = false) {
     lang_load = window.performance.now() - lang_load
 
     if (log) {
-        console.log("%cStadia Enhanced" + "%c ⚙️ - Loading translation '" + lang + "' - " + Object.keys(translate_load).length + " keys in " + lang_load.toFixed(2) + "ms, " + lang_filled + " strings defaulting to 'en'.", enhanced_consoleEnhanced, "");
+        console.groupCollapsed("%cStadia Enhanced" + "%c ⚙️ - Loading translation '" + lang + "' - " + Object.keys(translate_load).length + " keys in " + lang_load.toFixed(2) + "ms, " + lang_filled + " strings defaulting to 'en'.", enhanced_consoleEnhanced, "");
+        console.table(translate_load)
+        console.groupEnd()
     }
     return translation
 }
