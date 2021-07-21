@@ -114,11 +114,10 @@ enhanced_injectStyle(enhanced_monitorStyle, "enhanced_styleMonitor");
 
 // Stadia Public Database by OriginalPenguin
 // Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
-var enhanced_database;
+var enhanced_database = [];
 chrome.runtime.sendMessage({
     action: "extdatabase"
 }, function(response) {
-    var enhanced_database = [];
     var data = response.split("\n")
     for (var i = 1; i < data.length; i++) {
         split = data[i].split(",")
@@ -171,7 +170,7 @@ chrome.runtime.sendMessage({
 
 // Register
 chrome.runtime.sendMessage("agnaejlkbiiggajjmnpmeheigkflbnoo", {
-    mode: 'passive'
+    mode: 'active'
 }, function(response) {
     if (chrome.runtime.lastError || !response) {
         console.log("%cStadia Enhanced" + "%c ⚙️ - DiscordRPC: To use the Discord presence, install: https://chrome.google.com/webstore/detail/discord-rich-presence/agnaejlkbiiggajjmnpmeheigkflbnoo", enhanced_consoleEnhanced, "");
@@ -3675,9 +3674,9 @@ function enhancedTranslate(lang, log = false) {
         maxresolution: 'Maximum Resolution',
         fps4K: 'Framerate @ 4K',
         datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
-                On games with a resolution/framerate toggle, resolution was picked. \
-                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+            On games with a resolution/framerate toggle, resolution was picked. \
+            This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+            and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
         noteOne: 'Specs confirmed by devs/pubs',
         noteTwo: 'Pixel Count',
         noteThree: '60FPS in 1080p mode',
@@ -4417,15 +4416,18 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Buffer Jitter',
                 decodetime: 'Tempo di Decodifica',
                 compression: 'Compressione',
-                bitrate: undefined,
+                bitrate: 'Bitrate',
                 streammon: 'Monitor Stream',
                 stream: 'Stream',
-                network: undefined,
-                session: undefined,
-                extdetail: undefined,
-                maxresolution: undefined,
-                fps4K: undefined,
-                datadiscl: undefined,
+                network: 'Rete',
+                session: 'Sessione',
+                extdetail: 'Dettaglio Esteso',
+                maxresolution: 'Risoluzione Massima',
+                fps4K: 'Framerate @ 4K',
+                datadiscl: 'Questo è il framerate massimo ottenuto mentre si gioca in modalità 4k (devi essere un membro abbonato Pro).\
+                Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
+                Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                e l\'intero database potete trovarlo <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">qui</a>.',
                 noteOne: 'Specifiche confermate dagli sviluppatori/editori',
                 noteTwo: 'Conto dei pixel',
                 noteThree: '60 FPS in modalità 1080p',
@@ -4469,8 +4471,8 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Nasconde gli amici offline nella lista amici.',
                 invisiblefriend: 'Amici Invisibili',
                 invisiblefrienddesc: 'Nasconde gli amici con stato online sconosciuto nella lista amici.',
-                notification: undefined,
-                notificationdesc: undefined,
+                notification: 'Notifiche',
+                notificationdesc: 'Mostra una notifica quando Stadia Enhanced viene aggiornato ad una nuova versione ("Auto" si nasconde in automatico dopo 5 secondi, "Manuale" resta attivo fino all\'iterazione utente).',
                 streammode: 'Modalità Streaming',
                 streammodedesc: 'Abilita per rendere illeggibili alcuni elementi (ad esempio l\'elenco degli amici) durante lo streaming (tramite strumenti come OBS / Discord).',
                 catprev: 'Anteprima Categoria',
@@ -4479,7 +4481,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'La risoluzione impostata per i giochi. 1440p e 2160p richiedono VP9.',
                 codecdesc: 'Il codec utilizzato per i giochi.',
                 confirmreset: 'Sei sicuro di voler ripristinare le impostazioni?',
-                statistics: undefined,
+                statistics: 'Statistiche',
                 gamesfinished: 'Giochi Completati',
                 achievementsunlocked: 'Obiettivi Sbloccati',
                 totalPlayTime: 'Tempo di gioco totale',
@@ -5038,25 +5040,25 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Tampon de gigue',
                 decodetime: 'Decoding Time',
                 compression: 'Compression',
-                bitrate: undefined,
+                bitrate: 'Bitrate',
                 streammon: 'Moniteur de Stream',
                 stream: 'Stream',
-				network: 'Réseau',
-				session: 'Session',
-				extdetail: 'Plus de Détails',
-				maxresolution: 'Résolution Maximale',
-				fps4K: 'Framerate en 4K',
-				datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
-						Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
-						Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-						et la base de données complète est disponible sur <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">ici</a>.',
-				noteOne: 'Spécifications confirmées par les créateurs du jeu',
-				noteTwo: 'Compte de Pixels',
-				noteThree: '60FPS en mode 1080p',
-				noteFour: '30FPS en mode 1080p',
-				noteFive: 'Options de priorité performance/qualité',
-				noteSix: 'Aucun réglage HDR',
-				noteSeven: 'Incompatible avec le mode 4K',
+                network: 'Réseau',
+                session: 'Session',
+                extdetail: 'Plus de Détails',
+                maxresolution: 'Résolution Maximale',
+                fps4K: 'Framerate en 4K',
+                datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
+                        Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
+                        Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                        et la base de données complète est disponible sur <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">ici</a>.',
+                noteOne: 'Spécifications confirmées par les créateurs du jeu',
+                noteTwo: 'Compte de Pixels',
+                noteThree: '60FPS en mode 1080p',
+                noteFour: '30FPS en mode 1080p',
+                noteFive: 'Options de priorité performance/qualité',
+                noteSix: 'Aucun réglage HDR',
+                noteSeven: 'Incompatible avec le mode 4K',
                 community: 'Communauté',
                 speedtest: 'Test de Débit',
                 quickaccess: 'Accès Rapide',
@@ -5093,8 +5095,9 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Masque les amis hors-ligne dans la liste d\'amis.',
                 invisiblefriend: 'Amis Invisibles',
                 invisiblefrienddesc: 'Masque les amis dont le status en-ligne est inconnu dans la liste d\'amis.',
-				notification: 'Notifications',
-				notificationdesc: 'Affiche une notification lorsque Stadia Enhanced est mis à jour ("Auto" reste visible durant 5 secondes, "Manual" reste visible jusqu\'a être fermé manuellement).',
+                notification: 'Notifications',
+                notificationdesc: 'Affiche une notification lorsque Stadia Enhanced est mis à jour ("Auto" reste visible durant 5 secondes, "Manual" reste visible jusqu\'a être fermé manuellement).',
+                streammode: 'Mode Streaming',
                 streammode: 'Mode Streaming',
                 streammodedesc: 'Permet de rendre certains éléments (ex : la liste d\'amis) invisibles lorsque vous streamez (via un logiciel externe comme OBS ou Discord).',
                 catprev: 'Prévisualisation des Catégories',
@@ -5103,7 +5106,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'La résolution cible pour le stream de jeux. Les résolutions 1440p et 2160p nécessitent le codec VP9.',
                 codecdesc: 'Le codec utilisé pour le stream de jeux.',
                 confirmreset: 'Êtes-vous certain de vouloir réinitialiser les paramètres ?',
-				statistics: 'Statistiques',
+                statistics: 'Statistiques',
                 gamesfinished: 'Jeux Terminés',
                 achievementsunlocked: 'Succès Débloqués',
                 totalPlayTime: 'Total Playtime',

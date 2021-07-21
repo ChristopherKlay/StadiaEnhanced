@@ -2,7 +2,7 @@
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.action == "extdatabase") {
-            var url = "https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/database.csv"
+            var url = "https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/include/extdatabase.csv"
             fetch(url)
                 .then(response => response.text())
                 .then(result => sendResponse(result))
@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.action == "presencedata") {
-            var url = "https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/presence.json"
+            var url = "https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/include/presence.json"
             fetch(url)
                 .then(response => response.text())
                 .then(result => sendResponse(JSON.parse(result)))

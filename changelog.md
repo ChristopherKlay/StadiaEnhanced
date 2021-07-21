@@ -2,6 +2,12 @@
 
 ## Version 1.15
 
+### 1.15.2
+* Fixed the extended database not loading correctly
+* Changed the discord presence from "passive" back to "active", following DiscordRPC updating to `0.1.6`
+* Changed the repository structure and load path for included files to be more clear to the user
+* Updated italian & french translation
+
 ### 1.15.1
 * Added the ability to directly view the loaded translation data via `debugEnhanced("translation")`
 * Added slovak translation
