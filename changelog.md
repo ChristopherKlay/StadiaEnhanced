@@ -2,6 +2,9 @@
 
 ## Version 1.15
 
+### 1.15.3
+* Updated italian and slovak translation
+
 ### 1.15.2
 * Fixed the extended database not loading correctly
 * Changed the discord presence from "passive" back to "active", following DiscordRPC updating to `0.1.6`

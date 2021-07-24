@@ -82,15 +82,18 @@ var translation = {
     jitter: 'Jitter Buffer',
     decodetime: 'Decoding Time',
     compression: 'Compression',
+    bitrate: 'Bitrate',
     streammon: 'Stream Monitor',
     stream: 'Stream',
+    network: 'Network',
+    session: 'Session',
     extdetail: 'Extended Details',
     maxresolution: 'Maximum Resolution',
     fps4K: 'Framerate @ 4K',
     datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
-                On games with a resolution/framerate toggle, resolution was picked. \
-                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+        On games with a resolution/framerate toggle, resolution was picked. \
+        This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+        and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
     noteOne: 'Specs confirmed by devs/pubs',
     noteTwo: 'Pixel Count',
     noteThree: '60FPS in 1080p mode',
@@ -134,6 +137,8 @@ var translation = {
     offlinefrienddesc: 'Hides offline friends in the friends list.',
     invisiblefriend: 'Invisible Friends',
     invisiblefrienddesc: 'Hides friends with unknown online status in the friends list.',
+    notification: 'Notifications',
+    notificationdesc: 'Display a notification when Stadia Enhanced updated to a new version ("Auto" hides after 5 seconds, "Manual" stays until user interaction).',
     streammode: 'Streaming Mode',
     streammodedesc: 'Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).',
     catprev: 'Category Preview',
@@ -142,6 +147,7 @@ var translation = {
     resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9.',
     codecdesc: 'The codec used for game streams.',
     confirmreset: 'Are you sure you want to reset the settings?',
+    statistics: 'Statistics',
     gamesfinished: 'Games Finished',
     achievementsunlocked: 'Achievements Unlocked',
     totalPlayTime: 'Total Playtime',

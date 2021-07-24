@@ -3603,7 +3603,7 @@ function debugEnhanced(opt) {
         case "translation":
             // Translations
             console.groupCollapsed("Stadia Enhanced: Translation Output");
-            var languages = ["fr", "nl", "sv", "pt", "ca", "da", "it", "es", "de", "ru", "hu", "en"];
+            var languages = ["fr", "nl", "sv", "pt", "ca", "da", "it", "es", "de", "ru", "hu", "sk"];
             for (var i = 0; i < languages.length; i++) {
                 debug_load = enhancedTranslate(languages[i], true);
             }
@@ -3674,9 +3674,9 @@ function enhancedTranslate(lang, log = false) {
         maxresolution: 'Maximum Resolution',
         fps4K: 'Framerate @ 4K',
         datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
-            On games with a resolution/framerate toggle, resolution was picked. \
-            This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-            and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+        On games with a resolution/framerate toggle, resolution was picked. \
+        This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+        and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
         noteOne: 'Specs confirmed by devs/pubs',
         noteTwo: 'Pixel Count',
         noteThree: '60FPS in 1080p mode',
@@ -3845,8 +3845,6 @@ function enhancedTranslate(lang, log = false) {
                 quickprevdesc: 'Versteckt die Vorschau der letzten Nachricht in der Freundesliste.',
                 quickrep: 'Schnellantwort',
                 quickrepdesc: 'Versteckt die Antwortvorschläge in Chats.',
-                inlineimage: 'Bilder Vorschau',
-                inlinedesc: 'Ersetzt Links zu Bildern wenn möglich mit einer klickbaren Vorschau.',
                 offlinefriend: 'Offline Freunde',
                 offlinefrienddesc: 'Versteckt offline Freunde in der Freundesliste.',
                 invisiblefriend: 'Unsichtbare Freunde',
@@ -4000,7 +3998,7 @@ function enhancedTranslate(lang, log = false) {
             }
             break
         case 'sk': // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/142
-            var translation = {
+            var translate_load = {
                 default: 'Pôvodné',
                 native: 'Natívne',
                 hide: 'Skry',
@@ -4019,16 +4017,16 @@ function enhancedTranslate(lang, log = false) {
                 games: 'Hry',
                 allgames: 'Všetky hry',
                 leavepro: 'Hry čoskoro opúšťajúce Pro',
-                bundles: 'Balíčky',
-                addons: 'Prídavky',
+                bundles: 'Balíky',
+                addons: 'Doplnky',
                 wishlist: 'Wishlist',
-                responsive: 'Responsívne',
+                responsive: 'Dynamické',
                 windowed: 'V okne',
                 fullscreen: 'Na celú obrazovku',
                 onsale: 'V akcii',
-                prodeals: 'Pro deals',
+                prodeals: 'Výhodné ponuky Pro',
                 userprofile: 'Môj profil',
-                usermedia: 'Screenshoty a uložené stavy hier',
+                usermedia: 'Zábery a herné situácie',
                 searchbtnbase: 'Vyhľadaj',
                 avatarpopup: 'URL ku novému avataru (ponechaj prázdne pre základný):',
                 sessiontime: 'Uplynutý čas',
@@ -4036,9 +4034,9 @@ function enhancedTranslate(lang, log = false) {
                 resolution: 'Rozlíšenie',
                 hardware: 'Hardware',
                 software: 'Software',
-                trafficsession: 'Session prenos',
-                trafficcurrent: 'Aktuálny prenos',
-                trafficaverage: 'Priemerný prenos',
+                trafficsession: 'Celkový dátový prenos',
+                trafficcurrent: 'Aktuálny dátový prenos',
+                trafficaverage: 'Priemerný dátový prenos',
                 packetloss: 'Stratené pakety',
                 framedrop: 'Stratené frejmy',
                 latency: 'Odozva',
@@ -4046,18 +4044,19 @@ function enhancedTranslate(lang, log = false) {
                 decodetime: 'Trvanie dekódovania',
                 compression: 'Kompresia',
                 bitrate: 'Bitrate',
-                streammon: 'Monitor streamovania',
-                stream: 'Stream',
+                streammon: 'Monitoring dátového prenosu',
+                stream: 'Dátový prenos',
                 network: 'Sieť',
-                session: 'Session',
+                session: 'Relácia',
                 extdetail: 'Rozšírené detaily',
                 maxresolution: 'Maximálne rozlíšenie',
                 fps4K: 'Framerate pri 4K',
-                datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro predplatné).\
-                            Pri hrách ktoré majú rozlíšenie/framerate možnosť, je uprednostnené rozlíšenie.\
-                            Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
-                            a <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">kompletná databáza</a> sa nachádza tu.',
-                noteOne: 'Špecifikácie potvrdené vývojármi / distribútorom',
+                datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro odber).\
+                Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
+                je uprednostnené rozlíšenie.\
+                Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                a <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">kompletná databáza</a> sa nachádza tu.',
+                noteOne: 'Špecifikácie potvrdené vývojármi/distribútorom',
                 noteTwo: 'Na základe presného počtu pixelov',
                 noteThree: '60FPS pri 1080p móde',
                 noteFour: '30FPS pri 1080p móde',
@@ -4072,26 +4071,26 @@ function enhancedTranslate(lang, log = false) {
                 avatar: 'Avatar',
                 interface: 'Rozhranie',
                 shortcut: 'StadiaIcons',
-                shortcuttitle: 'Nainštaluj skratku pre',
+                shortcuttitle: 'Nainštaluj skratku do hry',
                 shortcutdesc: 'Umožňuje inštaláciu skratky do hry na tomto zariadení.',
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Pozri na StadiaStats.GG',
                 stadiastatsdesc: 'Umožňuje priamu skratku do hernej štatistiky, link do Tvojho profilu a "Nájdi kamoša" funkciu na stadiastats.gg.',
                 gridsize: 'Veľkosť mriežky herných ikon',
-                griddesc: 'Nastavuje počet herných ikon na riadok v zozname hier.',
+                griddesc: 'Nastavuje počet herných ikon na riadok v knižnici hier.',
                 clock: 'Hodiny',
                 clockdesc: 'Zobrazuje aktuálny čas v zozname priateľov, v hernom info panely, alebo v oboch.',
                 friendslist: 'Zoznam priateľov',
                 igoverlay: 'Herný info panel',
                 listoverlay: 'Priatelia a info panel',
                 filter: 'Filter hier',
-                filterdesc: 'Filter umožňuje sprehľadnenie zoznamu tým že skryje nechcené hry pomocou prepínača. Prepínač sa nachádza v pravo hore nad zoznamom hier.',
+                filterdesc: 'Filter umožňuje sprehľadnenie knižnice tým že skryje nechcené hry pomocou prepínača. Prepínač sa nachádza v pravo hore nad knižnicou hier.',
                 invitebase: 'Skopíruj pozývací link',
                 inviteactive: 'Skopírované!',
                 gamelabel: 'Visačky',
                 gamelabeldesc: 'Odstráni "Pro" a iné visačky z hier na domovskej obrazovke.',
-                homegallery: 'Používateľova galérie',
-                homegallerydesc: 'Skryje sekciu "Screenshoty" na spodku domovskej obrazovky.',
+                homegallery: 'Používateľova galéria',
+                homegallerydesc: 'Skryje sekciu "Zábery a herné situácie" na spodku domovskej obrazovky.',
                 quickprev: 'Náhľad správ',
                 quickprevdesc: 'Skryje náhľady správ v zozname priateľov.',
                 quickrep: 'Rýchla odpoveď',
@@ -4102,14 +4101,15 @@ function enhancedTranslate(lang, log = false) {
                 invisiblefrienddesc: 'Skryje priateľov s "neznámym" statusom v zozname.',
                 notification: 'Notifikácie',
                 notificationdesc: 'Zobrazenie notifikácií keď je Stadia Enhanced aktualizovaná na novú verziu. ("Automatické" skrytie notifikácie po 5 sekundách, "Manuálne" skrytie notifikácie po prvej používateľovej interakcii).',
-                streammode: 'Streaming mód',
-                streammodedesc: 'Zahmlí niektoré elementy používateľovho rozhrania (napr. Zoznam priateľov, atď.) počas streamovania na iné platformy a cez streamovacie nástroje (napr. OBS / Discord).',
+                streammode: 'Súkromie pri zdielanom prenose',
+                streammodedesc: 'Zahmlí niektoré elementy používateľovho rozhrania (napr. Zoznam priateľov, atď.) počas zdielaného prenosu (streamovania) na iné platformy a pri zdielaní cez streamovacie nástroje (napr. OBS / Discord).',
                 catprev: 'Visačky kategórií',
                 catprevdesc: 'Skryje visačky herných kategórií v info náhľade hry pod kurzorom myši.',
-                streammondesc: 'Aktivuj Monitor streamovania ihneď ako sa spustí hra.',
+                streammondesc: 'Aktivuj Monitoring dátového prenosu ihneď ako sa spustí hra.',
                 resolutiondesc: 'Požadované rozlíšenie. 1440p a 2160p módy vyžadujú VP9 kodek.',
                 codecdesc: 'Kodek použitý počas hrania.',
                 confirmreset: 'Si si istý že chceš vymazať nastavenia?',
+                statistics: undefined,
                 gamesfinished: 'Prejdené hry',
                 achievementsunlocked: 'Dosiahnuté ačívmenty',
                 totalPlayTime: 'Celkový čas hrania',
@@ -4118,7 +4118,7 @@ function enhancedTranslate(lang, log = false) {
                 inlineimage: 'Náhľad obrázku',
                 inlinedesc: 'Nahradí linky ku obrázkom v štandardných formátoch za kliknuteľné náhľady.',
                 familyelements: 'Zdieľanie v rámci rodiny',
-                familyelementsdesc: 'Skryje "Share this game with family" možnosť.',
+                familyelementsdesc: 'Skryje "Zdieľať túto hru s rodinou" možnosť v info náhľade.',
                 donations: 'Prispej!',
                 reportbug: 'Nahlásiť chybu',
                 resetsettings: 'Vymazať nastavenia'
@@ -4429,7 +4429,7 @@ function enhancedTranslate(lang, log = false) {
                 Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
                 e l\'intero database potete trovarlo <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">qui</a>.',
                 noteOne: 'Specifiche confermate dagli sviluppatori/editori',
-                noteTwo: 'Conto dei pixel',
+                noteTwo: 'Numero di pixel',
                 noteThree: '60 FPS in modalità 1080p',
                 noteFour: '30 FPS in modalità 1080p',
                 noteFive: 'Alterna Prestazioni/Qualità',

@@ -4,7 +4,7 @@
   <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/header-mockup.gif"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.15.2-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.15.3-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 
@@ -21,6 +21,8 @@
 * Many possible adjustments for the user interface, to allow for a cleaner homescreen
 * The ability to filter games, or install shortcuts for them on your device
 * Slight tweaks to your messaging experience, including emoji support
+* Discord presence support via DiscordRPC
+* Extended details section on store pages, displaying i.e. resolution and framerate
 
 ## Installation & Usage
 
