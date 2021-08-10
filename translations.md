@@ -91,9 +91,9 @@ var translation = {
     maxresolution: 'Maximum Resolution',
     fps4K: 'Framerate @ 4K',
     datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
-        On games with a resolution/framerate toggle, resolution was picked. \
-        This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-        and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
+    On games with a resolution/framerate toggle, resolution was picked. \
+    This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+    and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
     noteOne: 'Specs confirmed by devs/pubs',
     noteTwo: 'Pixel Count',
     noteThree: '60FPS in 1080p mode',
@@ -159,6 +159,9 @@ var translation = {
     familyelementsdesc: 'Hides the "Share this game with family" options.',
     donations: 'Donations',
     reportbug: 'Report a bug',
-    resetsettings: 'Reset Settings'
+    exportset: 'Export settings',
+    importset: 'Import settings',
+    importerror: 'The file you are trying to open does not contain a valid Stadia Enhanced profile.',
+    resetsettings: 'Reset settings'
 }
 ```

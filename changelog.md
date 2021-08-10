@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.16
+
+### 1.16.0
+* Changed settings from being shared across all users via the same browser, to a personal profile for each user
+* Changed old/unused settings to be automatically discarded from user profiles
+* Changed 'Reset all settings' to only reset the current profile, instead of all existing settings
+* Added the ability to import and export the settings of the current profile
+* Added a quick command to display the current profile via `debugEnhanced("profile")`
+* Fixed language selection with multiple logged in users resulting in errors
+* Fixed the Stadia menu displaying wrong stream infos when a previous sessions exists
+* Heavy code cleanup for consistency and optimization
+
 ## Version 1.15
 
 ### 1.15.3
