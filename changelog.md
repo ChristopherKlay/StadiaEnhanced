@@ -2,6 +2,9 @@
 
 ## Version 1.16
 
+### 1.16.1
+* Fixed profile based issues for accounts witht he founder status
+
 ### 1.16.0
 * Changed settings from being shared across all users via the same browser, to a personal profile for each user
 * Changed old/unused settings to be automatically discarded from user profiles
