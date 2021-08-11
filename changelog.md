@@ -2,6 +2,10 @@
 
 ## Version 1.16
 
+### 1.16.2
+* Fixed wishlist filter not working
+* Fixed some games getting added to the wishlist incorrectly
+
 ### 1.16.1
 * Fixed profile based issues for accounts with the founder status
 
