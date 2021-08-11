@@ -7,14 +7,30 @@ console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - ' + enhanced_manifest.
 var enhanced_timerLoadStart = window.performance.now();
 var enhanced_supportedLang = 'en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi|sk'
 var enhanced_local = document.querySelector("html").getAttribute('lang')
-var enhanced_AccountInfo = enhanced_loadUserInfo()
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
-if (enhanced_AccountInfo) {
-    console.log('%cStadia Enhanced' + '%c ⚙️ - User: ' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1] + ' (' + enhanced_AccountInfo[2] + ') (' + enhanced_local + ')', enhanced_consoleEnhanced, '')
-}
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
 
 // Load user settings
+function enhanced_loadUserInfo() {
+    var enhanced_scriptLoad = document.querySelectorAll('script[nonce]')
+    var info = []
+    for (var i = 0; i < enhanced_scriptLoad.length; i++) {
+        if (enhanced_scriptLoad[i].text.includes('AF_initDataCallback({key: \'ds:1\'')) {
+            var nametag = enhanced_scriptLoad[i].text.split('[["').pop().split('"]')[0].split('","')
+            var id = enhanced_scriptLoad[i].text.split('false,null,"').pop().split('"')[0]
+            info.push(nametag[0])
+            info.push(nametag[1])
+            info.push(id)
+            return info
+        }
+    }
+}
+embed(enhanced_loadUserInfo, false)
+
+var enhanced_AccountInfo = enhanced_loadUserInfo()
+if (enhanced_AccountInfo) {
+    console.log('%cStadia Enhanced' + '%c ⚙️ - User: ' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1] + ' (' + enhanced_AccountInfo[2] + ') (' + enhanced_local + ')', enhanced_consoleEnhanced, '')
+}
 var enhanced_storedSettings = localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1])
 
 var enhanced_settings = {
@@ -308,7 +324,7 @@ function enhanced_RTCMonitor() {
     var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
     var enhanced_local = document.querySelector('html').getAttribute('lang')
     var enhanced_lang = enhancedTranslate(enhanced_local)
-    var enhanced_activeUser = document.getElementsByClassName('DlMyQd NTLMMc')[0].textContent
+    var enhanced_AccountInfo = enhanced_loadUserInfo()
 
     // RTC Stream Inject
     var peerConnections = [];
@@ -433,7 +449,7 @@ function enhanced_RTCMonitor() {
                             enhanced_lastBytes = bytesReceived
                             enhanced_lastQpSum = tmp1.qpSum
                             var enhanced_connectionStatus = 'white'
-                            var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_activeUser))
+                            var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
 
                             var enhanced_streamData = `
                                         <section>
@@ -1329,8 +1345,8 @@ enhanced_resolutionPopup.addEventListener('click', function() {
 })
 
 function enhanced_changeResolution() {
-    var enhanced_activeUser = document.getElementsByClassName('DlMyQd NTLMMc')[0].textContent
-    var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_activeUser))
+    var enhanced_AccountInfo = enhanced_loadUserInfo()
+    var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
     var enhancedinject_currentResolution
     var x, y
     setInterval(function() {
@@ -3614,21 +3630,6 @@ function enhanced_pushNotification(content, image, dura) {
     }
 }
 
-function enhanced_loadUserInfo() {
-    var enhanced_scriptLoad = document.querySelectorAll('script[nonce]')
-    var info = []
-    for (var i = 0; i < enhanced_scriptLoad.length; i++) {
-        if (enhanced_scriptLoad[i].text.includes('AF_initDataCallback({key: \'ds:1\'')) {
-            var nametag = enhanced_scriptLoad[i].text.split('[["').pop().split('"]')[0].split('","')
-            var id = enhanced_scriptLoad[i].text.split('false,null,"').pop().split('"')[0]
-            info.push(nametag[0])
-            info.push(nametag[1])
-            info.push(id)
-            return info
-        }
-    }
-}
-
 // Download files
 function enhanced_downloadFile(filename, type, text) {
     // Create dummy element
@@ -3722,7 +3723,7 @@ function debugEnhanced(opt) {
             break
     }
 }
-embed(debugEnhanced, 0)
+embed(debugEnhanced, false)
 
 // Translation
 function enhancedTranslate(lang, log = false) {
