@@ -3,7 +3,7 @@
 ## Version 1.16
 
 ### 1.16.1
-* Fixed profile based issues for accounts witht he founder status
+* Fixed profile based issues for accounts with the founder status
 
 ### 1.16.0
 * Changed settings from being shared across all users via the same browser, to a personal profile for each user
