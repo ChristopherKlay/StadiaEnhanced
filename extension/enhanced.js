@@ -1835,7 +1835,7 @@ enhanced_wishlistHeart.style.cursor = 'pointer'
 enhanced_wishlistHeart.style.userSelect = 'none'
 enhanced_wishlistHeart.tabIndex = '0'
 enhanced_wishlistHeart.addEventListener('click', function() {
-    var enhanced_currentSKU = document.location.href.split('sku/')[1].substring(0, 32)
+    var enhanced_currentSKU = document.location.href.split('sku/')[1].split('?')[0]
 
     if (enhanced_settings.wishlist.includes(enhanced_currentSKU)) {
         enhanced_settings.wishlist = enhanced_settings.wishlist.replace('(' + enhanced_currentSKU + ')', '')
@@ -1978,7 +1978,7 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
                 enhanced_listFilterWishlist.style.color = 'white'
                 enhanced_listFilterWishlist.style.textDecoration = 'none'
-                var enhanced_wishlist = enhanced_settings.wishlist.substring(1, enhanced_wishlist.length - 1).split(')(')
+                var enhanced_wishlist = enhanced_settings.wishlist.substring(1, enhanced_settings.wishlist.length - 1).split(')(')
                 var enhanced_generateStyle = ''
 
                 for (var i = 0; i < enhanced_wishlist.length; i++) {
