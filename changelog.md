@@ -2,6 +2,11 @@
 
 ## Version 1.16
 
+### 1.16.3
+* Changed library count to match page style
+* Changed the translation used for "all games" to a dedicated string
+* Updated hungarian translation
+
 ### 1.16.2
 * Fixed wishlist filter not working
 * Fixed some games getting added to the wishlist incorrectly
