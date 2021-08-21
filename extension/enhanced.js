@@ -886,7 +886,7 @@ enhanced_StoreDropContent.append(enhanced_ubiPlus)
 var enhanced_AllGames = document.createElement('div')
 enhanced_AllGames.className = 'pBvcyf QAAyWd'
 enhanced_AllGames.id = 'enhanced_AllGames'
-enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.all + ' ' + enhanced_lang.games + '</span>'
+enhanced_AllGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.allgames + '</span>'
 enhanced_AllGames.style.cursor = 'pointer'
 enhanced_AllGames.style.userSelect = 'none'
 enhanced_AllGames.style.paddingRight = '2rem'
@@ -2165,10 +2165,11 @@ enhanced_allpayments.style.fontWeight = '500'
 // Game Count
 var enhanced_gameCounter = document.createElement('span')
 enhanced_gameCounter.id = 'enhanced_gameCounter'
-enhanced_gameCounter.style.fontSize = '1rem'
-enhanced_gameCounter.style.verticalAlign = 'middle'
-enhanced_gameCounter.style.transition = 'opacity 0.23s ease-out 0s'
-enhanced_gameCounter.style.color = 'rgba(255,255,255,.6)'
+enhanced_gameCounter.style.fontFamily = '"Roboto",sans-serif'
+enhanced_gameCounter.style.fontSize = '1.25rem'
+enhanced_gameCounter.style.lineHeight = '2rem'
+enhanced_gameCounter.style.fontWeight = '400'
+enhanced_gameCounter.style.color = '#a8adb3'
 
 // Total Friend Count
 var enhanced_friendCount = document.createElement('span')
@@ -2385,7 +2386,7 @@ setInterval(function() {
         var enhanced_homescreenGrids = document.getElementsByClassName('lEPylf KnM5Wc')
         if (enhanced_homescreenGrids.length > 0) {
             enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.GqLi4d').length
-            enhanced_gameCounter.textContent = ' (' + enhanced_homescreenGrids + ')'
+            enhanced_gameCounter.textContent = ' ' + enhanced_homescreenGrids
             secureInsert(enhanced_gameCounter, 'div[jsname="HXYfLc"] .HZ5mJ', 0)
         }
 
@@ -4005,13 +4006,13 @@ function enhancedTranslate(lang, log = false) {
                 disabled: 'Tiltva',
                 auto: 'Automatikus',
                 manual: 'Manuális',
-                all: undefined,
-                locked: undefined,
-                complete: undefined,
-                incomplete: undefined,
+                all: 'Összes',
+                locked: 'Zárolva',
+                complete: 'Befejezett',
+                incomplete: 'Befejezetlen',
                 games: 'Játékok',
-                allgames: undefined,
-                leavepro: undefined,
+                allgames: 'Összes Játék',
+                leavepro: 'Pro-ból kikerül',
                 bundles: 'Csomagok',
                 addons: 'Kiegészítők',
                 wishlist: 'Kívánságlista',
@@ -4038,44 +4039,47 @@ function enhancedTranslate(lang, log = false) {
                 jitter: 'Jitter puffer',
                 decodetime: 'Dekódolási idő',
                 compression: 'Tömörítés',
-                bitrate: undefined,
+                bitrate: 'Bitráta',
                 streammon: 'Stream Monitor',
                 stream: 'Stream',
-                network: undefined,
-                session: undefined,
-                extdetail: undefined,
-                maxresolution: undefined,
-                fps4K: undefined,
-                datadiscl: undefined,
-                noteOne: undefined,
-                noteTwo: undefined,
-                noteThree: undefined,
-                noteFour: undefined,
-                noteFive: undefined,
-                noteSix: undefined,
-                noteSeven: undefined,
+                network: 'Hálózat',
+                session: 'Munkamenet',
+                extdetail: 'Kiegészítő Adatok',
+                maxresolution: 'Maximum Felbontás',
+                fps4K: 'Képkocka @ 4K',
+                datadiscl: 'Ez a maximum elérhető képkockaszám 4K módban játszva (Pro előfizetés szükséges),\
+azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
+Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">itt</a>.',
+                noteOne: 'Specifikációkat megerősítette a fejlesző/kiadó',
+                noteTwo: 'Pixel Számláló',
+                noteThree: '60FPS 1080p módban',
+                noteFour: '30FPS 1080p módban',
+                noteFive: 'Teljesítmény/Minőség választás',
+                noteSix: 'Nincs HDR beállítás',
+                noteSeven: 'Nem kompatibilis a 4K móddal',
                 community: 'Közösség',
                 speedtest: 'Sebesség teszt',
                 quickaccess: 'Gyors elérés',
                 messages: 'Üzenetek',
-                comfeature: undefined,
+                comfeature: "Közösségi Funkciók",
                 avatar: 'Avatar',
                 interface: 'Megjelenítés',
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Hivatkozás telepítése:',
                 shortcutdesc: 'Parancsikon létrehozása közvetlen játék indításhoz',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
+                stadiastats: 'StadiaStats',
+                stadiastatsopen: 'StadiaStats.GG megnyitása',
+                stadiastatsdesc: 'Közvetlen elérés a játék statisztikákhoz, profilhoz és a "find-a-buddy" rendszerhez a stadiastats.gg',
                 gridsize: 'Rács méret',
-                griddesc: undefined,
+                griddesc: 'Játékok száma soronként a Saját Játékkönyvtárban.',
                 clock: 'Óra',
                 clockdesc: 'Az aktuális idő megjelenítése az ismerősök listáján vagy a játékban.',
                 friendslist: 'Ismerősök listája',
                 igoverlay: 'Játékon belüli Overlay',
                 listoverlay: 'Ismerősök listája és Játékon belüli Overlay',
-                filter: undefined,
-                filterdesc: undefined,
+                filter: 'Játekszűrő',
+                filterdesc: 'Saját játékkönyvtár játékainak rendezése azok elrejtésével.  A rendezést, szűrés ki/be kapcsolható a könyvár jobb felső sarkában a "szem" ikonnal.',
                 invitebase: 'Meghívási hivatkozás másolása',
                 inviteactive: 'Vágólapra másolva!',
                 gamelabel: 'Játek Címkék',
@@ -4090,8 +4094,9 @@ function enhancedTranslate(lang, log = false) {
                 offlinefrienddesc: 'Elrejti az offline ismerősöket a listából.',
                 invisiblefriend: 'Láthatatlan Ismerősök',
                 invisiblefrienddesc: 'Elrejti az ismeretlen státuszú ismerősöket a listán.',
-                notification: undefined,
-                notificationdesc: undefined,
+                notification: 'Értesítések',
+                notificationdesc: 'A Stadia Enhanced frissülésekor értesítést jelenít meg.("Auto" 5 másodperc múlva eltűnik, "Manual" kézzel kell bezárni).',
+                statistics: 'Statisztikák',
                 streammode: 'Streaming Mód',
                 streammodedesc: 'Stream-elés közben olvashatatlanná tesz bizonyos elemeket. (pl.: ismerősök listája - OBS vagy Discord használatakor)',
                 catprev: 'Kategória megjelenítés',
@@ -4100,7 +4105,7 @@ function enhancedTranslate(lang, log = false) {
                 resolutiondesc: 'Streameléshez beállított felbontás. 1440p és 2160p beállításhoz VP9 videó kódolás támogatás szükséges.',
                 codecdesc: 'A stream-hez használt videó kódoló eljárás.',
                 confirmreset: 'Biztosan vissza akarod állítani a beállításokat?',
-                statistics: undefined,
+                statistics: 'Statisztikák',
                 gamesfinished: 'Vége a játéknak',
                 achievementsunlocked: 'Megszerzett jutalom',
                 totalPlayTime: 'Total Playtime',
@@ -4110,11 +4115,11 @@ function enhancedTranslate(lang, log = false) {
                 inlinedesc: 'Gyakori képformátum (jpg/gif/png) linkek helyettesítése kattintható előnézeti képekkel.',
                 familyelements: 'Családi megosztás',
                 familyelementsdesc: 'Elrejti "A játék megosztása a családdal" lehetőséget a játékoknál, ha már létrehoztál családi csoportot.',
-                donations: undefined,
-                reportbug: undefined,
-                exportset: undefined,
-                importset: undefined,
-                importerror: undefined,
+                donations: 'Támogatás',
+                reportbug: 'Hibajelentés',
+                exportset: 'Beállítások Exportálása',
+                importset: 'Beállítások Importálása',
+                importerror: 'A megnyitni kívánt file nem tartalmaz valós Stadia Enhanced profilt.',
                 resetsettings: 'Beállítások alaphelyzetbe állítása'
             }
             break
