@@ -16,13 +16,13 @@
 * Changeable library size on the home screen, toggle between 2 up to 6 items per row
 * Settings for used stream codec and resolution
 * Quick access menu for screenshots and video captures, speedtest, the community and more
-* Store search bar to quickly find games
 * Direct links to a list of Pro titles and games currently on sale
 * Many possible adjustments for the user interface, to allow for a cleaner homescreen
 * The ability to filter games, or install shortcuts for them on your device
 * Slight tweaks to your messaging experience, including emoji support
 * Discord presence support via DiscordRPC
 * Extended details section on store pages, displaying i.e. resolution and framerate
+* And more
 
 ## Installation & Usage
 
