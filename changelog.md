@@ -2,6 +2,9 @@
 
 ## Version 1.16
 
+### 1.16.4
+* Fixed resolution options not being applied until the page is refreshed, due to a profile error
+
 ### 1.16.3
 * Changed library count to match page style
 * Changed the translation used for "all games" to a dedicated string
