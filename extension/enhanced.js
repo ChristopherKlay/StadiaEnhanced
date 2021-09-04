@@ -1346,48 +1346,43 @@ enhanced_resolutionPopup.addEventListener('click', function() {
 
 function enhanced_changeResolution() {
     var enhanced_AccountInfo = enhanced_loadUserInfo()
-    var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
-    var enhancedinject_currentResolution
     var x, y
     setInterval(function() {
-        var enhancedinject_newResolution = enhanced_settings.resolution
-        if (enhancedinject_newResolution != enhancedinject_currentResolution) {
-            enhancedinject_currentResolution = enhancedinject_newResolution
-            switch (enhancedinject_currentResolution) {
-                case 0:
-                    x = enhanced_settings.desktopWidth
-                    y = enhanced_settings.desktopHeight
-                    break
-                case 1:
-                    x = 2560
-                    y = 1440
-                    break
-                case 2:
-                    x = 3840
-                    y = 2160
-                    break
-            }
-
-            Object.defineProperties(window.screen, {
-                "availWidth": {
-                    value: x,
-                    configurable: true
-                },
-                "width": {
-                    value: x,
-                    configurable: true
-                },
-                "availHeight": {
-                    value: y,
-                    configurable: true
-                },
-                "height": {
-                    value: y,
-                    configurable: true
-                }
-            })
+        var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
+        switch (enhanced_settings.resolution) {
+            case 0:
+                x = enhanced_settings.desktopWidth
+                y = enhanced_settings.desktopHeight
+                break
+            case 1:
+                x = 2560
+                y = 1440
+                break
+            case 2:
+                x = 3840
+                y = 2160
+                break
         }
-    }, 200)
+
+        Object.defineProperties(window.screen, {
+            "availWidth": {
+                value: x,
+                configurable: true
+            },
+            "width": {
+                value: x,
+                configurable: true
+            },
+            "availHeight": {
+                value: y,
+                configurable: true
+            },
+            "height": {
+                value: y,
+                configurable: true
+            }
+        })
+    }, 1000)
 }
 embed(enhanced_changeResolution)
 
