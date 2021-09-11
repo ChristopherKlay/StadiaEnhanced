@@ -1,9 +1,9 @@
-﻿Title,Maximum Resolution (EN),Framerate in 4K mode (EN),HDR/SDR (EN),Cross-platform (EN),ID,Chris' Comments Box
+﻿Title,Maximum Resolution (EN),Framerate in 4K mode (EN),HDR/SDR (EN),Chris' Crossplay Box,ID,Chris' Comments Box
 A Place for the Unwilling,1920x1080,60,SDR,None,d5a3bd3f904647e1b72b346be7330c39rcp1,Pixel Count | Specs confirmed by devs/pubs
-A.O.T. 2: Final Battle,3840x2160,30,SDR,None,a38d988fb142400c947bf0a7b37fd404rcp1,Specs confirmed by devs/pubs | 60FPS in 1080p mode | Pixel Count
-Ary and the Secret of Seasons,1920x1080,60,SDR,None,016636d5f49f4862be3ff8cbcf6c7adercp1,Specs confirmed by devs/pubs | Not compatible with 4K mode | Pixel Count
+A.O.T. 2: Final Battle,3840x2160,30,SDR,None,a38d988fb142400c947bf0a7b37fd404rcp1,Pixel Count | Specs confirmed by devs/pubs | 60FPS in 1080p mode
+Ary and the Secret of Seasons,1920x1080,60,SDR,None,016636d5f49f4862be3ff8cbcf6c7adercp1,Pixel Count | Specs confirmed by devs/pubs | Not compatible with 4K mode
 Assassin's Creed Odyssey,2880x1620,30,HDR,None,8b7e7f7036e5483eaa8745d46248536crcp1,Pixel Count | Specs confirmed by devs/pubs | 30FPS in 1080p mode
-Assassin's Creed Origins,3840x2160,30,HDR,None,11dfda5b2d78475d8624972b9b78c995rcp1,30FPS in 1080p mode | No HDR settings | Pixel Count
+Assassin's Creed Origins,3840x2160,30,HDR,None,11dfda5b2d78475d8624972b9b78c995rcp1,Pixel Count | 30FPS in 1080p mode | No HDR settings
 Assassin's Creed Syndicate,2880x1620,30,HDR,None,88a2945345f744519c5148ddd54f26d1rcp1,Pixel Count | 30FPS in 1080p mode | No HDR settings
 Assassin's Creed Unity,3200x1800,30,HDR,None,92f77c19718444499ffb3054dd97ca36rcp1,Pixel Count | 30FPS in 1080p mode | No HDR settings
 Assassin's Creed: Valhalla,3840x2160,30,HDR,None,377f50584071472096bcda89b0839bc3rcp1,Pixel Count | 30FPS in 1080p mode
@@ -11,7 +11,7 @@ AVICII Invector,3840x2160,30,SDR,None,2c8b9ab112e5460db922dc7353381256rcp1,Pixel
 Baldur's Gate III,3840x2160,30,HDR,PC,41de509cbdbb4a13828636099c57731arcp1,Pixel Count | 30FPS in 1080p mode
 Blue Fire,3840x2160,60,SDR,None,e9c4d2fc77424c34b0cd570bd761aab0rcp1,Pixel Count
 Borderlands 3,3200x1800,30,HDR,None,be080ad40b434ca289166031d3e88623rcp1,Pixel Count | 60FPS in 1080p mode
-Cake Bash,3840x2160,60,SDR,PC,19efd5fa36794d7b8bc87de68124e705rcp1,Performance/Quality toggle | Pixel Count | Specs confirmed by devs/pubs
+Cake Bash,3840x2160,60,SDR,PC,19efd5fa36794d7b8bc87de68124e705rcp1,Pixel Count | Performance/Quality toggle | Specs confirmed by devs/pubs
 Celeste,Pixel Art/Retro,60,SDR,None,c911998e4f8d4c6ea6712c5ad33e4a54rcp1,Pixel Count
 Chronos: Before the Ashes,3840x2160,60,SDR,None,3f94b62fa50c4202be10472947478f8frcp1,Pixel Count
 Cosmic Star Heroine,Pixel Art/Retro,60,SDR,None,88396e4e44c94d43b4259e6bedbd582crcp1,Not compatible with 4K mode
@@ -20,18 +20,18 @@ Cris Tales,3840x2160,60,HDR,None,e5355e531fdb453f9876400180a1c254rcp1,Pixel Coun
 Cthulhu Saves Christmas,Pixel Art/Retro,60,SDR,None,769a088b9ef04c04b341911a1ef8b8ecrcp1,Not compatible with 4K mode
 Cyberpunk,3200x1800,30,HDR,None,49697e672bc34e7d8a5f73f78cb580d0rcp1,Pixel Count | Specs confirmed by devs/pubs | Performance/Quality toggle | 60FPS in 1080p mode | 30FPS in 1080p mode
 Darksiders Genesis,2560x1440,60,SDR,None,f39390395ed5444d8e9b23460c8f9152rcp1,Pixel Count
-Dead by Daylight,2880x1620,60,SDR,"PC,Xbox,PlayStation,Nintendo Switch",b67e43f2b05f4ba7acc56a4b222568aarcp1,Pixel Count
-Destiny 2,1920x1080,60,HDR,"PC,Xbox,PlayStation",20e792017ab34ad89b70dc17a5c72d68rcp1,Pixel Count | Specs confirmed by devs/pubs | No HDR settings
+Dead by Daylight,2880x1620,60,SDR,PC | Xbox | PlayStation | Nintendo Switch,b67e43f2b05f4ba7acc56a4b222568aarcp1,Pixel Count
+Destiny 2,1920x1080,60,HDR,PC | Xbox | PlayStation,20e792017ab34ad89b70dc17a5c72d68rcp1,Pixel Count | Specs confirmed by devs/pubs | No HDR settings
 Destroy All Humans,1920x1080,30,SDR,None,0fd3103549b54c7e89afd6eed83672cercp1,Pixel Count | Not compatible with 4K mode
 DiRT 5,1920x1080,60,,None,ed81a01114044edcacfa52656b259d41rcp1,Pixel Count
 Disco Elysium,3840x2160,60,SDR,None,01082780d6f4421c9635b22021f05ff5rcp1,Pixel Count
 DOOM (2016),3200x1800,60,SDR,None,cc1a8e0e94d54f15a22149fed93bbd7arcp1,Pixel Count
 DOOM 64,Pixel Art/Retro,60,SDR,None,5a0e892c933c4f56b4d87976cb655ecfrcp1,
-DOOM Eternal,3200x1800,60,HDR,None,632522c846a041ce801e47b96ba2e265rcp1,Specs confirmed by devs/pubs | Pixel Count
+DOOM Eternal,3200x1800,60,HDR,None,632522c846a041ce801e47b96ba2e265rcp1,Pixel Count | Specs confirmed by devs/pubs
 DRAGON BALL XENOVERSE 2,3840x2160,60,SDR,None,80a70c13987841b3a2aedbcac54784abrcp1,Pixel Count
 DRAGON QUEST XI S: Echoes of an Elusive Age,1728x972,60,SDR,None,6cf458a458cd4b2e8161c740c4844621rcp1,Pixel Count | No HDR settings
-El Hijo - A Wild West Tale,3840x2160,60,SDR,None,d46f9c2d858d41d6ae4cc12d186657f0rcp1,Specs confirmed by devs/pubs | Pixel Count
-Embr,1920x1080,60,HDR,"PC,PlayStation,Xbox",d599576cddfc400f804b889460e84cb3rcp1,Pixel Count | Specs confirmed by devs/pubs | Not compatible with 4K mode
+El Hijo - A Wild West Tale,3840x2160,60,SDR,None,d46f9c2d858d41d6ae4cc12d186657f0rcp1,Pixel Count | Specs confirmed by devs/pubs
+Embr,1920x1080,60,HDR,PC | PlayStation | Xbox,d599576cddfc400f804b889460e84cb3rcp1,Pixel Count | Specs confirmed by devs/pubs | Not compatible with 4K mode
 Enter the Gungeon,Pixel Art/Retro,60,SDR,None,8f0addba5d3d4c05b07d7b59481e0171rcp1,Not compatible with 4K mode
 Epistory - Typing Chronicles,3840x2160,60,SDR,None,cddb29b222924d11b2bf03a82fee477arcp1,Pixel Count
 Everspace,1920x1080,60,SDR,None,44752f1774ca4508a2c45e57121d7e8frcp1,Pixel Count | Specs confirmed by devs/pubs | Not compatible with 4K mode
@@ -52,8 +52,8 @@ Gods Will Fall,3840x2160,60,SDR,None,f001c122cb70445d8a247d5b6f6334cbrcp1,Pixel 
 GRID,3072x1728,60,HDR,None,ca805d3d37404654a91d2ea62fad7bd4rcp1,Pixel Count
 Gunsport,Pixel Art/Retro,60,SDR,None,16330bd770134d85b5bef3cc6b1407ffrcp1,
 GYLT,3840x2160,60,HDR,None,18a3cc2bb111419c8ac873086d04dfaarcp1,Pixel Count
-Hello Neighbor,1472x828,60,SDR,None,9dc548a191914b419cc80802ca64788frcp1,Not compatible with 4K mode | Pixel Count
-Hello Neighbor: Hide and Seek,1472x828,60,SDR,None,cf784a0f4c554ce68a2880cb461bd903rcp1,Not compatible with 4K mode | Pixel Count
+Hello Neighbor,1472x828,60,SDR,None,9dc548a191914b419cc80802ca64788frcp1,Pixel Count | Not compatible with 4K mode
+Hello Neighbor: Hide and Seek,1472x828,60,SDR,None,cf784a0f4c554ce68a2880cb461bd903rcp1,Pixel Count | Not compatible with 4K mode
 Hellpoint,1920x1080,60,SDR,None,c87989ee2285400c8ac96b8e52f57991rcp1,Pixel Count
 HITMAN - The Complete First Season,2560x1440,60,HDR,None,990ec302c2cd4ba7817cedcf633ab20frcp1,Pixel Count
 HITMAN 2,2560x1440,60,HDR,None,990ec302c2cd4ba7817cedcf633ab20frcp1,Pixel Count
@@ -74,13 +74,13 @@ Just Dance 2021,,60,HDR,None,b87ca389d6454546af28dff82898406arcp1,
 Just Shapes & Beats,3840x2160,60,HDR,None,6b43cecd79734ba28cef5894985c65f1rcp1,Pixel Count | Specs confirmed by devs/pubs
 Kaze and the Wild Masks,Pixel Art/Retro,60,,None,46f42ce202a6460d897fb43f43e20846rcp1,
 Kemono Heroes,Pixel Art/Retro,,,None,81733d32e2db41f9a58b97aa80c0b2fcrcp1,
-Killer Queen Black,Pixel Art/Retro,60,SDR,"PC,Xbox,Nintendo Switch",3f30ebc3799945fea323f8a663c35501rcp1,Not compatible with 4K mode
+Killer Queen Black,Pixel Art/Retro,60,SDR,PC | Xbox | Nintendo Switch,3f30ebc3799945fea323f8a663c35501rcp1,Not compatible with 4K mode
 Kine,3840x2160,60,SDR,None,da94f3aa88b24eb6ae6fdff798f73355rcp1,Pixel Count | Specs confirmed by devs/pubs
 Kona,2560x1440,60,HDR,None,f5f9708a422a44cc876c240cfa07221drcp1,Pixel Count
-Lara Croft and the Guardian of Light,3840x2160,60,HDR,None,29b3d5d6788f444c8cd59aa0a49d1bd1rcp1,No HDR settings | Pixel Count
+Lara Croft and the Guardian of Light,3840x2160,60,HDR,None,29b3d5d6788f444c8cd59aa0a49d1bd1rcp1,Pixel Count | No HDR settings
 Lara Croft and the Temple of Osiris,2560x1440,60,HDR,None,6d0d865669774338b3ce888a84da6cdercp1,Pixel Count | No HDR settings
 Legend of Keepers: Career of a Dungeon Manager,Pixel Art/Retro,60,HDR,None,ba593716983f436ea49ae09a531d65b5rcp1,No HDR settings
-Life is Strange: True Colors,,,,None,00c1858d808f469297b1200c8383f5f5rcp1,
+Life is Strange: True Colors,,30,,None,00c1858d808f469297b1200c8383f5f5rcp1,Pixel Count | 30FPS in 1080p mode
 Little Big Workshop,3840x2160,60,SDR,None,e4e8f5e5bc744270a644c554ba3f2962rcp1,Pixel Count
 Little Nightmares,3840x2160,60,SDR,None,3aed855f10b34f618e5f6c6f5467bcf9rcp1,Pixel Count
 Little Nightmares 2,2880x1620,60,SDR,None,0175bc876f55414ca207b2ea6691cfb2rcp1,Pixel Count
@@ -116,8 +116,8 @@ Phoenix Point,3840x2160,30,HDR,None,18ea8c5d2f7e4f40ad783a512da8ef91rcp1,Pixel C
 PHOGS!,3840x2160,60,SDR,None,05b9db9b9b5b489995568afd930a9db3rcp1,Pixel Count | Specs confirmed by devs/pubs
 Pikuniku,3840x2160,30,SDR,None,c02a86f966b044569ee03f80fbc86035rcp1,Pixel Count | 30FPS in 1080p mode
 PixelJunk Raiders,2880x1620,60,SDR,None,5903b3b139194aefa713f216669ee334rcp1,Pixel Count
-PLAYERUNKNOWN'S BATTLEGROUNDS,2560x1440,60,HDR,"PC,PlayStation,Xbox",a4c5eb3f4e614b7fadbba64cba68f849rcp1,Pixel Count | Specs confirmed by devs/pubs
-Power Rangers: Battle for the Grid,1920x1080,60,SDR,"PC,PlayStation,Xbox,Nintendo Switch",bbb1a143aa3449a5a1f236a05c305c9frcp1,Pixel Count | Not compatible with 4K mode
+PLAYERUNKNOWN'S BATTLEGROUNDS,2560x1440,60,HDR,PC | PlayStation | Xbox,a4c5eb3f4e614b7fadbba64cba68f849rcp1,Pixel Count | Specs confirmed by devs/pubs
+Power Rangers: Battle for the Grid,1920x1080,60,SDR,PC | PlayStation | Xbox | Nintendo Switch,bbb1a143aa3449a5a1f236a05c305c9frcp1,Pixel Count | Not compatible with 4K mode
 RAGE 2,1920x1080,60,SDR,None,8615c857d7d54efebd94fe17e3f2896crcp1,Pixel Count | Specs confirmed by devs/pubs
 Red Dead Redemption 2,2560x1440,30,HDR,None,2152a1e96d5b47b18a5df7ca9bb0751frcp1,Pixel Count | Performance/Quality toggle | 60FPS in 1080p mode
 Reigns,3840x2160,60,SDR,None,2677ffb357f946e29b4e86a9f18ea55frcp1,Pixel Count
@@ -183,12 +183,12 @@ Welcome to Elk,1920x1080,60,SDR,None,9fb7a46ff38a4c1d842e9ddd35b24d00rcp1,Pixel 
 West of Loathing,3840x2160,60,SDR,None,0a60fff637b445a797623d0c69433a9crcp1,Pixel Count | Specs confirmed by devs/pubs
 Windbound,3840x2160,60,HDR,None,657210fe20ad402b85bda8f816b80d98rcp1,Pixel Count
 Wolfenstein: Youngblood,2560x1440,60,SDR,None,4884bd9bd7864cf28deef05ef4b69e70rcp1,Pixel Count
-WWE 2K Battlegrounds,2560x1440,60,SDR,"PC,Xbox,PlayStation,Nintendo Switch,No Cross-platform Buddy System",f28e66bbd0984c77ac6a54e8cc3007bdrcp1,Pixel Count
+WWE 2K Battlegrounds,2560x1440,60,SDR,PC | Xbox | PlayStation | Nintendo Switch | No Cross-platform Buddy System,f28e66bbd0984c77ac6a54e8cc3007bdrcp1,Pixel Count
 Ys IX: Monstrum Nox,,,,None,b2c9b37fb3eb4089ad91f30b4e30ce92rcp1,
 Ys VIII: Lacrimosa of DANA,3840x2160,60,SDR,None,7ced0b517b144dd98529ceffab963791rcp1,Pixel Count
 Zombie Army 4: Dead War,2560x1440,60,HDR,None,cba537cccfe3470b8784f88660ea5f09rcp1,Pixel Count
 GRIME,1920x1080,60,SDR,None,d7a58e7a34c843bc91106ef9be366b32rcp1,Pixel Count | Not compatible with 4K mode
-Tom Clancy's Rainbow Six Siege,3840x2160,60,SDR,"PC,No Cross-platform Buddy System",ab3353cfcd1f4a938e40b0ba32c72b64rcp1,Pixel Count
+Tom Clancy's Rainbow Six Siege,3840x2160,60,SDR,PC | No Cross-platform Buddy System,ab3353cfcd1f4a938e40b0ba32c72b64rcp1,Pixel Count
 RAINBOW SIX: EXTRACTION,,,,,e219615d926c4e6e92fae3b567fac94ercp1,
 Riders Republic,,,,,a173ab7957e243d5a2a5668c6edd94b6rcp1,
 Just Dance 2022,,,,,#ERROR!,
