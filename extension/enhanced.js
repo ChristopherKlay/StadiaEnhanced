@@ -121,33 +121,36 @@ enhanced_CSS += `@media screen and (max-width: 639px) {
 // Stream Monitor
 var enhanced_monitorStyle = `
                 #enhanced_streamMonitor {
-                    position: fixed;
-                    width: fit-content;
                     color: rgba(255,255,255,0.9);
+                    cursor: pointer;
                     font-family: "Roboto", sans-serif;
                     font-size: 0.6875rem;
-                    z-index: 1000;
-                    cursor: pointer;
+                    position: fixed;
                     text-shadow: 1px 1px rgba(0,0,0,0.5);
+                    width: fit-content;
+                    z-index: 1000;
                 }
                 #enhanced_streamMonitor section {
                     background: rgba(32,33,36,0.8);
-                    border-radius: 0.5rem;
-                    margin-bottom: 0.5rem;
-                    padding: 0.5rem;
+                    border-radius: 0.5rem 0.5rem;
+                    margin-bottom: 0.4rem;
+                    padding: 0 0 0.4rem 0;
                 }
                 #enhanced_streamMonitor section:last-of-type {
                     margin-bottom: 0;
                 }
+                #enhanced_streamMonitor section:only-child {
+                    padding: 0.2rem 0 0.3rem 0;
+                }
                 #enhanced_streamMonitor .grid {
                     display: grid;
-                    grid-gap: 0.2rem 0.5rem;
-                    grid-template-columns: auto auto 1rem;
+                    grid-gap: 0.2rem 0.4rem;
+                    grid-template-columns: auto auto 0.8rem;
                     grid-template-rows: auto;
-                    padding: 0 0.5rem;
+                    padding: 0 0.4rem 0 0.6rem;
                 }
                 #enhanced_streamMonitor .grid > span:nth-child(2n) {
-                    padding-left: 0.5rem;
+                    text-align: end;
                 }
                 #enhanced_streamMonitor .connection {
                     position: relative;
@@ -155,21 +158,24 @@ var enhanced_monitorStyle = `
                     top: -2px;
                 }
                 #enhanced_streamMonitor .border {
-                    border-top: 1px solid rgba(255,255,255,0.15);
+                    border-top: 1px solid rgba(172,13,87,0.2);
                     grid-column: 1 / 4;
                 }
                 #enhanced_streamMonitor .split {
-                    display: inline-block;
                     color: rgba(255,255,255,0.3);
+                    display: inline-block;
                     padding: 0 0.2rem;
                 }
                 #enhanced_streamMonitor .tag {
-                    padding: 0.2rem;
-                    margin: 0 0 0.5rem 0;
-                    text-align: center;
-                    font-size: 0.875rem;
-                    border-radius: 0.5rem;
+                    border-radius: 0.5rem 0.5rem 0 0;  
                     background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
+                    color: white;
+                    font-size: 0.75rem;
+                    font-weight: 900;
+                    margin: 0 0 0.4rem 0;
+                    padding: 0.2rem 0.4rem;
+                    text-align: start;
+                    text-shadow: none;
                 }`
 
 // Inject CSS
