@@ -10,19 +10,19 @@
 
 ## Features
 
-* Set VP9 or H264 as the preferred codec
-* Enable 2K & 4K (requires GPU with support for VP9 decoding)
-* Stream Monitor (Displays frame/package loss among other things), via the group menu
-* Changeable library size on the home screen, toggle between 2 up to 6 items per row
-* Settings for used stream codec and resolution
-* Quick access menu for screenshots and video captures, speedtest, the community and more
-* Direct links to a list of Pro titles and games currently on sale
-* Many possible adjustments for the user interface, to allow for a cleaner homescreen
-* The ability to filter games, or install shortcuts for them on your device
-* Slight tweaks to your messaging experience, including emoji support
-* Discord presence support via DiscordRPC
-* Extended details section on store pages, displaying i.e. resolution and framerate
-* And more
+- [x] Set VP9 or H264 as the preferred codec
+- [x] Enable 2K & 4K (requires GPU with support for VP9 decoding)
+- [x] Stream Monitor (Displays frame/package loss among other things), via the group menu
+- [x] Changeable library size on the home screen, toggle between 2 up to 6 items per row
+- [x] Settings for used stream codec and resolution
+- [x] Quick access menu for screenshots and video captures, speedtest, the community and more
+- [x] Direct links to a list of Pro titles and games currently on sale
+- [x] Many possible adjustments for the user interface, to allow for a cleaner homescreen
+- [x] The ability to filter games, or install shortcuts for them on your device
+- [x] Slight tweaks to your messaging experience, including emoji support
+- [x] Discord presence support via DiscordRPC
+- [x] Extended details section on store pages, displaying i.e. resolution and framerate
+- [x] And more
 
 ## Installation & Usage
 
