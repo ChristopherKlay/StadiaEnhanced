@@ -2,7 +2,7 @@
 # Translations
 
 # Important Note
-Version `1.11` changed the translation function. All existing and newly submitted languages have been adjusted to the new format. The benefit of this new format is that instead of defaulting to english when a line isn't working or not defined, only those specific lines will now use default values. Which in return means that translations won't be english by default for new values, but "undefined". Updating translations also just became a lot easier, because you can just check what lines still show "undefined" in the current version, instead of having to check which ones are featuring default values.
+Version `1.16.5` changed translation infos used for the extended details section and added a Stadia Pro requirement to `resolutiondesc`.
 
 The command `debugEnhanced("translation")` can also be used via the console on the Stadia website (with Stadia Enhanced installed) to show the loading output of all available translations and the amount of keys that are not defined yet (in other words, defaulting to english).
 
@@ -90,17 +90,18 @@ var translation = {
     extdetail: 'Extended Details',
     maxresolution: 'Maximum Resolution',
     fps4K: 'Framerate @ 4K',
-    datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
+    testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
+    datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
     On games with a resolution/framerate toggle, resolution was picked. \
     This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-    and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
-    noteOne: 'Specs confirmed by devs/pubs',
-    noteTwo: 'Pixel Count',
-    noteThree: '60FPS in 1080p mode',
-    noteFour: '30FPS in 1080p mode',
-    noteFive: 'Performance/Quality toggle',
-    noteSix: 'No HDR settings',
-    noteSeven: 'Not compatible with 4K mode',
+    and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+    noteOne: '4K Mode',
+    noteTwo: '30/60 FPS Toggle',
+    noteThree: '60 FPS in 1080p mode',
+    noteFour: '30 FPS in 1080p Mode',
+    noteFive: 'Not compatible with 4K mode',
+    unsupported: 'Unsupported',
+    crossfriends: 'No Cross-platform Buddy System',
     community: 'Community',
     speedtest: 'Speedtest',
     quickaccess: 'Quick Access',
@@ -144,7 +145,7 @@ var translation = {
     catprev: 'Category Preview',
     catprevdesc: 'Hides the category tags when hovering over a game.',
     streammondesc: 'Activate to start the monitor whenever a game starts.',
-    resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9.',
+    resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9 and Stadia Pro.',
     codecdesc: 'The codec used for game streams.',
     confirmreset: 'Are you sure you want to reset the settings?',
     statistics: 'Statistics',

@@ -2,6 +2,12 @@
 
 ## Version 1.16
 
+### 1.16.5
+* Updated slovak translation
+* Updated the extended details section including crossplay support details
+* Resolution options for 1440/2160p will from now on include a note highlighting that Stadia Pro is required
+* Updated streaming monitor design by [Janca](https://github.com/Janca) (#163)
+
 ### 1.16.4
 * Fixed resolution options not being applied until the page is refreshed, due to a profile error
 
