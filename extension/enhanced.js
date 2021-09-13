@@ -183,29 +183,35 @@ enhanced_injectStyle(enhanced_CSS, 'enhanced_styleGeneral')
 enhanced_injectStyle(enhanced_monitorStyle, 'enhanced_styleMonitor')
 
 // Stadia Public Database by OriginalPenguin
-// Source: https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews
+// Source: https://linktr.ee/StadiaDatabase
 var enhanced_database = []
 chrome.runtime.sendMessage({
     action: 'extdatabase'
 }, function(response) {
-    var data = response.split("\n")
+    var data = csvToArray(response)
     for (var i = 1; i < data.length; i++) {
-        split = data[i].split(",")
         var json = {
-            name: split[0],
-            maxRes: split[1],
-            fps4K: split[2],
-            hdr: split[3],
-            id: split[4],
-            note: split[5]
-                .replace('Specs confirmed by devs/pubs', enhanced_lang.noteOne)
-                .replace('Pixel Count', enhanced_lang.noteTwo)
-                .replace('60FPS in 1080p mode', enhanced_lang.noteThree)
-                .replace('30FPS in 1080p mode', enhanced_lang.noteFour)
-                .replace('Performance/Quality toggle', enhanced_lang.noteFive)
-                .replace('No HDR settings', enhanced_lang.noteSix)
-                .replace('Not compatible with 4K mode', enhanced_lang.noteSeven)
+            name: data[i][0],
+            maxRes: data[i][1]
                 .replaceAll(' | ', ', ')
+                .replace('Unsure', '')
+                .replace('Not Compatible With 4K Mode', enhanced_lang.noteFive),
+            fps4K: data[i][2]
+                .replaceAll(' | ', ', ')
+                .replace('30FPS', '30 FPS')
+                .replace('60FPS', '60 FPS')
+                .replace('60FPS in 1080p Mode', enhanced_lang.noteThree)
+                .replace('30FPS in 1080p Mode', enhanced_lang.noteFour)
+                .replace('30/60FPS Toggle', enhanced_lang.noteFive),
+            proFeat: data[i][3]
+                .replaceAll(' | ', ', ')
+                .replace('4K Mode', enhanced_lang.noteOne),
+            crossplay: data[i][4]
+                .replaceAll(' | ', ', ')
+                .replace('None', enhanced_lang.unsupported)
+                .replace('No Cross-platform Buddy System', enhanced_lang.crossfriends),
+            id: data[i][5],
+            tested: data[i][6]
         }
         enhanced_database.push(json)
     }
@@ -218,8 +224,16 @@ chrome.runtime.sendMessage({
 var enhanced_extendedDetails = document.createElement('div')
 enhanced_extendedDetails.className = 'b2MCG'
 
+// Untested Disclaimer
+var enhanced_untestedDisclaimer = document.createElement('div')
+enhanced_untestedDisclaimer.className = 'uM5FUc'
+enhanced_untestedDisclaimer.style.marginBottom = '1.5rem'
+enhanced_untestedDisclaimer.innerHTML = enhanced_lang.testdiscl
+
+// Data Disclaimer
 var enhanced_extendedDisclaimer = document.createElement('div')
 enhanced_extendedDisclaimer.className = 'uM5FUc'
+enhanced_extendedDisclaimer.style.marginTop = '1.5rem'
 enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 
 // Discord Presence
@@ -2600,27 +2614,49 @@ setInterval(function() {
         if (enhanced_database) {
             for (var i = 0; i < enhanced_database.length; i++) {
                 if (enhanced_database[i].id == document.location.href.split('details/')[1].split('/')[0]) {
-                    var enhanced_databaseDetails = '<div class="CVVXfc"><h2 class="HZ5mJ">' + enhanced_lang.extdetail + '</h2></div>'
 
-                    if (enhanced_database[i].maxRes != '') {
-                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.maxresolution + '</div><div class="tM4Phe">' + enhanced_database[i].maxRes + '</div></div>'
-                    }
-                    if (enhanced_database[i].fps4K != '') {
-                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.fps4K + '</div><div class="tM4Phe">' + enhanced_database[i].fps4K + '</div></div>'
-                    }
-                    if (enhanced_database[i].hdr != '') {
-                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">HDR/SDR</div><div class="tM4Phe">' + enhanced_database[i].hdr + '</div></div>'
-                    }
-                    if (enhanced_database[i].note != '') {
-                        enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Notes</div><div class="tM4Phe">' + enhanced_database[i].note + '</div></div>'
-                    }
+                    // Check for empty entry
+                    var enhanced_fullEntry = enhanced_database[i].maxRes + enhanced_database[i].fps4K + enhanced_database[i].proFeat + enhanced_database[i].crossplay
+                    if (enhanced_fullEntry != '') {
 
-                    if (enhanced_extendedDetails.innerHTML != enhanced_databaseDetails) {
-                        enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
+                        // Section Header
+                        var enhanced_databaseDetails = '<div class="CVVXfc"><h2 class="HZ5mJ">' + enhanced_lang.extdetail + '</h2></div>'
+
+                        // Entry - Resolution
+                        if (enhanced_database[i].maxRes != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.maxresolution + '</div><div class="tM4Phe">' + enhanced_database[i].maxRes + '</div></div>'
+                        }
+
+                        // Entry - Framerate
+                        if (enhanced_database[i].fps4K != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.fps4K + '</div><div class="tM4Phe">' + enhanced_database[i].fps4K + '</div></div>'
+                        }
+
+                        // Entry - Pro Features
+                        if (enhanced_database[i].proFeat != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Pro Features</div><div class="tM4Phe">' + enhanced_database[i].proFeat + '</div></div>'
+                        }
+
+                        // Entry - Crossplay
+                        if (enhanced_database[i].crossplay != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Crossplay</div><div class="tM4Phe">' + enhanced_database[i].crossplay + '</div></div>'
+                        }
+
+                        // Check for changes
+                        if (enhanced_extendedDetails.innerHTML != enhanced_databaseDetails) {
+                            enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
+                        }
+
+                        secureInsert(enhanced_extendedDetails, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+
+                        // Disclaimers
+                        if (enhanced_database[i].tested != '') {
+                            secureInsert(enhanced_untestedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                        }
+
+                        secureInsert(enhanced_extendedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
                     }
                 }
-                secureInsert(enhanced_extendedDetails, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
-                secureInsert(enhanced_extendedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
             }
         }
 
@@ -3645,6 +3681,31 @@ function enhanced_downloadFile(filename, type, text) {
     document.body.removeChild(element)
 }
 
+// CSV2Array
+// https://stackoverflow.com/questions/8493195/
+function csvToArray(text) {
+    let p = '',
+        row = [''],
+        ret = [row],
+        i = 0,
+        r = 0,
+        s = !0,
+        l
+    for (l of text) {
+        if ('"' === l) {
+            if (s && l === p) row[i] += l
+            s = !s
+        } else if (',' === l && s) l = row[++i] = ''
+        else if ('\n' === l && s) {
+            if ('\r' === p) row[i] = row[i].slice(0, -1)
+            row = ret[++r] = [l = ''];
+            i = 0
+        } else row[i] += l
+        p = l
+    }
+    return ret
+}
+
 // Dragable Objects
 function enhanced_dragElement(el) {
     var pos = [0, 0, 0, 0]
@@ -3787,17 +3848,18 @@ function enhancedTranslate(lang, log = false) {
         extdetail: 'Extended Details',
         maxresolution: 'Maximum Resolution',
         fps4K: 'Framerate @ 4K',
-        datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (must be a Pro subscriber).\
+        testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
+        datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
         On games with a resolution/framerate toggle, resolution was picked. \
         This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-        and the full database can be found <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">here</a>.',
-        noteOne: 'Specs confirmed by devs/pubs',
-        noteTwo: 'Pixel Count',
-        noteThree: '60FPS in 1080p mode',
-        noteFour: '30FPS in 1080p mode',
-        noteFive: 'Performance/Quality toggle',
-        noteSix: 'No HDR settings',
-        noteSeven: 'Not compatible with 4K mode',
+        and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+        noteOne: '4K Mode',
+        noteTwo: '30/60 FPS Toggle',
+        noteThree: '60 FPS in 1080p mode',
+        noteFour: '30 FPS in 1080p Mode',
+        noteFive: 'Not compatible with 4K mode',
+        unsupported: 'Unsupported',
+        crossfriends: 'No Cross-platform Buddy System',
         community: 'Community',
         speedtest: 'Speedtest',
         quickaccess: 'Quick Access',
@@ -3841,7 +3903,7 @@ function enhancedTranslate(lang, log = false) {
         catprev: 'Category Preview',
         catprevdesc: 'Hides the category tags when hovering over a game.',
         streammondesc: 'Activate to start the monitor whenever a game starts.',
-        resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9.',
+        resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9 and Stadia Pro.',
         codecdesc: 'The codec used for game streams.',
         confirmreset: 'Are you sure you want to reset the settings?',
         statistics: 'Statistics',
@@ -3919,17 +3981,18 @@ function enhancedTranslate(lang, log = false) {
                 extdetail: 'Erweiterte Details',
                 maxresolution: 'Maximale Auflösung',
                 fps4K: 'Framerate @ 4K',
+                testdiscl: '<b>Vorwarnung:</b> Dieses Spiel muss noch getestet werden.',
                 datadiscl: 'Dies ist die im 4K Modus (Stadia Pro benötigt) maximal erreichbare Framerate.\
                             In Spielen mit Qualität/Performance Option, wurde Qualität gewählt. \
                             Diese Daten werden durch <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> bereitgestellt, \
-                            die vollständige Ansicht befindet sich <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">hier</a>.',
-                noteOne: 'Spezifikationen von Entwickler/Publisher bestätigt',
-                noteTwo: 'Pixel Zählung',
+                            die vollständige Ansicht befindet sich <a href="https://linktr.ee/StadiaDatabase" target="_blank">hier</a>.',
+                noteOne: '4K Modus',
+                noteTwo: '30/60 FPS Umschaltbar',
                 noteThree: '60 FPS im 1080p Modus',
                 noteFour: '30 FPS im 1080p Modus',
-                noteFive: 'Leistung / Qualität umschaltbar',
-                noteSix: 'Keine HDR Einstellungen',
-                noteSeven: 'Nicht kompatibel mit 4K Modus',
+                noteFive: 'Nicht kompatibel mit 4K Modus',
+                unsupported: 'Nicht unterstützt',
+                crossfriends: 'Kein plattformübergreifendes Freunde System',
                 community: 'Community',
                 speedtest: 'Geschwindigkeitstest',
                 quickaccess: 'Schnellzugriff',
@@ -3973,7 +4036,7 @@ function enhancedTranslate(lang, log = false) {
                 catprev: 'Kategorie Vorschau',
                 catprevdesc: 'Entfernt die Anzeige der Kategorien bei Spielen auf dem Startbildschirm.',
                 streammondesc: 'Aktivieren um den Streaming Monitor beim Starten von Spielen automatisch zu starten.',
-                resolutiondesc: 'Die angezielte Auflösung für Spiele. 1440p und 2160p benötigen VP9.',
+                resolutiondesc: 'Die angezielte Auflösung für Spiele. 1440p und 2160p benötigen VP9 und Stadia Pro.',
                 codecdesc: 'Der für Spiele genutzte Codec.',
                 confirmreset: 'Möchtest du die Einstellungen sicher zurücksetzen?',
                 statistics: 'Statistiken',
@@ -4048,17 +4111,18 @@ function enhancedTranslate(lang, log = false) {
                 extdetail: 'Kiegészítő Adatok',
                 maxresolution: 'Maximum Felbontás',
                 fps4K: 'Képkocka @ 4K',
+                testdiscl: undefined,
                 datadiscl: 'Ez a maximum elérhető képkockaszám 4K módban játszva (Pro előfizetés szükséges),\
 azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
 Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">itt</a>.',
-                noteOne: 'Specifikációkat megerősítette a fejlesző/kiadó',
-                noteTwo: 'Pixel Számláló',
+a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS 1080p módban',
                 noteFour: '30FPS 1080p módban',
-                noteFive: 'Teljesítmény/Minőség választás',
-                noteSix: 'Nincs HDR beállítás',
-                noteSeven: 'Nem kompatibilis a 4K móddal',
+                noteFive: 'Nem kompatibilis a 4K móddal',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Közösség',
                 speedtest: 'Sebesség teszt',
                 quickaccess: 'Gyors elérés',
@@ -4178,18 +4242,19 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: 'Rozšírené detaily',
                 maxresolution: 'Maximálne rozlíšenie',
                 fps4K: 'Framerate pri 4K',
+                testdiscl: undefined,
                 datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro odber).\
                 Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
                 je uprednostnené rozlíšenie.\
                 Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
-                a <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">kompletná databáza</a> sa nachádza tu.',
-                noteOne: 'Špecifikácie potvrdené vývojármi/distribútorom',
-                noteTwo: 'Na základe presného počtu pixelov',
+                a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS pri 1080p móde',
                 noteFour: '30FPS pri 1080p móde',
-                noteFive: 'Výkon/Kvalita možnosť',
-                noteSix: 'Žiadne HDR nastavenia',
-                noteSeven: 'Nekompatibilné so 4K módom',
+                noteFive: 'Nekompatibilné so 4K módom',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Komunita',
                 speedtest: 'Test rýchlosti',
                 quickaccess: 'Rýchly prístup',
@@ -4236,7 +4301,7 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 resolutiondesc: 'Požadované rozlíšenie. 1440p a 2160p módy vyžadujú VP9 kodek.',
                 codecdesc: 'Kodek použitý počas hrania.',
                 confirmreset: 'Si si istý že chceš vymazať nastavenia?',
-                statistics: undefined,
+                statistics: 'Štatistiky',
                 gamesfinished: 'Prejdené hry',
                 achievementsunlocked: 'Dosiahnuté ačívmenty',
                 totalPlayTime: 'Celkový čas hrania',
@@ -4248,9 +4313,9 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 familyelementsdesc: 'Skryje "Zdieľať túto hru s rodinou" možnosť v info náhľade.',
                 donations: 'Prispej!',
                 reportbug: 'Nahlásiť chybu',
-                exportset: undefined,
-                importset: undefined,
-                importerror: undefined,
+                exportset: 'Export nastavení',
+                importset: 'Import nastavení',
+                importerror: 'Súbor ktory sa snažíte otvoriť neobsahuje platný Stadia Enhanced profil.',
                 resetsettings: 'Vymazať nastavenia'
             }
             break
@@ -4308,14 +4373,15 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
+                testdiscl: undefined,
                 datadiscl: undefined,
-                noteOne: 'Specificaties bevestigd door Ontwikkelaar/Uitgever',
-                noteTwo: 'Aantal pixels',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS in 1080p modus',
                 noteFour: '30FPS in 1080p modus',
-                noteFive: 'Prestatie/Kwaliteit optie',
-                noteSix: 'Geen HDR instellingen',
-                noteSeven: 'Ondersteunt geen 4K modus',
+                noteFive: 'Ondersteunt geen 4K modus',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Gemeenschap',
                 speedtest: 'Snelheidstest',
                 quickaccess: 'Snelle Toegang',
@@ -4434,14 +4500,15 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
+                testdiscl: undefined,
                 datadiscl: undefined,
-                noteOne: 'Especificaciones confirmadas por desarrolladores y/o editores',
-                noteTwo: 'Cuenta de píxeles',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS en modo 1080p',
                 noteFour: '30FPS en modo 1080p',
-                noteFive: 'Selección Rendimiento/gráficos',
-                noteSix: 'Sin soporte para HDR',
-                noteSeven: 'No es compatible con modo 4K',
+                noteFive: 'No es compatible con modo 4K',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Comunidad',
                 speedtest: 'Test de Velocidad',
                 quickaccess: 'Acceso Rápido',
@@ -4560,17 +4627,18 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: 'Dettaglio Esteso',
                 maxresolution: 'Risoluzione Massima',
                 fps4K: 'Framerate @ 4K',
+                testdiscl: undefined,
                 datadiscl: 'Questo è il framerate massimo ottenuto mentre si gioca in modalità 4k (devi essere un membro abbonato Pro).\
                 Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
                 Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                e l\'intero database potete trovarlo <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">qui</a>.',
-                noteOne: 'Specifiche confermate dagli sviluppatori/editori',
-                noteTwo: 'Numero di pixel',
+                e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60 FPS in modalità 1080p',
                 noteFour: '30 FPS in modalità 1080p',
-                noteFive: 'Alterna Prestazioni/Qualità',
-                noteSix: 'Nessuna impostazione HDR',
-                noteSeven: 'Non compatibile con la modalità 4K',
+                noteFive: 'Non compatibile con la modalità 4K',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Comunità',
                 speedtest: 'Speedtest',
                 quickaccess: 'Accesso Veloce',
@@ -4689,14 +4757,15 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
+                testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: undefined,
                 noteFour: undefined,
                 noteFive: undefined,
-                noteSix: undefined,
-                noteSeven: undefined,
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Fællesskab',
                 speedtest: 'Hastighedstest',
                 quickaccess: 'Hurtig adgang',
@@ -4815,17 +4884,18 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: 'Més detalls',
                 maxresolution: 'Resolució màxima',
                 fps4K: 'Fotogrames per segon en 4K',
+                testdiscl: undefined,
                 datadiscl: 'Aquest és el màxim de fotogrames per segon aconseguit quan es juga un joc en mode 4K (cal ser subscriptor Pro).\
                 En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
                 Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                i es pot trobar la base de dades completa <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">aquí</a>.',
-                noteOne: 'Especificacions confirmades pels desenvolupadors/distribuïdors',
-                noteTwo: 'Recompte de píxels',
+                i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS en mode 1080p',
                 noteFour: '30FPS en mode 1080p',
-                noteFive: 'Permet seleccionar entre mode resolució o velocitat de fotogrames',
-                noteSix: 'Sense opcions d\'HDR',
-                noteSeven: 'No compatible amb el mode 4K',
+                noteFive: 'No compatible amb el mode 4K',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Comunitat',
                 speedtest: 'Prova de velocitat',
                 quickaccess: 'Accés ràpid',
@@ -4944,17 +5014,18 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: 'Mais Detalhes',
                 maxresolution: 'Resolução Máxima',
                 fps4K: 'Fotogramas a 4K',
+                testdiscl: undefined,
                 datadiscl: 'Esta é a taxa máxima de fotogramas alcançada ao jogar um jogo em modo 4K (deve ser um subscritor PRO). \
             Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
             Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-            e a base de dados completa pode ser encontrada <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">aqui</a>.',
-                noteOne: 'Especificações confirmadas pelos desenvolvedores',
-                noteTwo: 'Contador de Pixel',
+            e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS em 1080P',
                 noteFour: '30FPS em 1080P',
-                noteFive: 'Opção Performance/Qualidade',
-                noteSix: 'Sem opções HDR',
-                noteSeven: 'Não é compatível com 4K',
+                noteFive: 'Não é compatível com 4K',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Comunidade',
                 speedtest: 'Teste de Velocidade',
                 quickaccess: 'Acesso Rápido',
@@ -5073,14 +5144,15 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
+                testdiscl: undefined,
                 datadiscl: undefined,
-                noteOne: 'Specifikationer bekräftade av utvecklare/utgivare',
-                noteTwo: 'Pixelräkning',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS i 1080p-läge',
                 noteFour: '30FPS i 1080p-läge',
-                noteFive: 'Prestanda/Grafik-inställning',
-                noteSix: 'Ej HDR-inställningar',
-                noteSeven: 'Ej kompatibelt med 4K-läge',
+                noteFive: 'Ej kompatibelt med 4K-läge',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Gemenskap',
                 speedtest: 'Hastighetstest',
                 quickaccess: 'Snabbmeny',
@@ -5199,17 +5271,18 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: 'Plus de Détails',
                 maxresolution: 'Résolution Maximale',
                 fps4K: 'Framerate en 4K',
+                testdiscl: undefined,
                 datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
                         Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
                         Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                        et la base de données complète est disponible sur <a href="https://airtable.com/shr32bmiOThVvSGar/tblAeJTnP2bzZyews" target="_blank">ici</a>.',
-                noteOne: 'Spécifications confirmées par les créateurs du jeu',
-                noteTwo: 'Compte de Pixels',
+                        et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
+                noteOne: undefined,
+                noteTwo: undefined,
                 noteThree: '60FPS en mode 1080p',
                 noteFour: '30FPS en mode 1080p',
-                noteFive: 'Options de priorité performance/qualité',
-                noteSix: 'Aucun réglage HDR',
-                noteSeven: 'Incompatible avec le mode 4K',
+                noteFive: 'Incompatible avec le mode 4K',
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Communauté',
                 speedtest: 'Test de Débit',
                 quickaccess: 'Accès Rapide',
@@ -5329,14 +5402,15 @@ a teljes adatbázis elérhető <a href="https://airtable.com/shr32bmiOThVvSGar/t
                 extdetail: undefined,
                 maxresolution: undefined,
                 fps4K: undefined,
+                testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: undefined,
                 noteFour: undefined,
                 noteFive: undefined,
-                noteSix: undefined,
-                noteSeven: undefined,
+                unsupported: undefined,
+                crossfriends: undefined,
                 community: 'Сообщество',
                 speedtest: 'Проверка скорости',
                 quickaccess: 'Быстрый доступ',
