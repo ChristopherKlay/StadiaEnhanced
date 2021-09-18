@@ -89,7 +89,7 @@ var translation = {
     session: 'Session',
     extdetail: 'Extended Details',
     maxresolution: 'Maximum Resolution',
-    fps4K: 'Framerate @ 4K',
+    fps: 'Framerate',
     testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
     datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
     On games with a resolution/framerate toggle, resolution was picked. \

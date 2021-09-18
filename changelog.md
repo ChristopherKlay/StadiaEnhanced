@@ -2,6 +2,12 @@
 
 ## Version 1.16
 
+### 1.16.6
+* Added esperanto translation
+* Added hungarian to the language switcher
+* Changed description of framerates in extended details
+* Changed stream data to be handled by the content script
+
 ### 1.16.5
 * Updated slovak translation
 * Updated the extended details section including crossplay support details
