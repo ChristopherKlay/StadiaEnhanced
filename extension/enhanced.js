@@ -9,22 +9,6 @@ var enhanced_supportedLang = 'en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi|sk'
 var enhanced_local = document.querySelector("html").getAttribute('lang')
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
-
-// Load user settings
-function enhanced_loadUserInfo() {
-    var enhanced_scriptLoad = document.querySelectorAll('script[nonce]')
-    var info = []
-    for (var i = 0; i < enhanced_scriptLoad.length; i++) {
-        if (enhanced_scriptLoad[i].text.includes('AF_initDataCallback({key: \'ds:1\'')) {
-            var nametag = enhanced_scriptLoad[i].text.split('[["').pop().split('"]')[0].split('","')
-            var id = enhanced_scriptLoad[i].text.split('false,null,"').pop().split('"')[0]
-            info.push(nametag[0])
-            info.push(nametag[1])
-            info.push(id)
-            return info
-        }
-    }
-}
 embed(enhanced_loadUserInfo, false)
 
 var enhanced_AccountInfo = enhanced_loadUserInfo()
@@ -196,7 +180,7 @@ chrome.runtime.sendMessage({
                 .replaceAll(' | ', ', ')
                 .replace('Unsure', '')
                 .replace('Not Compatible With 4K Mode', enhanced_lang.noteFive),
-            fps4K: data[i][2]
+            fps: data[i][2]
                 .replaceAll(' | ', ', ')
                 .replace('30FPS', '30 FPS')
                 .replace('60FPS', '60 FPS')
@@ -291,7 +275,7 @@ enhanced_menuMonitor.style.whiteSpace = 'nowrap'
 
 // Codec
 var enhanced_menuMonitorCodec = document.createElement('div')
-enhanced_menuMonitorCodec.id = 'enhanced_menuMonitorCodecRes'
+enhanced_menuMonitorCodec.id = 'enhanced_menuMonitorCodec'
 enhanced_menuMonitorCodec.className = 'HPX1od'
 enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
 enhanced_menuMonitor.append(enhanced_menuMonitorCodec)
@@ -340,15 +324,8 @@ function enhanced_updateMonitor(opt) {
 }
 
 function enhanced_RTCMonitor() {
-    var enhanced_streamMonitor = document.getElementById('enhanced_streamMonitor')
-    var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
-    var enhanced_local = document.querySelector('html').getAttribute('lang')
-    var enhanced_lang = enhancedTranslate(enhanced_local)
-    var enhanced_AccountInfo = enhanced_loadUserInfo()
-
     // RTC Stream Inject
     var peerConnections = [];
-
     (function(original) {
         RTCPeerConnection = function() {
             var connection = new original(arguments[0], arguments[1])
@@ -391,23 +368,10 @@ function enhanced_RTCMonitor() {
             enhanced_lastBytes = 0
             enhanced_lastFrames = 0
             enhanced_sessionActive = false
+            localStorage.removeItem('enhanced_streamData')
         } else if (peerConnections.length >= 2) {
             if (!enhanced_sessionActive) {
                 enhanced_sessionStart = new Date()
-                enhanced_streamMonitor.innerHTML = `
-                <section>
-                    <div class="grid">
-                        <span style="grid-column: 1 / 4;">Loading stream data.</span>
-                    </div>
-                </section>`
-
-                // Reset monitor stats
-                document.getElementById('enhanced_menuMonitorCodecRes').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-                document.getElementById('enhanced_menuMonitorRes').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-                document.getElementById('enhanced_menuMonitorLatFps').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">- | -</span></div>'
-                document.getElementById('enhanced_menuMonitorFDrop').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-                document.getElementById('enhanced_menuMonitorDecode').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-
                 enhanced_sessionActive = true
             }
             const openConnections = peerConnections.filter(x => x.connectionState == 'connected')
@@ -425,6 +389,7 @@ function enhanced_RTCMonitor() {
                                 return 'ssrc' == f.type && f.id.endsWith('recv') && f.names().includes('mediaType') && 'video' == f.stat('mediaType')
                             });
 
+                            // Stream Data
                             var time = new Date()
                             var timeSinceUpdate = (time - enhanced_lastTime) / 1000
                             enhanced_lastTime = time
@@ -449,7 +414,6 @@ function enhanced_RTCMonitor() {
                             var jitterBufferDelay = tmp2.jitterBufferDelay * 1000
                             var jitterBufferEmittedCount = tmp2.jitterBufferEmittedCount
                             var jitterBuffer = jitterBufferDelay / jitterBufferEmittedCount
-
                             if (codec == 'VP9') {
                                 var compression = (tmp1.qpSum - enhanced_lastQpSum) / (framesDecoded - enhanced_lastFramesDecoded)
                                 compression = compression.toFixed(1)
@@ -459,158 +423,229 @@ function enhanced_RTCMonitor() {
                             }
                             var decodingTime = (tmp1.totalDecodeTime / tmp2.framesDecoded) * 1000
                             if (tmp3.stat('codecImplementationName') == 'ExternalDecoder') {
-                                decodingType = enhanced_lang.hardware
+                                decodingType = 'Hardware'
                             } else {
-                                decodingType = enhanced_lang.software
+                                decodingType = 'Software'
                             }
 
                             enhanced_lastFrames = framesReceived
                             enhanced_lastFramesDecoded = framesDecoded
                             enhanced_lastBytes = bytesReceived
                             enhanced_lastQpSum = tmp1.qpSum
-                            var enhanced_connectionStatus = 'white'
-                            var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
-
-                            var enhanced_streamData = `
-                                        <section>
-                                            <div class="grid">
-                                                <span style="grid-column: 1 / 4;">Loading stream data.</span>
-                                            </div>
-                                        </section>`
 
                             if (framesReceived > 0) {
-
-                                // Connection Check
-                                if (parseInt(framesReceivedPerSecond) < 1) {
-                                    enhanced_connectionStatus = 'white'
-                                } else if (decodingTime > 12 || framesDroppedPerc > 1 || latency > 100) {
-                                    enhanced_connectionStatus = 'FF7070' // Red
-                                } else if (decodingTime > 10 || framesDroppedPerc > 0.5 || latency > 75) {
-                                    enhanced_connectionStatus = 'FFB83D' // Yellow
-                                } else if (decodingTime > 8.33 || framesDroppedPerc > 0.2 || latency > 40) {
-                                    enhanced_connectionStatus = '00E0BA' // Green
-                                } else {
-                                    enhanced_connectionStatus = '#44BBD8' // Blue
+                                // Store stream data
+                                enhanced_streamData = {
+                                    date: time.split(' ')[0],
+                                    time: time.split(' ')[1],
+                                    sessiontime: enhanced_formatTime(sessionDuration),
+                                    codec: decodingType + ' ' + codec,
+                                    resolution: resolution,
+                                    fps: framesReceivedPerSecond.toFixed(1),
+                                    compression: compression,
+                                    decode: decodingTime.toFixed(2),
+                                    framedrop: framesDropped + ' (' + framesDroppedPerc + '%)',
+                                    framedropPerc: framesDroppedPerc,
+                                    sessionTraffic: enhanced_formatBytes(bytesReceived, 2),
+                                    currentTraffic: enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + 'b',
+                                    averageTraffic: averageData.toFixed(2) + ' GB/h',
+                                    packetloss: packetsLost + ' (' + ((packetsLost / packetsReceived) * 100).toFixed(3) + '%)',
+                                    latency: latency,
+                                    jitter: jitterBuffer.toPrecision(4) + ' ms'
                                 }
-
-                                switch (enhanced_settings.monitorMode) {
-                                    case 0:
-                                        enhanced_streamData = `
-                                        <section>
-                                            <div class="tag">` + enhanced_lang.session + `</div>
-                                            <div class="grid">
-                                                <span>Date</span><span>` + time.split(' ')[0] + `</span><span></span>
-                                                <div class="border"></div>
-                                                <span>Time</span><span>` + time.split(' ')[1] + `</span><span></span>
-                                                <div class="border"></div>
-                                                <span>` + enhanced_lang.sessiontime + `</span><span>` + enhanced_formatTime(sessionDuration) + `</span><span></span>
-                                            </div>
-                                        </section>
-                                        <section>
-                                            <div class="tag">` + enhanced_lang.stream + `</div>
-                                                <div class="grid">
-                                                  <span>` + enhanced_lang.codec + `</span><span>` + decodingType + ' ' + codec + `</span><span></span>
-                                                  <div class="border"></div>
-                                                  <span>` + enhanced_lang.resolution + `</span><span>` + resolution + `</span><span></span>
-                                                  <div class="border"></div>
-                                                  <span>FPS</span><span>` + framesReceivedPerSecond.toFixed(1) + `</span><span></span>
-                                                  <div class="border"></div>`
-
-                                        if (codec == 'VP9') {
-                                            enhanced_streamData += '<span>' + enhanced_lang.compression + '</span><span>' + compression + '</span><span></span>'
-                                        }
-
-                                        enhanced_streamData += '<div class="border"></div>'
-
-                                        if (decodingTime > 12) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                                        } else if (decodingTime > 10) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                                        } else if (decodingTime > 8.33) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                                        } else {
-                                            enhanced_streamData += '<span>' + enhanced_lang.decodetime + '</span><span>' + decodingTime.toFixed(2) + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                                        }
-
-                                        enhanced_streamData += '<div class="border"></div>'
-
-                                        if (framesDroppedPerc > 1) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                                        } else if (framesDroppedPerc > 0.5) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                                        } else if (framesDroppedPerc > 0.2) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                                        } else {
-                                            enhanced_streamData += '<span>' + enhanced_lang.framedrop + '</span><span>' + framesDropped + ' (' + framesDroppedPerc + '%)</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                                        }
-
-                                        enhanced_streamData += '\
-                                            </div>\
-                                        </section>\
-                                        <section>\
-                                            <div class="tag">' + enhanced_lang.network + '</div>\
-                                                <div class="grid">\
-                                                    <span>' + enhanced_lang.trafficsession + '</span><span>' + enhanced_formatBytes(bytesReceived, 2) + '</span><span></span>\
-                                                    <div class="border"></div>\
-                                                    <span>' + enhanced_lang.trafficcurrent + '</span><span>' + enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + 'b/s</span><span></span>\
-                                                    <div class="border"></div>\
-                                                    <span>' + enhanced_lang.trafficaverage + '</span><span>' + averageData.toFixed(2) + ' GB/h</span><span></span>\
-                                                    <div class="border"></div>\
-                                                    <span>' + enhanced_lang.packetloss + '</span><span>' + packetsLost + ' (' + ((packetsLost / packetsReceived) * 100).toFixed(3) + '%)</span><span></span>\
-                                                    <div class="border"></div>'
-
-                                        if (latency > 100) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                                        } else if (latency > 75) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                                        } else if (latency > 40) {
-                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                                        } else {
-                                            enhanced_streamData += '<span>' + enhanced_lang.latency + '</span><span>' + latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                                        }
-
-                                        enhanced_streamData += '\
-                                                    <div class="border"></div>\
-                                                    <span>' + enhanced_lang.jitter + '</span><span>' + jitterBuffer.toPrecision(4) + ' ms</span><span></span>\
-                                                </div>\
-                                            </div>\
-                                        </section>'
-                                        break
-                                    case 1:
-                                        enhanced_streamData = '\
-                                        <section>\
-                                            <div class="grid">\
-                                                <span style="grid-column: 1 / 4;">' + decodingType + ' ' + codec + '<div class="split">|</div>' + resolution + '<div class="split">|</div>' + framesReceivedPerSecond.toFixed(1) + 'fps<div class="split">|</div>' + latency + 'ms<div class="split">|</div>' + decodingTime.toFixed(1) + 'ms<div class="split">|</div><span style="color: ' + enhanced_connectionStatus + ';">⬤</span></span>\
-                                            </div>\
-                                        </section>'
-                                        break
-                                }
-
-                                // Menu Monitor
-                                document.getElementById('enhanced_menuMonitorCodecRes').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">' + decodingType + ' ' + codec + '</span></div>'
-                                document.getElementById('enhanced_menuMonitorRes').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + resolution + '</span></div>'
-                                document.getElementById('enhanced_menuMonitorLatFps').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + latency + 'ms | ' + framesReceivedPerSecond.toFixed(1) + '</span></div>'
-                                document.getElementById('enhanced_menuMonitorFDrop').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + framesDropped + ' (' + framesDroppedPerc + '%)</span></div>'
-                                document.getElementById('enhanced_menuMonitorDecode').innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + decodingTime.toFixed(2) + 'ms</span></div>'
+                                localStorage.setItem('enhanced_streamData', JSON.stringify(enhanced_streamData))
                             }
-
-                            // Reset outside of viewport
-                            var enhanced_boundingBox = enhanced_streamMonitor.getBoundingClientRect()
-                            if (enhanced_boundingBox.top <= 0 && enhanced_boundingBox.left <= 0 && enhanced_boundingBox.bottom >= window.availHeight && enhanced_boundingBox.right >= window.availWidth) {
-                                document.getElementById('enhanced_streamMonitor').style.top = '1rem'
-                                document.getElementById('enhanced_streamMonitor').style.left = '1rem'
-                            }
-                            enhanced_streamMonitor.innerHTML = enhanced_streamData
                         })
                     }
                 }
-
             })
         }
-    }, 1000)
+    }, 500)
 }
-embed(enhancedTranslate, false)
 embed(enhanced_RTCMonitor)
+
+// Update Stream Elements
+setInterval(function() {
+    if (document.location.href.indexOf('/player/') != -1) {
+
+        // Get local stream data
+        enhanced_streamData = localStorage.getItem('enhanced_streamData')
+        if (enhanced_streamData != null) {
+            enhanced_streamData = JSON.parse(enhanced_streamData)
+
+            // Reset outside of viewport
+            var enhanced_boundingBox = enhanced_streamMonitor.getBoundingClientRect()
+            if (enhanced_boundingBox.top <= 0 && enhanced_boundingBox.left <= 0 && enhanced_boundingBox.bottom >= window.availHeight && enhanced_boundingBox.right >= window.availWidth) {
+                enhanced_streamMonitor.style.top = '1rem'
+                enhanced_streamMonitor.style.left = '1rem'
+            }
+
+            // Update Position
+            enhanced_newMonitorPos = enhanced_streamMonitor.style.top + '|' + enhanced_streamMonitor.style.left
+            if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
+                enhanced_newMonitorPos = enhanced_settings.monitorPosition
+                localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+            }
+
+            // Quick Overview
+            enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.codec + '</span></div>'
+            enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.resolution + '</span></div>'
+            enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.latency + ' ms | ' + enhanced_streamData.fps + '</span></div>'
+            enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.packetloss + '</span></div>'
+            enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.decode + ' ms</span></div>'
+
+
+            // Translation
+            enhanced_streamData.codec = enhanced_streamData.codec
+                .replace('Hardware', enhanced_lang.hardware)
+                .replace('Software', enhanced_lang.software)
+
+            // Full Monitor
+            switch (enhanced_settings.monitorMode) {
+                case 0:
+                    enhanced_streamInfo = `
+                        <section>
+                            <div class="tag">` + enhanced_lang.session + `</div>
+                            <div class="grid">
+                                <span>Date</span>
+                                <span>` + enhanced_streamData.date + `</span>
+                                <span></span>
+                                <div class="border"></div>
+                                <span>Time</span>
+                                <span>` + enhanced_streamData.time + `</span>
+                                <span></span>
+                                <div class="border"></div>
+                                <span>` + enhanced_lang.sessiontime + `</span>
+                                <span>` + enhanced_streamData.sessiontime + `</span>
+                                <span></span>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="tag">` + enhanced_lang.stream + `</div>
+                            <div class="grid">
+                                <span>` + enhanced_lang.codec + `</span><span>` + enhanced_streamData.codec + `</span>
+                                <span></span>
+                                <div class="border"></div>
+                                <span>` + enhanced_lang.resolution + `</span>
+                                <span>` + enhanced_streamData.resolution + `</span>
+                                <span></span>
+                                <div class="border"></div>
+                                <span>FPS</span>
+                                <span>` + enhanced_streamData.fps + `</span>
+                                <span></span>`
+
+                    if (enhanced_streamData.codec.includes('VP9')) {
+                        enhanced_streamInfo += '<div class="border"></div><span>' + enhanced_lang.compression + '</span><span>' + enhanced_streamData.compression + '</span><span></span>'
+                    }
+
+                    enhanced_streamInfo += '<div class="border"></div>'
+
+                    if (enhanced_streamData.decode > 12) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
+                    } else if (enhanced_streamData.decode > 10) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
+                    } else if (enhanced_streamData.decode > 8.33) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
+                    } else {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
+                    }
+
+                    enhanced_streamInfo += '<div class="border"></div>'
+
+                    if (enhanced_streamData.framedropPerc > 1) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #FF7070;">⬤</span>'
+                    } else if (enhanced_streamData.framedropPerc > 0.5) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #FFB83D;">⬤</span>'
+                    } else if (enhanced_streamData.framedropPerc > 0.2) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #00E0BA;">⬤</span>'
+                    } else {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #44BBD8;">⬤</span>'
+                    }
+
+                    enhanced_streamInfo += `
+                        </div>
+                    </section>
+                    <section>
+                        <div class="tag">` + enhanced_lang.network + `</div>
+                        <div class="grid">
+                            <span>` + enhanced_lang.trafficsession + `</span>
+                            <span>` + enhanced_streamData.sessionTraffic + `</span>
+                            <span></span>
+                            <div class="border"></div>
+                            <span>` + enhanced_lang.trafficcurrent + `</span>
+                            <span>` + enhanced_streamData.currentTraffic + `</span>
+                            <span></span>
+                            <div class="border"></div>
+                            <span>` + enhanced_lang.trafficaverage + `</span>
+                            <span>` + enhanced_streamData.averageTraffic + `</span>
+                            <span></span>
+                            <div class="border"></div>
+                            <span>` + enhanced_lang.packetloss + `</span>
+                            <span>` + enhanced_streamData.packetloss + `</span>
+                            <span></span>
+                            <div class="border"></div>`
+
+                    if (enhanced_streamData.latency > 100) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
+                    } else if (enhanced_streamData.latency > 75) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
+                    } else if (enhanced_streamData.latency > 40) {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
+                    } else {
+                        enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
+                    }
+
+                    enhanced_streamInfo += `
+                                    <div class="border"></div>
+                                    <span>` + enhanced_lang.jitter + `</span>
+                                    <span>` + enhanced_streamData.jitter + `</span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </section>`
+                    break
+                case 1:
+                    // Connection Check
+                    if (parseInt(enhanced_streamData.fps) < 1) {
+                        enhanced_connectionStatus = 'white'
+                    } else if (enhanced_streamData.decode > 12 || enhanced_streamData.framedropPerc > 1 || enhanced_streamData.latency > 100) {
+                        enhanced_connectionStatus = 'FF7070' // Red
+                    } else if (enhanced_streamData.decode > 10 || enhanced_streamData.framedropPerc > 0.5 || enhanced_streamData.latency > 75) {
+                        enhanced_connectionStatus = 'FFB83D' // Yellow
+                    } else if (enhanced_streamData.decode > 8.33 || enhanced_streamData.framedropPerc > 0.2 || enhanced_streamData.latency > 40) {
+                        enhanced_connectionStatus = '00E0BA' // Green
+                    } else {
+                        enhanced_connectionStatus = '#44BBD8' // Blue
+                    }
+
+                    enhanced_streamInfo = `
+                    <section>
+                        <div class="grid">
+                            <span style="grid-column: 1 / 4;">` + enhanced_streamData.codec + `<div class="split">|</div>` + enhanced_streamData.resolution + `<div class="split">|</div>` + enhanced_streamData.fps + ` fps<div class="split">|</div>` + enhanced_streamData.latency + `ms<div class="split">|</div>` + enhanced_streamData.decode + `ms<div class="split">|</div><span style="color: ` + enhanced_connectionStatus + `;">⬤</span></span>
+                        </div>
+                    </section>`
+                    break
+            }
+            enhanced_streamMonitor.innerHTML = enhanced_streamInfo
+        }
+    } else {
+        // Quick Overview
+        enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+        enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+        enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">- | -</span></div>'
+        enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+        enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+
+        // Full Monitor
+        enhanced_streamMonitor.innerHTML = `
+            <section>
+                <div class="grid">
+                    <span style="grid-column: 1 / 4;">Loading stream data.</span>
+                </div>
+            </section>`
+    }
+
+}, 1000)
 
 // Streaming Monitor
 var enhanced_Monitor = document.createElement('div')
@@ -981,11 +1016,13 @@ var enhanced_langCodes = {
     English: 'en',
     French: 'fr',
     German: 'de',
+    Hungary: 'hu',
     Italian: 'it',
     Portuguese: 'pt',
     Spanish: 'es',
     Slovak: 'sk',
-    Swedish: 'sv'
+    Swedish: 'sv',
+    Esperanto: 'eo'
 }
 
 for (const [key, value] of Object.entries(enhanced_langCodes)) {
@@ -2616,7 +2653,7 @@ setInterval(function() {
                 if (enhanced_database[i].id == document.location.href.split('details/')[1].split('/')[0]) {
 
                     // Check for empty entry
-                    var enhanced_fullEntry = enhanced_database[i].maxRes + enhanced_database[i].fps4K + enhanced_database[i].proFeat + enhanced_database[i].crossplay
+                    var enhanced_fullEntry = enhanced_database[i].maxRes + enhanced_database[i].fps + enhanced_database[i].proFeat + enhanced_database[i].crossplay
                     if (enhanced_fullEntry != '') {
 
                         // Section Header
@@ -2628,8 +2665,8 @@ setInterval(function() {
                         }
 
                         // Entry - Framerate
-                        if (enhanced_database[i].fps4K != '') {
-                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.fps4K + '</div><div class="tM4Phe">' + enhanced_database[i].fps4K + '</div></div>'
+                        if (enhanced_database[i].fps != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.fps + '</div><div class="tM4Phe">' + enhanced_database[i].fps + '</div></div>'
                         }
 
                         // Entry - Pro Features
@@ -3532,16 +3569,17 @@ function openStadia(url) {
 }
 
 // Embed scripts to execute on the websites layer
-function embed(fn, enhanced_sessionActive = true) {
+function embed(fn, active = true) {
     const script = document.createElement('script')
-    if (enhanced_sessionActive === true) {
+    if (active === true) {
         script.text = `(${fn.toString()})();`
     } else {
         script.text = `${fn.toString()}`
     }
-    document.documentElement.appendChild(script)
+    (document.head || document.documentElement).appendChild(script)
 }
 
+// Insert elements
 function secureInsert(el, sel, opt = 0) {
     var selector = document.querySelectorAll(sel)
     var target = selector[selector.length - 1]
@@ -3567,6 +3605,22 @@ function secureInsert(el, sel, opt = 0) {
                     target.parentNode.insertBefore(el, target)
                 }
                 break
+        }
+    }
+}
+
+// Load user settings
+function enhanced_loadUserInfo() {
+    var enhanced_scriptLoad = document.querySelectorAll('script[nonce]')
+    var info = []
+    for (var i = 0; i < enhanced_scriptLoad.length; i++) {
+        if (enhanced_scriptLoad[i].text.includes('AF_initDataCallback({key: \'ds:1\'')) {
+            var nametag = enhanced_scriptLoad[i].text.split('[["').pop().split('"]')[0].split('","')
+            var id = enhanced_scriptLoad[i].text.split('false,null,"').pop().split('"')[0]
+            info.push(nametag[0])
+            info.push(nametag[1])
+            info.push(id)
+            return info
         }
     }
 }
@@ -3759,7 +3813,7 @@ function debugEnhanced(opt) {
         case 'translation':
             // Translations
             console.groupCollapsed('Stadia Enhanced: Translation Output')
-            var languages = ['fr', 'nl', 'sv', 'pt', 'ca', 'da', 'it', 'es', 'de', 'ru', 'hu', 'sk']
+            var languages = ['fr', 'nl', 'sv', 'pt', 'ca', 'da', 'it', 'es', 'de', 'ru', 'hu', 'sk', 'eo']
             for (var i = 0; i < languages.length; i++) {
                 debug_load = enhancedTranslate(languages[i], true)
             }
@@ -3847,7 +3901,7 @@ function enhancedTranslate(lang, log = false) {
         session: 'Session',
         extdetail: 'Extended Details',
         maxresolution: 'Maximum Resolution',
-        fps4K: 'Framerate @ 4K',
+        fps: 'Framerate',
         testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
         datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
         On games with a resolution/framerate toggle, resolution was picked. \
@@ -3980,7 +4034,7 @@ function enhancedTranslate(lang, log = false) {
                 session: 'Sitzung',
                 extdetail: 'Erweiterte Details',
                 maxresolution: 'Maximale Auflösung',
-                fps4K: 'Framerate @ 4K',
+                fps: 'Framerate',
                 testdiscl: '<b>Vorwarnung:</b> Dieses Spiel muss noch getestet werden.',
                 datadiscl: 'Dies ist die im 4K Modus (Stadia Pro benötigt) maximal erreichbare Framerate.\
                             In Spielen mit Qualität/Performance Option, wurde Qualität gewählt. \
@@ -4110,7 +4164,7 @@ function enhancedTranslate(lang, log = false) {
                 session: 'Munkamenet',
                 extdetail: 'Kiegészítő Adatok',
                 maxresolution: 'Maximum Felbontás',
-                fps4K: 'Képkocka @ 4K',
+                fps: 'Képkocka',
                 testdiscl: undefined,
                 datadiscl: 'Ez a maximum elérhető képkockaszám 4K módban játszva (Pro előfizetés szükséges),\
 azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
@@ -4241,7 +4295,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: 'Relácia',
                 extdetail: 'Rozšírené detaily',
                 maxresolution: 'Maximálne rozlíšenie',
-                fps4K: 'Framerate pri 4K',
+                fps: 'Framerate',
                 testdiscl: undefined,
                 datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro odber).\
                 Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
@@ -4372,7 +4426,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
-                fps4K: undefined,
+                fps: undefined,
                 testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
@@ -4499,7 +4553,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
-                fps4K: undefined,
+                fps: undefined,
                 testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
@@ -4626,7 +4680,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: 'Sessione',
                 extdetail: 'Dettaglio Esteso',
                 maxresolution: 'Risoluzione Massima',
-                fps4K: 'Framerate @ 4K',
+                fps: 'Framerate',
                 testdiscl: undefined,
                 datadiscl: 'Questo è il framerate massimo ottenuto mentre si gioca in modalità 4k (devi essere un membro abbonato Pro).\
                 Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
@@ -4756,7 +4810,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
-                fps4K: undefined,
+                fps: undefined,
                 testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
@@ -4883,7 +4937,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: undefined,
                 extdetail: 'Més detalls',
                 maxresolution: 'Resolució màxima',
-                fps4K: 'Fotogrames per segon en 4K',
+                fps: 'Fotogrames per segon',
                 testdiscl: undefined,
                 datadiscl: 'Aquest és el màxim de fotogrames per segon aconseguit quan es juga un joc en mode 4K (cal ser subscriptor Pro).\
                 En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
@@ -5013,7 +5067,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: 'Sessão',
                 extdetail: 'Mais Detalhes',
                 maxresolution: 'Resolução Máxima',
-                fps4K: 'Fotogramas a 4K',
+                fps: 'Fotogramas',
                 testdiscl: undefined,
                 datadiscl: 'Esta é a taxa máxima de fotogramas alcançada ao jogar um jogo em modo 4K (deve ser um subscritor PRO). \
             Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
@@ -5143,7 +5197,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
-                fps4K: undefined,
+                fps: undefined,
                 testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
@@ -5270,7 +5324,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: 'Session',
                 extdetail: 'Plus de Détails',
                 maxresolution: 'Résolution Maximale',
-                fps4K: 'Framerate en 4K',
+                fps: 'Framerate',
                 testdiscl: undefined,
                 datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
                         Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
@@ -5401,7 +5455,7 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 session: undefined,
                 extdetail: undefined,
                 maxresolution: undefined,
-                fps4K: undefined,
+                fps: undefined,
                 testdiscl: undefined,
                 datadiscl: undefined,
                 noteOne: undefined,
@@ -5473,6 +5527,136 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 importset: undefined,
                 importerror: undefined,
                 resetsettings: 'Сбросить настройки'
+            }
+
+        case 'eo':
+            translate_load = {
+                default: 'Defaŭta',
+                native: 'Origina',
+                hide: 'Kaŝi',
+                show: 'Montri',
+                total: 'Totalo',
+                visible: 'Videbla',
+                hidden: 'Kaŝita',
+                enabled: 'Ŝaltita',
+                disabled: 'Malŝaltita',
+                auto: 'Aŭtomata',
+                manual: 'Permana',
+                all: 'Ĉio',
+                locked: 'Barita',
+                complete: 'Kompleta',
+                incomplete: 'Malkompleta',
+                games: 'Ludoj',
+                allgames: 'Ĉiuj ludoj',
+                leavepro: 'Forlasas Pro',
+                bundles: 'Faskoj',
+                addons: 'Aldonaĵoj',
+                wishlist: 'Dezirlisto',
+                responsive: 'Sinadapta',
+                windowed: 'Fenestra',
+                fullscreen: 'Plenekrana',
+                onsale: 'Rabatoj',
+                prodeals: 'Rabatoj de Stadia Pro',
+                userprofile: 'Mia profilo',
+                usermedia: 'Captures & game states',
+                searchbtnbase: 'Serĉi en',
+                avatarpopup: 'Nova profilbilda URL (Lasu ĝin malplenan por defaŭta ):',
+                sessiontime: 'Tempo de seanco',
+                codec: 'Kodeko',
+                resolution: 'Distingivo',
+                hardware: 'Hardvaro',
+                software: 'Softvaro',
+                trafficsession: 'Session traffic',
+                trafficcurrent: 'Current traffic',
+                trafficaverage: 'Average traffic',
+                packetloss: 'Perditaj paketoj',
+                framedrop: 'Frames dropped',
+                latency: 'Respondotempo',
+                jitter: 'Jitter Buffer',
+                decodetime: 'Decoding Time',
+                compression: 'Densigo',
+                bitrate: 'Bitrapido ',
+                streammon: 'Stream Monitor',
+                stream: 'Elsendo',
+                network: 'Reto',
+                session: 'Seanco',
+                extdetail: 'Pliaj detaloj',
+                maxresolution: 'Maximuma distingivo',
+                fps: 'Framerate',
+                testdiscl: 'Disclaimer: This game has yet to be tested.',
+                datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
+                            On games with a resolution/framerate toggle, resolution was picked.\
+                            This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                            and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+                noteOne: '4K Mode',
+                noteTwo: '30/60 FPS Toggle',
+                noteThree: '60 FPS in 1080p mode',
+                noteFour: '30 FPS in 1080p Mode',
+                noteFive: 'Not compatible with 4K mode',
+                unsupported: 'Unsupported',
+                crossfriends: 'No Cross-platform Buddy System',
+                community: 'Komunumo',
+                speedtest: 'Speedtest',
+                quickaccess: 'Rapida aliro',
+                messages: 'Mesaĝoj',
+                comfeature: "Komunumaj funkcioj",
+                avatar: 'Profilbildo',
+                interface: 'Interfaco',
+                shortcut: 'StadiaIcons',
+                shortcuttitle: 'Krei ŝparvojon por',
+                shortcutdesc: 'Ebligas krei ŝparvojon por ludo en via aparato.',
+                stadiastats: 'StadiaStats',
+                stadiastatsopen: 'Vidi je StadiaStats.GG',
+                stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
+                gridsize: 'Grid Size',
+                griddesc: 'Changes the amount of games per row in the library.',
+                clock: 'Horloĝo',
+                clockdesc: 'Displays the current time on the friends list, as a in-game overlay, or both.',
+                friendslist: 'Listo de amikoj',
+                igoverlay: 'Enluda plustavolo',
+                listoverlay: 'List & Overlay',
+                filter: 'Game Filter',
+                filterdesc: 'Allows you to sort your library by hiding games. The filter can be toggled via the symbol, top-right above your games in the library.',
+                invitebase: 'Copy invite link',
+                inviteactive: 'Kopiita!',
+                gamelabel: 'Game Labels',
+                gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+                homegallery: 'Uzanta galerio',
+                homegallerydesc: 'Hides the "Captures" area at the bottom of the homescreen.',
+                quickprev: 'Antaŭrigardo de mesaĝo',
+                quickprevdesc: 'Hides the message preview in the friends list.',
+                quickrep: 'Tujrespondo',
+                quickrepdesc: 'Hides the quick reply option in chats.',
+                offlinefriend: 'Elretaj amikoj',
+                offlinefrienddesc: 'Hides offline friends in the friends list.',
+                invisiblefriend: 'Invisible Friends',
+                invisiblefrienddesc: 'Hides friends with unknown online status in the friends list.',
+                notification: 'Sciigoj',
+                notificationdesc: 'Montras sciigon kiam Stadia Enhanced ĝisdatiĝas al nova versio("Aŭtomata" kaŝas post 5 sekundoj, "Permana" atendas agon de la uzanto).',
+                streammodedesc: 'Ŝaltu por igi kelkajn elementojn (ekzemple: la liston de amikojn) nelegeblajn dum vi elsendas (pere de iloj kiel OBS / Discord).',
+                streammode: 'Elsenda reĝimo',
+                catprev: 'Category Preview',
+                catprevdesc: 'Hides the category tags when hovering over a game.',
+                streammondesc: 'Activate to start the monitor whenever a game starts.',
+                resolutiondesc: 'The targeted resolution for game streams. 1440p and 2160p require VP9 and Stadia Pro.',
+                codecdesc: 'The codec used for game streams.',
+                confirmreset: 'Are you sure you want to reset the settings?',
+                statistics: 'Statistikoj',
+                gamesfinished: 'Finitaj ludoj',
+                achievementsunlocked: 'Achievements Unlocked',
+                totalPlayTime: 'Totala ludtempo',
+                splitstore: 'Split Store Lists',
+                splitstoredesc: 'Splits store lists into two columns for a better overview.',
+                inlineimage: 'Antaŭmontri bildon',
+                inlinedesc: 'Replaces image links for common file formats (jpg/gif/png) with a clickable preview.',
+                familyelements: 'Family-sharing options',
+                familyelementsdesc: 'Hides the "Share this game with family" options.',
+                donations: 'Donacoj',
+                reportbug: 'Cimraporti',
+                exportset: 'Export settings',
+                importset: 'Import settings',
+                importerror: 'The file you are trying to open does not contain a valid Stadia Enhanced profile.',
+                resetsettings: 'Reset settings'
             }
             break
     }
