@@ -644,7 +644,6 @@ setInterval(function() {
                 </div>
             </section>`
     }
-
 }, 1000)
 
 // Streaming Monitor
@@ -661,14 +660,15 @@ enhanced_Monitor.addEventListener('click', function() {
 });
 enhanced_Monitor.addEventListener('dblclick', function() {
     // Generate new Window
-    var enhanced_popMonitor = window.open('', '_blank', 'width=350,height=350,toolbar=0')
+    var enhanced_popMonitor = window.open('', '_blank', 'width=280,height=500,toolbar=0')
+    enhanced_popMonitor.document.title = 'Stream Monitor'
     enhanced_popMonitor.document.body.style.background = "#000"
     enhanced_popMonitor.document.body.style.color = "#fff"
 
     // Copy styles
     var el = document.createElement('style')
     enhanced_popMonitor.document.head.appendChild(el)
-    el.innerHTML = enhanced_monitorStyle
+    el.innerHTML = enhanced_monitorStyle + '#enhanced_streamMonitor { display: block !important; }'
 
     // Update
     enhanced_upPop = setInterval(function() {
@@ -1000,7 +1000,7 @@ enhanced_langDefault.style.textAlign = 'center'
 enhanced_langDefault.tabIndex = '0'
 enhanced_langDefault.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_langDefault.addEventListener('click', function() {
-    enhanced_urlGoal = document.location.pathname.substring(1)
+    enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
     enhanced_urlBase = new URL(window.location.href)
     enhanced_urlBase.searchParams.delete('hl')
     history.replaceState(null, null, '?' + enhanced_urlBase.searchParams);
@@ -2829,7 +2829,7 @@ setInterval(function() {
 
             if (enhanced_timesAvailable) {
                 for (var i = 0; i < enhanced_timeQuery.length; i++) {
-                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.replace(".", "").split(/[\s]/)
+                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.split(/[\s]/)
 
                     switch (enhanced_titlePlaytime.length) {
                         case 2:
@@ -3099,7 +3099,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Codec Preference: Set to "VP9".', enhanced_consoleEnhanced, '')
                     break
                 case 2:
-                    enhanced_settings.resolution = 0;
+                    enhanced_settings.resolution = 0
                     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
                     enhanced_applySettings('resolution', enhanced_settings.resolution)
                     enhanced_Codec.style.color = '#00e0ba'
@@ -3117,7 +3117,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Resolution: Set to "Native".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
-                    enhanced_settings.codec = 1;
+                    enhanced_settings.codec = 1
                     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
                     enhanced_applySettings('codec', enhanced_settings.codec)
                     enhanced_Resolution.style.color = '#00e0ba'
@@ -3126,7 +3126,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Resolution: Set to "2560x1440".', enhanced_consoleEnhanced, '')
                     break
                 case 2:
-                    enhanced_settings.codec = 1;
+                    enhanced_settings.codec = 1
                     localStorage.setItem("enhanced_" + enhanced_settings.user, JSON.stringify(enhanced_settings))
                     enhanced_applySettings("codec", enhanced_settings.codec)
                     enhanced_Resolution.style.color = "#00e0ba"
