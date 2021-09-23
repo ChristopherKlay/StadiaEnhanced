@@ -2,6 +2,11 @@
 
 ## Version 1.16
 
+### 1.16.7
+* Fixed display issues with the popup monitor (double-click)
+* Fixed total playtime calculations
+* Fixed the "default" language option when multiple users are logged in
+
 ### 1.16.6
 * Added esperanto translation
 * Added hungarian to the language switcher

@@ -4,7 +4,7 @@
   <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/header-mockup.gif"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.16.6-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.16.7-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 
@@ -22,7 +22,7 @@
 - [x] Slight tweaks to your messaging experience, including emoji support
 - [x] Discord presence support via DiscordRPC
 - [x] Extended details section on store pages, displaying i.e. resolution and framerate
-- [x] And more
+- [ ] And more
 
 ## Installation & Usage
 
