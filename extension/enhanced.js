@@ -38,17 +38,20 @@ var enhanced_settings = {
     hideOfflineUsers: 0,
     hideInvisibleUsers: 0,
     hideLabels: 0,
+    dimOverlay: 0,
     hideUserMedia: 0,
     hideCategories: 0,
     splitStore: 0,
     hideFamilySharing: 0,
     enableShortcuts: 0,
     enableStadiaStats: 0,
+    enableStadiaDatabase: 1,
     updateNotifications: 0,
     streamMode: 0,
     wishlist: "",
     gameFilter: "",
-    favoriteList: ""
+    favoriteList: "",
+    postprocess: {}
 }
 
 if (enhanced_storedSettings) {
@@ -103,7 +106,7 @@ enhanced_CSS += `@media screen and (max-width: 639px) {
                 }`
 
 // Stream Monitor
-var enhanced_monitorStyle = `
+var enhanced_streamMonitorStyle = `
                 #enhanced_streamMonitor {
                     color: rgba(255,255,255,0.9);
                     cursor: pointer;
@@ -124,7 +127,7 @@ var enhanced_monitorStyle = `
                     margin-bottom: 0;
                 }
                 #enhanced_streamMonitor section:only-child {
-                    padding: 0.2rem 0 0.3rem 0;
+                    padding: 0 0 0.3rem 0;
                 }
                 #enhanced_streamMonitor .grid {
                     display: grid;
@@ -162,9 +165,44 @@ var enhanced_monitorStyle = `
                     text-shadow: none;
                 }`
 
+// Filter Overlay
+var enhanced_filterOverlayStyle = `
+                #enhanced_filterUI {
+                    color: rgba(255,255,255,0.9);
+                    background: rgba(32,33,36,0.8);
+                    font-family: "Roboto", sans-serif;
+                    font-size: 0.6875rem;
+                    position: fixed;
+                    margin-bottom: 0.4rem;
+                    padding: 0 0 0.3rem 0;
+                    border-radius: 0.5rem 0.5rem;
+                    text-shadow: 1px 1px rgba(0,0,0,0.5);
+                    width: fit-content;
+                    z-index: 1000;
+                }
+                #enhanced_filterUI .grid {
+                    display: grid;
+                    grid-gap: 0.2rem 0.4rem;
+                    grid-template-columns: auto auto;
+                    grid-template-rows: auto;
+                    padding: 0 0.4rem 0 0.6rem;
+                }
+                #enhanced_filterUI .tag {
+                    border-radius: 0.5rem 0.5rem 0 0;  
+                    background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
+                    color: white;
+                    font-size: 0.75rem;
+                    font-weight: 900;
+                    margin: 0 0 0.4rem 0;
+                    padding: 0.2rem 0.4rem;
+                    text-align: start;
+                    text-shadow: none;
+                }`
+
 // Inject CSS
 enhanced_injectStyle(enhanced_CSS, 'enhanced_styleGeneral')
-enhanced_injectStyle(enhanced_monitorStyle, 'enhanced_styleMonitor')
+enhanced_injectStyle(enhanced_streamMonitorStyle, 'enhanced_styleStreamMonitor')
+enhanced_injectStyle(enhanced_filterOverlayStyle, 'enhanced_styleFilterOverlay')
 
 // Stadia Public Database by OriginalPenguin
 // Source: https://linktr.ee/StadiaDatabase
@@ -507,11 +545,11 @@ setInterval(function() {
                         <section>
                             <div class="tag">` + enhanced_lang.session + `</div>
                             <div class="grid">
-                                <span>Date</span>
+                                <span>` + enhanced_lang.date + `</span>
                                 <span>` + enhanced_streamData.date + `</span>
                                 <span></span>
                                 <div class="border"></div>
-                                <span>Time</span>
+                                <span>` + enhanced_lang.time + `</span>
                                 <span>` + enhanced_streamData.time + `</span>
                                 <span></span>
                                 <div class="border"></div>
@@ -680,6 +718,218 @@ enhanced_Monitor.addEventListener('dblclick', function() {
     }, 1000)
 })
 
+// Filter UI
+var enhanced_filterUI = {
+    main: {
+        frame: document.createElement('div'),
+        toggle: document.createElement('div'),
+        tag: document.createElement('div'),
+        grid: document.createElement('div')
+    },
+    saturation: {
+        label: document.createElement('span'),
+        slider: document.createElement('input'),
+    },
+    contrast: {
+        label: document.createElement('span'),
+        slider: document.createElement('input'),
+    },
+    brightness: {
+        label: document.createElement('span'),
+        slider: document.createElement('input'),
+    },
+    sharpen: {
+        label: document.createElement('span'),
+        slider: document.createElement('input'),
+    }
+}
+
+// Filter UI - Main
+enhanced_filterUI.main.frame.id = 'enhanced_filterUI'
+enhanced_filterUI.main.frame.style.position = 'fixed'
+enhanced_filterUI.main.frame.style.bottom = '1rem'
+enhanced_filterUI.main.frame.style.left = '1rem'
+enhanced_filterUI.main.frame.style.display = 'none'
+
+// Filter UI - Toggle
+enhanced_filterUI.main.toggle.className = 'R2s0be'
+enhanced_filterUI.main.toggle.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i></span><span class="caSJV" jsname="V67aGc">Filter Settings</span></div>'
+enhanced_filterUI.main.toggle.style.cursor = 'pointer'
+enhanced_filterUI.main.toggle.style.userSelect = 'none'
+enhanced_filterUI.main.toggle.tabIndex = '0'
+enhanced_filterUI.main.toggle.addEventListener('click', function() {
+    if (enhanced_filterUI.main.frame.style.display == 'block') {
+        enhanced_filterUI.main.frame.style.display = 'none'
+        enhanced_injectStyle('', 'enhanced_styleDimOverlayTemp')
+    } else {
+        enhanced_filterUI.main.frame.style.display = 'block'
+        enhanced_injectStyle('.bYYDgf { background: linear-gradient(to right, transparent 50%, rgba(0,0,0,.6) 100%) !important; }', 'enhanced_styleDimOverlayTemp')
+    }
+});
+
+// Filter UI - Structure
+enhanced_filterUI.main.tag.textContent = 'Filter Settings'
+enhanced_filterUI.main.tag.className = 'tag'
+enhanced_filterUI.main.frame.append(enhanced_filterUI.main.tag)
+enhanced_filterUI.main.grid.className = 'grid'
+enhanced_filterUI.main.frame.append(enhanced_filterUI.main.grid)
+
+// Filter UI - Saturation
+enhanced_filterUI.main.grid.append(enhanced_filterUI.saturation.label)
+enhanced_filterUI.main.grid.append(enhanced_filterUI.saturation.slider)
+enhanced_filterUI.saturation.slider.type = 'range'
+enhanced_filterUI.saturation.slider.min = 0
+enhanced_filterUI.saturation.slider.max = 150
+enhanced_filterUI.saturation.slider.setAttribute('value', enhanced_settings.postprocess.saturation * 100)
+enhanced_filterUI.saturation.slider.addEventListener("dblclick", function() {
+    this.value = 100
+    enhanced_updateFilters()
+})
+enhanced_filterUI.saturation.slider.onchange = function() {
+    enhanced_updateFilters()
+}
+
+// Filter UI - Contrast
+enhanced_filterUI.main.grid.append(enhanced_filterUI.contrast.label)
+enhanced_filterUI.main.grid.append(enhanced_filterUI.contrast.slider)
+enhanced_filterUI.contrast.slider.type = 'range'
+enhanced_filterUI.contrast.slider.min = 50
+enhanced_filterUI.contrast.slider.max = 150
+enhanced_filterUI.contrast.slider.setAttribute('value', enhanced_settings.postprocess.contrast * 100)
+enhanced_filterUI.contrast.slider.addEventListener("dblclick", function() {
+    this.value = 100
+    enhanced_updateFilters()
+})
+enhanced_filterUI.contrast.slider.onchange = function() {
+    enhanced_updateFilters()
+}
+
+// Filter UI - Brightness
+enhanced_filterUI.main.grid.append(enhanced_filterUI.brightness.label)
+enhanced_filterUI.main.grid.append(enhanced_filterUI.brightness.slider)
+enhanced_filterUI.brightness.slider.type = 'range'
+enhanced_filterUI.brightness.slider.min = 50
+enhanced_filterUI.brightness.slider.max = 150
+enhanced_filterUI.brightness.slider.setAttribute('value', enhanced_settings.postprocess.brightness * 100)
+enhanced_filterUI.brightness.slider.addEventListener("dblclick", function() {
+    this.value = 100
+    enhanced_updateFilters()
+})
+enhanced_filterUI.brightness.slider.onchange = function() {
+    enhanced_updateFilters()
+}
+
+// Filter UI - Sharpen
+enhanced_filterUI.main.grid.append(enhanced_filterUI.sharpen.label)
+enhanced_filterUI.main.grid.append(enhanced_filterUI.sharpen.slider)
+enhanced_filterUI.sharpen.slider.type = 'range'
+enhanced_filterUI.sharpen.slider.min = 0
+enhanced_filterUI.sharpen.slider.max = 20
+enhanced_filterUI.sharpen.slider.setAttribute('value', enhanced_settings.postprocess.sharpen)
+enhanced_filterUI.sharpen.slider.addEventListener("dblclick", function() {
+    this.value = 0
+    enhanced_updateFilters()
+})
+enhanced_filterUI.sharpen.slider.onchange = function() {
+    enhanced_updateFilters()
+}
+
+// Filter UI - Update Settings
+function enhanced_updateFilters(setup = false) {
+    if (document.location.href.indexOf('/player/') != -1) {
+        // Get Current Game
+        var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
+        var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
+
+        // Create Game Entry
+        if (!enhanced_settings.postprocess[enhanced_currentID]) {
+            enhanced_settings.postprocess[enhanced_currentID] = {
+                saturation: 1,
+                contrast: 1,
+                brightness: 1,
+                sharpen: 0
+            }
+        }
+
+        // Manage user settings
+        if (setup) {
+            // Update with existing settings
+            enhanced_filterUI.saturation.slider.value = enhanced_settings.postprocess[enhanced_currentID].saturation * 100
+            enhanced_filterUI.contrast.slider.value = enhanced_settings.postprocess[enhanced_currentID].contrast * 100
+            enhanced_filterUI.brightness.slider.value = enhanced_settings.postprocess[enhanced_currentID].brightness * 100
+            enhanced_filterUI.sharpen.slider.value = enhanced_settings.postprocess[enhanced_currentID].sharpen
+        } else {
+            // Update saved settings
+            enhanced_settings.postprocess[enhanced_currentID].saturation = enhanced_filterUI.saturation.slider.value / 100
+            enhanced_settings.postprocess[enhanced_currentID].contrast = enhanced_filterUI.contrast.slider.value / 100
+            enhanced_settings.postprocess[enhanced_currentID].brightness = enhanced_filterUI.brightness.slider.value / 100
+            enhanced_settings.postprocess[enhanced_currentID].sharpen = enhanced_filterUI.sharpen.slider.value
+        }
+
+        // Update SVG Matrix
+        enhanced_svgUnsharpMask.feComposite.setAttribute('k2', 1 + (0.1 * enhanced_filterUI.sharpen.slider.value))
+        enhanced_svgUnsharpMask.feComposite.setAttribute('k3', 0 - (0.1 * enhanced_filterUI.sharpen.slider.value))
+
+        // Update Filter
+        if (enhanced_currentStream && enhanced_currentID) {
+            var enhanced_completeFilter = `
+                saturate(` + enhanced_settings.postprocess[enhanced_currentID].saturation + `) 
+                contrast(` + enhanced_settings.postprocess[enhanced_currentID].contrast + `) 
+                brightness(` + enhanced_settings.postprocess[enhanced_currentID].brightness + `) `
+            if (enhanced_settings.postprocess[enhanced_currentID].sharpen == 0) {
+                enhanced_completeFilter += 'url(#)'
+            } else {
+                enhanced_completeFilter += 'url(#enhanced_svgUnsharpMask)'
+            }
+            enhanced_currentStream.style.filter = enhanced_completeFilter
+        }
+
+        // Update Labels
+        enhanced_filterUI.saturation.label.textContent = 'Saturation (' + (enhanced_settings.postprocess[enhanced_currentID].saturation * 100).toFixed(0) + '%)'
+        enhanced_filterUI.contrast.label.textContent = 'Contrast (' + (enhanced_settings.postprocess[enhanced_currentID].contrast * 100).toFixed(0) + '%)'
+        enhanced_filterUI.brightness.label.textContent = 'Brightness (' + (enhanced_settings.postprocess[enhanced_currentID].brightness * 100).toFixed(0) + '%)'
+        enhanced_filterUI.sharpen.label.textContent = 'Sharpen (' + enhanced_settings.postprocess[enhanced_currentID].sharpen + ')'
+
+        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    }
+}
+
+enhanced_filterApplied = false
+document.body.appendChild(enhanced_filterUI.main.frame)
+
+// Filter - SVG
+var enhanced_svgNS = "http://www.w3.org/2000/svg"
+var enhanced_svg = document.createElementNS(enhanced_svgNS, "svg")
+
+// Unsharp Mask
+var enhanced_svgUnsharpMask = {
+    filter: document.createElementNS(enhanced_svgNS, "filter"),
+    feGaussianBlur: document.createElementNS(enhanced_svgNS, "feGaussianBlur"),
+    feComposite: document.createElementNS(enhanced_svgNS, "feComposite")
+}
+
+// Filter Element
+enhanced_svgUnsharpMask.filter.setAttribute("id", "enhanced_svgUnsharpMask")
+enhanced_svgUnsharpMask.filter.setAttribute("color-interpolation-filters", "sRGB")
+
+// Blur Element
+enhanced_svgUnsharpMask.feGaussianBlur.setAttribute('result', 'blurOut')
+enhanced_svgUnsharpMask.feGaussianBlur.setAttribute('in', 'SourceGraphic')
+enhanced_svgUnsharpMask.feGaussianBlur.setAttribute('stdDeviation', '1')
+
+// Composite
+enhanced_svgUnsharpMask.feComposite.setAttribute('operator', 'arithmetic')
+enhanced_svgUnsharpMask.feComposite.setAttribute('k1', 0)
+enhanced_svgUnsharpMask.feComposite.setAttribute('k2', 1)
+enhanced_svgUnsharpMask.feComposite.setAttribute('k3', 0)
+enhanced_svgUnsharpMask.feComposite.setAttribute('k4', 0)
+enhanced_svgUnsharpMask.feComposite.setAttribute('in', 'SourceGraphic')
+enhanced_svgUnsharpMask.feComposite.setAttribute('in2', 'blurOut')
+
+enhanced_svgUnsharpMask.filter.appendChild(enhanced_svgUnsharpMask.feGaussianBlur)
+enhanced_svgUnsharpMask.filter.appendChild(enhanced_svgUnsharpMask.feComposite)
+enhanced_svg.appendChild(enhanced_svgUnsharpMask.filter)
+document.body.appendChild(enhanced_svg)
 
 // Windowed Mode
 // Source: Mafrans - https://github.com/Mafrans/StadiaPlus
@@ -841,6 +1091,7 @@ enhanced_StoreContainer.appendChild(enhanced_StoreDropdown)
 enhanced_StoreDropdown.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_StoreDropdown.id = 'enhanced_StoreDropdown'
 enhanced_StoreDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">expand_more</i>'
+enhanced_StoreDropdown.style.position = 'relative'
 enhanced_StoreDropdown.style.width = '2.5rem'
 enhanced_StoreDropdown.style.padding = '0'
 enhanced_StoreDropdown.style.cursor = 'pointer'
@@ -860,7 +1111,7 @@ enhanced_StoreDropContent.id = 'enhanced_StoreDropContent'
 enhanced_StoreDropContent.className = 'us22N'
 enhanced_StoreDropContent.style.position = 'absolute'
 enhanced_StoreDropContent.style.width = 'auto'
-enhanced_StoreDropContent.style.top = '4.25rem'
+enhanced_StoreDropContent.style.top = '3.5rem'
 enhanced_StoreDropContent.style.boxShadow = '0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)'
 enhanced_StoreDropContent.style.zIndex = '20'
 enhanced_StoreDropContent.style.display = 'none'
@@ -960,6 +1211,7 @@ enhanced_langContainer.appendChild(enhanced_langDropdown)
 enhanced_langDropdown.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_langDropdown.id = 'enhanced_langDropdown'
 enhanced_langDropdown.innerHTML = '<i class="material-icons-extended" aria-hidden="true">language</i>'
+enhanced_langDropdown.style.position = 'relative'
 enhanced_langDropdown.style.width = '2.5rem'
 enhanced_langDropdown.style.padding = '0'
 enhanced_langDropdown.style.cursor = 'pointer'
@@ -984,7 +1236,7 @@ enhanced_langDropContent.style.position = 'absolute'
 enhanced_langDropContent.style.width = 'auto'
 enhanced_langDropContent.style.height = '20rem'
 enhanced_langDropContent.style.overflowY = 'scroll'
-enhanced_langDropContent.style.top = '4.25rem'
+enhanced_langDropContent.style.top = '3.5rem'
 enhanced_langDropContent.style.boxShadow = '0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)'
 enhanced_langDropContent.style.zIndex = '20'
 enhanced_langDropContent.style.display = 'none'
@@ -992,7 +1244,7 @@ enhanced_langDropContent.style.display = 'none'
 // Language Select - Default
 var enhanced_langDefault = document.createElement('div')
 enhanced_langDefault.className = 'pBvcyf QAAyWd'
-enhanced_langDefault.innerHTML = '<span class="mJVLwb" style="padding: 0.75rem 0;">' + enhanced_lang.default+'</span>'
+enhanced_langDefault.innerHTML = '<span class="mJVLwb" style="padding: 0.5rem 0;">' + enhanced_lang.default+'</span>'
 enhanced_langDefault.style.cursor = 'pointer'
 enhanced_langDefault.style.userSelect = 'none'
 enhanced_langDefault.style.padding = '0 2rem'
@@ -1029,7 +1281,7 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
     if (value != enhanced_local) {
         var enhanced_langOption = document.createElement('div')
         enhanced_langOption.className = 'pBvcyf QAAyWd'
-        enhanced_langOption.innerHTML = '<span class="mJVLwb" style="padding: 0.75rem 0;">' + key + '</span>'
+        enhanced_langOption.innerHTML = '<span class="mJVLwb" style="padding: 0.5rem 0;">' + key + '</span>'
         enhanced_langOption.style.cursor = 'pointer'
         enhanced_langOption.style.userSelect = 'none'
         enhanced_langOption.style.padding = '0 2rem'
@@ -1679,6 +1931,21 @@ enhanced_gameLabel.addEventListener('click', function() {
 })
 enhanced_settingsGeneral.append(enhanced_gameLabel)
 
+// Hide Dimmed Overlay
+var enhanced_dimOverlay = document.createElement('div')
+enhanced_dimOverlay.className = 'pBvcyf QAAyWd'
+enhanced_dimOverlay.id = 'enhanced_dimOverlay'
+enhanced_dimOverlay.style.cursor = 'pointer'
+enhanced_dimOverlay.style.userSelect = 'none'
+enhanced_dimOverlay.style.borderBottom = '1px solid rgba(255,255,255,.06)'
+enhanced_dimOverlay.tabIndex = '0'
+enhanced_dimOverlay.addEventListener('click', function() {
+    enhanced_settings.dimOverlay = (enhanced_settings.dimOverlay + 1) % 2
+    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    enhanced_applySettings('dimoverlay', enhanced_settings.dimOverlay)
+})
+enhanced_settingsGeneral.append(enhanced_dimOverlay)
+
 // Hide User Media on Homescreen
 var enhanced_mediaPreview = document.createElement('div')
 enhanced_mediaPreview.className = 'pBvcyf QAAyWd'
@@ -1767,6 +2034,21 @@ enhanced_showStadiaStats.addEventListener('click', function() {
     enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
 })
 enhanced_settingsComFeat.append(enhanced_showStadiaStats)
+
+// Stadia Database - By OriginalPenguin
+// https://twitter.com/OriginaIPenguin
+var enhanced_showStadiaDatabase = document.createElement('div')
+enhanced_showStadiaDatabase.className = 'pBvcyf QAAyWd'
+enhanced_showStadiaDatabase.id = 'enhanced_showStadiaDatabase'
+enhanced_showStadiaDatabase.style.cursor = 'pointer'
+enhanced_showStadiaDatabase.style.userSelect = 'none'
+enhanced_showStadiaDatabase.tabIndex = '0'
+enhanced_showStadiaDatabase.addEventListener('click', function() {
+    enhanced_settings.enableStadiaDatabase = (enhanced_settings.enableStadiaDatabase + 1) % 2
+    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
+})
+enhanced_settingsComFeat.append(enhanced_showStadiaDatabase)
 
 // Show Notifications
 var enhanced_setNotification = document.createElement('div')
@@ -2562,10 +2844,25 @@ setInterval(function() {
 
     // Location - In-Game
     if (document.location.href.indexOf('/player/') != -1) {
+
+        // Currrent Game Info
+        var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
+        var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
+
         enhanced_Windowed.style.display = 'flex'
         enhanced_Monitor.style.display = 'flex'
         secureInsert(enhanced_Windowed, '.E0Zk9b', 0)
         secureInsert(enhanced_Monitor, '.E0Zk9b', 0)
+        secureInsert(enhanced_filterUI.main.toggle, '.E0Zk9b', 0)
+
+        // Filter Setup
+        if (enhanced_currentStream && enhanced_currentStream.style.filter == 'url("#")') {
+            enhanced_updateFilters()
+        }
+        if (!enhanced_filterApplied) {
+            enhanced_updateFilters(true)
+            enhanced_filterApplied = true
+        }
 
         // Clock
         if (enhanced_settings.clockOption == 2 || enhanced_settings.clockOption == 3) {
@@ -2594,7 +2891,6 @@ setInterval(function() {
 
         // Discord Presence
         var enhanced_currentStatus = document.querySelector('.HDKZKb.LiQ6Hb')
-        var enhanced_currentID = document.location.href.split('/')[4]
         if (enhanced_currentStatus && enhanced_presenceData) {
             if (enhanced_presenceData[enhanced_currentID]) {
                 enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID]
@@ -2627,6 +2923,13 @@ setInterval(function() {
         enhanced_Windowed.style.display = 'none'
         enhanced_Monitor.style.display = 'none'
         enhanced_ClockOverlay.style.display = 'none'
+
+        if (enhanced_filterUI.main.frame.style.display == 'block') {
+            enhanced_filterUI.main.frame.style.display = 'none'
+            enhanced_injectStyle('', 'enhanced_styleDimOverlayTemp')
+        }
+
+        enhanced_filterApplied = false
         enhanced_monitorStarted = false
         enhanced_monitorState = 0
         enhanced_sessionStart = 0
@@ -2648,7 +2951,7 @@ setInterval(function() {
     if (document.location.href.indexOf('/store/details/') != -1) {
 
         // Database Infos
-        if (enhanced_database) {
+        if (enhanced_database && enhanced_settings.enableStadiaDatabase == 1) {
             for (var i = 0; i < enhanced_database.length; i++) {
                 if (enhanced_database[i].id == document.location.href.split('details/')[1].split('/')[0]) {
 
@@ -3080,8 +3383,10 @@ setInterval(function() {
             var enhanced_CurrentTime = enhanced_Date.toLocaleTimeString('en-US')
             break
     }
-    enhanced_ClockFriends.innerHTML = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_CurrentTime
-    enhanced_ClockOverlay.innerHTML = enhanced_CurrentTime
+    if (enhanced_ClockFriends.innerHTML != enhanced_CurrentTime) {
+        enhanced_ClockFriends.innerHTML = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_CurrentTime
+        enhanced_ClockOverlay.innerHTML = enhanced_CurrentTime
+    }
 }, 200)
 
 function enhanced_applySettings(set, opt) {
@@ -3347,6 +3652,23 @@ function enhanced_applySettings(set, opt) {
             }
             enhanced_injectStyle(enhanced_CSS, 'enhanced_styleGameLabel')
             break
+        case 'dimoverlay':
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ''
+                    enhanced_dimOverlay.style.color = ''
+                    enhanced_dimOverlay.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">layers</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.dimoverlay + ": " + enhanced_lang.visible + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.dimoverlaydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Dimmed Overlay: Set to "Visible".', enhanced_consoleEnhanced, '')
+                    break
+                case 1:
+                    enhanced_CSS = '.bYYDgf { background: linear-gradient(to right, transparent 50%, rgba(0,0,0,.6) 100%); }'
+                    enhanced_dimOverlay.style.color = '#00e0ba'
+                    enhanced_dimOverlay.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">layers_clear</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.dimoverlay + ": " + enhanced_lang.hidden + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.dimoverlaydesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.visible + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Dimmed Overlay: Set to "Hidden".', enhanced_consoleEnhanced, '')
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, 'enhanced_styleDimOverlay')
+            break
         case 'mediapreview':
             switch (opt) {
                 case 0:
@@ -3390,7 +3712,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
-                    enhanced_CSS = '@media screen and (min-width: 1080px) { .alEDLe.URhE4b .h6J22d { float: left; width: calc(50% - 1rem); margin: 0.5rem; } }'
+                    enhanced_CSS = '@media screen and (min-width: 1080px) { .URhE4b[jsname="gF9qbe"] { display: grid; grid-template-columns: auto auto; grid-template-rows: auto; grid-gap: 0 1rem; }'
                     enhanced_storeList.style.color = '#00e0ba'
                     enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Enabled".', enhanced_consoleEnhanced, '')
@@ -3440,6 +3762,20 @@ function enhanced_applySettings(set, opt) {
                     enhanced_showStadiaStats.style.color = '#00e0ba'
                     enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Enabled".', enhanced_consoleEnhanced, '')
+                    break
+            }
+            break
+        case 'stadiadatabase':
+            switch (opt) {
+                case 0:
+                    enhanced_showStadiaDatabase.style.color = ''
+                    enhanced_showStadiaDatabase.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">table_chart</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiadatabase + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiadatabasedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stadia Database: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    break
+                case 1:
+                    enhanced_showStadiaDatabase.style.color = '#00e0ba'
+                    enhanced_showStadiaDatabase.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">table_chart</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiadatabase + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiadatabasedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.enabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stadia Database: Set to "Enabled".', enhanced_consoleEnhanced, '')
                     break
             }
             break
@@ -3513,6 +3849,7 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings('codec', enhanced_settings.codec)
             enhanced_applySettings('messagepreview', enhanced_settings.hideMessagePreview)
             enhanced_applySettings('gamelabel', enhanced_settings.hideLabels)
+            enhanced_applySettings('dimoverlay', enhanced_settings.dimOverlay)
             enhanced_applySettings('quickreply', enhanced_settings.hideQuickReply)
             enhanced_applySettings('offlineusers', enhanced_settings.hideOfflineUsers)
             enhanced_applySettings('invisibleusers', enhanced_settings.hideInvisibleUsers)
@@ -3523,6 +3860,7 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings('storelist', enhanced_settings.splitStore)
             enhanced_applySettings('shortcuts', enhanced_settings.enableShortcuts)
             enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
+            enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
             enhanced_applySettings('inlinepreview', enhanced_settings.hideInlinePreview)
             enhanced_applySettings('familysharing', enhanced_settings.hideFamilySharing)
             enhanced_applySettings('mediapreview', enhanced_settings.hideUserMedia)
@@ -3880,6 +4218,8 @@ function enhancedTranslate(lang, log = false) {
         usermedia: 'Captures & game states',
         searchbtnbase: 'Search on',
         avatarpopup: 'New avatar URL (empty for default):',
+        date: 'Date',
+        time: 'Time',
         sessiontime: 'Session time',
         codec: 'Codec',
         resolution: 'Resolution',
@@ -3927,6 +4267,8 @@ function enhancedTranslate(lang, log = false) {
         stadiastats: 'StadiaStats',
         stadiastatsopen: 'View on StadiaStats.GG',
         stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
+        stadiadatabase: 'Stadia Database',
+        stadiadatabasedesc: 'Displays a "Extended Details" section on the store page of games, which showcases framerate, resolution and more about the game.',
         gridsize: 'Grid Size',
         griddesc: 'Changes the amount of games per row in the library.',
         clock: 'Clock',
@@ -3940,6 +4282,8 @@ function enhancedTranslate(lang, log = false) {
         inviteactive: 'Copied!',
         gamelabel: 'Game Labels',
         gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+        dimoverlay: 'Dimmed Overlay',
+        dimoverlaydesc: 'Removes the dimming effect when opening the Stadia menu during gameplay.',
         homegallery: 'User Gallery',
         homegallerydesc: 'Hides the "Captures" area at the bottom of the homescreen.',
         quickprev: 'Message Preview',
@@ -4013,6 +4357,8 @@ function enhancedTranslate(lang, log = false) {
                 usermedia: 'Aufnahmen und Spielstatus',
                 searchbtnbase: 'Suche auf',
                 avatarpopup: 'Neue Avatar URL (keine für Zurücksetzung):',
+                date: 'Datum',
+                time: 'Zeit',
                 sessiontime: 'Sitzungszeit',
                 codec: 'Codec',
                 resolution: 'Auflösung',
@@ -4060,6 +4406,8 @@ function enhancedTranslate(lang, log = false) {
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Auf StadiaStats.GG ansehen',
                 stadiastatsdesc: 'Stellt Statistiken für Spiele, eine Verknüpfung zum Profil und einen Weg Mitspieler zu finden via stadiastats.gg bereit.',
+                stadiadatabase: 'Stadia Datenbank',
+                stadiadatabasedesc: 'Zeigt einen "Erweiterte Details" Bereich auf der Store Seite von Spielen, welcher Framerate, Auflösung und weitere Informationen über das Spiel zeigt.',
                 gridsize: 'Rastergröße',
                 griddesc: 'Ändert die Anzahl der Spiele pro Reihe in der Übersicht der Mediathek.',
                 clock: 'Uhr',
@@ -4073,6 +4421,8 @@ function enhancedTranslate(lang, log = false) {
                 inviteactive: 'Kopiert!',
                 gamelabel: 'Spiele Beschriftung',
                 gamelabeldesc: 'Entfernt Beschriftungen wie "Pro" von Spielen auf dem Startbildschirm.',
+                dimoverlay: 'Dimmendes Overlay',
+                dimoverlaydesc: 'Entfernt den verdunkelnden Effekt von Spielen, wenn das Stadia Menü geöffnet ist.',
                 homegallery: 'Nutzer Galerie',
                 homegallerydesc: 'Versteckt den "Aufnahmen" Bereich am unteren Ende des Startbildschirmes.',
                 quickprev: 'Nachrichten Vorschau',
@@ -4143,6 +4493,8 @@ function enhancedTranslate(lang, log = false) {
                 usermedia: 'Képernyőképek és Videók',
                 searchbtnbase: 'Keresés',
                 avatarpopup: 'Új avatar URL (alapból üres):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Kapcsolat ideje',
                 codec: 'Videó kódolás',
                 resolution: 'Felbontás',
@@ -4190,6 +4542,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'StadiaStats.GG megnyitása',
                 stadiastatsdesc: 'Közvetlen elérés a játék statisztikákhoz, profilhoz és a "find-a-buddy" rendszerhez a stadiastats.gg',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Rács méret',
                 griddesc: 'Játékok száma soronként a Saját Játékkönyvtárban.',
                 clock: 'Óra',
@@ -4203,6 +4557,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Vágólapra másolva!',
                 gamelabel: 'Játek Címkék',
                 gamelabeldesc: 'A kezdőlapon eltávolítja a címkéket a játékokról. Pl.: "pro"',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Felvételek és játékállások',
                 homegallerydesc: 'Elrejti a kezdőlap alján található "Felvételek és játékállások" területet.',
                 quickprev: 'Üzenet Előnézet',
@@ -4274,6 +4630,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Zábery a herné situácie',
                 searchbtnbase: 'Vyhľadaj',
                 avatarpopup: 'URL ku novému avataru (ponechaj prázdne pre základný):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Uplynutý čas',
                 codec: 'Kodek',
                 resolution: 'Rozlíšenie',
@@ -4322,6 +4680,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Pozri na StadiaStats.GG',
                 stadiastatsdesc: 'Umožňuje priamu skratku do hernej štatistiky, link do Tvojho profilu a "Nájdi kamoša" funkciu na stadiastats.gg.',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Veľkosť mriežky herných ikon',
                 griddesc: 'Nastavuje počet herných ikon na riadok v knižnici hier.',
                 clock: 'Hodiny',
@@ -4335,6 +4695,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Skopírované!',
                 gamelabel: 'Visačky',
                 gamelabeldesc: 'Odstráni "Pro" a iné visačky z hier na domovskej obrazovke.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Používateľova galéria',
                 homegallerydesc: 'Skryje sekciu "Zábery a herné situácie" na spodku domovskej obrazovky.',
                 quickprev: 'Náhľad správ',
@@ -4405,6 +4767,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Screenshots & Videos',
                 searchbtnbase: 'Zoek verder',
                 avatarpopup: 'Nieuwe avatar URL (laat leeg voor standaard):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Sessie tijd',
                 codec: 'Codec',
                 resolution: 'Resolutie',
@@ -4449,6 +4813,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: undefined,
                 stadiastatsopen: undefined,
                 stadiastatsdesc: undefined,
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Rooster Grootte',
                 griddesc: undefined,
                 clock: 'Klok',
@@ -4462,6 +4828,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Gekopiëerd!',
                 gamelabel: 'Game Labels',
                 gamelabeldesc: 'Verwijderd labels zoals "Pro" van games op het homescreen.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Gebruikers Gallerij',
                 homegallerydesc: 'Verbergt het "Captures" deel onderaan het thuisscherm.',
                 quickprev: 'Berichtvoorbeeld',
@@ -4532,6 +4900,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Capturas de pantalla y Vídeos',
                 searchbtnbase: 'Buscar en',
                 avatarpopup: 'URL del nuevo avatar (vacío por defecto):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Duración de la sesión',
                 codec: 'Códec',
                 resolution: 'Resolución',
@@ -4576,6 +4946,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: undefined,
                 stadiastatsopen: undefined,
                 stadiastatsdesc: undefined,
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Tamaño de la cuadrícula',
                 griddesc: undefined,
                 clock: 'Reloj',
@@ -4589,6 +4961,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: '¡Copiado!',
                 gamelabel: 'Game Labels',
                 gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Galería de Capturas',
                 homegallerydesc: 'Oculta el área de "Capturas" de la parte inferior de la pantalla de inicio.',
                 quickprev: 'Previsualización de Mensajes',
@@ -4659,6 +5033,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Screenshot & Video',
                 searchbtnbase: 'Cerca su',
                 avatarpopup: 'Nuovo URL avatar (vuoto per impostazione predefinita):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Tempo sessione',
                 codec: 'Codec',
                 resolution: 'Risoluzione',
@@ -4706,6 +5082,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Visualizza su StadiaStats.GG',
                 stadiastatsdesc: 'Abilita scorciatoie dirette alle statistiche di gioco, link al tuo profilo e al sistema trova un amico su stadiastats.gg.',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Dimensione Griglia',
                 griddesc: 'Modifica la quantità di giochi per riga nella libreria.',
                 clock: 'Orologio',
@@ -4719,6 +5097,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Copiato!',
                 gamelabel: 'Etichette Giochi',
                 gamelabeldesc: 'Rimuove le etichette "Pro" dai giochi nella schermata home.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Galleria Utente',
                 homegallerydesc: 'Nasconde l\'area "Acquisizioni" nella parte inferiore della schermata home.',
                 quickprev: 'Anteprima Messaggio',
@@ -4789,6 +5169,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Skærmbilleder og videoer',
                 searchbtnbase: 'Søg videre',
                 avatarpopup: 'Ny avatar-URL (tom for standard):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Sessionstid',
                 codec: 'Codec',
                 resolution: 'Opløsning',
@@ -4833,6 +5215,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: undefined,
                 stadiastatsopen: undefined,
                 stadiastatsdesc: undefined,
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Gitterstørrelse',
                 griddesc: undefined,
                 clock: 'Ur',
@@ -4846,6 +5230,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Kopieret!',
                 gamelabel: undefined,
                 gamelabeldesc: undefined,
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Brugergalleri',
                 homegallerydesc: 'Skjuler området "Optager" nederst på startskærmen.',
                 quickprev: 'Eksempel på besked',
@@ -4916,6 +5302,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Captures i vídeos',
                 searchbtnbase: 'Cerca a',
                 avatarpopup: 'URL de l\'avatar  nou (buit per defecte):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Temps de sessió',
                 codec: 'Còdec',
                 resolution: 'Resolució',
@@ -4963,6 +5351,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Veure a StadiaStats.GG',
                 stadiastatsdesc: 'Permet les dreceres directes a les estadístiques dels jocs, l\'enllaç al vostre perfil i el sistema de cerca d\'altres jugadors/es a stadiastats.gg.',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Tamany de la quadrícula',
                 griddesc: 'Canvia la quantitat de jocs per fila a la biblioteca.',
                 clock: 'Rellotge',
@@ -4976,6 +5366,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Copiat!',
                 gamelabel: 'Etiquetes de joc',
                 gamelabeldesc: 'Elimina etiquetes com "Pro" dels jocs del menú principal.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Galeria d\'usuari',
                 homegallerydesc: 'Amaga l\'àrea "Captures i estats del joc" de la part inferior de la pantalla d\'inici.',
                 quickprev: 'Vista prèvia del missatge',
@@ -5046,6 +5438,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Capturas e Vídeos',
                 searchbtnbase: 'Pesquisar em',
                 avatarpopup: 'Novo URL para avatar (vazio para o padrão):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Tempo da Sessão',
                 codec: 'Codec',
                 resolution: 'Resolução',
@@ -5093,6 +5487,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Ver em StadiaStats.gg',
                 stadiastatsdesc: 'Ativa atalhos para estatísticas de jogos, link para o perfil e um sistema para encontrar amigos em StadiaStats.gg',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Tamanho da Grelha',
                 griddesc: 'Muda a quantidade de jogos em cada linha na biblioteca',
                 clock: 'Relógio',
@@ -5106,6 +5502,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Copiado!',
                 gamelabel: 'Etiquetas de Jogos',
                 gamelabeldesc: 'Remove as Etiquetas como por exemplo "Pro" dos jogos da página inicial.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Galeria do Utilizador',
                 homegallerydesc: 'Esconde a área "Capturas" no fundo do ecrã inicial.',
                 quickprev: 'Pré-visualização de Mensagens',
@@ -5176,6 +5574,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Skärmdumpar & Filmer',
                 searchbtnbase: 'Sök på',
                 avatarpopup: 'Nytt avatar-URL (lämna tomt för standard):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Sessionstid',
                 codec: 'Kodec',
                 resolution: 'Upplösning',
@@ -5220,6 +5620,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: undefined,
                 stadiastatsopen: undefined,
                 stadiastatsdesc: undefined,
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Rutnätsstorlek',
                 griddesc: undefined,
                 clock: 'Klocka',
@@ -5233,6 +5635,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Kopierat!',
                 gamelabel: undefined,
                 gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Användargalleri',
                 homegallerydesc: 'Gömmer "Captures"-sektionen längst ner på hemskärmen.',
                 quickprev: 'Förhandsvisning av Meddelande',
@@ -5303,6 +5707,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Captures & Vidéos',
                 searchbtnbase: 'Rechercher sur',
                 avatarpopup: 'URL du nouvel avatar (vide = par défaut):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Durée de la session',
                 codec: 'Codec',
                 resolution: 'Résolution',
@@ -5350,6 +5756,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Voir sur StadiaStats.GG',
                 stadiastatsdesc: 'Ajoute des liens stadiastats.gg vers votre profil, des statistiques pour chaque jeux et le système de recherche de joueurs "find-a-buddy".',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Taille de la Grille',
                 griddesc: 'Change le nombre de colonnes de jeux affichées sur la page d\'accueil.',
                 clock: 'Horloge',
@@ -5363,6 +5771,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Copié!',
                 gamelabel: 'Étiquettes des Jeux',
                 gamelabeldesc: 'Retire les étiquettes des jeux telles que l(étiquette "Pro" dans la page d\'accueil.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Galerie des Captures',
                 homegallerydesc: 'Masque la section "Captures" en bas de la page d\'accueil.',
                 quickprev: 'Prévisualisation des Messages',
@@ -5434,6 +5844,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Скриншоты и Видео',
                 searchbtnbase: 'Найти на',
                 avatarpopup: 'Ссылка на новый аватар (изначатьно пусто):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Время сессии',
                 codec: 'Кодек',
                 resolution: 'Разрешение',
@@ -5478,6 +5890,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: undefined,
                 stadiastatsopen: undefined,
                 stadiastatsdesc: undefined,
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Размер сетки',
                 griddesc: undefined,
                 clock: 'Часы',
@@ -5491,6 +5905,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Скопированно!',
                 gamelabel: 'Названия игр',
                 gamelabeldesc: 'Убирает яркие надписи "pro: " с главного экрана.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Галлерея пользователя',
                 homegallerydesc: 'Прячет галлерею под низ главного экрана.',
                 quickprev: 'Предпросмотр сообщения',
@@ -5561,6 +5977,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Captures & game states',
                 searchbtnbase: 'Serĉi en',
                 avatarpopup: 'Nova profilbilda URL (Lasu ĝin malplenan por defaŭta ):',
+                date: undefined,
+                time: undefined,
                 sessiontime: 'Tempo de seanco',
                 codec: 'Kodeko',
                 resolution: 'Distingivo',
@@ -5608,6 +6026,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Vidi je StadiaStats.GG',
                 stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
+                stadiadatabase: undefined,
+                stadiadatabasedesc: undefined,
                 gridsize: 'Grid Size',
                 griddesc: 'Changes the amount of games per row in the library.',
                 clock: 'Horloĝo',
@@ -5621,6 +6041,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Kopiita!',
                 gamelabel: 'Game Labels',
                 gamelabeldesc: 'Removes labels like "Pro" from games on the homescreen.',
+                dimoverlay: undefined,
+                dimoverlaydesc: undefined,
                 homegallery: 'Uzanta galerio',
                 homegallerydesc: 'Hides the "Captures" area at the bottom of the homescreen.',
                 quickprev: 'Antaŭrigardo de mesaĝo',
@@ -5682,3 +6104,4 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
     }
     return translation
 }
+embed(enhancedTranslate, false)
