@@ -1,5 +1,20 @@
 # Changelog
 
+## Version 1.17
+
+### 1.17.0
+* Added support for css/svg video filters, saved per game/profile
+* Added video settings for saturation, contrast, brightness and sharpening
+* Added the option remove the dimming effect when opening the Stadia menu during gameplay
+* Added a community feature setting for the Stadia Database
+* Changed text spacing on language selection
+* Changed split store styling to fit Stadias layout
+* Fixed missing translation access for `debugEnhanced("translation")`
+* Fixed "date" & "time" not being translated in the stream monitor
+* Fixed multiple elements being updated when unchanged
+* Fixed position issues with multiple dropdown menus
+* Fixed the "split store" option not working due to changes on Googles side
+
 ## Version 1.16
 
 ### 1.16.7
