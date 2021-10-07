@@ -872,10 +872,17 @@ function enhanced_updateFilters(setup = false) {
 
         // Update Filter
         if (enhanced_currentStream && enhanced_currentID) {
-            var enhanced_completeFilter = `
-                saturate(` + enhanced_settings.postprocess[enhanced_currentID].saturation + `) 
-                contrast(` + enhanced_settings.postprocess[enhanced_currentID].contrast + `) 
-                brightness(` + enhanced_settings.postprocess[enhanced_currentID].brightness + `) `
+            var enhanced_completeFilter = ''
+
+            if (enhanced_settings.postprocess[enhanced_currentID].saturation != 1) {
+                enhanced_completeFilter += 'saturate(' + enhanced_settings.postprocess[enhanced_currentID].saturation + ') '
+            }
+            if (enhanced_settings.postprocess[enhanced_currentID].contrast != 1) {
+                enhanced_completeFilter += 'contrast(' + enhanced_settings.postprocess[enhanced_currentID].contrast + ') '
+            }
+            if (enhanced_settings.postprocess[enhanced_currentID].brightness != 1) {
+                enhanced_completeFilter += 'brightness(' + enhanced_settings.postprocess[enhanced_currentID].brightness + ') '
+            }
             if (enhanced_settings.postprocess[enhanced_currentID].sharpen == 0) {
                 enhanced_completeFilter += 'url(#)'
             } else {
@@ -898,19 +905,23 @@ enhanced_filterApplied = false
 document.body.appendChild(enhanced_filterUI.main.frame)
 
 // Filter - SVG
-var enhanced_svgNS = "http://www.w3.org/2000/svg"
-var enhanced_svg = document.createElementNS(enhanced_svgNS, "svg")
+var enhanced_svgNS = 'http://www.w3.org/2000/svg'
+var enhanced_svg = document.createElementNS(enhanced_svgNS, 'svg')
 
 // Unsharp Mask
 var enhanced_svgUnsharpMask = {
-    filter: document.createElementNS(enhanced_svgNS, "filter"),
-    feGaussianBlur: document.createElementNS(enhanced_svgNS, "feGaussianBlur"),
-    feComposite: document.createElementNS(enhanced_svgNS, "feComposite")
+    filter: document.createElementNS(enhanced_svgNS, 'filter'),
+    feGaussianBlur: document.createElementNS(enhanced_svgNS, 'feGaussianBlur'),
+    feComposite: document.createElementNS(enhanced_svgNS, 'feComposite')
 }
 
 // Filter Element
-enhanced_svgUnsharpMask.filter.setAttribute("id", "enhanced_svgUnsharpMask")
-enhanced_svgUnsharpMask.filter.setAttribute("color-interpolation-filters", "sRGB")
+enhanced_svgUnsharpMask.filter.setAttribute('id', 'enhanced_svgUnsharpMask')
+enhanced_svgUnsharpMask.filter.setAttribute('color-interpolation-filters', 'sRGB')
+enhanced_svgUnsharpMask.filter.setAttribute('x', '0')
+enhanced_svgUnsharpMask.filter.setAttribute('y', '0')
+enhanced_svgUnsharpMask.filter.setAttribute('width', '100%')
+enhanced_svgUnsharpMask.filter.setAttribute('height', '100%')
 
 // Blur Element
 enhanced_svgUnsharpMask.feGaussianBlur.setAttribute('result', 'blurOut')
