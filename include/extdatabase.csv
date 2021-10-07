@@ -6,7 +6,7 @@ Assassin's Creed Odyssey,2880x1620,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5
 Assassin's Creed Origins,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,11dfda5b2d78475d8624972b9b78c995rcp1,
 Assassin's Creed Syndicate,2880x1620,30FPS | 30FPS in 1080p Mode,4K Mode | 5.1,None,88a2945345f744519c5148ddd54f26d1rcp1,
 Assassin's Creed Unity,3200x1800,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,92f77c19718444499ffb3054dd97ca36rcp1,
-Assassin's Creed: Valhalla,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,377f50584071472096bcda89b0839bc3rcp1,
+Assassin's Creed: Valhalla,3840x2160,30/60FPS Toggle | 30/60FPS Toggle in 1080p Mode,4K Mode | HDR | 5.1,None,377f50584071472096bcda89b0839bc3rcp1,
 AVICII Invector,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode,None,2c8b9ab112e5460db922dc7353381256rcp1,
 Baldur's Gate III,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,41de509cbdbb4a13828636099c57731arcp1,
 Blue Fire,3840x2160,60FPS,4K Mode,None,e9c4d2fc77424c34b0cd570bd761aab0rcp1,
@@ -226,3 +226,5 @@ Chorus,,,,,#ERROR!,checked
 FIFA 22,3840x2160,60FPS,4K Mode | HDR | 5.1,None,d45d390acba5479db7c47170b09d517drcp1,
 DreamWorks Spirit Lucky's Big Adventure,,,,None,25567bfb599a46ecab0fc8b18682b3f8rcp1,checked
 Mafia III,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,HDR | 5.1,None,9092c5ed87224f3e8a277dac0479874frcp1,
+The Falconeer,,,,None,b7be5151de924478ab54ef9afeee4826rcp1,checked
+Assassin's Creed Rogue Remastered,2880x1620,60FPS,4K Mode | 5.1,None,1aca0f17682540698822de0419062511rcp1,
