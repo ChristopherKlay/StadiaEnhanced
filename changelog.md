@@ -2,6 +2,9 @@
 
 ## Version 1.17
 
+### 1.17.1
+* Changed all filter settings to only be applied when not on default value
+
 ### 1.17.0
 * Added support for css/svg video filters, saved per game/profile
 * Added video settings for saturation, contrast, brightness and sharpening
