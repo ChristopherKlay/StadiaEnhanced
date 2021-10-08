@@ -64,6 +64,12 @@ if (enhanced_storedSettings) {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 }
 
+var userLanguage = localStorage.getItem('enhanced_laguage')
+enhanced_urlHL = new URL(window.location.href).searchParams.get('hl')
+if(!enhanced_urlHL && userLanguage) {
+    switchLanguage(userLanguage)
+}    
+
 // Check for update
 window.addEventListener('load', function() {
     window.addEventListener('click', function() {
@@ -1263,6 +1269,7 @@ enhanced_langDefault.style.textAlign = 'center'
 enhanced_langDefault.tabIndex = '0'
 enhanced_langDefault.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_langDefault.addEventListener('click', function() {
+    localStorage.setItem('enhanced_laguage', null)
     enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
     enhanced_urlBase = new URL(window.location.href)
     enhanced_urlBase.searchParams.delete('hl')
@@ -1288,6 +1295,15 @@ var enhanced_langCodes = {
     Esperanto: 'eo'
 }
 
+function switchLanguage(value) {
+    enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
+    enhanced_urlBase = new URL(window.location.href)
+    enhanced_urlBase.searchParams.set('hl', value)
+    history.replaceState(null, null, '?' + enhanced_urlBase.searchParams);
+    openStadia(enhanced_urlGoal)
+}
+
+// TODO: here
 for (const [key, value] of Object.entries(enhanced_langCodes)) {
     if (value != enhanced_local) {
         var enhanced_langOption = document.createElement('div')
@@ -1299,11 +1315,9 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
         enhanced_langOption.style.textAlign = 'center'
         enhanced_langOption.tabIndex = '0'
         enhanced_langOption.addEventListener('click', function() {
-            enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
-            enhanced_urlBase = new URL(window.location.href)
-            enhanced_urlBase.searchParams.set('hl', value)
-            history.replaceState(null, null, '?' + enhanced_urlBase.searchParams);
-            openStadia(enhanced_urlGoal)
+            enhanced_settings.lanugage = value
+            localStorage.setItem('enhanced_laguage', value)
+            switchLanguage(value)
         });
         enhanced_langDropContent.append(enhanced_langOption);
     }
