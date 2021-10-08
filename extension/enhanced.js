@@ -1303,7 +1303,6 @@ function switchLanguage(value) {
     openStadia(enhanced_urlGoal)
 }
 
-// TODO: here
 for (const [key, value] of Object.entries(enhanced_langCodes)) {
     if (value != enhanced_local) {
         var enhanced_langOption = document.createElement('div')
