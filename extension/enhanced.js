@@ -65,8 +65,8 @@ if (enhanced_storedSettings) {
 }
 
 // Check for update
-window.addEventListener('load', function() {
-    window.addEventListener('click', function() {
+window.addEventListener('load', function () {
+    window.addEventListener('click', function () {
         if (enhanced_newVersion(enhanced_settings.version, enhanced_manifest.version)) {
             switch (enhanced_settings.updateNotifications) {
                 case 0:
@@ -209,7 +209,7 @@ enhanced_injectStyle(enhanced_filterOverlayStyle, 'enhanced_styleFilterOverlay')
 var enhanced_database = []
 chrome.runtime.sendMessage({
     action: 'extdatabase'
-}, function(response) {
+}, function (response) {
     var data = csvToArray(response)
     for (var i = 1; i < data.length; i++) {
         var json = {
@@ -228,12 +228,15 @@ chrome.runtime.sendMessage({
             proFeat: data[i][3]
                 .replaceAll(' | ', ', ')
                 .replace('4K Mode', enhanced_lang.noteOne),
-            crossplay: data[i][4]
+            stadiaFeat: data[i][4]
+                .replaceAll(' | ', ', ')
+                .replace('None', enhanced_lang.unsupported),
+            crossplay: data[i][5]
                 .replaceAll(' | ', ', ')
                 .replace('None', enhanced_lang.unsupported)
                 .replace('No Cross-platform Buddy System', enhanced_lang.crossfriends),
-            id: data[i][5],
-            tested: data[i][6]
+            id: data[i][6],
+            tested: data[i][7]
         }
         enhanced_database.push(json)
     }
@@ -267,28 +270,28 @@ var enhanced_discordPresence = {}
 var enhanced_presenceData
 chrome.runtime.sendMessage({
     action: 'presencedata'
-}, function(response) {
+}, function (response) {
     enhanced_presenceData = response
     console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: ' + Object.keys(response).length + ' entries loaded successfully.', enhanced_consoleEnhanced, '')
     console.log(response)
     console.groupEnd()
-});
+})
 
 // Register
 chrome.runtime.sendMessage('agnaejlkbiiggajjmnpmeheigkflbnoo', {
     mode: 'active'
-}, function(response) {
+}, function (response) {
     if (chrome.runtime.lastError || !response) {
         console.log('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: To use the Discord presence, install: https://chrome.google.com/webstore/detail/discord-rich-presence/agnaejlkbiiggajjmnpmeheigkflbnoo', enhanced_consoleEnhanced, '');
     } else {
         console.log('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: Presence active.', enhanced_consoleEnhanced, '')
     }
-});
+})
 
 // Wait for presence requests
-chrome.runtime.onMessage.addListener(function(info, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
     sendResponse(enhanced_discordPresence)
-});
+})
 
 // Stream Monitor
 // Credits to the base by AquaRegia
@@ -300,7 +303,7 @@ enhanced_streamMonitor.style.position = 'fixed'
 enhanced_streamMonitor.style.top = enhanced_settings.monitorPosition.split("|")[0]
 enhanced_streamMonitor.style.left = enhanced_settings.monitorPosition.split("|")[1]
 enhanced_streamMonitor.style.display = 'block'
-enhanced_streamMonitor.addEventListener('dblclick', function() {
+enhanced_streamMonitor.addEventListener('dblclick', function () {
     enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -364,8 +367,8 @@ function enhanced_updateMonitor(opt) {
 function enhanced_RTCMonitor() {
     // RTC Stream Inject
     var peerConnections = [];
-    (function(original) {
-        RTCPeerConnection = function() {
+    (function (original) {
+        RTCPeerConnection = function () {
             var connection = new original(arguments[0], arguments[1])
             peerConnections.push(connection)
             return connection
@@ -400,7 +403,7 @@ function enhanced_RTCMonitor() {
         return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + Math.floor(seconds)
     }
 
-    setInterval(function() {
+    setInterval(function () {
         if (document.location.href.indexOf('/player/') == -1) {
             peerConnections = []
             enhanced_lastBytes = 0
@@ -413,7 +416,7 @@ function enhanced_RTCMonitor() {
                 enhanced_sessionActive = true
             }
             const openConnections = peerConnections.filter(x => x.connectionState == 'connected')
-            openConnections[1].getStats().then(function(stats) {
+            openConnections[1].getStats().then(function (stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf('RTCIceCandidatePair') != -1) {
                         var tmp4 = stats.get(key)
@@ -422,8 +425,8 @@ function enhanced_RTCMonitor() {
                         var tmp1 = stats.get(key)
                         var tmp2 = stats.get(tmp1.trackId)
 
-                        openConnections[1].getStats(function(stats) {
-                            var tmp3 = stats.result().find(function(f) {
+                        openConnections[1].getStats(function (stats) {
+                            var tmp3 = stats.result().find(function (f) {
                                 return 'ssrc' == f.type && f.id.endsWith('recv') && f.names().includes('mediaType') && 'video' == f.stat('mediaType')
                             });
 
@@ -503,7 +506,7 @@ function enhanced_RTCMonitor() {
 embed(enhanced_RTCMonitor)
 
 // Update Stream Elements
-setInterval(function() {
+setInterval(function () {
     if (document.location.href.indexOf('/player/') != -1) {
 
         // Get local stream data
@@ -692,11 +695,11 @@ enhanced_Monitor.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMY
 enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
 enhanced_Monitor.tabIndex = '0'
-enhanced_Monitor.addEventListener('click', function() {
+enhanced_Monitor.addEventListener('click', function () {
     enhanced_monitorState = (enhanced_monitorState + 1) % 2
     enhanced_updateMonitor(enhanced_monitorState)
 });
-enhanced_Monitor.addEventListener('dblclick', function() {
+enhanced_Monitor.addEventListener('dblclick', function () {
     // Generate new Window
     var enhanced_popMonitor = window.open('', '_blank', 'width=280,height=500,toolbar=0')
     enhanced_popMonitor.document.title = 'Stream Monitor'
@@ -709,7 +712,7 @@ enhanced_Monitor.addEventListener('dblclick', function() {
     el.innerHTML = enhanced_monitorStyle + '#enhanced_streamMonitor { display: block !important; }'
 
     // Update
-    enhanced_upPop = setInterval(function() {
+    enhanced_upPop = setInterval(function () {
         if (enhanced_popMonitor.closed) {
             clearInterval(enhanced_upPop)
         } else {
@@ -728,19 +731,19 @@ var enhanced_filterUI = {
     },
     saturation: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     },
     contrast: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     },
     brightness: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     },
     sharpen: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     }
 }
 
@@ -757,7 +760,7 @@ enhanced_filterUI.main.toggle.innerHTML = '<div role="button" class="CTvDXd QAAy
 enhanced_filterUI.main.toggle.style.cursor = 'pointer'
 enhanced_filterUI.main.toggle.style.userSelect = 'none'
 enhanced_filterUI.main.toggle.tabIndex = '0'
-enhanced_filterUI.main.toggle.addEventListener('click', function() {
+enhanced_filterUI.main.toggle.addEventListener('click', function () {
     if (enhanced_filterUI.main.frame.style.display == 'block') {
         enhanced_filterUI.main.frame.style.display = 'none'
         enhanced_injectStyle('', 'enhanced_styleDimOverlayTemp')
@@ -781,11 +784,11 @@ enhanced_filterUI.saturation.slider.type = 'range'
 enhanced_filterUI.saturation.slider.min = 0
 enhanced_filterUI.saturation.slider.max = 150
 enhanced_filterUI.saturation.slider.setAttribute('value', enhanced_settings.postprocess.saturation * 100)
-enhanced_filterUI.saturation.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.saturation.slider.addEventListener("dblclick", function () {
     this.value = 100
     enhanced_updateFilters()
 })
-enhanced_filterUI.saturation.slider.onchange = function() {
+enhanced_filterUI.saturation.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -796,11 +799,11 @@ enhanced_filterUI.contrast.slider.type = 'range'
 enhanced_filterUI.contrast.slider.min = 50
 enhanced_filterUI.contrast.slider.max = 150
 enhanced_filterUI.contrast.slider.setAttribute('value', enhanced_settings.postprocess.contrast * 100)
-enhanced_filterUI.contrast.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.contrast.slider.addEventListener("dblclick", function () {
     this.value = 100
     enhanced_updateFilters()
 })
-enhanced_filterUI.contrast.slider.onchange = function() {
+enhanced_filterUI.contrast.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -811,11 +814,11 @@ enhanced_filterUI.brightness.slider.type = 'range'
 enhanced_filterUI.brightness.slider.min = 50
 enhanced_filterUI.brightness.slider.max = 150
 enhanced_filterUI.brightness.slider.setAttribute('value', enhanced_settings.postprocess.brightness * 100)
-enhanced_filterUI.brightness.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.brightness.slider.addEventListener("dblclick", function () {
     this.value = 100
     enhanced_updateFilters()
 })
-enhanced_filterUI.brightness.slider.onchange = function() {
+enhanced_filterUI.brightness.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -826,11 +829,11 @@ enhanced_filterUI.sharpen.slider.type = 'range'
 enhanced_filterUI.sharpen.slider.min = 0
 enhanced_filterUI.sharpen.slider.max = 20
 enhanced_filterUI.sharpen.slider.setAttribute('value', enhanced_settings.postprocess.sharpen)
-enhanced_filterUI.sharpen.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.sharpen.slider.addEventListener("dblclick", function () {
     this.value = 0
     enhanced_updateFilters()
 })
-enhanced_filterUI.sharpen.slider.onchange = function() {
+enhanced_filterUI.sharpen.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -952,7 +955,7 @@ enhanced_Windowed.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcM
 enhanced_Windowed.style.cursor = 'pointer'
 enhanced_Windowed.style.userSelect = 'none'
 enhanced_Windowed.tabIndex = '0'
-enhanced_Windowed.addEventListener('click', function() {
+enhanced_Windowed.addEventListener('click', function () {
     if (enhanced_BlockFullscreen) {
         enhanced_Windowed.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">fullscreen</i></span><span class="caSJV" jsname="V67aGc">' + enhanced_lang.windowed + '</span></div>'
         enhanced_BlockFullscreen = false
@@ -963,7 +966,7 @@ enhanced_Windowed.addEventListener('click', function() {
         document.exitFullscreen()
     }
 });
-window.addEventListener('fullscreenchange', function(event) {
+window.addEventListener('fullscreenchange', function (event) {
     if (enhanced_BlockFullscreen) {
         event.stopPropagation()
     }
@@ -974,7 +977,7 @@ var enhanced_emojiswitch = document.createElement('div')
 enhanced_emojiswitch.innerHTML = '😃'
 enhanced_emojiswitch.style.marginLeft = '1rem'
 enhanced_emojiswitch.style.cursor = 'pointer'
-enhanced_emojiswitch.addEventListener('click', function() {
+enhanced_emojiswitch.addEventListener('click', function () {
     if (enhanced_emojiPicker.style.display == 'none') {
         enhanced_emojiPicker.style.display = 'flex'
         if (document.querySelector('div[jsname="IbgIAb"] .emG1mb')) {
@@ -999,12 +1002,12 @@ enhanced_emojiPicker.style.userSelect = 'none'
 enhanced_emojiPicker.style.borderRadius = '0.5rem'
 enhanced_emojiPicker.style.display = 'none'
 
-enhanced_emojiPicker.addEventListener('click', function(i) {
+enhanced_emojiPicker.addEventListener('click', function (i) {
     document.querySelector('.m0BtMe').focus()
     document.execCommand('insertText', false, i.target.textContent)
 })
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target != enhanced_emojiswitch && e.target != enhanced_emojiPicker && enhanced_emojiPicker.contains(e.target) === false) {
         enhanced_emojiPicker.style.display = 'none'
     }
@@ -1051,7 +1054,7 @@ enhanced_ClockFriends.style.display = 'flex'
 enhanced_ClockFriends.style.alignItems = 'center'
 enhanced_ClockFriends.style.justifyContent = 'center'
 enhanced_ClockFriends.style.zIndex = '20'
-enhanced_ClockFriends.addEventListener('click', function() {
+enhanced_ClockFriends.addEventListener('click', function () {
     enhanced_settings.clockMode = (enhanced_settings.clockMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -1073,7 +1076,7 @@ enhanced_ClockOverlay.style.cursor = 'pointer'
 enhanced_ClockOverlay.style.alignItems = 'center'
 enhanced_ClockOverlay.style.justifyContent = 'center'
 enhanced_ClockOverlay.style.zIndex = '20'
-enhanced_ClockOverlay.addEventListener('click', function() {
+enhanced_ClockOverlay.addEventListener('click', function () {
     enhanced_settings.clockMode = (enhanced_settings.clockMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -1086,7 +1089,7 @@ var enhanced_ProGamesLink = document.createElement('a')
 enhanced_ProGames.appendChild(enhanced_ProGamesLink)
 enhanced_ProGamesLink.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_ProGamesLink.textContent = 'Pro'
-enhanced_ProGamesLink.addEventListener('click', function() {
+enhanced_ProGamesLink.addEventListener('click', function () {
     openStadia('store/list/2001')
 })
 if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
@@ -1108,7 +1111,7 @@ enhanced_StoreDropdown.style.padding = '0'
 enhanced_StoreDropdown.style.cursor = 'pointer'
 enhanced_StoreDropdown.style.userSelect = 'none'
 enhanced_StoreDropdown.tabIndex = '0'
-enhanced_StoreDropdown.addEventListener('click', function() {
+enhanced_StoreDropdown.addEventListener('click', function () {
     if (enhanced_StoreDropContent.style.display === 'none') {
         enhanced_StoreDropContent.style.display = 'block'
     } else {
@@ -1131,13 +1134,13 @@ if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
     document.getElementsByClassName('ZECEje')[0].append(enhanced_StoreContainer)
 }
 
-enhanced_StoreDropdown.addEventListener('keyup', function(e) {
+enhanced_StoreDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
         enhanced_StoreDropdown.click()
     }
 })
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target != enhanced_StoreDropdown && enhanced_StoreDropdown.contains(e.target) === false) {
         enhanced_StoreDropContent.style.display = 'none'
     }
@@ -1152,7 +1155,7 @@ enhanced_OnSale.style.cursor = 'pointer'
 enhanced_OnSale.style.userSelect = 'none'
 enhanced_OnSale.style.paddingRight = '2rem'
 enhanced_OnSale.tabIndex = '0'
-enhanced_OnSale.addEventListener('click', function() {
+enhanced_OnSale.addEventListener('click', function () {
     openStadia('store/list/14')
 });
 enhanced_StoreDropContent.append(enhanced_OnSale)
@@ -1166,7 +1169,7 @@ enhanced_ProDeals.style.cursor = 'pointer'
 enhanced_ProDeals.style.userSelect = 'none'
 enhanced_ProDeals.style.paddingRight = '2rem'
 enhanced_ProDeals.tabIndex = '0'
-enhanced_ProDeals.addEventListener('click', function() {
+enhanced_ProDeals.addEventListener('click', function () {
     openStadia('store/list/45')
 })
 enhanced_StoreDropContent.append(enhanced_ProDeals)
@@ -1180,7 +1183,7 @@ enhanced_leavePro.style.cursor = 'pointer'
 enhanced_leavePro.style.userSelect = 'none'
 enhanced_leavePro.style.paddingRight = '2rem'
 enhanced_leavePro.tabIndex = '0'
-enhanced_leavePro.addEventListener('click', function() {
+enhanced_leavePro.addEventListener('click', function () {
     openStadia('store/list/36')
 })
 enhanced_StoreDropContent.append(enhanced_leavePro)
@@ -1194,7 +1197,7 @@ enhanced_ubiPlus.style.cursor = 'pointer'
 enhanced_ubiPlus.style.userSelect = 'none'
 enhanced_ubiPlus.style.paddingRight = '2rem'
 enhanced_ubiPlus.tabIndex = '0'
-enhanced_ubiPlus.addEventListener('click', function() {
+enhanced_ubiPlus.addEventListener('click', function () {
     openStadia('store/list/2002')
 })
 enhanced_StoreDropContent.append(enhanced_ubiPlus)
@@ -1208,7 +1211,7 @@ enhanced_AllGames.style.cursor = 'pointer'
 enhanced_AllGames.style.userSelect = 'none'
 enhanced_AllGames.style.paddingRight = '2rem'
 enhanced_AllGames.tabIndex = '0'
-enhanced_AllGames.addEventListener('click', function() {
+enhanced_AllGames.addEventListener('click', function () {
     openStadia('store/list/3')
 })
 enhanced_StoreDropContent.append(enhanced_AllGames)
@@ -1228,7 +1231,7 @@ enhanced_langDropdown.style.padding = '0'
 enhanced_langDropdown.style.cursor = 'pointer'
 enhanced_langDropdown.style.userSelect = 'none'
 enhanced_langDropdown.tabIndex = '0'
-enhanced_langDropdown.addEventListener('click', function() {
+enhanced_langDropdown.addEventListener('click', function () {
     if (enhanced_langDropContent.style.display === 'none') {
         enhanced_langDropContent.style.display = 'block'
         enhanced_langDropContent.scrollTop = 0
@@ -1262,7 +1265,7 @@ enhanced_langDefault.style.padding = '0 2rem'
 enhanced_langDefault.style.textAlign = 'center'
 enhanced_langDefault.tabIndex = '0'
 enhanced_langDefault.style.borderBottom = '1px solid rgba(255,255,255,.06)'
-enhanced_langDefault.addEventListener('click', function() {
+enhanced_langDefault.addEventListener('click', function () {
     enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
     enhanced_urlBase = new URL(window.location.href)
     enhanced_urlBase.searchParams.delete('hl')
@@ -1298,7 +1301,7 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
         enhanced_langOption.style.padding = '0 2rem'
         enhanced_langOption.style.textAlign = 'center'
         enhanced_langOption.tabIndex = '0'
-        enhanced_langOption.addEventListener('click', function() {
+        enhanced_langOption.addEventListener('click', function () {
             enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
             enhanced_urlBase = new URL(window.location.href)
             enhanced_urlBase.searchParams.set('hl', value)
@@ -1311,13 +1314,13 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
 
 secureInsert(enhanced_langContainer, '.ZECEje', 1)
 
-enhanced_langDropdown.addEventListener('keyup', function(e) {
+enhanced_langDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
         enhanced_langDropdown.click()
     }
 });
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target != enhanced_langDropdown && enhanced_langDropdown.contains(e.target) === false) {
         enhanced_langDropContent.style.display = 'none'
         enhanced_langDropdown.firstElementChild.style.color = ''
@@ -1338,7 +1341,7 @@ enhanced_SettingsDropdown.style.width = '2.5rem'
 enhanced_SettingsDropdown.style.padding = '0'
 enhanced_SettingsDropdown.style.userSelect = 'none'
 enhanced_SettingsDropdown.tabIndex = '0'
-enhanced_SettingsDropdown.addEventListener('click', function(e) {
+enhanced_SettingsDropdown.addEventListener('click', function (e) {
     if (document.querySelector('.X1asv.ahEBEd.LJni0').style.opacity == '1') {
         document.querySelector('.hBNsYe.QAAyWd.wJYinb.YySNWc').click()
     }
@@ -1353,13 +1356,13 @@ enhanced_SettingsDropdown.addEventListener('click', function(e) {
     }
 })
 
-enhanced_SettingsDropdown.addEventListener('keyup', function(e) {
+enhanced_SettingsDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
         enhanced_SettingsDropdown.click()
     }
 })
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
         enhanced_settingsFrame.style.display = 'none'
         enhanced_SettingsDropdown.firstElementChild.style.color = ''
@@ -1425,7 +1428,7 @@ enhanced_settingsShortcutTitle.style.userSelect = 'none'
 enhanced_settingsShortcutTitle.style.textAlign = 'center'
 enhanced_settingsShortcutTitle.style.padding = '0 1rem'
 enhanced_settingsShortcutTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsShortcutTitle.addEventListener('click', function() {
+enhanced_settingsShortcutTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsShortcut)
@@ -1441,7 +1444,7 @@ enhanced_settingsStreamTitle.style.userSelect = 'none'
 enhanced_settingsStreamTitle.style.textAlign = 'center'
 enhanced_settingsStreamTitle.style.padding = '0 1rem'
 enhanced_settingsStreamTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsStreamTitle.addEventListener('click', function() {
+enhanced_settingsStreamTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsStream)
@@ -1457,7 +1460,7 @@ enhanced_settingsGeneralTitle.style.userSelect = 'none'
 enhanced_settingsGeneralTitle.style.textAlign = 'center'
 enhanced_settingsGeneralTitle.style.padding = '0 1rem'
 enhanced_settingsGeneralTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsGeneralTitle.addEventListener('click', function() {
+enhanced_settingsGeneralTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsGeneral)
@@ -1473,7 +1476,7 @@ enhanced_settingsMessagesTitle.style.userSelect = 'none'
 enhanced_settingsMessagesTitle.style.textAlign = 'center'
 enhanced_settingsMessagesTitle.style.padding = '0 1rem'
 enhanced_settingsMessagesTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsMessagesTitle.addEventListener('click', function() {
+enhanced_settingsMessagesTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsMessages)
@@ -1489,7 +1492,7 @@ enhanced_settingsComFeatTitle.style.userSelect = 'none'
 enhanced_settingsComFeatTitle.style.textAlign = 'center'
 enhanced_settingsComFeatTitle.style.padding = '0 1rem'
 enhanced_settingsComFeatTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsComFeatTitle.addEventListener('click', function() {
+enhanced_settingsComFeatTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsComFeat)
@@ -1505,7 +1508,7 @@ enhanced_settingsEnhancedTitle.style.userSelect = 'none'
 enhanced_settingsEnhancedTitle.style.textAlign = 'center'
 enhanced_settingsEnhancedTitle.style.padding = '0 1rem'
 enhanced_settingsEnhancedTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsEnhancedTitle.addEventListener('click', function() {
+enhanced_settingsEnhancedTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsEnhanced)
@@ -1521,7 +1524,7 @@ enhanced_UserProfile.style.cursor = 'pointer'
 enhanced_UserProfile.style.userSelect = 'none'
 enhanced_UserProfile.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserProfile.tabIndex = '0'
-enhanced_UserProfile.addEventListener('click', function() {
+enhanced_UserProfile.addEventListener('click', function () {
     openStadia('profile/' + enhanced_AccountInfo[2])
 })
 enhanced_settingsShortcut.append(enhanced_UserProfile)
@@ -1535,7 +1538,7 @@ enhanced_UserMedia.style.cursor = 'pointer'
 enhanced_UserMedia.style.userSelect = 'none'
 enhanced_UserMedia.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
-enhanced_UserMedia.addEventListener('click', function() {
+enhanced_UserMedia.addEventListener('click', function () {
     openStadia('captures')
 })
 enhanced_settingsShortcut.append(enhanced_UserMedia)
@@ -1549,7 +1552,7 @@ enhanced_speedTest.style.cursor = 'pointer'
 enhanced_speedTest.style.userSelect = 'none'
 enhanced_speedTest.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_speedTest.tabIndex = '0'
-enhanced_speedTest.addEventListener('click', function() {
+enhanced_speedTest.addEventListener('click', function () {
     window.open('https://projectstream.google.com/speedtest', '_blank')
 })
 enhanced_settingsShortcut.append(enhanced_speedTest)
@@ -1563,7 +1566,7 @@ enhanced_communityPage.style.cursor = 'pointer'
 enhanced_communityPage.style.userSelect = 'none'
 enhanced_communityPage.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_communityPage.tabIndex = '0'
-enhanced_communityPage.addEventListener('click', function() {
+enhanced_communityPage.addEventListener('click', function () {
     window.open('https://community.stadia.com/', '_blank')
 })
 enhanced_settingsShortcut.append(enhanced_communityPage)
@@ -1577,7 +1580,7 @@ enhanced_GitHubLink.style.cursor = 'pointer'
 enhanced_GitHubLink.style.userSelect = 'none'
 enhanced_GitHubLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_GitHubLink.tabIndex = '0'
-enhanced_GitHubLink.addEventListener('click', function() {
+enhanced_GitHubLink.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_GitHubLink)
@@ -1591,7 +1594,7 @@ enhanced_ChangelogLink.style.cursor = 'pointer'
 enhanced_ChangelogLink.style.userSelect = 'none'
 enhanced_ChangelogLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ChangelogLink.tabIndex = '0'
-enhanced_ChangelogLink.addEventListener('click', function() {
+enhanced_ChangelogLink.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_ChangelogLink)
@@ -1605,7 +1608,7 @@ enhanced_ReportIssue.style.cursor = 'pointer'
 enhanced_ReportIssue.style.userSelect = 'none'
 enhanced_ReportIssue.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ReportIssue.tabIndex = '0'
-enhanced_ReportIssue.addEventListener('click', function() {
+enhanced_ReportIssue.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced/issues', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_ReportIssue)
@@ -1619,7 +1622,7 @@ enhanced_CoffeeLink.style.cursor = 'pointer'
 enhanced_CoffeeLink.style.userSelect = 'none'
 enhanced_CoffeeLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_CoffeeLink.tabIndex = '0'
-enhanced_CoffeeLink.addEventListener('click', function() {
+enhanced_CoffeeLink.addEventListener('click', function () {
     window.open('https://www.buymeacoffee.com/christopherklay', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_CoffeeLink)
@@ -1632,7 +1635,7 @@ enhanced_Codec.style.cursor = 'pointer'
 enhanced_Codec.style.userSelect = 'none'
 enhanced_Codec.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Codec.tabIndex = '0'
-enhanced_Codec.addEventListener('click', function() {
+enhanced_Codec.addEventListener('click', function () {
     enhanced_settings.codec = (enhanced_settings.codec + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('codec', enhanced_settings.codec)
@@ -1647,7 +1650,7 @@ enhanced_Resolution.style.cursor = 'pointer'
 enhanced_Resolution.style.userSelect = 'none'
 enhanced_Resolution.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
-enhanced_Resolution.addEventListener('click', function() {
+enhanced_Resolution.addEventListener('click', function () {
     enhanced_settings.resolution = (enhanced_settings.resolution + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('resolution', enhanced_settings.resolution)
@@ -1658,7 +1661,7 @@ var enhanced_resolutionPopup = document.createElement('div')
 enhanced_resolutionPopup.id = 'enhanced_resolutionPopup'
 enhanced_resolutionPopup.className = 'HP4yJd heSpB'
 enhanced_resolutionPopup.style.cursor = 'pointer'
-enhanced_resolutionPopup.addEventListener('click', function() {
+enhanced_resolutionPopup.addEventListener('click', function () {
     enhanced_settings.resolution = (enhanced_settings.resolution + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('resolution', enhanced_settings.resolution)
@@ -1667,7 +1670,7 @@ enhanced_resolutionPopup.addEventListener('click', function() {
 function enhanced_changeResolution() {
     var enhanced_AccountInfo = enhanced_loadUserInfo()
     var x, y
-    setInterval(function() {
+    setInterval(function () {
         var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
         switch (enhanced_settings.resolution) {
             case 0:
@@ -1714,7 +1717,7 @@ enhanced_monitorAutostart.id = 'enhanced_monitorAutostart'
 enhanced_monitorAutostart.style.cursor = 'pointer'
 enhanced_monitorAutostart.style.userSelect = 'none'
 enhanced_monitorAutostart.tabIndex = '0'
-enhanced_monitorAutostart.addEventListener('click', function() {
+enhanced_monitorAutostart.addEventListener('click', function () {
     enhanced_settings.monitorAutostart = (enhanced_settings.monitorAutostart + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
@@ -1729,7 +1732,7 @@ enhanced_Grid.style.cursor = 'pointer'
 enhanced_Grid.style.userSelect = 'none'
 enhanced_Grid.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Grid.tabIndex = '0'
-enhanced_Grid.addEventListener('click', function() {
+enhanced_Grid.addEventListener('click', function () {
     enhanced_settings.gridSize = (enhanced_settings.gridSize + 1) % 6
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('gridsize', enhanced_settings.gridSize)
@@ -1744,7 +1747,7 @@ enhanced_Clock.style.cursor = 'pointer'
 enhanced_Clock.style.userSelect = 'none'
 enhanced_Clock.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Clock.tabIndex = '0'
-enhanced_Clock.addEventListener('click', function() {
+enhanced_Clock.addEventListener('click', function () {
     enhanced_settings.clockOption = (enhanced_settings.clockOption + 1) % 4
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('clock', enhanced_settings.clockOption)
@@ -1759,7 +1762,7 @@ enhanced_useFilter.style.cursor = 'pointer'
 enhanced_useFilter.style.userSelect = 'none'
 enhanced_useFilter.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_useFilter.tabIndex = '0'
-enhanced_useFilter.addEventListener('click', function() {
+enhanced_useFilter.addEventListener('click', function () {
     enhanced_settings.filter = (enhanced_settings.filter + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('filter', enhanced_settings.filter)
@@ -1776,11 +1779,11 @@ enhanced_Invite.style.cursor = 'pointer'
 enhanced_Invite.style.userSelect = 'none'
 enhanced_Invite.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Invite.tabIndex = '0'
-enhanced_Invite.addEventListener('click', function() {
+enhanced_Invite.addEventListener('click', function () {
     navigator.clipboard.writeText(enhanced_InviteURL)
     enhanced_Invite.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">person_add</i></span><span class="mJVLwb" >' + enhanced_lang.inviteactive + '</span>'
     enhanced_Invite.style.color = '#ff773d'
-    setTimeout(function() {
+    setTimeout(function () {
         enhanced_Invite.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">person_add</i></span><span class="mJVLwb">' + enhanced_lang.invitebase + '</span>'
         enhanced_Invite.style.color = ''
     }, 1000)
@@ -1795,7 +1798,7 @@ enhanced_exportSettings.innerHTML = '<i class="material-icons-extended STPv1" ar
 enhanced_exportSettings.style.cursor = 'pointer'
 enhanced_exportSettings.style.userSelect = 'none'
 enhanced_exportSettings.tabIndex = '0'
-enhanced_exportSettings.addEventListener('click', function() {
+enhanced_exportSettings.addEventListener('click', function () {
     var enhanced_exportContent = JSON.stringify(enhanced_settings)
     enhanced_downloadFile('enhanced_' + enhanced_settings.user, 'json', enhanced_exportContent)
 })
@@ -1804,7 +1807,7 @@ enhanced_settingsEnhanced.append(enhanced_exportSettings)
 // Import settings
 var enhanced_importDummy = document.createElement('input')
 enhanced_importDummy.type = 'file'
-enhanced_importDummy.addEventListener('change', function() {
+enhanced_importDummy.addEventListener('change', function () {
     let files = enhanced_importDummy.files
     if (files.length == 0) {
         return
@@ -1833,7 +1836,7 @@ enhanced_importSettings.innerHTML = '<i class="material-icons-extended STPv1" ar
 enhanced_importSettings.style.cursor = 'pointer'
 enhanced_importSettings.style.userSelect = 'none'
 enhanced_importSettings.tabIndex = '0'
-enhanced_importSettings.addEventListener('click', function() {
+enhanced_importSettings.addEventListener('click', function () {
     enhanced_importDummy.click()
 })
 enhanced_settingsEnhanced.append(enhanced_importSettings)
@@ -1846,7 +1849,7 @@ enhanced_resetSettings.innerHTML = '<i class="material-icons-extended STPv1" ari
 enhanced_resetSettings.style.cursor = 'pointer'
 enhanced_resetSettings.style.userSelect = 'none'
 enhanced_resetSettings.tabIndex = '0'
-enhanced_resetSettings.addEventListener('click', function() {
+enhanced_resetSettings.addEventListener('click', function () {
     if (confirm(enhanced_lang.confirmreset)) {
         enhanced_applySettings('resetall')
     }
@@ -1861,7 +1864,7 @@ enhanced_hidePreview.style.cursor = 'pointer'
 enhanced_hidePreview.style.userSelect = 'none'
 enhanced_hidePreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_hidePreview.tabIndex = '0'
-enhanced_hidePreview.addEventListener('click', function() {
+enhanced_hidePreview.addEventListener('click', function () {
     enhanced_settings.hideMessagePreview = (enhanced_settings.hideMessagePreview + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('messagepreview', enhanced_settings.hideMessagePreview)
@@ -1876,7 +1879,7 @@ enhanced_quickReply.style.cursor = 'pointer'
 enhanced_quickReply.style.userSelect = 'none'
 enhanced_quickReply.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_quickReply.tabIndex = '0'
-enhanced_quickReply.addEventListener('click', function() {
+enhanced_quickReply.addEventListener('click', function () {
     enhanced_settings.hideQuickReply = (enhanced_settings.hideQuickReply + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('quickreply', enhanced_settings.hideQuickReply)
@@ -1891,7 +1894,7 @@ enhanced_inlineConvert.style.cursor = 'pointer'
 enhanced_inlineConvert.style.userSelect = 'none'
 enhanced_inlineConvert.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_inlineConvert.tabIndex = '0'
-enhanced_inlineConvert.addEventListener('click', function() {
+enhanced_inlineConvert.addEventListener('click', function () {
     enhanced_settings.hideInlinePreview = (enhanced_settings.hideInlinePreview + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('inlinepreview', enhanced_settings.hideInlinePreview)
@@ -1906,7 +1909,7 @@ enhanced_offlineUser.style.cursor = 'pointer'
 enhanced_offlineUser.style.userSelect = 'none'
 enhanced_offlineUser.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_offlineUser.tabIndex = '0'
-enhanced_offlineUser.addEventListener('click', function() {
+enhanced_offlineUser.addEventListener('click', function () {
     enhanced_settings.hideOfflineUsers = (enhanced_settings.hideOfflineUsers + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('offlineusers', enhanced_settings.hideOfflineUsers)
@@ -1920,7 +1923,7 @@ enhanced_invisibleUser.id = 'enhanced_lastMessage'
 enhanced_invisibleUser.style.cursor = 'pointer'
 enhanced_invisibleUser.style.userSelect = 'none'
 enhanced_invisibleUser.tabIndex = '0'
-enhanced_invisibleUser.addEventListener('click', function() {
+enhanced_invisibleUser.addEventListener('click', function () {
     enhanced_settings.hideInvisibleUsers = (enhanced_settings.hideInvisibleUsers + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('invisibleusers', enhanced_settings.hideInvisibleUsers)
@@ -1935,7 +1938,7 @@ enhanced_gameLabel.style.cursor = 'pointer'
 enhanced_gameLabel.style.userSelect = 'none'
 enhanced_gameLabel.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_gameLabel.tabIndex = '0'
-enhanced_gameLabel.addEventListener('click', function() {
+enhanced_gameLabel.addEventListener('click', function () {
     enhanced_settings.hideLabels = (enhanced_settings.hideLabels + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('gamelabel', enhanced_settings.hideLabels)
@@ -1950,7 +1953,7 @@ enhanced_dimOverlay.style.cursor = 'pointer'
 enhanced_dimOverlay.style.userSelect = 'none'
 enhanced_dimOverlay.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_dimOverlay.tabIndex = '0'
-enhanced_dimOverlay.addEventListener('click', function() {
+enhanced_dimOverlay.addEventListener('click', function () {
     enhanced_settings.dimOverlay = (enhanced_settings.dimOverlay + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('dimoverlay', enhanced_settings.dimOverlay)
@@ -1965,7 +1968,7 @@ enhanced_mediaPreview.style.cursor = 'pointer'
 enhanced_mediaPreview.style.userSelect = 'none'
 enhanced_mediaPreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_mediaPreview.tabIndex = '0'
-enhanced_mediaPreview.addEventListener('click', function() {
+enhanced_mediaPreview.addEventListener('click', function () {
     enhanced_settings.hideUserMedia = (enhanced_settings.hideUserMedia + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('mediapreview', enhanced_settings.hideUserMedia)
@@ -1980,7 +1983,7 @@ enhanced_categoryPreview.style.cursor = 'pointer'
 enhanced_categoryPreview.style.userSelect = 'none'
 enhanced_categoryPreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_categoryPreview.tabIndex = '0'
-enhanced_categoryPreview.addEventListener('click', function() {
+enhanced_categoryPreview.addEventListener('click', function () {
     enhanced_settings.hideCategories = (enhanced_settings.hideCategories + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('categorypreview', enhanced_settings.hideCategories)
@@ -1995,7 +1998,7 @@ enhanced_storeList.style.cursor = 'pointer'
 enhanced_storeList.style.userSelect = 'none'
 enhanced_storeList.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_storeList.tabIndex = '0'
-enhanced_storeList.addEventListener('click', function() {
+enhanced_storeList.addEventListener('click', function () {
     enhanced_settings.splitStore = (enhanced_settings.splitStore + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('storelist', enhanced_settings.splitStore)
@@ -2010,7 +2013,7 @@ enhanced_hideFamilyElements.style.cursor = 'pointer'
 enhanced_hideFamilyElements.style.userSelect = 'none'
 enhanced_hideFamilyElements.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_hideFamilyElements.tabIndex = '0'
-enhanced_hideFamilyElements.addEventListener('click', function() {
+enhanced_hideFamilyElements.addEventListener('click', function () {
     enhanced_settings.hideFamilySharing = (enhanced_settings.hideFamilySharing + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('familysharing', enhanced_settings.hideFamilySharing)
@@ -2025,7 +2028,7 @@ enhanced_showShortcut.style.cursor = 'pointer'
 enhanced_showShortcut.style.userSelect = 'none'
 enhanced_showShortcut.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_showShortcut.tabIndex = '0'
-enhanced_showShortcut.addEventListener('click', function() {
+enhanced_showShortcut.addEventListener('click', function () {
     enhanced_settings.enableShortcuts = (enhanced_settings.enableShortcuts + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('shortcuts', enhanced_settings.enableShortcuts)
@@ -2039,7 +2042,7 @@ enhanced_showStadiaStats.id = 'enhanced_showStadiaStats'
 enhanced_showStadiaStats.style.cursor = 'pointer'
 enhanced_showStadiaStats.style.userSelect = 'none'
 enhanced_showStadiaStats.tabIndex = '0'
-enhanced_showStadiaStats.addEventListener('click', function() {
+enhanced_showStadiaStats.addEventListener('click', function () {
     enhanced_settings.enableStadiaStats = (enhanced_settings.enableStadiaStats + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
@@ -2054,7 +2057,7 @@ enhanced_showStadiaDatabase.id = 'enhanced_showStadiaDatabase'
 enhanced_showStadiaDatabase.style.cursor = 'pointer'
 enhanced_showStadiaDatabase.style.userSelect = 'none'
 enhanced_showStadiaDatabase.tabIndex = '0'
-enhanced_showStadiaDatabase.addEventListener('click', function() {
+enhanced_showStadiaDatabase.addEventListener('click', function () {
     enhanced_settings.enableStadiaDatabase = (enhanced_settings.enableStadiaDatabase + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
@@ -2069,7 +2072,7 @@ enhanced_setNotification.style.cursor = 'pointer'
 enhanced_setNotification.style.userSelect = 'none'
 enhanced_setNotification.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_setNotification.tabIndex = '0'
-enhanced_setNotification.addEventListener('click', function() {
+enhanced_setNotification.addEventListener('click', function () {
     enhanced_settings.updateNotifications = (enhanced_settings.updateNotifications + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('notification', enhanced_settings.updateNotifications)
@@ -2083,7 +2086,7 @@ enhanced_streamMode.id = 'enhanced_streamMode'
 enhanced_streamMode.style.cursor = 'pointer'
 enhanced_streamMode.style.userSelect = 'none'
 enhanced_streamMode.tabIndex = '0'
-enhanced_streamMode.addEventListener('click', function() {
+enhanced_streamMode.addEventListener('click', function () {
     enhanced_settings.streamMode = (enhanced_settings.streamMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('streammode', enhanced_settings.streamMode)
@@ -2097,7 +2100,7 @@ enhanced_customAvatar.id = 'enhanced_customAvatar'
 enhanced_customAvatar.role = 'button'
 enhanced_customAvatar.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">face</i></span><span class="caSJV snByac">' + enhanced_lang.avatar + '</span></div>'
 enhanced_customAvatar.tabIndex = '0'
-enhanced_customAvatar.addEventListener('click', function() {
+enhanced_customAvatar.addEventListener('click', function () {
     enhanced_avatarURL = prompt(enhanced_lang.avatarpopup)
     if (enhanced_avatarURL != null) {
         if (enhanced_avatarURL.length < 1) {
@@ -2119,7 +2122,7 @@ enhanced_stadiaStatsProfile.role = 'button'
 enhanced_stadiaStatsProfile.style.display = 'none'
 enhanced_stadiaStatsProfile.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">account_circle</i></span><span class="caSJV snByac">' + enhanced_lang.stadiastats + '</span></div>'
 enhanced_stadiaStatsProfile.tabIndex = '0'
-enhanced_stadiaStatsProfile.addEventListener('click', function() {
+enhanced_stadiaStatsProfile.addEventListener('click', function () {
     window.open('https://stadiastats.gg/players/' + enhanced_AccountInfo[2] + '/' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1], '_blank')
 })
 
@@ -2141,7 +2144,7 @@ enhanced_YouTube.tabIndex = '0'
 enhanced_YouTube.style.backgroundColor = '#c00'
 enhanced_YouTube.style.color = 'white'
 enhanced_YouTube.style.marginTop = '1.5rem'
-enhanced_YouTube.addEventListener('click', function() {
+enhanced_YouTube.addEventListener('click', function () {
     enhanced_GameTitle = document.querySelectorAll('.UG7HXc')[document.querySelectorAll('.UG7HXc').length - 1].textContent
     window.open('https://www.youtube.com/results?search_query=' + enhanced_GameTitle, '_blank')
 })
@@ -2158,7 +2161,7 @@ enhanced_Metacritic.tabIndex = '0'
 enhanced_Metacritic.style.backgroundColor = '#131416'
 enhanced_Metacritic.style.color = 'white'
 enhanced_Metacritic.style.marginTop = '1.5rem'
-enhanced_Metacritic.addEventListener('click', function() {
+enhanced_Metacritic.addEventListener('click', function () {
     enhanced_GameTitle = document.querySelectorAll('.UG7HXc')[document.querySelectorAll('.UG7HXc').length - 1].textContent;
     window.open('https://www.metacritic.com/search/game/' + enhanced_GameTitle + '/results', '_blank')
 })
@@ -2179,7 +2182,7 @@ enhanced_wishlistHeart.style.padding = '0'
 enhanced_wishlistHeart.style.cursor = 'pointer'
 enhanced_wishlistHeart.style.userSelect = 'none'
 enhanced_wishlistHeart.tabIndex = '0'
-enhanced_wishlistHeart.addEventListener('click', function() {
+enhanced_wishlistHeart.addEventListener('click', function () {
     var enhanced_currentSKU = document.location.href.split('sku/')[1].split('?')[0]
 
     if (enhanced_settings.wishlist.includes(enhanced_currentSKU)) {
@@ -2216,7 +2219,7 @@ enhanced_showAll.innerHTML = '<div role="button" tabindex="0" class="CTvDXd QAAy
 enhanced_showAll.style.cursor = 'pointer'
 enhanced_showAll.style.flexGrow = '0'
 enhanced_showAll.style.webkitFlexGrow = '0'
-enhanced_showAll.addEventListener('click', function() {
+enhanced_showAll.addEventListener('click', function () {
     switch (enhanced_showState) {
         case true:
             enhanced_showAll.innerHTML = '<div role="button" style="color: white" tabindex="0" class="CTvDXd QAAyWd JkRlwc"><i class="material-icons-extended" aria-hidden="true">visibility_off</i></div>'
@@ -2240,7 +2243,7 @@ enhanced_listFilterGames.className = 'Adwm6c'
 enhanced_listFilterGames.style.userSelect = 'none'
 enhanced_listFilterGames.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterGames)
-enhanced_listFilterGames.addEventListener('click', function() {
+enhanced_listFilterGames.addEventListener('click', function () {
     enhanced_switchListFilter(1)
 })
 
@@ -2250,7 +2253,7 @@ enhanced_listFilterAddOns.className = 'Adwm6c'
 enhanced_listFilterAddOns.style.userSelect = 'none'
 enhanced_listFilterAddOns.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterAddOns)
-enhanced_listFilterAddOns.addEventListener('click', function() {
+enhanced_listFilterAddOns.addEventListener('click', function () {
     enhanced_switchListFilter(2)
 })
 
@@ -2260,7 +2263,7 @@ enhanced_listFilterBundles.className = 'Adwm6c'
 enhanced_listFilterBundles.style.userSelect = 'none'
 enhanced_listFilterBundles.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterBundles)
-enhanced_listFilterBundles.addEventListener('click', function() {
+enhanced_listFilterBundles.addEventListener('click', function () {
     enhanced_switchListFilter(3)
 })
 
@@ -2270,7 +2273,7 @@ enhanced_listFilterWishlist.className = 'Adwm6c'
 enhanced_listFilterWishlist.style.userSelect = 'none'
 enhanced_listFilterWishlist.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterWishlist)
-enhanced_listFilterWishlist.addEventListener('click', function() {
+enhanced_listFilterWishlist.addEventListener('click', function () {
     enhanced_switchListFilter(4)
 })
 
@@ -2356,7 +2359,7 @@ enhanced_unlockedFilter.innerHTML = enhanced_lang.show + ': ' + enhanced_lang.al
 enhanced_unlockedFilter.className = 'Adwm6c'
 enhanced_unlockedFilter.style.userSelect = 'none'
 enhanced_unlockedFilter.style.marginLeft = '0.75rem'
-enhanced_unlockedFilter.addEventListener('click', function() {
+enhanced_unlockedFilter.addEventListener('click', function () {
     if (this.state == 0) {
         enhanced_injectStyle('.h6J22d.cWe8yc.QAAyWd { display: none !important } .h6J22d.cWe8yc.GIh6Af.QAAyWd { display: grid !important }', 'unlockedfilter')
         this.state = 1
@@ -2379,7 +2382,7 @@ enhanced_gameStateFilter.innerHTML = enhanced_lang.show + ': ' + enhanced_lang.a
 enhanced_gameStateFilter.className = 'Adwm6c'
 enhanced_gameStateFilter.style.userSelect = 'none'
 enhanced_gameStateFilter.style.marginLeft = '0.75rem'
-enhanced_gameStateFilter.addEventListener('click', function() {
+enhanced_gameStateFilter.addEventListener('click', function () {
     this.state = (this.state + 1) % 3
     switch (this.state) {
         case 0:
@@ -2400,7 +2403,7 @@ var enhanced_installShortcut = document.createElement('div')
 enhanced_installShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc'
 enhanced_installShortcut.id = 'enhanced_installShortcut'
 enhanced_installShortcut.tabIndex = '0'
-enhanced_installShortcut.addEventListener('click', function() {
+enhanced_installShortcut.addEventListener('click', function () {
     window.open('https://stadiaicons.web.app/' + enhanced_installShortcut.gameID + '/?fullName=' + encodeURIComponent(enhanced_installShortcut.gameName), '_blank')
 })
 
@@ -2420,7 +2423,7 @@ enhanced_shortcutLastPlayed.style.borderRadius = '50%'
 enhanced_shortcutLastPlayed.style.padding = '0.2rem'
 enhanced_shortcutLastPlayed.style.cursor = 'pointer'
 enhanced_shortcutLastPlayed.style.zIndex = '2'
-enhanced_shortcutLastPlayed.addEventListener('click', function() {
+enhanced_shortcutLastPlayed.addEventListener('click', function () {
     window.open('https://stadiaicons.web.app/' + enhanced_shortcutLastPlayed.gameID + '/?fullName=' + encodeURIComponent(enhanced_shortcutLastPlayed.gameName), '_blank')
 })
 
@@ -2430,7 +2433,7 @@ enhanced_stadiaStatsShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t
 enhanced_stadiaStatsShortcut.id = 'enhanced_stadiaStatsShortcut'
 enhanced_stadiaStatsShortcut.innerHTML = enhanced_lang.stadiastatsopen
 enhanced_stadiaStatsShortcut.tabIndex = '0'
-enhanced_stadiaStatsShortcut.addEventListener('click', function() {
+enhanced_stadiaStatsShortcut.addEventListener('click', function () {
     window.open('https://stadiastats.gg/games/' + enhanced_stadiaStatsShortcut.gameID, '_blank')
 })
 
@@ -2461,7 +2464,7 @@ enhanced_captureScreenshot.style.width = '2.5rem'
 enhanced_captureScreenshot.style.padding = '0px'
 enhanced_captureScreenshot.style.marginRight = '1rem'
 enhanced_captureScreenshot.style.userSelect = 'none'
-enhanced_captureScreenshot.addEventListener('click', function() {
+enhanced_captureScreenshot.addEventListener('click', function () {
     if (enhanced_activeCapFilter != 'image') {
         enhanced_activeCapFilter = 'image'
         enhanced_captureScreenshot.style.color = '#ff773d'
@@ -2483,7 +2486,7 @@ enhanced_captureClip.tabIndex = '0'
 enhanced_captureClip.style.width = '2.5rem'
 enhanced_captureClip.style.padding = '0px'
 enhanced_captureClip.style.userSelect = 'none'
-enhanced_captureClip.addEventListener('click', function() {
+enhanced_captureClip.addEventListener('click', function () {
     if (enhanced_activeCapFilter != 'movie') {
         enhanced_activeCapFilter = 'movie'
         enhanced_captureScreenshot.style.color = 'rgba(255,255,255,.9)'
@@ -2545,7 +2548,7 @@ for (var i = 0; i < 26; i++) {
     }
     el.style.cursor = 'pointer'
     el.style.userSelect = 'none'
-    el.addEventListener('click', function() {
+    el.addEventListener('click', function () {
         enhanced_applySettings('letterbox', this.letter + ',' + this.state)
     })
     enhanced_letters.push(el)
@@ -2567,7 +2570,7 @@ enhanced_openBuddy.style.padding = '0'
 enhanced_openBuddy.style.cursor = 'pointer'
 enhanced_openBuddy.style.userSelect = 'none'
 enhanced_openBuddy.tabIndex = '0'
-enhanced_openBuddy.addEventListener('click', function() {
+enhanced_openBuddy.addEventListener('click', function () {
     window.open('https://stadiastats.gg/find-a-buddy', '_blank')
 })
 secureInsert(enhanced_buddyContainer, '.ZECEje', 1)
@@ -2587,7 +2590,7 @@ enhanced_favorite.style.cursor = 'pointer'
 enhanced_favorite.style.background = '#202124'
 enhanced_favorite.style.zIndex = '2'
 enhanced_favorite.active = false
-enhanced_favorite.addEventListener('click', function() {
+enhanced_favorite.addEventListener('click', function () {
     if (this.active) {
         enhanced_favorite.active = false
         enhanced_favorite.style.color = ''
@@ -2613,7 +2616,7 @@ enhanced_visibility.style.cursor = 'pointer'
 enhanced_visibility.style.background = '#202124'
 enhanced_visibility.style.zIndex = '2'
 enhanced_visibility.active = false
-enhanced_visibility.addEventListener('click', function() {
+enhanced_visibility.addEventListener('click', function () {
     if (this.active) {
         this.active = false
         this.style.color = ''
@@ -2648,7 +2651,7 @@ var enhanced_sessionStart = 0
 var enhanced_wrappers = []
 
 // Main Loop
-setInterval(function() {
+setInterval(function () {
     // Location - Home & Library
     if (document.location.href.indexOf('/home') != -1 || document.location.href.indexOf('/library') != -1) {
 
@@ -2986,6 +2989,11 @@ setInterval(function() {
                         // Entry - Pro Features
                         if (enhanced_database[i].proFeat != '') {
                             enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Pro Features</div><div class="tM4Phe">' + enhanced_database[i].proFeat + '</div></div>'
+                        }
+
+                        // Entry - Stadia Features
+                        if (enhanced_database[i].stadiaFeat != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Stadia Features</div><div class="tM4Phe">' + enhanced_database[i].stadiaFeat + '</div></div>'
                         }
 
                         // Entry - Crossplay
@@ -4038,7 +4046,7 @@ function enhanced_pushNotification(content, image, dura) {
         <div class="zHwKDd" style="background-image:url(` + image + `)"></div>
     </div>`
 
-    setTimeout(function() {
+    setTimeout(function () {
         // State - Show
         this.notification.className = 'OFe4V kVaHpd'
         this.notification.style.visibility = 'visible'
@@ -4049,7 +4057,7 @@ function enhanced_pushNotification(content, image, dura) {
     }, 1000)
 
     if (dura) {
-        setTimeout(function() {
+        setTimeout(function () {
             // State - Hide
             this.notification.className = 'OFe4V'
             this.notification.style.opacity = 0
@@ -4058,7 +4066,7 @@ function enhanced_pushNotification(content, image, dura) {
             this.active = false
         }, (dura * 1000) + 1000)
     } else {
-        window.addEventListener('click', function(e) {
+        window.addEventListener('click', function (e) {
             if (e.path.indexOf(this.notification) == -1 && this.active) {
                 // State - Hide
                 this.notification.className = 'OFe4V'
@@ -4078,7 +4086,7 @@ function enhanced_downloadFile(filename, type, text) {
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
     element.setAttribute('download', filename + "." + type)
     element.style.display = 'none'
-        // Process in page context
+    // Process in page context
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
@@ -4530,9 +4538,9 @@ function enhancedTranslate(lang, log = false) {
                 fps: 'Képkocka',
                 testdiscl: undefined,
                 datadiscl: 'Ez a maximum elérhető képkockaszám 4K módban játszva (Pro előfizetés szükséges),\
-azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
-Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
+                            azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
+                            Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS 1080p módban',
@@ -4667,10 +4675,10 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Framerate',
                 testdiscl: undefined,
                 datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro odber).\
-                Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
-                je uprednostnené rozlíšenie.\
-                Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
-                a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
+                            Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
+                            je uprednostnené rozlíšenie.\
+                            Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                            a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS pri 1080p móde',
@@ -5044,8 +5052,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Screenshot & Video',
                 searchbtnbase: 'Cerca su',
                 avatarpopup: 'Nuovo URL avatar (vuoto per impostazione predefinita):',
-                date: undefined,
-                time: undefined,
+                date: 'Data',
+                time: 'Ore',
                 sessiontime: 'Tempo sessione',
                 codec: 'Codec',
                 resolution: 'Risoluzione',
@@ -5068,18 +5076,18 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 extdetail: 'Dettaglio Esteso',
                 maxresolution: 'Risoluzione Massima',
                 fps: 'Framerate',
-                testdiscl: undefined,
+                testdiscl: '<b>Nota bene:</b> Questo gioco deve ancora essere testato.',
                 datadiscl: 'Questo è il framerate massimo ottenuto mentre si gioca in modalità 4k (devi essere un membro abbonato Pro).\
-                Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
-                Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
-                noteOne: undefined,
-                noteTwo: undefined,
+                            Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
+                            Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
+                noteOne: 'Modalità 4K',
+                noteTwo: 'Cambio 30/60 FPS',
                 noteThree: '60 FPS in modalità 1080p',
                 noteFour: '30 FPS in modalità 1080p',
                 noteFive: 'Non compatibile con la modalità 4K',
-                unsupported: undefined,
-                crossfriends: undefined,
+                unsupported: 'Non supportato',
+                crossfriends: 'Nessun sistema Amico Multipiattaforma',
                 community: 'Comunità',
                 speedtest: 'Speedtest',
                 quickaccess: 'Accesso Veloce',
@@ -5093,8 +5101,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Visualizza su StadiaStats.GG',
                 stadiastatsdesc: 'Abilita scorciatoie dirette alle statistiche di gioco, link al tuo profilo e al sistema trova un amico su stadiastats.gg.',
-                stadiadatabase: undefined,
-                stadiadatabasedesc: undefined,
+                stadiadatabase: 'Database Stadia ',
+                stadiadatabasedesc: 'Visualizza una sezione "Dettagli estesi" nella pagina del negozio dei giochi, che mostra framerate, risoluzione e altro ancora sul gioco.',
                 gridsize: 'Dimensione Griglia',
                 griddesc: 'Modifica la quantità di giochi per riga nella libreria.',
                 clock: 'Orologio',
@@ -5108,8 +5116,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Copiato!',
                 gamelabel: 'Etichette Giochi',
                 gamelabeldesc: 'Rimuove le etichette "Pro" dai giochi nella schermata home.',
-                dimoverlay: undefined,
-                dimoverlaydesc: undefined,
+                dimoverlay: 'Overlay Oscurato',
+                dimoverlaydesc: 'Rimuove l\'effetto di oscuramento quando si apre il menu Stadia durante il gioco.',
                 homegallery: 'Galleria Utente',
                 homegallerydesc: 'Nasconde l\'area "Acquisizioni" nella parte inferiore della schermata home.',
                 quickprev: 'Anteprima Messaggio',
@@ -5142,9 +5150,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 familyelementsdesc: 'Nasconde l\'opzione "Condividi questo gioco con la famiglia".',
                 donations: 'Donazioni',
                 reportbug: 'Segnala un bug',
-                exportset: undefined,
-                importset: undefined,
-                importerror: undefined,
+                exportset: 'Esporta impostazioni',
+                importset: 'Importa impostazioni',
+                importerror: 'Il file che si sta tentando di aprire non contiene un profilo Stadia Enhanced valido.',
                 resetsettings: 'Ripristina Impostazioni'
             }
             break
@@ -5339,9 +5347,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Fotogrames per segon',
                 testdiscl: undefined,
                 datadiscl: 'Aquest és el màxim de fotogrames per segon aconseguit quan es juga un joc en mode 4K (cal ser subscriptor Pro).\
-                En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
-                Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
+                            En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
+                            Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS en mode 1080p',
@@ -5475,9 +5483,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Fotogramas',
                 testdiscl: undefined,
                 datadiscl: 'Esta é a taxa máxima de fotogramas alcançada ao jogar um jogo em modo 4K (deve ser um subscritor PRO). \
-            Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
-            Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-            e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
+                            Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
+                            Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS em 1080P',
@@ -5718,8 +5726,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Captures & Vidéos',
                 searchbtnbase: 'Rechercher sur',
                 avatarpopup: 'URL du nouvel avatar (vide = par défaut):',
-                date: undefined,
-                time: undefined,
+                date: 'Date',
+                time: 'Heure',
                 sessiontime: 'Durée de la session',
                 codec: 'Codec',
                 resolution: 'Résolution',
@@ -5742,18 +5750,18 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 extdetail: 'Plus de Détails',
                 maxresolution: 'Résolution Maximale',
                 fps: 'Framerate',
-                testdiscl: undefined,
+                testdiscl: '<b>Avertissement:</b> Ce jeu n\'a pas encore été testé.',
                 datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
-                        Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
-                        Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                        et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
-                noteOne: undefined,
-                noteTwo: undefined,
+                            Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
+                            Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
+                noteOne: 'Mode 4K',
+                noteTwo: 'Option 30/60 FPS',
                 noteThree: '60FPS en mode 1080p',
                 noteFour: '30FPS en mode 1080p',
                 noteFive: 'Incompatible avec le mode 4K',
-                unsupported: undefined,
-                crossfriends: undefined,
+                unsupported: 'Incompatible',
+                crossfriends: 'Aucun système d\'amis multiplatforme',
                 community: 'Communauté',
                 speedtest: 'Test de Débit',
                 quickaccess: 'Accès Rapide',
@@ -5767,23 +5775,23 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 stadiastats: 'StadiaStats',
                 stadiastatsopen: 'Voir sur StadiaStats.GG',
                 stadiastatsdesc: 'Ajoute des liens stadiastats.gg vers votre profil, des statistiques pour chaque jeux et le système de recherche de joueurs "find-a-buddy".',
-                stadiadatabase: undefined,
-                stadiadatabasedesc: undefined,
+                stadiadatabase: 'Base de données Stadia',
+                stadiadatabasedesc: 'Affiche une section "Détails Supplémentaires" sur la page de chaque jeu dans le Store. Cette section indique le taux de rafraîchissement, la résolution et d\'autres informations sur le jeu.',
                 gridsize: 'Taille de la Grille',
                 griddesc: 'Change le nombre de colonnes de jeux affichées sur la page d\'accueil.',
                 clock: 'Horloge',
                 clockdesc: 'Affiche l\'heure dans la liste d\'amis et/ou dans le menu en-jeu.',
-                friendslist: 'Liste d\'amis',
-                igoverlay: 'Menu en-jeu',
+                friendslist: 'Liste d\'Amis',
+                igoverlay: 'Menu En-Jeu',
                 listoverlay: 'Liste & Menu',
-                filter: 'Jeux masqués',
+                filter: 'Jeux Masqués',
                 filterdesc: 'Permet de masquer des jeux sur la page d\'accueil. Le système peut être activé/désactivé en utilisant l\'icône en haut à droite de la liste de jeux de la page d\'accueil.',
                 invitebase: 'Copier le lien d\'invitation',
                 inviteactive: 'Copié!',
                 gamelabel: 'Étiquettes des Jeux',
                 gamelabeldesc: 'Retire les étiquettes des jeux telles que l(étiquette "Pro" dans la page d\'accueil.',
-                dimoverlay: undefined,
-                dimoverlaydesc: undefined,
+                dimoverlay: 'Menu Estompé',
+                dimoverlaydesc: 'Retire l\'effet d\'assombrissement lorsque le menu Stadia est ouvert en-jeu.',
                 homegallery: 'Galerie des Captures',
                 homegallerydesc: 'Masque la section "Captures" en bas de la page d\'accueil.',
                 quickprev: 'Prévisualisation des Messages',
@@ -5817,9 +5825,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 familyelementsdesc: 'Masque l\'option "Partager ce jeu avec la famille".',
                 donations: 'Dons',
                 reportbug: 'Signaler un bug',
-                exportset: undefined,
-                importset: undefined,
-                importerror: undefined,
+                exportset: 'Exporter vos réglages',
+                importset: 'Importer des réglages',
+                importerror: 'Le fichier que vous essayez d\'ouvrir ne contient pas un profil Stadia Enhanced valide.',
                 resetsettings: 'Réinitialiser les Paramètres'
             }
             break
@@ -5955,7 +5963,6 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 importerror: undefined,
                 resetsettings: 'Сбросить настройки'
             }
-
         case 'eo':
             translate_load = {
                 default: 'Defaŭta',
