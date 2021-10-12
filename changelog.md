@@ -2,6 +2,10 @@
 
 ## Version 1.17
 
+### 1.17.2
+* Updated italian and french translations
+* Added support for stadia features (i.e. Crowd Play) to the extended details
+
 ### 1.17.1
 * Changed all filter settings to only be applied when not set to default value
 
