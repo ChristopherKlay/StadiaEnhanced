@@ -2,6 +2,9 @@
 
 ## Version 1.17
 
+### 1.17.3
+* Fixed a display issue with "frames lost" in the stream monitor on the Stadia menu
+
 ### 1.17.2
 * Updated italian and french translations
 * Added support for stadia features (i.e. Crowd Play) to the extended details
