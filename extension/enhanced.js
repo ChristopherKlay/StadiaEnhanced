@@ -2469,7 +2469,7 @@ enhanced_captureScreenshot.addEventListener('click', function () {
         enhanced_activeCapFilter = 'image'
         enhanced_captureScreenshot.style.color = '#ff773d'
         enhanced_captureClip.style.color = 'rgba(255,255,255,.9)'
-        enhanced_injectStyle('.MykDQe.QAAyWd.hWAuu.mESdP.d3Yvnc.Lkvyqc.MP0FQb { display: none }', 'enhanced_styleCaptureFilter')
+        enhanced_injectStyle('.au9T5d.lEPylf.sfe1Ff div[data-is-photo="false"] { display: none }', 'enhanced_styleCaptureFilter')
     } else {
         enhanced_activeCapFilter = 'none'
         enhanced_captureScreenshot.style.color = 'rgba(255,255,255,.9)'
@@ -2479,7 +2479,7 @@ enhanced_captureScreenshot.addEventListener('click', function () {
 enhanced_captureFilters.append(enhanced_captureScreenshot)
 
 enhanced_captureClip = document.createElement('div')
-enhanced_captureClip.id = 'enhanced_captureScreenshot'
+enhanced_captureClip.id = 'enhanced_captureClip'
 enhanced_captureClip.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_captureClip.innerHTML = '<i class="material-icons-extended" aria-hidden="true">movie</i>'
 enhanced_captureClip.tabIndex = '0'
@@ -2491,7 +2491,7 @@ enhanced_captureClip.addEventListener('click', function () {
         enhanced_activeCapFilter = 'movie'
         enhanced_captureScreenshot.style.color = 'rgba(255,255,255,.9)'
         enhanced_captureClip.style.color = '#ff773d'
-        enhanced_injectStyle('.MykDQe.QAAyWd.hWAuu.mESdP.d3Yvnc.Lkvyqc.GcgHfd { display: none }', 'enhanced_styleCaptureFilter')
+        enhanced_injectStyle('.au9T5d.lEPylf.sfe1Ff div[data-is-photo="true"] { display: none }', 'enhanced_styleCaptureFilter')
     } else {
         enhanced_activeCapFilter = 'none'
         enhanced_captureClip.style.color = 'rgba(255,255,255,.9)'
@@ -3151,7 +3151,7 @@ setInterval(function () {
 
             if (enhanced_timesAvailable) {
                 for (var i = 0; i < enhanced_timeQuery.length; i++) {
-                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.split(/[\s]/)
+                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.replace('.', '').split(/[\s]/)
 
                     switch (enhanced_titlePlaytime.length) {
                         case 2:
