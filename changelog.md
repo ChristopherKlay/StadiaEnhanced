@@ -2,6 +2,10 @@
 
 ## Version 1.17
 
+### 1.17.4
+* Fixed photo/video filtering options not working after changes to captures by Google
+* Fixed issues with playtime calculation in games with over 1000 hours in a single title
+
 ### 1.17.3
 * Fixed a display issue with "frames lost" in the stream monitor on the Stadia menu
 
