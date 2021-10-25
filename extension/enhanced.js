@@ -314,6 +314,13 @@ enhanced_dragElement(enhanced_streamMonitor)
 var enhanced_menuMonitor = document.createElement('div')
 enhanced_menuMonitor.style.whiteSpace = 'nowrap'
 
+// Session Time
+var enhanced_menuMonitorSessionTime = document.createElement('div')
+enhanced_menuMonitorSessionTime.id = 'enhanced_menuMonitorCodec'
+enhanced_menuMonitorSessionTime.className = 'HPX1od'
+enhanced_menuMonitorSessionTime.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">00:00:00</span></div>'
+enhanced_menuMonitor.append(enhanced_menuMonitorSessionTime)
+
 // Codec
 var enhanced_menuMonitorCodec = document.createElement('div')
 enhanced_menuMonitorCodec.id = 'enhanced_menuMonitorCodec'
@@ -843,6 +850,11 @@ function enhanced_updateFilters(setup = false) {
         // Get Current Game
         var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
+
+        // Set Transform
+        if (enhanced_currentStream) {
+            enhanced_currentStream.style.willChange = 'filter'
+        }
 
         // Create Game Entry
         if (!enhanced_settings.postprocess[enhanced_currentID]) {
@@ -2897,11 +2909,10 @@ setInterval(function () {
         } else {
             var enhanced_sessionDur = Date.now()
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000)
-            enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>'
+            if (enhanced_menuMonitorSessionTime.textContent != enhanced_lang.sessiontime + enhanced_sessionDur) {
+                enhanced_menuMonitorSessionTime.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>'
+            }
         }
-
-        // Session Timer
-        secureInsert(enhanced_sessionTimer, '.OWVtN', 0)
 
         // Discord Presence
         var enhanced_currentStatus = document.querySelector('.HDKZKb.LiQ6Hb')
@@ -2931,7 +2942,7 @@ setInterval(function () {
         }
 
         // Menu Monitor
-        secureInsert(enhanced_menuMonitor, '.OWVtN', 0)
+        secureInsert(enhanced_menuMonitor, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
     } else {
         enhanced_discordPresence = {}
         enhanced_Windowed.style.display = 'none'
