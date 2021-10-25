@@ -2,6 +2,11 @@
 
 ## Version 1.17
 
+### 1.17.5
+* Changed filter settings for rendering optimization
+* Fixed stream details on the Stadia menu not being visible when using a controller
+* Fixed multiple refresh issues related to session times
+
 ### 1.17.4
 * Fixed photo/video filtering options not working after changes to captures by Google
 * Fixed issues with playtime calculation in games with over 1000 hours in a single title
