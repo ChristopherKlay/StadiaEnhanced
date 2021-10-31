@@ -2,6 +2,11 @@
 
 ## Version 1.17
 
+### 1.17.6
+* Changed the store filter to work with language based support, after changes on Stadias side
+* Changed store filter labels to match Stadias store entry labeling
+* Removed the wishlist option (hopefully temp.), due to Stadia removing the ID from store entries [[#190]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/190#issuecomment-955766042)
+
 ### 1.17.5
 * Changed filter settings for rendering optimization
 * Fixed stream details on the Stadia menu not being visible when using a controller
