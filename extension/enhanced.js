@@ -5,7 +5,6 @@ var enhanced_manifest = chrome.runtime.getManifest()
 var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
 console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - ' + enhanced_manifest.version + ': Start-Up', enhanced_consoleEnhanced, '');
 var enhanced_timerLoadStart = window.performance.now();
-var enhanced_supportedLang = 'en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi|sk'
 var enhanced_local = document.querySelector("html").getAttribute('lang')
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
@@ -82,6 +81,88 @@ window.addEventListener('load', function () {
         once: true
     })
 })
+
+// Language Support
+var enhanced_languageSupport = {
+    supportedCodes: 'ca|da|de|en|es|fi|fr|hu|it|nl|no|pl|pt|sk|sv',
+    storeFilters: {
+        ca: {
+            game: 'Joc',
+            bundle: 'Paquet',
+            addon: 'Complement'
+        },
+        da: {
+            game: 'Spil',
+            bundle: 'Pakke',
+            addon: 'Tilføjelse'
+        },
+        de: {
+            game: 'Spiel',
+            bundle: 'Bundle',
+            addon: 'Add-on'
+        },
+        en: {
+            game: 'Game',
+            bundle: 'Bundle',
+            addon: 'Add-On'
+        },
+        es: {
+            game: 'Juego',
+            bundle: 'Paquete',
+            addon: 'Complemento'
+        },
+        fi: {
+            game: 'Peli',
+            bundle: 'Paketti',
+            addon: 'Laajennus'
+        },
+        fr: {
+            game: 'Jeu',
+            bundle: 'Pack',
+            addon: 'Extension'
+        },
+        hu: {
+            game: 'Játék',
+            bundle: 'Csomag',
+            addon: 'Kiegészítő'
+        },
+        it: {
+            game: 'Gioco',
+            bundle: 'Bundle',
+            addon: 'Contenuto aggiuntivo'
+        },
+        nl: {
+            game: 'Game',
+            bundle: 'Bundel',
+            addon: 'Add-On'
+        },
+        no: {
+            game: 'Spill',
+            bundle: 'Pakke',
+            addon: 'Tillegg'
+        },
+        pl: {
+            game: 'Gra',
+            bundle: 'Pakiet',
+            addon: 'Dotatek'
+        },
+        pt: {
+            game: 'Game',
+            bundle: 'Bundle',
+            addon: 'Add-On'
+        },
+        sk: {
+            game: 'Hra',
+            bundle: 'Balíček',
+            addon: 'Doplnok'
+        },
+        sv: {
+            game: 'Spel',
+            bundle: 'Paket',
+            addon: 'Extra innehåll'
+        }
+    }
+}
 
 // CSS Changes - Global styles and overwrites
 var enhanced_discordActive = false
@@ -2209,7 +2290,8 @@ enhanced_wishlistHeart.addEventListener('click', function () {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
 if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
-    document.getElementsByClassName('ZECEje')[0].append(enhanced_wishlistContainer)
+    // Currently deactivated, due to store changes
+    // document.getElementsByClassName('ZECEje')[0].append(enhanced_wishlistContainer)
 }
 
 // Account Menu - Changes to the account menu behaviour
@@ -2244,13 +2326,13 @@ enhanced_showAll.addEventListener('click', function () {
     }
 })
 
-// List Type Filter
+// List Type Filter [Language Supported]
 enhanced_activeListFilter = 0
 enhanced_listFilter = document.createElement('div')
 enhanced_listFilter.style.display = 'flex'
 
 enhanced_listFilterGames = document.createElement('div')
-enhanced_listFilterGames.innerHTML = enhanced_lang.games
+enhanced_listFilterGames.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].game
 enhanced_listFilterGames.className = 'Adwm6c'
 enhanced_listFilterGames.style.userSelect = 'none'
 enhanced_listFilterGames.style.marginLeft = '0.75rem'
@@ -2259,34 +2341,24 @@ enhanced_listFilterGames.addEventListener('click', function () {
     enhanced_switchListFilter(1)
 })
 
-enhanced_listFilterAddOns = document.createElement('div')
-enhanced_listFilterAddOns.innerHTML = enhanced_lang.addons
-enhanced_listFilterAddOns.className = 'Adwm6c'
-enhanced_listFilterAddOns.style.userSelect = 'none'
-enhanced_listFilterAddOns.style.marginLeft = '0.75rem'
-enhanced_listFilter.append(enhanced_listFilterAddOns)
-enhanced_listFilterAddOns.addEventListener('click', function () {
-    enhanced_switchListFilter(2)
-})
-
 enhanced_listFilterBundles = document.createElement('div')
-enhanced_listFilterBundles.innerHTML = enhanced_lang.bundles
+enhanced_listFilterBundles.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].bundle
 enhanced_listFilterBundles.className = 'Adwm6c'
 enhanced_listFilterBundles.style.userSelect = 'none'
 enhanced_listFilterBundles.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterBundles)
 enhanced_listFilterBundles.addEventListener('click', function () {
-    enhanced_switchListFilter(3)
+    enhanced_switchListFilter(2)
 })
 
-enhanced_listFilterWishlist = document.createElement('div')
-enhanced_listFilterWishlist.innerHTML = enhanced_lang.wishlist
-enhanced_listFilterWishlist.className = 'Adwm6c'
-enhanced_listFilterWishlist.style.userSelect = 'none'
-enhanced_listFilterWishlist.style.marginLeft = '0.75rem'
-enhanced_listFilter.append(enhanced_listFilterWishlist)
-enhanced_listFilterWishlist.addEventListener('click', function () {
-    enhanced_switchListFilter(4)
+enhanced_listFilterAddOns = document.createElement('div')
+enhanced_listFilterAddOns.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].addon
+enhanced_listFilterAddOns.className = 'Adwm6c'
+enhanced_listFilterAddOns.style.userSelect = 'none'
+enhanced_listFilterAddOns.style.marginLeft = '0.75rem'
+enhanced_listFilter.append(enhanced_listFilterAddOns)
+enhanced_listFilterAddOns.addEventListener('click', function () {
+    enhanced_switchListFilter(3)
 })
 
 function enhanced_switchListFilter(type) {
@@ -2300,52 +2372,28 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = 'line-through'
                 enhanced_listFilterAddOns.style.color = 'grey'
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_listFilterWishlist.style.color = 'grey'
-                enhanced_listFilterWishlist.style.textDecoration = 'line-through'
-                enhanced_injectStyle('.h6J22d.undefined.QAAyWd[jslog*="17:2"], .h6J22d.undefined.QAAyWd[jslog*="17:3"], .h6J22d.undefined.QAAyWd[jslog*="17:9"] { display: none }', 'enhanced_styleListFilter')
+                enhanced_applySettings('storefilter', 0)
                 break
             case 2:
                 enhanced_activeListFilter = 2
-                enhanced_listFilterGames.style.color = 'grey'
-                enhanced_listFilterGames.style.textDecoration = 'line-through'
-                enhanced_listFilterBundles.style.color = 'grey'
-                enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'white'
-                enhanced_listFilterAddOns.style.textDecoration = 'none'
-                enhanced_listFilterWishlist.style.color = 'grey'
-                enhanced_listFilterWishlist.style.textDecoration = 'line-through'
-                enhanced_injectStyle('.h6J22d.undefined.QAAyWd[jslog*="17:1"], .h6J22d.undefined.QAAyWd[jslog*="17:3"] { display: none }', 'enhanced_styleListFilter')
-                break
-            case 3:
-                enhanced_activeListFilter = 3
                 enhanced_listFilterGames.style.color = 'grey'
                 enhanced_listFilterGames.style.textDecoration = 'line-through'
                 enhanced_listFilterBundles.style.color = 'white'
                 enhanced_listFilterBundles.style.textDecoration = 'none'
                 enhanced_listFilterAddOns.style.color = 'grey'
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_listFilterWishlist.style.color = 'grey'
-                enhanced_listFilterWishlist.style.textDecoration = 'line-through'
-                enhanced_injectStyle('.h6J22d.undefined.QAAyWd[jslog*="17:1"], .h6J22d.undefined.QAAyWd[jslog*="17:2"], .h6J22d.undefined.QAAyWd[jslog*="17:9"] { display: none }', 'enhanced_styleListFilter')
+                enhanced_applySettings('storefilter', 1)
                 break
-            case 4:
-                enhanced_activeListFilter = 4
+            case 3:
+                enhanced_activeListFilter = 3
                 enhanced_listFilterGames.style.color = 'grey'
                 enhanced_listFilterGames.style.textDecoration = 'line-through'
                 enhanced_listFilterBundles.style.color = 'grey'
                 enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'grey'
-                enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_listFilterWishlist.style.color = 'white'
-                enhanced_listFilterWishlist.style.textDecoration = 'none'
-                var enhanced_wishlist = enhanced_settings.wishlist.substring(1, enhanced_settings.wishlist.length - 1).split(')(')
-                var enhanced_generateStyle = ''
-
-                for (var i = 0; i < enhanced_wishlist.length; i++) {
-                    enhanced_generateStyle += 'div[data-sku-id*="' + enhanced_wishlist[i] + '"], '
-                }
-                enhanced_generateStyle = '.h6J22d.undefined.QAAyWd { display: none; } ' + enhanced_generateStyle.substring(0, enhanced_generateStyle.length - 2) + ' { display: grid !important }'
-                enhanced_injectStyle(enhanced_generateStyle, 'enhanced_styleListFilter')
+                enhanced_listFilterAddOns.style.color = 'white'
+                enhanced_listFilterAddOns.style.textDecoration = 'none'
+                enhanced_applySettings('storefilter', 2)
+                break
         }
     } else {
         enhanced_activeListFilter = 0
@@ -2355,9 +2403,7 @@ function enhanced_switchListFilter(type) {
         enhanced_listFilterBundles.style.textDecoration = 'none'
         enhanced_listFilterAddOns.style.color = 'white'
         enhanced_listFilterAddOns.style.textDecoration = 'none'
-        enhanced_listFilterWishlist.style.color = 'white'
-        enhanced_listFilterWishlist.style.textDecoration = 'none'
-        enhanced_injectStyle('', 'enhanced_styleListFilter')
+        enhanced_applySettings('storefilter', 3)
     }
 }
 
@@ -2543,9 +2589,6 @@ enhanced_letterBox.id = 'enhanced_letterBox'
 enhanced_letterBox.className = 'jkwub bJBQjf'
 enhanced_letterBox.style.marginRight = 'auto'
 enhanced_letterBox.style.textIndent = '-0.5rem'
-if (!enhanced_supportedLang.includes(enhanced_local)) {
-    enhanced_letterBox.style.display = 'none'
-}
 
 var enhanced_letters = []
 for (var i = 0; i < 26; i++) {
@@ -2751,7 +2794,9 @@ setInterval(function () {
         }
 
         // Letter Box
-        secureInsert(enhanced_letterBox, '.w83WBe.URhE4b', 1)
+        if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+            secureInsert(enhanced_letterBox, '.w83WBe.URhE4b', 1)
+        }
 
         // Add Show-All Button
         secureInsert(enhanced_showAll, '.w83WBe.URhE4b', 0)
@@ -2835,6 +2880,7 @@ setInterval(function () {
             if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_showState === false && enhanced_settings.filter == 1) {
                 enhanced_gameList[i].style.display = 'none';
             } else {
+                // Letterbox
                 if (enhanced_activeLetter) {
                     enhanced_ariaLabel = enhanced_gameList[i].getAttribute('aria-label')
                     if ('en|sv|fr|it|es|da|ca|pt|no|fi'.includes(enhanced_local)) {
@@ -3056,7 +3102,9 @@ setInterval(function () {
     // Location - Store List
     if (document.location.href.indexOf('/list') != -1) {
         // List Filters
-        secureInsert(enhanced_listFilter, '.dwGRGd', 2)
+        if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+            secureInsert(enhanced_listFilter, '.B22Hnf', 3)
+        }
     } else if (enhanced_activeListFilter != 0) {
         enhanced_switchListFilter(enhanced_activeListFilter)
     }
@@ -3742,7 +3790,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
-                    enhanced_CSS = '@media screen and (min-width: 1080px) { .URhE4b[jsname="gF9qbe"] { display: grid; grid-template-columns: auto auto; grid-template-rows: auto; grid-gap: 0 1rem; }'
+                    enhanced_CSS = '@media screen and (min-width: 1080px) { .Md1Yte.URhE4b .xPDr9b[jsname="azRXlc"] { display: grid; grid-template-columns: auto auto; min-height: auto; grid-gap: 0 1rem; }'
                     enhanced_storeList.style.color = '#00e0ba'
                     enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Enabled".', enhanced_consoleEnhanced, '')
@@ -3793,6 +3841,27 @@ function enhanced_applySettings(set, opt) {
                     enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Enabled".', enhanced_consoleEnhanced, '')
                     break
+            }
+            break
+        case 'storefilter':
+            switch (opt) {
+                case 0:
+                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].game
+                    break
+                case 1:
+                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].bundle
+                    break
+                case 2:
+                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].addon
+                    break
+            }
+            var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].children
+            for (var i = 0; i < enhanced_listElements.length; i++) {
+                if (enhanced_listElements[i].classList.length == 0 && opt < 3 && enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != filter) {
+                    enhanced_listElements[i].style.display = 'none'
+                } else {
+                    enhanced_listElements[i].style.display = 'block'
+                }
             }
             break
         case 'stadiadatabase':
