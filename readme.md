@@ -1,7 +1,7 @@
 # Stadia Enhanced
 
 <p align="center">
-  <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/header-mockup.gif"/>
+  <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/header-mockup.gif"/>
 </p>
 
 ![](https://img.shields.io/badge/GitHub-1.17.6-green?style=for-the-badge)
@@ -104,8 +104,8 @@ Please post updates to translations in their respective discussions. No content 
 
 ## Screenshots
 
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot1.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot2.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot3.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot4.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot5.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot1.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot2.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot3.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot4.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot5.png)
