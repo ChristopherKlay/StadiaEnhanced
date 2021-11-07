@@ -34,7 +34,7 @@
 * The extensions fits itself into the existing website and it's main menu can be found at the top-right when opening Stadia after installation.
 
 ### Manual
-1. Download the [newest files of the extension](https://github.com/ChristopherKlay/StadiaEnhanced/tree/master/extension).
+1. Download the [newest files of the extension](https://github.com/ChristopherKlay/StadiaEnhanced/tree/main/extension).
 2. Open `chrome://extensions`
 3. Enable developer mode.
 4. Load the downloaded files via the "Load unpacked" option.
@@ -45,7 +45,7 @@ Please note that installing the extension this way, removes the automatic update
 Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
 
 ## Translation
-If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
+If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/translations.md).
 
 ## Community Features
 These are features developed by the community, made more accessible via Stadia Enhanced.
