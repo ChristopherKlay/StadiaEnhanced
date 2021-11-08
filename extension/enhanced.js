@@ -2,18 +2,22 @@
 var enhanced_manifest = chrome.runtime.getManifest()
 
 // Start Up
-var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
-console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - ' + enhanced_manifest.version + ': Start-Up', enhanced_consoleEnhanced, '');
 var enhanced_timerLoadStart = window.performance.now();
+var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
+
+var enhanced_AccountInfo = enhanced_loadUserInfo()
+if (enhanced_AccountInfo) {
+    console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - ' + enhanced_manifest.version + ': Start-Up', enhanced_consoleEnhanced, '');
+    console.log('%cStadia Enhanced' + '%c ⚙️ - User: ' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1] + ' (' + enhanced_AccountInfo[2] + ') (' + enhanced_local + ')', enhanced_consoleEnhanced, '')
+} else {
+    throw new Error("No logged in user detected.");
+}
+
 var enhanced_local = document.querySelector("html").getAttribute('lang')
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
 embed(enhanced_loadUserInfo, false)
 
-var enhanced_AccountInfo = enhanced_loadUserInfo()
-if (enhanced_AccountInfo) {
-    console.log('%cStadia Enhanced' + '%c ⚙️ - User: ' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1] + ' (' + enhanced_AccountInfo[2] + ') (' + enhanced_local + ')', enhanced_consoleEnhanced, '')
-}
 var enhanced_storedSettings = localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1])
 
 var enhanced_settings = {
@@ -1405,7 +1409,7 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
     }
 }
 
-secureInsert(enhanced_langContainer, '.ZECEje', 1)
+secureInsert(enhanced_langContainer, 'ZECEje', 1)
 
 enhanced_langDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
@@ -1501,7 +1505,7 @@ enhanced_settingsContent.style.borderRadius = '0'
 enhanced_settingsFrame.append(enhanced_settingsContent)
 
 enhanced_SettingsDropdown.append(enhanced_settingsFrame)
-secureInsert(enhanced_SettingsContainer, '.ZECEje', 1)
+secureInsert(enhanced_SettingsContainer, 'ZECEje', 1)
 
 // Settings - Groups
 var enhanced_settingsShortcut = document.createElement('div')
@@ -2628,7 +2632,7 @@ enhanced_openBuddy.tabIndex = '0'
 enhanced_openBuddy.addEventListener('click', function () {
     window.open('https://stadiastats.gg/find-a-buddy', '_blank')
 })
-secureInsert(enhanced_buddyContainer, '.ZECEje', 1)
+secureInsert(enhanced_buddyContainer, 'ZECEje', 1)
 
 // Favorites
 var enhanced_favorite = document.createElement('div')
@@ -2714,7 +2718,7 @@ setInterval(function () {
         var enhanced_gameList = document.getElementsByClassName('GqLi4d')
 
         // Resolution change on pop-ups
-        secureInsert(enhanced_resolutionPopup, '.EcfBLd', 3)
+        secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
 
         // StadiaStatsGG
         if (enhanced_settings.enableStadiaStats == 1) {
@@ -2722,7 +2726,7 @@ setInterval(function () {
             if (document.getElementById(enhanced_stadiaStatsShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
                 if (enhanced_stadiaStatsShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
                     enhanced_stadiaStatsShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_stadiaStatsShortcut.gameID = document.querySelector('.h1uihb > c-wiz').getAttribute('data-app-id')
+                    enhanced_stadiaStatsShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
                 }
                 secureInsert(enhanced_stadiaStatsShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
                 enhanced_stadiaStatsShortcut.style.display = "inline-flex"
@@ -2740,7 +2744,7 @@ setInterval(function () {
             if (document.getElementById(enhanced_installShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
                 if (enhanced_installShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
                     enhanced_installShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_installShortcut.gameID = document.querySelector('.h1uihb > c-wiz').getAttribute('data-app-id')
+                    enhanced_installShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
                     enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
                 }
                 secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
@@ -2795,11 +2799,11 @@ setInterval(function () {
 
         // Letter Box
         if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
-            secureInsert(enhanced_letterBox, '.w83WBe.URhE4b', 1)
+            secureInsert(enhanced_letterBox, 'w83WBe URhE4b', 1)
         }
 
         // Add Show-All Button
-        secureInsert(enhanced_showAll, '.w83WBe.URhE4b', 0)
+        secureInsert(enhanced_showAll, 'w83WBe URhE4b', 0)
         if (enhanced_settings.filter == 0) {
             enhanced_showAll.style.display = 'none'
             enhanced_showState = false
@@ -2811,7 +2815,7 @@ setInterval(function () {
         if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
             if (enhanced_favorite.name != document.querySelector('.Wq73hb').textContent) {
                 enhanced_favorite.name = document.querySelector('.Wq73hb').textContent
-                enhanced_favorite.sku = document.querySelector('.h1uihb > c-wiz').getAttribute('data-sku-id');
+                enhanced_favorite.sku = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-sku-id')
 
                 if (enhanced_settings.favoriteList.includes(enhanced_favorite.sku)) {
                     enhanced_favorite.active = true
@@ -2826,8 +2830,9 @@ setInterval(function () {
 
         // Show/Hide Filter - Last Played
         if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc') && enhanced_settings.filter == 1) {
-            if (enhanced_visibility.sku != document.querySelector('.h1uihb > c-wiz').getAttribute('data-sku-id')) {
-                enhanced_visibility.sku = document.querySelector('.h1uihb > c-wiz').getAttribute('data-sku-id');
+            var enhanced_launchSKU = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-sku-id')
+            if (enhanced_visibility.sku != enhanced_launchSKU) {
+                enhanced_visibility.sku = enhanced_launchSKU
                 enhanced_visibility.name = document.querySelector('.Wq73hb').textContent
 
                 if (enhanced_settings.gameFilter.includes(enhanced_visibility.sku)) {
@@ -2923,9 +2928,9 @@ setInterval(function () {
 
         enhanced_Windowed.style.display = 'flex'
         enhanced_Monitor.style.display = 'flex'
-        secureInsert(enhanced_Windowed, '.E0Zk9b', 0)
-        secureInsert(enhanced_Monitor, '.E0Zk9b', 0)
-        secureInsert(enhanced_filterUI.main.toggle, '.E0Zk9b', 0)
+        secureInsert(enhanced_Windowed, 'E0Zk9b', 0)
+        secureInsert(enhanced_Monitor, 'E0Zk9b', 0)
+        secureInsert(enhanced_filterUI.main.toggle, 'E0Zk9b', 0)
 
         // Filter Setup
         if (enhanced_currentStream && enhanced_currentStream.style.filter == 'url("#")') {
@@ -2938,7 +2943,7 @@ setInterval(function () {
 
         // Clock
         if (enhanced_settings.clockOption == 2 || enhanced_settings.clockOption == 3) {
-            secureInsert(enhanced_ClockOverlay, '.bYYDgf', 0)
+            secureInsert(enhanced_ClockOverlay, 'bYYDgf', 0)
             enhanced_ClockOverlay.style.display = 'flex'
         }
 
@@ -3010,12 +3015,12 @@ setInterval(function () {
     // Location - Captures
     if (document.location.href.indexOf('/captures') != -1) {
         // Captures Filter
-        secureInsert(enhanced_captureFilters, '.dwGRGd', 0)
+        secureInsert(enhanced_captureFilters, 'dwGRGd', 0)
     }
 
     // Location - Profile Details
     if (document.location.href.match('profile.[0-9]+.detail') != null) {
-        secureInsert(enhanced_achievementsFilter, '.dwGRGd', 2)
+        secureInsert(enhanced_achievementsFilter, 'dwGRGd', 2)
     }
 
     // Location - Store Details
@@ -3063,14 +3068,14 @@ setInterval(function () {
                             enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
                         }
 
-                        secureInsert(enhanced_extendedDetails, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                        secureInsert(enhanced_extendedDetails, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
 
                         // Disclaimers
                         if (enhanced_database[i].tested != '') {
-                            secureInsert(enhanced_untestedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                            secureInsert(enhanced_untestedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
                         }
 
-                        secureInsert(enhanced_extendedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                        secureInsert(enhanced_extendedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
                     }
                 }
             }
@@ -3089,7 +3094,7 @@ setInterval(function () {
             enhanced_wishlistContainer.style.display = 'inline-block'
         }
 
-        secureInsert(enhanced_StoreContainer, '.WjVJKd', 0)
+        secureInsert(enhanced_StoreContainer, 'WjVJKd', 0)
     } else {
         // Reset extended game info
         enhanced_extendedDetails.innerHTML = ''
@@ -3103,7 +3108,7 @@ setInterval(function () {
     if (document.location.href.indexOf('/list') != -1) {
         // List Filters
         if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
-            secureInsert(enhanced_listFilter, '.B22Hnf', 3)
+            secureInsert(enhanced_listFilter, 'B22Hnf', 3)
         }
     } else if (enhanced_activeListFilter != 0) {
         enhanced_switchListFilter(enhanced_activeListFilter)
@@ -3150,7 +3155,7 @@ setInterval(function () {
         if (document.querySelector('.MDSsFe') !== null) {
 
             // Gamelist Filter
-            secureInsert(enhanced_gamelistFilter, '.dwGRGd', 2)
+            secureInsert(enhanced_gamelistFilter, 'dwGRGd', 2)
 
             var enhanced_gameListBaseQuery = document.querySelectorAll('div[jsname="jlb53b"]')[document.querySelectorAll('div[jsname="jlb53b"]').length - 1]
             var enhanced_gameListRatioQuery = enhanced_gameListBaseQuery.querySelectorAll('.kPtFV')
@@ -3190,7 +3195,7 @@ setInterval(function () {
             }
 
             // Container
-            secureInsert(enhanced_statOverview, '.dkZt0b.qRvogc', 2)
+            secureInsert(enhanced_statOverview, 'dkZt0b qRvogc', 2)
 
             // Playtime Calculation
             var enhanced_statsBaseQuery = document.querySelectorAll('div[jsname="jlb53b"]')[document.querySelectorAll('div[jsname="jlb53b"]').length - 1]
@@ -3345,7 +3350,7 @@ setInterval(function () {
             }
 
             enhanced_friendCount.textContent = ', ' + i + ' ' + enhanced_lang.total.toLowerCase() + ')'
-            secureInsert(enhanced_friendCount, '.VE7aje', 2)
+            secureInsert(enhanced_friendCount, 'VE7aje', 2)
         }
 
         // Links 2 Images
@@ -3374,11 +3379,11 @@ setInterval(function () {
         }
 
         // Emoji Picker
-        secureInsert(enhanced_emojiswitch, '.IRyDt', 0)
-        secureInsert(enhanced_emojiPicker, '.pwUBOe.t7snHe', 2)
+        secureInsert(enhanced_emojiswitch, 'IRyDt', 0)
+        secureInsert(enhanced_emojiPicker, 'pwUBOe t7snHe', 2)
 
         // Clock
-        secureInsert(enhanced_ClockFriends, '.hxhAyf.OzUE7e.XY6ZL', 0)
+        secureInsert(enhanced_ClockFriends, 'hxhAyf OzUE7e XY6ZL', 0)
     }
 
     // Location - Settings
@@ -3414,7 +3419,7 @@ setInterval(function () {
                 enhanced_paytotal = enhanced_lang.total + ' ' + enhanced_currency.replace('CUR', enhanced_paytotal)
 
                 enhanced_allpayments.textContent = enhanced_paytotal
-                secureInsert(enhanced_allpayments, '.Ca4K1', 0)
+                secureInsert(enhanced_allpayments, 'Ca4K1', 0)
             }
         }
     }
@@ -4018,7 +4023,11 @@ function embed(fn, active = true) {
 
 // Insert elements
 function secureInsert(el, sel, opt = 0) {
-    var selector = document.querySelectorAll(sel)
+    if (/^[a-z ]+$/i.test(sel)) {
+        var selector = document.getElementsByClassName(sel)
+    } else {
+        var selector = document.querySelectorAll(sel)
+    }
     var target = selector[selector.length - 1]
     if (target && el) {
         switch (opt) {
