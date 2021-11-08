@@ -2,6 +2,9 @@
 
 ## Version 1.17
 
+### 1.17.8
+* Fixed some UI elements not being visible, due to incorrect RegEx filtering [[#192]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/192)
+
 ### 1.17.7
 * Added a fallback error when no account is logged in
 * Changed how UI elements get inserted, to improve performance
