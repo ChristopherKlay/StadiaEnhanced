@@ -4,6 +4,7 @@ var enhanced_manifest = chrome.runtime.getManifest()
 // Start Up
 var enhanced_timerLoadStart = window.performance.now();
 var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
+var enhanced_local = document.querySelector("html").getAttribute('lang')
 
 var enhanced_AccountInfo = enhanced_loadUserInfo()
 if (enhanced_AccountInfo) {
@@ -13,7 +14,6 @@ if (enhanced_AccountInfo) {
     throw new Error("No logged in user detected.");
 }
 
-var enhanced_local = document.querySelector("html").getAttribute('lang')
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
 embed(enhanced_loadUserInfo, false)
@@ -4023,7 +4023,7 @@ function embed(fn, active = true) {
 
 // Insert elements
 function secureInsert(el, sel, opt = 0) {
-    if (/^[a-z ]+$/i.test(sel)) {
+    if (/^[a-z 0-9]+$/i.test(sel)) {
         var selector = document.getElementsByClassName(sel)
     } else {
         var selector = document.querySelectorAll(sel)
