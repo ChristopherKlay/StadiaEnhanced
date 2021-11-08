@@ -2,6 +2,11 @@
 
 ## Version 1.17
 
+### 1.17.7
+* Added a fallback error when no account is logged in
+* Changed how UI elements get inserted, to improve performance
+* Fixed issues with the game ID detection for filtering, favorites, StadiaIcons and StadiaStatsGG
+
 ### 1.17.6
 * Changed the store filter to work with language based support, after changes on Stadias side
 * Changed store filter labels to match Stadias store entry labeling
