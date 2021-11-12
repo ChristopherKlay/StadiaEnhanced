@@ -61,7 +61,7 @@ HITMAN 3,2560x1440,60FPS,4K Mode | HDR | 5.1,State Share,None,990ec302c2cd4ba781
 Hotline Miami,Pixel Art/Retro,60FPS,4K Mode | 5.1,None,None,5f54e869de4441f8998e80d2c54fa74brcp1,
 Hotline Miami 2: Wrong Number,Pixel Art/Retro,60FPS,4K Mode | 5.1,None,None,68add0d67fe3491f94cb439664b1ffc7rcp1,
 Human: Fall Flat,1280x720,60FPS,4K Mode,None,None,16d98de80a3340ffa4129953ae4e3206rcp1,
-HUMANKIND - Digital Deluxe Edition,3840x2160,30FPS,4K Mode | HDR | 5.1,Direct Touch,None,3f40802097224fa1aaa0dcc4555828b7rcp1,
+HUMANKIND - Digital Deluxe Edition,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,Direct Touch,None,3f40802097224fa1aaa0dcc4555828b7rcp1,
 Hundred Days - Winemaking Simulator,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode,None,None,0b14eb3560f94ed69375f6ca5b7491fercp1,
 IMMORTALS FENYX RISING,2880x1620,60FPS in 1080p Mode | 30/60FPS Toggle,4K Mode | HDR | 5.1,None,None,161f276db10947a199cd0260ed4dc248rcp1,
 Into the Breach,Pixel Art/Retro,60FPS,4K Mode | HDR | 5.1,None,None,1a871cfe8a7d4ebc8592c2ad4bc07150rcp1,
@@ -158,7 +158,7 @@ Superhot: Mind Control Delete,3840x2160,60FPS,4K Mode,None,None,382fe14629e14844
 Terraria,Pixel Art/Retro,60FPS,4K Mode,None,None,774b82b8c1194dc2acc13a268c4ea7c7rcp1,
 The Crew 2,1920x1080,30FPS | 30FPS in 1080p Mode,4K Mode | 5.1,Stream Connect,None,cc97434908874852a6705d255a605dc8rcp1,
 The Darkside Detective,Pixel Art/Retro,60FPS,4K Mode,None,None,b465998ccc1c48aaa2fb74f331ebbdd7rcp1,
-The Darkside Detective: A Fumble in the Dark,Pixel Art/Retro,,,None,None,4e9c4e089aa5410cbffb3c1869d68925rcp1,
+The Darkside Detective: A Fumble in the Dark,Pixel Art/Retro,60FPS,4K Mode,None,None,4e9c4e089aa5410cbffb3c1869d68925rcp1,
 The Elder Scrolls Online,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,PC,b17f16d4a4f94c0a85e07f54dbdedbb6rcp1,
 The Gardens Between,3840x2160,60FPS,4K Mode | 5.1,None,None,cf65dc95d523465493d6fbc482452227rcp1,
 The Legend of Heroes: Trails of Cold Steel III,3840x2160,60FPS,4K Mode,None,None,5de3aed0b1b4439887e1cb4458f9cec8rcp1,
@@ -191,7 +191,7 @@ GRIME,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,HDR | 5.1,None
 Tom Clancy's Rainbow Six Siege,3840x2160,60FPS,4K Mode | 5.1,None,PC | No Cross-platform Buddy System,ab3353cfcd1f4a938e40b0ba32c72b64rcp1,
 RAINBOW SIX: EXTRACTION,,,,None,,e219615d926c4e6e92fae3b567fac94ercp1,checked
 Riders Republic,,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,PC | PlayStation | Xbox,a173ab7957e243d5a2a5668c6edd94b6rcp1,checked
-Just Dance 2022,,,,None,,#ERROR!,checked
+Just Dance 2022,,,,None,,c3ca0eaae154485aa56f0520cd895e4ercp1,checked
 Hello Engineer,2560x1440,60FPS,4K Mode | HDR | 5.1,State Share,None,e85d550899de407e996a8a2d9dfbc7efrcp1,
 Life is Strange Remastered,,,,None,None,09011184da8446c1b6fafb8c010888bfrcp1,checked
 Life is Strange: Before the Storm Remastered,,,,None,None,e8eaa376059b43d5a3007c13589e8a1drcp1,checked
@@ -232,3 +232,4 @@ Heist Simulator Early Access,,,,,None,513df9a0ecfd40199e077fc3bb9647f5rcp1,check
 Ben 10: Power Trip,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,35cbf2108a6c4f1a982076cd41252112rcp1,
 DRAGON BALL Z: KAKAROT,3840x2160,,4K Mode,None,None,8275f275454340d78fb746ba97b6b8earcp1,checked
 Saints Row: Re-Elected,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,,None,5325f670b13d4c959123c437948d1834rcp1,
+Wavetale,,,,,None,68297438f4ca40828f91b31db3ce746ercp1,checked
