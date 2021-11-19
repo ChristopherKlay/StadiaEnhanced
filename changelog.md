@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 1.18
+
+### 1.18.0
+* Added "StadiaHunters" as a community feature, including level progress, world rank and direct links on detail/achievement pages
+* Fixed console logs for the streaming mode being mislabeled
+* Fixed a filter related issue with games that disdplay a video, instead of a screenshot on the details window
+* Fixed issues with game ID detection for the Discord presence and video filter features, with multiple logged in users
+* Fixed the extension running on unnecessary pages (i.e. the couch/tv dedicated pages)
+* Fixed issues with the extension running and no user being logged in
+* Removed "StadiaStatsGG" community feature, due to inactivity and issues with the service
+
 ## Version 1.17
 
 ### 1.17.8

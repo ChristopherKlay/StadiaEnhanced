@@ -4,7 +4,7 @@
   <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/header-mockup.gif"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.17.8-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.18.0-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/rating/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
@@ -56,6 +56,13 @@ These are features developed by the community, made more accessible via Stadia E
   ![Stadia Database](https://i.imgur.com/2w2pfdr.png)
 
   The [Stadia Database](https://linktr.ee/StadiaDatabase) by [OriginaIPenguin](https://twitter.com/OriginaIPenguin) is a full database filled with infos about games on Stadia, including details not accessible via Stadia itself (like resolution, framerate and more).
+</details>
+<details>
+  <summary>Stadia Hunters - Track your progress and climb the leaderboard.</summary>
+  
+  ![Stadia Hunters](https://i.imgur.com/VSzOn9L.png)
+
+  [Stadia Hunters](https://stadiahunters.com/) is tracking your achievements and provides a nice overview of captures, guides, leaderboards and more, including a level system.
 </details>
 <details>
   <summary>Stadia Icons - Create shortcuts to your favorite games.</summary>
