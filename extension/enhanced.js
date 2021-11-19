@@ -18,8 +18,10 @@ var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
 embed(enhanced_loadUserInfo, false)
 
+// Load existing settings
 var enhanced_storedSettings = localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1])
 
+// Default settings
 var enhanced_settings = {
     user: enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1],
     version: '0.0.0',
@@ -47,8 +49,8 @@ var enhanced_settings = {
     splitStore: 0,
     hideFamilySharing: 0,
     enableShortcuts: 0,
-    enableStadiaStats: 0,
     enableStadiaDatabase: 1,
+    enableStadiaHunters: 0,
     updateNotifications: 0,
     streamMode: 0,
     wishlist: "",
@@ -57,6 +59,7 @@ var enhanced_settings = {
     postprocess: {}
 }
 
+// Merge settings
 if (enhanced_storedSettings) {
     enhanced_oldSettings = JSON.parse(enhanced_storedSettings)
     enhanced_settings.version = enhanced_oldSettings.version
@@ -288,6 +291,64 @@ var enhanced_filterOverlayStyle = `
 enhanced_injectStyle(enhanced_CSS, 'enhanced_styleGeneral')
 enhanced_injectStyle(enhanced_streamMonitorStyle, 'enhanced_styleStreamMonitor')
 enhanced_injectStyle(enhanced_filterOverlayStyle, 'enhanced_styleFilterOverlay')
+
+// Stadia Hunters - Player Stats
+// Source: https://stadiahunters.com/
+var enhanced_stadiaHunters
+
+function loadStadiaHunters(id) {
+    chrome.runtime.sendMessage({
+        action: 'stadiahunters',
+        id: id
+    }, function (response) {
+        enhanced_stadiaHunters = JSON.parse(response)
+        if (Object.keys(enhanced_stadiaHunters).length > 1) {
+            enhanced_huntersDropdown.querySelector('.RMEzA').textContent = enhanced_stadiaHunters.level
+            enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslevel + ' ' + enhanced_stadiaHunters.level
+            enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersworldrank + ' ' + enhanced_stadiaHunters.rank
+            enhanced_huntersDropContent.querySelector('.FxJ5Tc.y2VB6d').style.width = enhanced_stadiaHunters.percentage + '%'
+
+            enhanced_proReplace = `
+                <span class="p4uZTc nLp2td" style="margin-left: 0">
+                    <svg class="xduoyf" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#c1820)">
+                            <path d="M16.75 5.04a.8.8 0 0 0-1.5 0l-1.54 4.2a.8.8 0 0 1-.48.47l-4.19 1.54a.8.8 0 0 0 0 1.5l4.2 1.54c.21.08.39.26.47.48l1.54 4.19a.8.8 0 0 0 1.5 0l1.54-4.2a.8.8 0 0 1 .48-.47l4.19-1.54a.8.8 0 0 0 0-1.5l-4.2-1.54a.8.8 0 0 1-.47-.48l-1.54-4.19z" fill="url(#c1821)"></path>
+                            <path d="M7.47 16.28a.5.5 0 0 0-.94 0L6 17.7a.5.5 0 0 1-.3.3l-1.42.52a.5.5 0 0 0 0 .94L5.7 20a.5.5 0 0 1 .3.3l.52 1.42a.5.5 0 0 0 .94 0L8 20.3a.5.5 0 0 1 .3-.3l1.42-.52a.5.5 0 0 0 0-.94L8.3 18a.5.5 0 0 1-.3-.3l-.52-1.42z" fill="url(#c1822)"></path>
+                            <path d="M5.47 3.28a.5.5 0 0 0-.94 0l-.8 2.16a.5.5 0 0 1-.3.3l-2.15.8a.5.5 0 0 0 0 .93l2.16.8a.5.5 0 0 1 .3.3l.8 2.15a.5.5 0 0 0 .93 0l.8-2.16a.5.5 0 0 1 .3-.3l2.15-.8a.5.5 0 0 0 0-.93l-2.16-.8a.5.5 0 0 1-.3-.3l-.8-2.15z" fill="url(#c1823)"></path>
+                        </g>
+                        <defs>
+                            <linearGradient id="c1821" x1="16" y1="5.57" x2="16" y2="22.61" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4C1D"></stop>
+                                <stop offset="1" stop-color="#9B0063"></stop>
+                            </linearGradient>
+                            <linearGradient id="c1822" x1="7" y1="16.14" x2="7" y2="23.71" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4C1D"></stop>
+                                <stop offset="1" stop-color="#9B0063"></stop>
+                            </linearGradient>
+                            <linearGradient id="c1823" x1="5" y1="3.43" x2="5" y2="12.89" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4C1D"></stop>
+                                <stop offset="1" stop-color="#9B0063"></stop>
+                            </linearGradient>
+                            <clipPath id="c1820">
+                                <path fill="#fff" transform="matrix(-1 0 0 1 24 0)" d="M0 0h24v24H0z"></path>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </span>`
+
+            if (enhanced_AccountInfo[1] == '0000') {
+                enhanced_huntersDropContent.querySelector('.rmIKk.qUT0tf').outerHTML = enhanced_proReplace
+            }
+        } else {
+            enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslogin
+            enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersnotfound
+        }
+
+        console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Profile Data.', enhanced_consoleEnhanced, '')
+        console.table(enhanced_stadiaHunters)
+        console.groupEnd()
+    })
+}
 
 // Stadia Public Database by OriginalPenguin
 // Source: https://linktr.ee/StadiaDatabase
@@ -933,7 +994,7 @@ enhanced_filterUI.sharpen.slider.onchange = function () {
 function enhanced_updateFilters(setup = false) {
     if (document.location.href.indexOf('/player/') != -1) {
         // Get Current Game
-        var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
+        var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
 
         // Set Transform
@@ -2132,20 +2193,6 @@ enhanced_showShortcut.addEventListener('click', function () {
 })
 enhanced_settingsComFeat.append(enhanced_showShortcut)
 
-// StadiaStatsGG
-var enhanced_showStadiaStats = document.createElement('div')
-enhanced_showStadiaStats.className = 'pBvcyf QAAyWd'
-enhanced_showStadiaStats.id = 'enhanced_showStadiaStats'
-enhanced_showStadiaStats.style.cursor = 'pointer'
-enhanced_showStadiaStats.style.userSelect = 'none'
-enhanced_showStadiaStats.tabIndex = '0'
-enhanced_showStadiaStats.addEventListener('click', function () {
-    enhanced_settings.enableStadiaStats = (enhanced_settings.enableStadiaStats + 1) % 2
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-    enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
-})
-enhanced_settingsComFeat.append(enhanced_showStadiaStats)
-
 // Stadia Database - By OriginalPenguin
 // https://twitter.com/OriginaIPenguin
 var enhanced_showStadiaDatabase = document.createElement('div')
@@ -2160,6 +2207,21 @@ enhanced_showStadiaDatabase.addEventListener('click', function () {
     enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
 })
 enhanced_settingsComFeat.append(enhanced_showStadiaDatabase)
+
+// Stadia Hunters - By Endeavour
+// https://stadiahunters.com/
+var enhanced_showStadiaHunters = document.createElement('div')
+enhanced_showStadiaHunters.className = 'pBvcyf QAAyWd'
+enhanced_showStadiaHunters.id = 'enhanced_showStadiaHunters'
+enhanced_showStadiaHunters.style.cursor = 'pointer'
+enhanced_showStadiaHunters.style.userSelect = 'none'
+enhanced_showStadiaHunters.tabIndex = '0'
+enhanced_showStadiaHunters.addEventListener('click', function () {
+    enhanced_settings.enableStadiaHunters = (enhanced_settings.enableStadiaHunters + 1) % 2
+    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    enhanced_applySettings('stadiahunters', enhanced_settings.enableStadiaHunters)
+})
+enhanced_settingsComFeat.append(enhanced_showStadiaHunters)
 
 // Show Notifications
 var enhanced_setNotification = document.createElement('div')
@@ -2211,17 +2273,99 @@ enhanced_customAvatar.addEventListener('click', function () {
     }
 })
 
-// StadiaStatsGG - Profile Link
-var enhanced_stadiaStatsProfile = document.createElement('div')
-enhanced_stadiaStatsProfile.className = 'CTvDXd QAAyWd Pjpac GShPJb edaWcd'
-enhanced_stadiaStatsProfile.id = 'enhanced_customAvatar'
-enhanced_stadiaStatsProfile.role = 'button'
-enhanced_stadiaStatsProfile.style.display = 'none'
-enhanced_stadiaStatsProfile.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">account_circle</i></span><span class="caSJV snByac">' + enhanced_lang.stadiastats + '</span></div>'
-enhanced_stadiaStatsProfile.tabIndex = '0'
-enhanced_stadiaStatsProfile.addEventListener('click', function () {
-    window.open('https://stadiastats.gg/players/' + enhanced_AccountInfo[2] + '/' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1], '_blank')
+// Stadia Hunters - Profile Popup
+var enhanced_huntersContainer = document.createElement('li')
+enhanced_huntersContainer.className = 'OfFb0b tj2D'
+enhanced_huntersContainer.id = 'enhanced_huntersContainer'
+var enhanced_huntersDropdown = document.createElement('div')
+enhanced_huntersContainer.appendChild(enhanced_huntersDropdown)
+enhanced_huntersDropdown.className = 'ROpnrd QAAyWd wJYinb'
+enhanced_huntersDropdown.id = 'enhanced_huntersDropdown'
+enhanced_huntersDropdown.innerHTML = `
+    <div class="yNQThc">
+        <span class="jtYd1">
+            <img class="xduoyf" src="` + chrome.runtime.getURL('/media/included/hunters_logo.png') + `" style="width: 24px; height: 24px; border-radius: 50%;" >
+        </span>
+    </div>
+    <div class="RMEzA">
+        <span>0</span>
+    </div>`
+enhanced_huntersDropdown.style.position = 'relative'
+enhanced_huntersDropdown.style.padding = '0'
+enhanced_huntersDropdown.style.cursor = 'pointer'
+enhanced_huntersDropdown.style.userSelect = 'none'
+enhanced_huntersDropdown.tabIndex = '0'
+enhanced_huntersDropdown.addEventListener('click', function () {
+    if (enhanced_huntersDropContent.style.display === 'none') {
+        enhanced_huntersDropContent.style.display = 'block'
+    } else {
+        enhanced_huntersDropContent.style.display = 'none'
+    }
 })
+
+var enhanced_huntersDropContent = document.createElement('div')
+enhanced_huntersDropdown.append(enhanced_huntersDropContent)
+enhanced_huntersDropContent.id = 'enhanced_huntersDropContent'
+enhanced_huntersDropContent.className = 'us22N'
+enhanced_huntersDropContent.innerHTML = `
+    <img src="` + chrome.runtime.getURL('/media/included/hunters_banner.png') + `" style="width: 200px; padding-top: 0.5rem;">
+    <div class="WTRpgf">
+        <div class="d50Cgd VwFGMb" style="padding: 0 0.5rem 0.5rem 0.5rem; height: 0.375rem;" title="` + enhanced_lang.stadiahuntersxphover + `">
+            <div class="hPTRZ Jc3yuc" style="border-radius: 0.5rem; height: 100%; width: 100%; background-color: rgba(232,234,237,0.122); overflow: hidden;">
+                <div class="FxJ5Tc y2VB6d" style="width: 0%; height: 100%; background-color: #00e0ba;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="TZ0BN" style="">
+        <div class="lTHVjf QAAyWd RjcqTc AGhbCb" tabindex="0" style="border-radius: 0;">
+            <div class="uKRpKb">
+                <div class="rybUIf"></div>
+            </div>
+            <div class="Uwaqdf">
+                <div class="DlMyQd q3yMEf">
+                    <span class="VY8blf fSorq">` + enhanced_AccountInfo[0] + `<span class="rmIKk qUT0tf">` + '#' + enhanced_AccountInfo[1] + `</span></span>
+                </div>
+                <div>
+                    <div class="UxR5ob m8Kzt" style="align-items: flex-start; flex-direction: column;">
+                        <div class="HDKZKb LiQ6Hb">` + enhanced_lang.stadiahunterslevel + ` 0</div>
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,.4);">` + enhanced_lang.stadiahuntersworldrank + ` 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`
+
+enhanced_huntersDropContent.querySelector('.rybUIf').style.backgroundImage = document.getElementsByClassName('ksZYgc VGZcUb')[0].style.backgroundImage
+enhanced_huntersDropContent.style.position = 'absolute'
+enhanced_huntersDropContent.style.width = 'auto'
+enhanced_huntersDropContent.style.height = 'auto'
+enhanced_huntersDropContent.style.top = '3.5rem'
+enhanced_huntersDropContent.style.cursor = 'default'
+enhanced_huntersDropContent.style.textAlign = 'center'
+enhanced_huntersDropContent.style.boxShadow = '0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)'
+enhanced_huntersDropContent.style.overflow = 'hidden'
+enhanced_huntersDropContent.style.zIndex = '20'
+enhanced_huntersDropContent.style.display = 'none'
+
+enhanced_huntersDropContent.querySelector('.TZ0BN').addEventListener('click', function () {
+    if (Object.keys(enhanced_stadiaHunters).length < 2) {
+        window.open('https://stadiahunters.com/login', '_blank')
+    } else {
+        if (enhanced_AccountInfo[1] == '0000') {
+            window.open('https://stadiahunters.com/user/' + enhanced_AccountInfo[0], '_blank')
+        } else {
+            window.open('https://stadiahunters.com/user/' + enhanced_AccountInfo[0] + '-' + enhanced_AccountInfo[1], '_blank')
+        }
+    }
+})
+
+window.addEventListener('click', function (e) {
+    if (e.target != enhanced_huntersDropdown && enhanced_huntersDropdown.contains(e.target) === false) {
+        enhanced_huntersDropContent.style.display = 'none'
+    }
+})
+
+secureInsert(enhanced_huntersContainer, 'ZECEje', 1)
 
 // Store Container - Container to display store buttons
 var enhanced_StoreContainer = document.createElement('div')
@@ -2434,6 +2578,20 @@ enhanced_unlockedFilter.addEventListener('click', function () {
 })
 enhanced_achievementsFilter.append(enhanced_unlockedFilter)
 
+// Stadia Hunters - Achievements Link
+enhanced_huntersLinkContainer = document.createElement('div')
+enhanced_huntersLinkContainer.style.display = 'flex'
+
+enhanced_huntersLink = document.createElement('div')
+enhanced_huntersLink.innerHTML = '<img src="' + chrome.runtime.getURL('/media/included/hunters_banner.png') + '" style="height: 1.25rem;">'
+enhanced_huntersLink.className = 'Adwm6c'
+enhanced_huntersLink.style.userSelect = 'none'
+enhanced_huntersLink.style.marginLeft = '0.75rem'
+enhanced_huntersLink.addEventListener('click', function () {
+    window.open('https://stadiahunters.com/games/' + enhanced_huntersLink.gameID, '_blank')
+})
+enhanced_huntersLinkContainer.append(enhanced_huntersLink)
+
 // Gamelist Filter
 enhanced_gamelistFilter = document.createElement('div')
 enhanced_gamelistFilter.style.display = 'flex'
@@ -2469,6 +2627,15 @@ enhanced_installShortcut.addEventListener('click', function () {
     window.open('https://stadiaicons.web.app/' + enhanced_installShortcut.gameID + '/?fullName=' + encodeURIComponent(enhanced_installShortcut.gameName), '_blank')
 })
 
+// Shortcut - Stadia Hunters
+var enhanced_stadiaHuntersShortcut = document.createElement('div')
+enhanced_stadiaHuntersShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc'
+enhanced_stadiaHuntersShortcut.id = 'enhanced_stadiaHuntersShortcut'
+enhanced_stadiaHuntersShortcut.tabIndex = '0'
+enhanced_stadiaHuntersShortcut.addEventListener('click', function () {
+    window.open('https://stadiahunters.com/games/' + enhanced_stadiaHuntersShortcut.gameID, '_blank')
+})
+
 // Shortcut - Last Played
 var enhanced_shortcutLastPlayed = document.createElement('div')
 enhanced_shortcutLastPlayed.id = 'enhanced_shortcutLastPlayed'
@@ -2487,16 +2654,6 @@ enhanced_shortcutLastPlayed.style.cursor = 'pointer'
 enhanced_shortcutLastPlayed.style.zIndex = '2'
 enhanced_shortcutLastPlayed.addEventListener('click', function () {
     window.open('https://stadiaicons.web.app/' + enhanced_shortcutLastPlayed.gameID + '/?fullName=' + encodeURIComponent(enhanced_shortcutLastPlayed.gameName), '_blank')
-})
-
-// StadiaStatsGG - Shortcut
-var enhanced_stadiaStatsShortcut = document.createElement('div')
-enhanced_stadiaStatsShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc'
-enhanced_stadiaStatsShortcut.id = 'enhanced_stadiaStatsShortcut'
-enhanced_stadiaStatsShortcut.innerHTML = enhanced_lang.stadiastatsopen
-enhanced_stadiaStatsShortcut.tabIndex = '0'
-enhanced_stadiaStatsShortcut.addEventListener('click', function () {
-    window.open('https://stadiastats.gg/games/' + enhanced_stadiaStatsShortcut.gameID, '_blank')
 })
 
 // Stats Container
@@ -2614,26 +2771,6 @@ for (var i = 0; i < 26; i++) {
     enhanced_letterBox.append(el)
 }
 
-// Find-a-buddy - Shortcut to stadiastats.gg find-a-buddy service
-var enhanced_buddyContainer = document.createElement('li')
-enhanced_buddyContainer.className = 'OfFb0b tj2D'
-enhanced_buddyContainer.id = 'enhanced_buddyContainer'
-enhanced_buddyContainer.style.display = 'none'
-var enhanced_openBuddy = document.createElement('div')
-enhanced_buddyContainer.appendChild(enhanced_openBuddy)
-enhanced_openBuddy.className = 'ROpnrd QAAyWd wJYinb'
-enhanced_openBuddy.id = 'enhanced_openBuddy'
-enhanced_openBuddy.innerHTML = '<i class="material-icons-extended" aria-hidden="true">group_add</i>'
-enhanced_openBuddy.style.width = '2.5rem'
-enhanced_openBuddy.style.padding = '0'
-enhanced_openBuddy.style.cursor = 'pointer'
-enhanced_openBuddy.style.userSelect = 'none'
-enhanced_openBuddy.tabIndex = '0'
-enhanced_openBuddy.addEventListener('click', function () {
-    window.open('https://stadiastats.gg/find-a-buddy', '_blank')
-})
-secureInsert(enhanced_buddyContainer, 'ZECEje', 1)
-
 // Favorites
 var enhanced_favorite = document.createElement('div')
 enhanced_favorite.innerHTML = '<i class="material-icons-extended" aria-hidden="true">star</i>'
@@ -2720,27 +2857,12 @@ setInterval(function () {
         // Resolution change on pop-ups
         secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
 
-        // StadiaStatsGG
-        if (enhanced_settings.enableStadiaStats == 1) {
-            //Shortcut
-            if (document.getElementById(enhanced_stadiaStatsShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
-                if (enhanced_stadiaStatsShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
-                    enhanced_stadiaStatsShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_stadiaStatsShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
-                }
-                secureInsert(enhanced_stadiaStatsShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
-                enhanced_stadiaStatsShortcut.style.display = "inline-flex"
-            }
-        } else {
-            enhanced_stadiaStatsShortcut.style.display = 'none'
-        }
-
         // Shortcuts
         if (enhanced_settings.enableShortcuts == 1) {
             enhanced_installShortcut.style.display = 'inline-flex'
             enhanced_shortcutLastPlayed.style.display = 'flex'
 
-            // Popup
+            // Popup - Stadia Icons
             if (document.getElementById(enhanced_installShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
                 if (enhanced_installShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
                     enhanced_installShortcut.gameName = document.querySelector('.Wq73hb').textContent
@@ -2748,6 +2870,17 @@ setInterval(function () {
                     enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
                 }
                 secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+            }
+
+            // Popup - Stadia Hunters
+            if (enhanced_settings.enableStadiaHunters && document.getElementById(enhanced_stadiaHuntersShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
+                var enhanced_popupID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                if (enhanced_stadiaHuntersShortcut.gameID != enhanced_popupID) {
+                    enhanced_stadiaHuntersShortcut.gameName = document.querySelector('.Wq73hb').textContent
+                    enhanced_stadiaHuntersShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                    enhanced_stadiaHuntersShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_installShortcut.gameName + ' ' + enhanced_lang.stadiahunterstitle + '</div>'
+                }
+                secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
             }
 
             // Last Played
@@ -2830,7 +2963,8 @@ setInterval(function () {
 
         // Show/Hide Filter - Last Played
         if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc') && enhanced_settings.filter == 1) {
-            var enhanced_launchSKU = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-sku-id')
+            var enhanced_launchSKU = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-sku-id')
+
             if (enhanced_visibility.sku != enhanced_launchSKU) {
                 enhanced_visibility.sku = enhanced_launchSKU
                 enhanced_visibility.name = document.querySelector('.Wq73hb').textContent
@@ -2923,7 +3057,7 @@ setInterval(function () {
     if (document.location.href.indexOf('/player/') != -1) {
 
         // Currrent Game Info
-        var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
+        var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
 
         enhanced_Windowed.style.display = 'flex'
@@ -3020,6 +3154,12 @@ setInterval(function () {
 
     // Location - Profile Details
     if (document.location.href.match('profile.[0-9]+.detail') != null) {
+        // Stadia Hunters - Logo Link
+        if (enhanced_settings.enableStadiaHunters) {
+            enhanced_huntersLink.gameID = document.location.href.split('/detail/')[1].split('?')[0]
+            secureInsert(enhanced_huntersLinkContainer, 'dwGRGd', 3)
+        }
+
         secureInsert(enhanced_achievementsFilter, 'dwGRGd', 2)
     }
 
@@ -3138,14 +3278,6 @@ setInterval(function () {
 
         // Add avatar option on own profile
         secureInsert(enhanced_customAvatar, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
-
-        // Add StadiaStatsGG Profile
-        if (enhanced_settings.enableStadiaStats == 1) {
-            secureInsert(enhanced_stadiaStatsProfile, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
-            enhanced_stadiaStatsProfile.style.display = 'flex'
-        } else {
-            enhanced_stadiaStatsProfile.style.display = 'none'
-        }
     }
 
     // Location - Player Statistics
@@ -3197,6 +3329,9 @@ setInterval(function () {
             // Container
             secureInsert(enhanced_statOverview, 'dkZt0b qRvogc', 2)
 
+            // Statistics
+            var enhanced_loadStats
+
             // Playtime Calculation
             var enhanced_statsBaseQuery = document.querySelectorAll('div[jsname="jlb53b"]')[document.querySelectorAll('div[jsname="jlb53b"]').length - 1]
             var enhanced_timeQuery = enhanced_statsBaseQuery.querySelectorAll('.eUhXn')
@@ -3235,7 +3370,7 @@ setInterval(function () {
                 }
                 enhanced_statsPlaytime = enhanced_secondsToHms(enhanced_statsPlaytime)
 
-                var enhanced_loadStats = `
+                enhanced_loadStats = `
                     <div class="xsbfy" style="margin-bottom: 1rem;">
                         <div class="qKSMec">
                             <i class="google-material-icons QxsLuc" aria-hidden="true">schedule</i>
@@ -3273,7 +3408,7 @@ setInterval(function () {
                 var enhanced_statsUnlockRate = (enhanced_statsUnlock * 100) / enhanced_statsTotal
                 var enhanced_statsFinishRate = (enhanced_statsFinished * 100) / enhanced_statsOwned
 
-                var enhanced_loadStats = `
+                enhanced_loadStats = `
                     <div class="HZ5mJ">` + enhanced_lang.statistics + `</div>
                     <div class="xsbfy" style="margin-bottom: 1rem;">
                         <div class="qKSMec">
@@ -3429,13 +3564,6 @@ setInterval(function () {
 
     // Update monitor position
     enhanced_settings.monitorPosition = enhanced_streamMonitor.style.top + '|' + enhanced_streamMonitor.style.left
-
-    // StadiaStatsGG - Find-a-buddy
-    if (enhanced_settings.enableStadiaStats == 1) {
-        enhanced_buddyContainer.style.display = 'inline-block'
-    } else {
-        enhanced_buddyContainer.style.display = 'none'
-    }
 
     // Codec - Set codec preference
     switch (enhanced_settings.codec) {
@@ -3834,20 +3962,6 @@ function enhanced_applySettings(set, opt) {
                     break
             }
             break
-        case 'stadiastats':
-            switch (opt) {
-                case 0:
-                    enhanced_showStadiaStats.style.color = ''
-                    enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Disabled".', enhanced_consoleEnhanced, '')
-                    break
-                case 1:
-                    enhanced_showStadiaStats.style.color = '#00e0ba'
-                    enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Enabled".', enhanced_consoleEnhanced, '')
-                    break
-            }
-            break
         case 'storefilter':
             switch (opt) {
                 case 0:
@@ -3883,19 +3997,39 @@ function enhanced_applySettings(set, opt) {
                     break
             }
             break
+        case 'stadiahunters':
+            switch (opt) {
+                case 0:
+                    enhanced_showStadiaHunters.style.color = ''
+                    enhanced_huntersContainer.style.display = 'none'
+                    enhanced_showStadiaHunters.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">emoji_events</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiahunters + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiahuntersdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    break
+                case 1:
+                    enhanced_showStadiaHunters.style.color = '#00e0ba'
+                    enhanced_huntersContainer.style.display = 'block'
+                    enhanced_showStadiaHunters.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">emoji_events</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiahunters + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiahuntersdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Set to "Enabled".', enhanced_consoleEnhanced, '')
+
+                    if (enhanced_stadiaHunters == null) {
+                        loadStadiaHunters(enhanced_AccountInfo[2])
+                    }
+                    break
+            }
+            break
         case 'streammode':
             switch (opt) {
                 case 0:
                     enhanced_CSS = ''
                     enhanced_streamMode.style.color = ''
                     enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Streaming Mode: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
                     enhanced_CSS = '.lzIqJf .Y1rZWd, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .kBJKIf span, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }'
                     enhanced_streamMode.style.color = '#00e0ba'
                     enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stream Mode: Set to "Enabled".', enhanced_consoleEnhanced, '')
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Streaming Mode: Set to "Enabled".', enhanced_consoleEnhanced, '')
                     break
             }
             enhanced_injectStyle(enhanced_CSS, 'enhanced_styleStreamMode')
@@ -3963,8 +4097,8 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
             enhanced_applySettings('storelist', enhanced_settings.splitStore)
             enhanced_applySettings('shortcuts', enhanced_settings.enableShortcuts)
-            enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
             enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
+            enhanced_applySettings('stadiahunters', enhanced_settings.enableStadiaHunters)
             enhanced_applySettings('inlinepreview', enhanced_settings.hideInlinePreview)
             enhanced_applySettings('familysharing', enhanced_settings.hideFamilySharing)
             enhanced_applySettings('mediapreview', enhanced_settings.hideUserMedia)
@@ -4372,11 +4506,16 @@ function enhancedTranslate(lang, log = false) {
         shortcut: 'StadiaIcons',
         shortcuttitle: 'Install a shortcut for',
         shortcutdesc: 'Allows you to install a shortcut for a game on your device.',
-        stadiastats: 'StadiaStats',
-        stadiastatsopen: 'View on StadiaStats.GG',
-        stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
         stadiadatabase: 'Stadia Database',
         stadiadatabasedesc: 'Displays a "Extended Details" section on the store page of games, which showcases framerate, resolution and more about the game.',
+        stadiahunters: 'Stadia Hunters',
+        stadiahuntersdesc: 'Access to the Stadia Hunters community, including achievement tracking, guides, leaderboards and more. The perfect companion for achievement hunters.',
+        stadiahunterstitle: 'on Stadia Hunters',
+        stadiahunterslogin: 'Click to login',
+        stadiahuntersnotfound: 'User not found',
+        stadiahunterslevel: 'Level',
+        stadiahuntersworldrank: 'World Rank',
+        stadiahuntersxphover: 'Level Progress',
         gridsize: 'Grid Size',
         griddesc: 'Changes the amount of games per row in the library.',
         clock: 'Clock',
@@ -4511,11 +4650,16 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installiere eine Verknüpfung für',
                 shortcutdesc: 'Erlaubt das Erstellen einer Verknüpfung von Spielen auf dem Gerät.',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Auf StadiaStats.GG ansehen',
-                stadiastatsdesc: 'Stellt Statistiken für Spiele, eine Verknüpfung zum Profil und einen Weg Mitspieler zu finden via stadiastats.gg bereit.',
                 stadiadatabase: 'Stadia Datenbank',
                 stadiadatabasedesc: 'Zeigt einen "Erweiterte Details" Bereich auf der Store Seite von Spielen, welcher Framerate, Auflösung und weitere Informationen über das Spiel zeigt.',
+                stadiahunters: 'Stadia Hunters',
+                stadiahuntersdesc: 'Zugriff auf die Stadia Hunters Community, inclusive Hilfestellungen, Ranglisten und Erfolge. Der perfekte Begleiter für Erfolge Jäger.',
+                stadiahunterstitle: 'auf Stadia Hunters',
+                stadiahunterslogin: 'Hier klicken zum Anmelden',
+                stadiahuntersnotfound: 'Nutzer nicht gefunden',
+                stadiahunterslevel: 'Level',
+                stadiahuntersworldrank: 'Welt Rang',
+                stadiahuntersxphover: 'Level Fortschritt',
                 gridsize: 'Rastergröße',
                 griddesc: 'Ändert die Anzahl der Spiele pro Reihe in der Übersicht der Mediathek.',
                 clock: 'Uhr',
@@ -4647,11 +4791,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Hivatkozás telepítése:',
                 shortcutdesc: 'Parancsikon létrehozása közvetlen játék indításhoz',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'StadiaStats.GG megnyitása',
-                stadiastatsdesc: 'Közvetlen elérés a játék statisztikákhoz, profilhoz és a "find-a-buddy" rendszerhez a stadiastats.gg',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Rács méret',
                 griddesc: 'Játékok száma soronként a Saját Játékkönyvtárban.',
                 clock: 'Óra',
@@ -4785,11 +4933,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Nainštaluj skratku do hry',
                 shortcutdesc: 'Umožňuje inštaláciu skratky do hry na tomto zariadení.',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Pozri na StadiaStats.GG',
-                stadiastatsdesc: 'Umožňuje priamu skratku do hernej štatistiky, link do Tvojho profilu a "Nájdi kamoša" funkciu na stadiastats.gg.',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Veľkosť mriežky herných ikon',
                 griddesc: 'Nastavuje počet herných ikon na riadok v knižnici hier.',
                 clock: 'Hodiny',
@@ -4918,11 +5070,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installeer een snelkoppeling voor',
                 shortcutdesc: 'Laat je een snelkoppeling voor een game installeren op je apparaat',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Rooster Grootte',
                 griddesc: undefined,
                 clock: 'Klok',
@@ -5051,11 +5207,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instala un acceso directo para',
                 shortcutdesc: 'Permite instalar un acceso directo de un juego en tu dispositivo.',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Tamaño de la cuadrícula',
                 griddesc: undefined,
                 clock: 'Reloj',
@@ -5187,11 +5347,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installa una scorciatoia per',
                 shortcutdesc: 'Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Visualizza su StadiaStats.GG',
-                stadiastatsdesc: 'Abilita scorciatoie dirette alle statistiche di gioco, link al tuo profilo e al sistema trova un amico su stadiastats.gg.',
                 stadiadatabase: 'Database Stadia ',
                 stadiadatabasedesc: 'Visualizza una sezione "Dettagli estesi" nella pagina del negozio dei giochi, che mostra framerate, risoluzione e altro ancora sul gioco.',
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Dimensione Griglia',
                 griddesc: 'Modifica la quantità di giochi per riga nella libreria.',
                 clock: 'Orologio',
@@ -5320,11 +5484,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installer en genvej for',
                 shortcutdesc: 'Giver dig mulighed for at installere en genvej til et spil på din enhed',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Gitterstørrelse',
                 griddesc: undefined,
                 clock: 'Ur',
@@ -5456,11 +5624,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instal·la una drecera per a',
                 shortcutdesc: 'Permet instal·lar una drecera per a un joc al dispositiu',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Veure a StadiaStats.GG',
-                stadiastatsdesc: 'Permet les dreceres directes a les estadístiques dels jocs, l\'enllaç al vostre perfil i el sistema de cerca d\'altres jugadors/es a stadiastats.gg.',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Tamany de la quadrícula',
                 griddesc: 'Canvia la quantitat de jocs per fila a la biblioteca.',
                 clock: 'Rellotge',
@@ -5592,11 +5764,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instalar atalho para',
                 shortcutdesc: 'Permite-te instalar um atalho para um jogo no teu dispositivo',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Ver em StadiaStats.gg',
-                stadiastatsdesc: 'Ativa atalhos para estatísticas de jogos, link para o perfil e um sistema para encontrar amigos em StadiaStats.gg',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Tamanho da Grelha',
                 griddesc: 'Muda a quantidade de jogos em cada linha na biblioteca',
                 clock: 'Relógio',
@@ -5725,11 +5901,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installera en genväg för',
                 shortcutdesc: 'Låter dig installera en genväg för ett spel på din enhet',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Rutnätsstorlek',
                 griddesc: undefined,
                 clock: 'Klocka',
@@ -5861,11 +6041,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installer un raccourcis pour',
                 shortcutdesc: 'Permet d\'installer des raccourcis individuels pour vos jeux sur votre ordinateur',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Voir sur StadiaStats.GG',
-                stadiastatsdesc: 'Ajoute des liens stadiastats.gg vers votre profil, des statistiques pour chaque jeux et le système de recherche de joueurs "find-a-buddy".',
                 stadiadatabase: 'Base de données Stadia',
                 stadiadatabasedesc: 'Affiche une section "Détails Supplémentaires" sur la page de chaque jeu dans le Store. Cette section indique le taux de rafraîchissement, la résolution et d\'autres informations sur le jeu.',
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Taille de la Grille',
                 griddesc: 'Change le nombre de colonnes de jeux affichées sur la page d\'accueil.',
                 clock: 'Horloge',
@@ -5995,11 +6179,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Установить скриншот на',
                 shortcutdesc: 'Разрешить делать скриншоты в играх',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Размер сетки',
                 griddesc: undefined,
                 clock: 'Часы',
@@ -6130,11 +6318,15 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Krei ŝparvojon por',
                 shortcutdesc: 'Ebligas krei ŝparvojon por ludo en via aparato.',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Vidi je StadiaStats.GG',
-                stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Grid Size',
                 griddesc: 'Changes the amount of games per row in the library.',
                 clock: 'Horloĝo',
