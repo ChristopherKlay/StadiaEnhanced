@@ -2,6 +2,11 @@
 
 ## Version 1.18
 
+### 1.18.1
+* Updated french and italian translations
+* Added permission delcarations to the readme overview
+* Fixed a issue with loading game ID's on detail pages of games with multiple screenshots
+
 ### 1.18.0
 * Added "StadiaHunters" as a community feature, including level progress, world rank and direct links on detail/achievement pages
 * Fixed console logs for the streaming mode being mislabeled
