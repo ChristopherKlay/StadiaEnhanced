@@ -2866,7 +2866,7 @@ setInterval(function () {
             if (document.getElementById(enhanced_installShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
                 if (enhanced_installShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
                     enhanced_installShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_installShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                    enhanced_installShortcut.gameID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
                     enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
                 }
                 secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
@@ -2874,10 +2874,10 @@ setInterval(function () {
 
             // Popup - Stadia Hunters
             if (enhanced_settings.enableStadiaHunters && document.getElementById(enhanced_stadiaHuntersShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
-                var enhanced_popupID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                var enhanced_popupID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
                 if (enhanced_stadiaHuntersShortcut.gameID != enhanced_popupID) {
                     enhanced_stadiaHuntersShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_stadiaHuntersShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                    enhanced_stadiaHuntersShortcut.gameID = enhanced_popupID
                     enhanced_stadiaHuntersShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_installShortcut.gameName + ' ' + enhanced_lang.stadiahunterstitle + '</div>'
                 }
                 secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
@@ -2948,7 +2948,7 @@ setInterval(function () {
         if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
             if (enhanced_favorite.name != document.querySelector('.Wq73hb').textContent) {
                 enhanced_favorite.name = document.querySelector('.Wq73hb').textContent
-                enhanced_favorite.sku = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-sku-id')
+                enhanced_favorite.sku = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-sku-id')
 
                 if (enhanced_settings.favoriteList.includes(enhanced_favorite.sku)) {
                     enhanced_favorite.active = true
@@ -5349,13 +5349,14 @@ function enhancedTranslate(lang, log = false) {
                 shortcutdesc: 'Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo',
                 stadiadatabase: 'Database Stadia ',
                 stadiadatabasedesc: 'Visualizza una sezione "Dettagli estesi" nella pagina del negozio dei giochi, che mostra framerate, risoluzione e altro ancora sul gioco.',
-                stadiahunters: undefined,
-                stadiahuntersdesc: undefined,
-                stadiahunterslogin: undefined,
-                stadiahuntersnotfound: undefined,
-                stadiahunterslevel: undefined,
-                stadiahuntersworldrank: undefined,
-                stadiahuntersxphover: undefined,
+                stadiahunters: 'Stadia Hunters',
+                stadiahuntersdesc: 'Abilita la community Stadia Hunters, include il tracking degli obbiettivi, le guide, le classifiche e altro ancora. Il compagno perfetto per i cacciatori di obiettivi.',
+                stadiahunterstitle: 'su Stadia Hunters',
+                stadiahunterslogin: 'Clicca per accedere ',
+                stadiahuntersnotfound: 'Utente non trovato',
+                stadiahunterslevel: 'Livello',
+                stadiahuntersworldrank: 'Classifica mondiale',
+                stadiahuntersxphover: 'Progresso Livello',
                 gridsize: 'Dimensione Griglia',
                 griddesc: 'Modifica la quantità di giochi per riga nella libreria.',
                 clock: 'Orologio',
