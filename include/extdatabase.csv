@@ -92,7 +92,7 @@ Metro Exodus,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None
 Metro Last Light Redux,2560x1440,60FPS,4K Mode | HDR | 5.1,None,None,b65c1c4dcdf24446bcecda190c6a2fe7rcp1,
 Monopoly,2560x1440,60FPS,4K Mode | 5.1,None,None,10b8a9cc8ec746f29afc1fc3c3ded28brcp1,
 Monster Boy and the Cursed Kingdom,3840x2160 | Unsure,60FPS,4K Mode,Crowd Choice | State Share,None,ef14fb2f692c4b42b4b092d3e7864cd8rcp1,
-Monster Energy Supercross - The Official Videogame 3,3840x2160,30FPS,4K Mode | HDR | 5.1,None,None,d50e1c1b61224bceb65da9406f3f4e8frcp1,
+Monster Energy Supercross - The Official Videogame 3,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,d50e1c1b61224bceb65da9406f3f4e8frcp1,
 Monster Energy Supercross - The Official Videogame 4,2880x1620,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR,None,None,a62130f4b41b4878a00f8ec444df6b01rcp1,
 Monster Jam Steel Titans,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | 5.1,None,None,e7506ec75c8046dfa7879fe604505ca7rcp1,
 Monster Jam Steel Titans 2,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | 5.1,None,None,3fa9461d9fbd4fb3855039d9b64ca736rcp1,
@@ -207,7 +207,7 @@ Ice Age: Scrat's Nutty Adventure,,,,None,None,28c8c1c35b8c450083c980f1dd44b64drc
 Gigantosaurus The Game,,,,None,None,106e912318b24f0394850cdeabf73b0arcp1,checked
 PAW Patrol Mighty Pups Save Adventure Bay,3840x2160,60FPS,4K Mode,None,None,ccf9e5615864445ba6a85cbd3557665frcp1,
 PAW Patrol The Movie: Adventure City Calls,,,,None,None,2e00fb54c35e47b08e3d56e0d59cb2ffrcp1,checked
-Young Souls,,,5.1,None,None,39b2419557a4479792c267dffa77fbbfrcp1,checked
+Young Souls,,60FPS in 1080p Mode,5.1,None,None,39b2419557a4479792c267dffa77fbbfrcp1,checked
 Madden NFL 22,,,5.1,None,None,451f31e0ce9e4ac4b928f4f6a9d2b3d0rcp1,checked
 Farming Simulator 22,,,,None,PC,3bb062e7f1274d4ca83af6b5f67d9abarcp1,checked
 Darkwood,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,848cb37ae8f64d4cbeddc5f2e290806ercp1,
@@ -216,7 +216,7 @@ Darksiders II Deathinitive Edition,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode
 ARK: Survival Evolved,1920x1080,30FPS | 30FPS in 1080p Mode,4K Mode,None,PC,805de0d15b8b4beea63e282aa6f7e8fercp1,
 Fast & Furious: Spy Racers Rise of SH1FT3R,,,,None,,#ERROR!,checked
 PJ Masks: Heroes of the Night,,,,None,None,7eb71ccf6f374859909aacc5afb8264arcp1,checked
-The Addams Family: Mansion Mayhem,,,,None,None,06a1ece9dfdd42f3871af2735d688a34rcp1,checked
+The Addams Family: Mansion Mayhem,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,06a1ece9dfdd42f3871af2735d688a34rcp1,
 My Friend Peppa Pig,1920x1080,60FPS in 1080p Mode,None,None,None,5e294a10f1d848c78ac205218b68e469rcp1,
 Darksiders III,,,,None,None,d05ef34140f34f5e91f7c2ea9e58b135rcp1,checked
 Assassin's Creed Black Flag,2560x1440,60FPS,4K Mode | 5.1,None,None,ba56dcf3117a4a3a8323f49341f454a4rcp1,
@@ -233,3 +233,4 @@ Ben 10: Power Trip,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,N
 DRAGON BALL Z: KAKAROT,3840x2160,,4K Mode,None,None,8275f275454340d78fb746ba97b6b8earcp1,checked
 Saints Row: Re-Elected,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,,None,5325f670b13d4c959123c437948d1834rcp1,
 Wavetale,,,,,None,68297438f4ca40828f91b31db3ce746ercp1,checked
+The Jackbox Party Pack 8,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,5.1,Direct Touch,None,5553fb6e89514ca48891044b8e0ef47frcp1,
