@@ -1,6 +1,46 @@
 # Changelog
 
+## Version 1.18
+
+### 1.18.0
+* Added "StadiaHunters" as a community feature, including level progress, world rank and direct links on detail/achievement pages
+* Fixed console logs for the streaming mode being mislabeled
+* Fixed a filter related issue with games that disdplay a video, instead of a screenshot on the details window
+* Fixed issues with game ID detection for the Discord presence and video filter features, with multiple logged in users
+* Fixed the extension running on unnecessary pages (i.e. the couch/tv dedicated pages)
+* Fixed issues with the extension running and no user being logged in
+* Removed "StadiaStatsGG" community feature, due to inactivity and issues with the service
+
 ## Version 1.17
+
+### 1.17.8
+* Fixed some UI elements not being visible, due to incorrect RegEx filtering [[#192]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/192)
+
+### 1.17.7
+* Added a fallback error when no account is logged in
+* Changed how UI elements get inserted, to improve performance
+* Fixed issues with the game ID detection for filtering, favorites, StadiaIcons and StadiaStatsGG
+
+### 1.17.6
+* Changed the store filter to work with language based support, after changes on Stadias side
+* Changed store filter labels to match Stadias store entry labeling
+* Removed the wishlist option (hopefully temp.), due to Stadia removing the ID from store entries [[#190]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/190#issuecomment-955766042)
+
+### 1.17.5
+* Changed filter settings for rendering optimization
+* Fixed stream details on the Stadia menu not being visible when using a controller
+* Fixed multiple refresh issues related to session times
+
+### 1.17.4
+* Fixed photo/video filtering options not working after changes to captures by Google
+* Fixed issues with playtime calculation in games with over 1000 hours in a single title
+
+### 1.17.3
+* Fixed a display issue with "frames lost" in the stream monitor on the Stadia menu
+
+### 1.17.2
+* Updated italian and french translations
+* Added support for stadia features (i.e. Crowd Play) to the extended details
 
 ### 1.17.1
 * Changed all filter settings to only be applied when not set to default value

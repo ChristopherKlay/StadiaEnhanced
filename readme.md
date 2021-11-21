@@ -1,10 +1,10 @@
 # Stadia Enhanced
 
 <p align="center">
-  <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/header-mockup.gif"/>
+  <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/header-mockup.gif"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.17.1-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.18.0-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/rating/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
@@ -34,7 +34,7 @@
 * The extensions fits itself into the existing website and it's main menu can be found at the top-right when opening Stadia after installation.
 
 ### Manual
-1. Download the [newest files of the extension](https://github.com/ChristopherKlay/StadiaEnhanced/tree/master/extension).
+1. Download the [newest files of the extension](https://github.com/ChristopherKlay/StadiaEnhanced/tree/main/extension).
 2. Open `chrome://extensions`
 3. Enable developer mode.
 4. Load the downloaded files via the "Load unpacked" option.
@@ -45,7 +45,7 @@ Please note that installing the extension this way, removes the automatic update
 Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
 
 ## Translation
-If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/translations.md).
+If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/translations.md).
 
 ## Community Features
 These are features developed by the community, made more accessible via Stadia Enhanced.
@@ -56,6 +56,13 @@ These are features developed by the community, made more accessible via Stadia E
   ![Stadia Database](https://i.imgur.com/2w2pfdr.png)
 
   The [Stadia Database](https://linktr.ee/StadiaDatabase) by [OriginaIPenguin](https://twitter.com/OriginaIPenguin) is a full database filled with infos about games on Stadia, including details not accessible via Stadia itself (like resolution, framerate and more).
+</details>
+<details>
+  <summary>Stadia Hunters - Track your progress and climb the leaderboard.</summary>
+  
+  ![Stadia Hunters](https://i.imgur.com/VSzOn9L.png)
+
+  [Stadia Hunters](https://stadiahunters.com/) is tracking your achievements and provides a nice overview of captures, guides, leaderboards and more, including a level system.
 </details>
 <details>
   <summary>Stadia Icons - Create shortcuts to your favorite games.</summary>
@@ -104,8 +111,8 @@ Please post updates to translations in their respective discussions. No content 
 
 ## Screenshots
 
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot1.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot2.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot3.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot4.png)
-![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/media/Screenshot5.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot1.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot2.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot3.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot4.png)
+![](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/Screenshot5.png)

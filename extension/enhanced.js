@@ -2,21 +2,26 @@
 var enhanced_manifest = chrome.runtime.getManifest()
 
 // Start Up
-var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
-console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - ' + enhanced_manifest.version + ': Start-Up', enhanced_consoleEnhanced, '');
 var enhanced_timerLoadStart = window.performance.now();
-var enhanced_supportedLang = 'en|sv|fr|it|es|da|ca|pt|de|hu|nl|pl|no|fi|sk'
+var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
 var enhanced_local = document.querySelector("html").getAttribute('lang')
+
+var enhanced_AccountInfo = enhanced_loadUserInfo()
+if (enhanced_AccountInfo) {
+    console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - ' + enhanced_manifest.version + ': Start-Up', enhanced_consoleEnhanced, '');
+    console.log('%cStadia Enhanced' + '%c ⚙️ - User: ' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1] + ' (' + enhanced_AccountInfo[2] + ') (' + enhanced_local + ')', enhanced_consoleEnhanced, '')
+} else {
+    throw new Error("No logged in user detected.");
+}
+
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = enhancedTranslate(enhanced_local, true)
 embed(enhanced_loadUserInfo, false)
 
-var enhanced_AccountInfo = enhanced_loadUserInfo()
-if (enhanced_AccountInfo) {
-    console.log('%cStadia Enhanced' + '%c ⚙️ - User: ' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1] + ' (' + enhanced_AccountInfo[2] + ') (' + enhanced_local + ')', enhanced_consoleEnhanced, '')
-}
+// Load existing settings
 var enhanced_storedSettings = localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1])
 
+// Default settings
 var enhanced_settings = {
     user: enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1],
     version: '0.0.0',
@@ -44,8 +49,8 @@ var enhanced_settings = {
     splitStore: 0,
     hideFamilySharing: 0,
     enableShortcuts: 0,
-    enableStadiaStats: 0,
     enableStadiaDatabase: 1,
+    enableStadiaHunters: 0,
     updateNotifications: 0,
     streamMode: 0,
     wishlist: "",
@@ -54,6 +59,7 @@ var enhanced_settings = {
     postprocess: {}
 }
 
+// Merge settings
 if (enhanced_storedSettings) {
     enhanced_oldSettings = JSON.parse(enhanced_storedSettings)
     enhanced_settings.version = enhanced_oldSettings.version
@@ -65,8 +71,8 @@ if (enhanced_storedSettings) {
 }
 
 // Check for update
-window.addEventListener('load', function() {
-    window.addEventListener('click', function() {
+window.addEventListener('load', function () {
+    window.addEventListener('click', function () {
         if (enhanced_newVersion(enhanced_settings.version, enhanced_manifest.version)) {
             switch (enhanced_settings.updateNotifications) {
                 case 0:
@@ -82,6 +88,88 @@ window.addEventListener('load', function() {
         once: true
     })
 })
+
+// Language Support
+var enhanced_languageSupport = {
+    supportedCodes: 'ca|da|de|en|es|fi|fr|hu|it|nl|no|pl|pt|sk|sv',
+    storeFilters: {
+        ca: {
+            game: 'Joc',
+            bundle: 'Paquet',
+            addon: 'Complement'
+        },
+        da: {
+            game: 'Spil',
+            bundle: 'Pakke',
+            addon: 'Tilføjelse'
+        },
+        de: {
+            game: 'Spiel',
+            bundle: 'Bundle',
+            addon: 'Add-on'
+        },
+        en: {
+            game: 'Game',
+            bundle: 'Bundle',
+            addon: 'Add-On'
+        },
+        es: {
+            game: 'Juego',
+            bundle: 'Paquete',
+            addon: 'Complemento'
+        },
+        fi: {
+            game: 'Peli',
+            bundle: 'Paketti',
+            addon: 'Laajennus'
+        },
+        fr: {
+            game: 'Jeu',
+            bundle: 'Pack',
+            addon: 'Extension'
+        },
+        hu: {
+            game: 'Játék',
+            bundle: 'Csomag',
+            addon: 'Kiegészítő'
+        },
+        it: {
+            game: 'Gioco',
+            bundle: 'Bundle',
+            addon: 'Contenuto aggiuntivo'
+        },
+        nl: {
+            game: 'Game',
+            bundle: 'Bundel',
+            addon: 'Add-On'
+        },
+        no: {
+            game: 'Spill',
+            bundle: 'Pakke',
+            addon: 'Tillegg'
+        },
+        pl: {
+            game: 'Gra',
+            bundle: 'Pakiet',
+            addon: 'Dotatek'
+        },
+        pt: {
+            game: 'Game',
+            bundle: 'Bundle',
+            addon: 'Add-On'
+        },
+        sk: {
+            game: 'Hra',
+            bundle: 'Balíček',
+            addon: 'Doplnok'
+        },
+        sv: {
+            game: 'Spel',
+            bundle: 'Paket',
+            addon: 'Extra innehåll'
+        }
+    }
+}
 
 // CSS Changes - Global styles and overwrites
 var enhanced_discordActive = false
@@ -204,12 +292,70 @@ enhanced_injectStyle(enhanced_CSS, 'enhanced_styleGeneral')
 enhanced_injectStyle(enhanced_streamMonitorStyle, 'enhanced_styleStreamMonitor')
 enhanced_injectStyle(enhanced_filterOverlayStyle, 'enhanced_styleFilterOverlay')
 
+// Stadia Hunters - Player Stats
+// Source: https://stadiahunters.com/
+var enhanced_stadiaHunters
+
+function loadStadiaHunters(id) {
+    chrome.runtime.sendMessage({
+        action: 'stadiahunters',
+        id: id
+    }, function (response) {
+        enhanced_stadiaHunters = JSON.parse(response)
+        if (Object.keys(enhanced_stadiaHunters).length > 1) {
+            enhanced_huntersDropdown.querySelector('.RMEzA').textContent = enhanced_stadiaHunters.level
+            enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslevel + ' ' + enhanced_stadiaHunters.level
+            enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersworldrank + ' ' + enhanced_stadiaHunters.rank
+            enhanced_huntersDropContent.querySelector('.FxJ5Tc.y2VB6d').style.width = enhanced_stadiaHunters.percentage + '%'
+
+            enhanced_proReplace = `
+                <span class="p4uZTc nLp2td" style="margin-left: 0">
+                    <svg class="xduoyf" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#c1820)">
+                            <path d="M16.75 5.04a.8.8 0 0 0-1.5 0l-1.54 4.2a.8.8 0 0 1-.48.47l-4.19 1.54a.8.8 0 0 0 0 1.5l4.2 1.54c.21.08.39.26.47.48l1.54 4.19a.8.8 0 0 0 1.5 0l1.54-4.2a.8.8 0 0 1 .48-.47l4.19-1.54a.8.8 0 0 0 0-1.5l-4.2-1.54a.8.8 0 0 1-.47-.48l-1.54-4.19z" fill="url(#c1821)"></path>
+                            <path d="M7.47 16.28a.5.5 0 0 0-.94 0L6 17.7a.5.5 0 0 1-.3.3l-1.42.52a.5.5 0 0 0 0 .94L5.7 20a.5.5 0 0 1 .3.3l.52 1.42a.5.5 0 0 0 .94 0L8 20.3a.5.5 0 0 1 .3-.3l1.42-.52a.5.5 0 0 0 0-.94L8.3 18a.5.5 0 0 1-.3-.3l-.52-1.42z" fill="url(#c1822)"></path>
+                            <path d="M5.47 3.28a.5.5 0 0 0-.94 0l-.8 2.16a.5.5 0 0 1-.3.3l-2.15.8a.5.5 0 0 0 0 .93l2.16.8a.5.5 0 0 1 .3.3l.8 2.15a.5.5 0 0 0 .93 0l.8-2.16a.5.5 0 0 1 .3-.3l2.15-.8a.5.5 0 0 0 0-.93l-2.16-.8a.5.5 0 0 1-.3-.3l-.8-2.15z" fill="url(#c1823)"></path>
+                        </g>
+                        <defs>
+                            <linearGradient id="c1821" x1="16" y1="5.57" x2="16" y2="22.61" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4C1D"></stop>
+                                <stop offset="1" stop-color="#9B0063"></stop>
+                            </linearGradient>
+                            <linearGradient id="c1822" x1="7" y1="16.14" x2="7" y2="23.71" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4C1D"></stop>
+                                <stop offset="1" stop-color="#9B0063"></stop>
+                            </linearGradient>
+                            <linearGradient id="c1823" x1="5" y1="3.43" x2="5" y2="12.89" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF4C1D"></stop>
+                                <stop offset="1" stop-color="#9B0063"></stop>
+                            </linearGradient>
+                            <clipPath id="c1820">
+                                <path fill="#fff" transform="matrix(-1 0 0 1 24 0)" d="M0 0h24v24H0z"></path>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </span>`
+
+            if (enhanced_AccountInfo[1] == '0000') {
+                enhanced_huntersDropContent.querySelector('.rmIKk.qUT0tf').outerHTML = enhanced_proReplace
+            }
+        } else {
+            enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslogin
+            enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersnotfound
+        }
+
+        console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Profile Data.', enhanced_consoleEnhanced, '')
+        console.table(enhanced_stadiaHunters)
+        console.groupEnd()
+    })
+}
+
 // Stadia Public Database by OriginalPenguin
 // Source: https://linktr.ee/StadiaDatabase
 var enhanced_database = []
 chrome.runtime.sendMessage({
     action: 'extdatabase'
-}, function(response) {
+}, function (response) {
     var data = csvToArray(response)
     for (var i = 1; i < data.length; i++) {
         var json = {
@@ -228,12 +374,15 @@ chrome.runtime.sendMessage({
             proFeat: data[i][3]
                 .replaceAll(' | ', ', ')
                 .replace('4K Mode', enhanced_lang.noteOne),
-            crossplay: data[i][4]
+            stadiaFeat: data[i][4]
+                .replaceAll(' | ', ', ')
+                .replace('None', enhanced_lang.unsupported),
+            crossplay: data[i][5]
                 .replaceAll(' | ', ', ')
                 .replace('None', enhanced_lang.unsupported)
                 .replace('No Cross-platform Buddy System', enhanced_lang.crossfriends),
-            id: data[i][5],
-            tested: data[i][6]
+            id: data[i][6],
+            tested: data[i][7]
         }
         enhanced_database.push(json)
     }
@@ -267,28 +416,28 @@ var enhanced_discordPresence = {}
 var enhanced_presenceData
 chrome.runtime.sendMessage({
     action: 'presencedata'
-}, function(response) {
+}, function (response) {
     enhanced_presenceData = response
     console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: ' + Object.keys(response).length + ' entries loaded successfully.', enhanced_consoleEnhanced, '')
     console.log(response)
     console.groupEnd()
-});
+})
 
 // Register
 chrome.runtime.sendMessage('agnaejlkbiiggajjmnpmeheigkflbnoo', {
     mode: 'active'
-}, function(response) {
+}, function (response) {
     if (chrome.runtime.lastError || !response) {
         console.log('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: To use the Discord presence, install: https://chrome.google.com/webstore/detail/discord-rich-presence/agnaejlkbiiggajjmnpmeheigkflbnoo', enhanced_consoleEnhanced, '');
     } else {
         console.log('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: Presence active.', enhanced_consoleEnhanced, '')
     }
-});
+})
 
 // Wait for presence requests
-chrome.runtime.onMessage.addListener(function(info, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
     sendResponse(enhanced_discordPresence)
-});
+})
 
 // Stream Monitor
 // Credits to the base by AquaRegia
@@ -300,7 +449,7 @@ enhanced_streamMonitor.style.position = 'fixed'
 enhanced_streamMonitor.style.top = enhanced_settings.monitorPosition.split("|")[0]
 enhanced_streamMonitor.style.left = enhanced_settings.monitorPosition.split("|")[1]
 enhanced_streamMonitor.style.display = 'block'
-enhanced_streamMonitor.addEventListener('dblclick', function() {
+enhanced_streamMonitor.addEventListener('dblclick', function () {
     enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -310,6 +459,13 @@ enhanced_dragElement(enhanced_streamMonitor)
 // Minified Menu Monitor
 var enhanced_menuMonitor = document.createElement('div')
 enhanced_menuMonitor.style.whiteSpace = 'nowrap'
+
+// Session Time
+var enhanced_menuMonitorSessionTime = document.createElement('div')
+enhanced_menuMonitorSessionTime.id = 'enhanced_menuMonitorCodec'
+enhanced_menuMonitorSessionTime.className = 'HPX1od'
+enhanced_menuMonitorSessionTime.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">00:00:00</span></div>'
+enhanced_menuMonitor.append(enhanced_menuMonitorSessionTime)
 
 // Codec
 var enhanced_menuMonitorCodec = document.createElement('div')
@@ -364,8 +520,8 @@ function enhanced_updateMonitor(opt) {
 function enhanced_RTCMonitor() {
     // RTC Stream Inject
     var peerConnections = [];
-    (function(original) {
-        RTCPeerConnection = function() {
+    (function (original) {
+        RTCPeerConnection = function () {
             var connection = new original(arguments[0], arguments[1])
             peerConnections.push(connection)
             return connection
@@ -400,7 +556,7 @@ function enhanced_RTCMonitor() {
         return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + Math.floor(seconds)
     }
 
-    setInterval(function() {
+    setInterval(function () {
         if (document.location.href.indexOf('/player/') == -1) {
             peerConnections = []
             enhanced_lastBytes = 0
@@ -413,7 +569,7 @@ function enhanced_RTCMonitor() {
                 enhanced_sessionActive = true
             }
             const openConnections = peerConnections.filter(x => x.connectionState == 'connected')
-            openConnections[1].getStats().then(function(stats) {
+            openConnections[1].getStats().then(function (stats) {
                 for (var key of stats.keys()) {
                     if (key.indexOf('RTCIceCandidatePair') != -1) {
                         var tmp4 = stats.get(key)
@@ -422,8 +578,8 @@ function enhanced_RTCMonitor() {
                         var tmp1 = stats.get(key)
                         var tmp2 = stats.get(tmp1.trackId)
 
-                        openConnections[1].getStats(function(stats) {
-                            var tmp3 = stats.result().find(function(f) {
+                        openConnections[1].getStats(function (stats) {
+                            var tmp3 = stats.result().find(function (f) {
                                 return 'ssrc' == f.type && f.id.endsWith('recv') && f.names().includes('mediaType') && 'video' == f.stat('mediaType')
                             });
 
@@ -503,7 +659,7 @@ function enhanced_RTCMonitor() {
 embed(enhanced_RTCMonitor)
 
 // Update Stream Elements
-setInterval(function() {
+setInterval(function () {
     if (document.location.href.indexOf('/player/') != -1) {
 
         // Get local stream data
@@ -529,7 +685,7 @@ setInterval(function() {
             enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.codec + '</span></div>'
             enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.resolution + '</span></div>'
             enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.latency + ' ms | ' + enhanced_streamData.fps + '</span></div>'
-            enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.packetloss + '</span></div>'
+            enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.framedrop + '</span></div>'
             enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.decode + ' ms</span></div>'
 
 
@@ -692,11 +848,11 @@ enhanced_Monitor.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMY
 enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
 enhanced_Monitor.tabIndex = '0'
-enhanced_Monitor.addEventListener('click', function() {
+enhanced_Monitor.addEventListener('click', function () {
     enhanced_monitorState = (enhanced_monitorState + 1) % 2
     enhanced_updateMonitor(enhanced_monitorState)
 });
-enhanced_Monitor.addEventListener('dblclick', function() {
+enhanced_Monitor.addEventListener('dblclick', function () {
     // Generate new Window
     var enhanced_popMonitor = window.open('', '_blank', 'width=280,height=500,toolbar=0')
     enhanced_popMonitor.document.title = 'Stream Monitor'
@@ -709,7 +865,7 @@ enhanced_Monitor.addEventListener('dblclick', function() {
     el.innerHTML = enhanced_monitorStyle + '#enhanced_streamMonitor { display: block !important; }'
 
     // Update
-    enhanced_upPop = setInterval(function() {
+    enhanced_upPop = setInterval(function () {
         if (enhanced_popMonitor.closed) {
             clearInterval(enhanced_upPop)
         } else {
@@ -728,19 +884,19 @@ var enhanced_filterUI = {
     },
     saturation: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     },
     contrast: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     },
     brightness: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     },
     sharpen: {
         label: document.createElement('span'),
-        slider: document.createElement('input'),
+        slider: document.createElement('input')
     }
 }
 
@@ -757,7 +913,7 @@ enhanced_filterUI.main.toggle.innerHTML = '<div role="button" class="CTvDXd QAAy
 enhanced_filterUI.main.toggle.style.cursor = 'pointer'
 enhanced_filterUI.main.toggle.style.userSelect = 'none'
 enhanced_filterUI.main.toggle.tabIndex = '0'
-enhanced_filterUI.main.toggle.addEventListener('click', function() {
+enhanced_filterUI.main.toggle.addEventListener('click', function () {
     if (enhanced_filterUI.main.frame.style.display == 'block') {
         enhanced_filterUI.main.frame.style.display = 'none'
         enhanced_injectStyle('', 'enhanced_styleDimOverlayTemp')
@@ -781,11 +937,11 @@ enhanced_filterUI.saturation.slider.type = 'range'
 enhanced_filterUI.saturation.slider.min = 0
 enhanced_filterUI.saturation.slider.max = 150
 enhanced_filterUI.saturation.slider.setAttribute('value', enhanced_settings.postprocess.saturation * 100)
-enhanced_filterUI.saturation.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.saturation.slider.addEventListener("dblclick", function () {
     this.value = 100
     enhanced_updateFilters()
 })
-enhanced_filterUI.saturation.slider.onchange = function() {
+enhanced_filterUI.saturation.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -796,11 +952,11 @@ enhanced_filterUI.contrast.slider.type = 'range'
 enhanced_filterUI.contrast.slider.min = 50
 enhanced_filterUI.contrast.slider.max = 150
 enhanced_filterUI.contrast.slider.setAttribute('value', enhanced_settings.postprocess.contrast * 100)
-enhanced_filterUI.contrast.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.contrast.slider.addEventListener("dblclick", function () {
     this.value = 100
     enhanced_updateFilters()
 })
-enhanced_filterUI.contrast.slider.onchange = function() {
+enhanced_filterUI.contrast.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -811,11 +967,11 @@ enhanced_filterUI.brightness.slider.type = 'range'
 enhanced_filterUI.brightness.slider.min = 50
 enhanced_filterUI.brightness.slider.max = 150
 enhanced_filterUI.brightness.slider.setAttribute('value', enhanced_settings.postprocess.brightness * 100)
-enhanced_filterUI.brightness.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.brightness.slider.addEventListener("dblclick", function () {
     this.value = 100
     enhanced_updateFilters()
 })
-enhanced_filterUI.brightness.slider.onchange = function() {
+enhanced_filterUI.brightness.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -826,11 +982,11 @@ enhanced_filterUI.sharpen.slider.type = 'range'
 enhanced_filterUI.sharpen.slider.min = 0
 enhanced_filterUI.sharpen.slider.max = 20
 enhanced_filterUI.sharpen.slider.setAttribute('value', enhanced_settings.postprocess.sharpen)
-enhanced_filterUI.sharpen.slider.addEventListener("dblclick", function() {
+enhanced_filterUI.sharpen.slider.addEventListener("dblclick", function () {
     this.value = 0
     enhanced_updateFilters()
 })
-enhanced_filterUI.sharpen.slider.onchange = function() {
+enhanced_filterUI.sharpen.slider.onchange = function () {
     enhanced_updateFilters()
 }
 
@@ -838,8 +994,13 @@ enhanced_filterUI.sharpen.slider.onchange = function() {
 function enhanced_updateFilters(setup = false) {
     if (document.location.href.indexOf('/player/') != -1) {
         // Get Current Game
-        var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
+        var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
+
+        // Set Transform
+        if (enhanced_currentStream) {
+            enhanced_currentStream.style.willChange = 'filter'
+        }
 
         // Create Game Entry
         if (!enhanced_settings.postprocess[enhanced_currentID]) {
@@ -952,7 +1113,7 @@ enhanced_Windowed.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcM
 enhanced_Windowed.style.cursor = 'pointer'
 enhanced_Windowed.style.userSelect = 'none'
 enhanced_Windowed.tabIndex = '0'
-enhanced_Windowed.addEventListener('click', function() {
+enhanced_Windowed.addEventListener('click', function () {
     if (enhanced_BlockFullscreen) {
         enhanced_Windowed.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">fullscreen</i></span><span class="caSJV" jsname="V67aGc">' + enhanced_lang.windowed + '</span></div>'
         enhanced_BlockFullscreen = false
@@ -963,7 +1124,7 @@ enhanced_Windowed.addEventListener('click', function() {
         document.exitFullscreen()
     }
 });
-window.addEventListener('fullscreenchange', function(event) {
+window.addEventListener('fullscreenchange', function (event) {
     if (enhanced_BlockFullscreen) {
         event.stopPropagation()
     }
@@ -974,7 +1135,7 @@ var enhanced_emojiswitch = document.createElement('div')
 enhanced_emojiswitch.innerHTML = '😃'
 enhanced_emojiswitch.style.marginLeft = '1rem'
 enhanced_emojiswitch.style.cursor = 'pointer'
-enhanced_emojiswitch.addEventListener('click', function() {
+enhanced_emojiswitch.addEventListener('click', function () {
     if (enhanced_emojiPicker.style.display == 'none') {
         enhanced_emojiPicker.style.display = 'flex'
         if (document.querySelector('div[jsname="IbgIAb"] .emG1mb')) {
@@ -999,12 +1160,12 @@ enhanced_emojiPicker.style.userSelect = 'none'
 enhanced_emojiPicker.style.borderRadius = '0.5rem'
 enhanced_emojiPicker.style.display = 'none'
 
-enhanced_emojiPicker.addEventListener('click', function(i) {
+enhanced_emojiPicker.addEventListener('click', function (i) {
     document.querySelector('.m0BtMe').focus()
     document.execCommand('insertText', false, i.target.textContent)
 })
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target != enhanced_emojiswitch && e.target != enhanced_emojiPicker && enhanced_emojiPicker.contains(e.target) === false) {
         enhanced_emojiPicker.style.display = 'none'
     }
@@ -1051,7 +1212,7 @@ enhanced_ClockFriends.style.display = 'flex'
 enhanced_ClockFriends.style.alignItems = 'center'
 enhanced_ClockFriends.style.justifyContent = 'center'
 enhanced_ClockFriends.style.zIndex = '20'
-enhanced_ClockFriends.addEventListener('click', function() {
+enhanced_ClockFriends.addEventListener('click', function () {
     enhanced_settings.clockMode = (enhanced_settings.clockMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -1073,7 +1234,7 @@ enhanced_ClockOverlay.style.cursor = 'pointer'
 enhanced_ClockOverlay.style.alignItems = 'center'
 enhanced_ClockOverlay.style.justifyContent = 'center'
 enhanced_ClockOverlay.style.zIndex = '20'
-enhanced_ClockOverlay.addEventListener('click', function() {
+enhanced_ClockOverlay.addEventListener('click', function () {
     enhanced_settings.clockMode = (enhanced_settings.clockMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -1086,7 +1247,7 @@ var enhanced_ProGamesLink = document.createElement('a')
 enhanced_ProGames.appendChild(enhanced_ProGamesLink)
 enhanced_ProGamesLink.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_ProGamesLink.textContent = 'Pro'
-enhanced_ProGamesLink.addEventListener('click', function() {
+enhanced_ProGamesLink.addEventListener('click', function () {
     openStadia('store/list/2001')
 })
 if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
@@ -1108,7 +1269,7 @@ enhanced_StoreDropdown.style.padding = '0'
 enhanced_StoreDropdown.style.cursor = 'pointer'
 enhanced_StoreDropdown.style.userSelect = 'none'
 enhanced_StoreDropdown.tabIndex = '0'
-enhanced_StoreDropdown.addEventListener('click', function() {
+enhanced_StoreDropdown.addEventListener('click', function () {
     if (enhanced_StoreDropContent.style.display === 'none') {
         enhanced_StoreDropContent.style.display = 'block'
     } else {
@@ -1131,13 +1292,13 @@ if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
     document.getElementsByClassName('ZECEje')[0].append(enhanced_StoreContainer)
 }
 
-enhanced_StoreDropdown.addEventListener('keyup', function(e) {
+enhanced_StoreDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
         enhanced_StoreDropdown.click()
     }
 })
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target != enhanced_StoreDropdown && enhanced_StoreDropdown.contains(e.target) === false) {
         enhanced_StoreDropContent.style.display = 'none'
     }
@@ -1152,7 +1313,7 @@ enhanced_OnSale.style.cursor = 'pointer'
 enhanced_OnSale.style.userSelect = 'none'
 enhanced_OnSale.style.paddingRight = '2rem'
 enhanced_OnSale.tabIndex = '0'
-enhanced_OnSale.addEventListener('click', function() {
+enhanced_OnSale.addEventListener('click', function () {
     openStadia('store/list/14')
 });
 enhanced_StoreDropContent.append(enhanced_OnSale)
@@ -1166,7 +1327,7 @@ enhanced_ProDeals.style.cursor = 'pointer'
 enhanced_ProDeals.style.userSelect = 'none'
 enhanced_ProDeals.style.paddingRight = '2rem'
 enhanced_ProDeals.tabIndex = '0'
-enhanced_ProDeals.addEventListener('click', function() {
+enhanced_ProDeals.addEventListener('click', function () {
     openStadia('store/list/45')
 })
 enhanced_StoreDropContent.append(enhanced_ProDeals)
@@ -1180,7 +1341,7 @@ enhanced_leavePro.style.cursor = 'pointer'
 enhanced_leavePro.style.userSelect = 'none'
 enhanced_leavePro.style.paddingRight = '2rem'
 enhanced_leavePro.tabIndex = '0'
-enhanced_leavePro.addEventListener('click', function() {
+enhanced_leavePro.addEventListener('click', function () {
     openStadia('store/list/36')
 })
 enhanced_StoreDropContent.append(enhanced_leavePro)
@@ -1194,7 +1355,7 @@ enhanced_ubiPlus.style.cursor = 'pointer'
 enhanced_ubiPlus.style.userSelect = 'none'
 enhanced_ubiPlus.style.paddingRight = '2rem'
 enhanced_ubiPlus.tabIndex = '0'
-enhanced_ubiPlus.addEventListener('click', function() {
+enhanced_ubiPlus.addEventListener('click', function () {
     openStadia('store/list/2002')
 })
 enhanced_StoreDropContent.append(enhanced_ubiPlus)
@@ -1208,7 +1369,7 @@ enhanced_AllGames.style.cursor = 'pointer'
 enhanced_AllGames.style.userSelect = 'none'
 enhanced_AllGames.style.paddingRight = '2rem'
 enhanced_AllGames.tabIndex = '0'
-enhanced_AllGames.addEventListener('click', function() {
+enhanced_AllGames.addEventListener('click', function () {
     openStadia('store/list/3')
 })
 enhanced_StoreDropContent.append(enhanced_AllGames)
@@ -1228,7 +1389,7 @@ enhanced_langDropdown.style.padding = '0'
 enhanced_langDropdown.style.cursor = 'pointer'
 enhanced_langDropdown.style.userSelect = 'none'
 enhanced_langDropdown.tabIndex = '0'
-enhanced_langDropdown.addEventListener('click', function() {
+enhanced_langDropdown.addEventListener('click', function () {
     if (enhanced_langDropContent.style.display === 'none') {
         enhanced_langDropContent.style.display = 'block'
         enhanced_langDropContent.scrollTop = 0
@@ -1262,7 +1423,7 @@ enhanced_langDefault.style.padding = '0 2rem'
 enhanced_langDefault.style.textAlign = 'center'
 enhanced_langDefault.tabIndex = '0'
 enhanced_langDefault.style.borderBottom = '1px solid rgba(255,255,255,.06)'
-enhanced_langDefault.addEventListener('click', function() {
+enhanced_langDefault.addEventListener('click', function () {
     enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
     enhanced_urlBase = new URL(window.location.href)
     enhanced_urlBase.searchParams.delete('hl')
@@ -1298,7 +1459,7 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
         enhanced_langOption.style.padding = '0 2rem'
         enhanced_langOption.style.textAlign = 'center'
         enhanced_langOption.tabIndex = '0'
-        enhanced_langOption.addEventListener('click', function() {
+        enhanced_langOption.addEventListener('click', function () {
             enhanced_urlGoal = document.location.pathname.substring(1).replace(/u\/[0-9]\//, '')
             enhanced_urlBase = new URL(window.location.href)
             enhanced_urlBase.searchParams.set('hl', value)
@@ -1309,15 +1470,15 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
     }
 }
 
-secureInsert(enhanced_langContainer, '.ZECEje', 1)
+secureInsert(enhanced_langContainer, 'ZECEje', 1)
 
-enhanced_langDropdown.addEventListener('keyup', function(e) {
+enhanced_langDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
         enhanced_langDropdown.click()
     }
 });
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target != enhanced_langDropdown && enhanced_langDropdown.contains(e.target) === false) {
         enhanced_langDropContent.style.display = 'none'
         enhanced_langDropdown.firstElementChild.style.color = ''
@@ -1338,7 +1499,7 @@ enhanced_SettingsDropdown.style.width = '2.5rem'
 enhanced_SettingsDropdown.style.padding = '0'
 enhanced_SettingsDropdown.style.userSelect = 'none'
 enhanced_SettingsDropdown.tabIndex = '0'
-enhanced_SettingsDropdown.addEventListener('click', function(e) {
+enhanced_SettingsDropdown.addEventListener('click', function (e) {
     if (document.querySelector('.X1asv.ahEBEd.LJni0').style.opacity == '1') {
         document.querySelector('.hBNsYe.QAAyWd.wJYinb.YySNWc').click()
     }
@@ -1353,13 +1514,13 @@ enhanced_SettingsDropdown.addEventListener('click', function(e) {
     }
 })
 
-enhanced_SettingsDropdown.addEventListener('keyup', function(e) {
+enhanced_SettingsDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
         enhanced_SettingsDropdown.click()
     }
 })
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
         enhanced_settingsFrame.style.display = 'none'
         enhanced_SettingsDropdown.firstElementChild.style.color = ''
@@ -1405,7 +1566,7 @@ enhanced_settingsContent.style.borderRadius = '0'
 enhanced_settingsFrame.append(enhanced_settingsContent)
 
 enhanced_SettingsDropdown.append(enhanced_settingsFrame)
-secureInsert(enhanced_SettingsContainer, '.ZECEje', 1)
+secureInsert(enhanced_SettingsContainer, 'ZECEje', 1)
 
 // Settings - Groups
 var enhanced_settingsShortcut = document.createElement('div')
@@ -1425,7 +1586,7 @@ enhanced_settingsShortcutTitle.style.userSelect = 'none'
 enhanced_settingsShortcutTitle.style.textAlign = 'center'
 enhanced_settingsShortcutTitle.style.padding = '0 1rem'
 enhanced_settingsShortcutTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsShortcutTitle.addEventListener('click', function() {
+enhanced_settingsShortcutTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsShortcut)
@@ -1441,7 +1602,7 @@ enhanced_settingsStreamTitle.style.userSelect = 'none'
 enhanced_settingsStreamTitle.style.textAlign = 'center'
 enhanced_settingsStreamTitle.style.padding = '0 1rem'
 enhanced_settingsStreamTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsStreamTitle.addEventListener('click', function() {
+enhanced_settingsStreamTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsStream)
@@ -1457,7 +1618,7 @@ enhanced_settingsGeneralTitle.style.userSelect = 'none'
 enhanced_settingsGeneralTitle.style.textAlign = 'center'
 enhanced_settingsGeneralTitle.style.padding = '0 1rem'
 enhanced_settingsGeneralTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsGeneralTitle.addEventListener('click', function() {
+enhanced_settingsGeneralTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsGeneral)
@@ -1473,7 +1634,7 @@ enhanced_settingsMessagesTitle.style.userSelect = 'none'
 enhanced_settingsMessagesTitle.style.textAlign = 'center'
 enhanced_settingsMessagesTitle.style.padding = '0 1rem'
 enhanced_settingsMessagesTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsMessagesTitle.addEventListener('click', function() {
+enhanced_settingsMessagesTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsMessages)
@@ -1489,7 +1650,7 @@ enhanced_settingsComFeatTitle.style.userSelect = 'none'
 enhanced_settingsComFeatTitle.style.textAlign = 'center'
 enhanced_settingsComFeatTitle.style.padding = '0 1rem'
 enhanced_settingsComFeatTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsComFeatTitle.addEventListener('click', function() {
+enhanced_settingsComFeatTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsComFeat)
@@ -1505,7 +1666,7 @@ enhanced_settingsEnhancedTitle.style.userSelect = 'none'
 enhanced_settingsEnhancedTitle.style.textAlign = 'center'
 enhanced_settingsEnhancedTitle.style.padding = '0 1rem'
 enhanced_settingsEnhancedTitle.style.borderBottom = '1px solid rgba(255, 255, 255, 0)'
-enhanced_settingsEnhancedTitle.addEventListener('click', function() {
+enhanced_settingsEnhancedTitle.addEventListener('click', function () {
     enhanced_settingsContent.innerHTML = ''
     enhanced_settingsContent.scrollTop = 0
     enhanced_settingsContent.append(enhanced_settingsEnhanced)
@@ -1521,7 +1682,7 @@ enhanced_UserProfile.style.cursor = 'pointer'
 enhanced_UserProfile.style.userSelect = 'none'
 enhanced_UserProfile.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserProfile.tabIndex = '0'
-enhanced_UserProfile.addEventListener('click', function() {
+enhanced_UserProfile.addEventListener('click', function () {
     openStadia('profile/' + enhanced_AccountInfo[2])
 })
 enhanced_settingsShortcut.append(enhanced_UserProfile)
@@ -1535,7 +1696,7 @@ enhanced_UserMedia.style.cursor = 'pointer'
 enhanced_UserMedia.style.userSelect = 'none'
 enhanced_UserMedia.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
-enhanced_UserMedia.addEventListener('click', function() {
+enhanced_UserMedia.addEventListener('click', function () {
     openStadia('captures')
 })
 enhanced_settingsShortcut.append(enhanced_UserMedia)
@@ -1549,7 +1710,7 @@ enhanced_speedTest.style.cursor = 'pointer'
 enhanced_speedTest.style.userSelect = 'none'
 enhanced_speedTest.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_speedTest.tabIndex = '0'
-enhanced_speedTest.addEventListener('click', function() {
+enhanced_speedTest.addEventListener('click', function () {
     window.open('https://projectstream.google.com/speedtest', '_blank')
 })
 enhanced_settingsShortcut.append(enhanced_speedTest)
@@ -1563,7 +1724,7 @@ enhanced_communityPage.style.cursor = 'pointer'
 enhanced_communityPage.style.userSelect = 'none'
 enhanced_communityPage.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_communityPage.tabIndex = '0'
-enhanced_communityPage.addEventListener('click', function() {
+enhanced_communityPage.addEventListener('click', function () {
     window.open('https://community.stadia.com/', '_blank')
 })
 enhanced_settingsShortcut.append(enhanced_communityPage)
@@ -1577,7 +1738,7 @@ enhanced_GitHubLink.style.cursor = 'pointer'
 enhanced_GitHubLink.style.userSelect = 'none'
 enhanced_GitHubLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_GitHubLink.tabIndex = '0'
-enhanced_GitHubLink.addEventListener('click', function() {
+enhanced_GitHubLink.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_GitHubLink)
@@ -1591,7 +1752,7 @@ enhanced_ChangelogLink.style.cursor = 'pointer'
 enhanced_ChangelogLink.style.userSelect = 'none'
 enhanced_ChangelogLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ChangelogLink.tabIndex = '0'
-enhanced_ChangelogLink.addEventListener('click', function() {
+enhanced_ChangelogLink.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_ChangelogLink)
@@ -1605,7 +1766,7 @@ enhanced_ReportIssue.style.cursor = 'pointer'
 enhanced_ReportIssue.style.userSelect = 'none'
 enhanced_ReportIssue.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ReportIssue.tabIndex = '0'
-enhanced_ReportIssue.addEventListener('click', function() {
+enhanced_ReportIssue.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced/issues', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_ReportIssue)
@@ -1619,7 +1780,7 @@ enhanced_CoffeeLink.style.cursor = 'pointer'
 enhanced_CoffeeLink.style.userSelect = 'none'
 enhanced_CoffeeLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_CoffeeLink.tabIndex = '0'
-enhanced_CoffeeLink.addEventListener('click', function() {
+enhanced_CoffeeLink.addEventListener('click', function () {
     window.open('https://www.buymeacoffee.com/christopherklay', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_CoffeeLink)
@@ -1632,7 +1793,7 @@ enhanced_Codec.style.cursor = 'pointer'
 enhanced_Codec.style.userSelect = 'none'
 enhanced_Codec.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Codec.tabIndex = '0'
-enhanced_Codec.addEventListener('click', function() {
+enhanced_Codec.addEventListener('click', function () {
     enhanced_settings.codec = (enhanced_settings.codec + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('codec', enhanced_settings.codec)
@@ -1647,7 +1808,7 @@ enhanced_Resolution.style.cursor = 'pointer'
 enhanced_Resolution.style.userSelect = 'none'
 enhanced_Resolution.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
-enhanced_Resolution.addEventListener('click', function() {
+enhanced_Resolution.addEventListener('click', function () {
     enhanced_settings.resolution = (enhanced_settings.resolution + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('resolution', enhanced_settings.resolution)
@@ -1658,7 +1819,7 @@ var enhanced_resolutionPopup = document.createElement('div')
 enhanced_resolutionPopup.id = 'enhanced_resolutionPopup'
 enhanced_resolutionPopup.className = 'HP4yJd heSpB'
 enhanced_resolutionPopup.style.cursor = 'pointer'
-enhanced_resolutionPopup.addEventListener('click', function() {
+enhanced_resolutionPopup.addEventListener('click', function () {
     enhanced_settings.resolution = (enhanced_settings.resolution + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('resolution', enhanced_settings.resolution)
@@ -1667,7 +1828,7 @@ enhanced_resolutionPopup.addEventListener('click', function() {
 function enhanced_changeResolution() {
     var enhanced_AccountInfo = enhanced_loadUserInfo()
     var x, y
-    setInterval(function() {
+    setInterval(function () {
         var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
         switch (enhanced_settings.resolution) {
             case 0:
@@ -1714,7 +1875,7 @@ enhanced_monitorAutostart.id = 'enhanced_monitorAutostart'
 enhanced_monitorAutostart.style.cursor = 'pointer'
 enhanced_monitorAutostart.style.userSelect = 'none'
 enhanced_monitorAutostart.tabIndex = '0'
-enhanced_monitorAutostart.addEventListener('click', function() {
+enhanced_monitorAutostart.addEventListener('click', function () {
     enhanced_settings.monitorAutostart = (enhanced_settings.monitorAutostart + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
@@ -1729,7 +1890,7 @@ enhanced_Grid.style.cursor = 'pointer'
 enhanced_Grid.style.userSelect = 'none'
 enhanced_Grid.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Grid.tabIndex = '0'
-enhanced_Grid.addEventListener('click', function() {
+enhanced_Grid.addEventListener('click', function () {
     enhanced_settings.gridSize = (enhanced_settings.gridSize + 1) % 6
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('gridsize', enhanced_settings.gridSize)
@@ -1744,7 +1905,7 @@ enhanced_Clock.style.cursor = 'pointer'
 enhanced_Clock.style.userSelect = 'none'
 enhanced_Clock.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Clock.tabIndex = '0'
-enhanced_Clock.addEventListener('click', function() {
+enhanced_Clock.addEventListener('click', function () {
     enhanced_settings.clockOption = (enhanced_settings.clockOption + 1) % 4
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('clock', enhanced_settings.clockOption)
@@ -1759,7 +1920,7 @@ enhanced_useFilter.style.cursor = 'pointer'
 enhanced_useFilter.style.userSelect = 'none'
 enhanced_useFilter.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_useFilter.tabIndex = '0'
-enhanced_useFilter.addEventListener('click', function() {
+enhanced_useFilter.addEventListener('click', function () {
     enhanced_settings.filter = (enhanced_settings.filter + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('filter', enhanced_settings.filter)
@@ -1776,11 +1937,11 @@ enhanced_Invite.style.cursor = 'pointer'
 enhanced_Invite.style.userSelect = 'none'
 enhanced_Invite.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Invite.tabIndex = '0'
-enhanced_Invite.addEventListener('click', function() {
+enhanced_Invite.addEventListener('click', function () {
     navigator.clipboard.writeText(enhanced_InviteURL)
     enhanced_Invite.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">person_add</i></span><span class="mJVLwb" >' + enhanced_lang.inviteactive + '</span>'
     enhanced_Invite.style.color = '#ff773d'
-    setTimeout(function() {
+    setTimeout(function () {
         enhanced_Invite.innerHTML = '<span class="p7Os3d"><i class="material-icons-extended" aria-hidden="true">person_add</i></span><span class="mJVLwb">' + enhanced_lang.invitebase + '</span>'
         enhanced_Invite.style.color = ''
     }, 1000)
@@ -1795,7 +1956,7 @@ enhanced_exportSettings.innerHTML = '<i class="material-icons-extended STPv1" ar
 enhanced_exportSettings.style.cursor = 'pointer'
 enhanced_exportSettings.style.userSelect = 'none'
 enhanced_exportSettings.tabIndex = '0'
-enhanced_exportSettings.addEventListener('click', function() {
+enhanced_exportSettings.addEventListener('click', function () {
     var enhanced_exportContent = JSON.stringify(enhanced_settings)
     enhanced_downloadFile('enhanced_' + enhanced_settings.user, 'json', enhanced_exportContent)
 })
@@ -1804,7 +1965,7 @@ enhanced_settingsEnhanced.append(enhanced_exportSettings)
 // Import settings
 var enhanced_importDummy = document.createElement('input')
 enhanced_importDummy.type = 'file'
-enhanced_importDummy.addEventListener('change', function() {
+enhanced_importDummy.addEventListener('change', function () {
     let files = enhanced_importDummy.files
     if (files.length == 0) {
         return
@@ -1833,7 +1994,7 @@ enhanced_importSettings.innerHTML = '<i class="material-icons-extended STPv1" ar
 enhanced_importSettings.style.cursor = 'pointer'
 enhanced_importSettings.style.userSelect = 'none'
 enhanced_importSettings.tabIndex = '0'
-enhanced_importSettings.addEventListener('click', function() {
+enhanced_importSettings.addEventListener('click', function () {
     enhanced_importDummy.click()
 })
 enhanced_settingsEnhanced.append(enhanced_importSettings)
@@ -1846,7 +2007,7 @@ enhanced_resetSettings.innerHTML = '<i class="material-icons-extended STPv1" ari
 enhanced_resetSettings.style.cursor = 'pointer'
 enhanced_resetSettings.style.userSelect = 'none'
 enhanced_resetSettings.tabIndex = '0'
-enhanced_resetSettings.addEventListener('click', function() {
+enhanced_resetSettings.addEventListener('click', function () {
     if (confirm(enhanced_lang.confirmreset)) {
         enhanced_applySettings('resetall')
     }
@@ -1861,7 +2022,7 @@ enhanced_hidePreview.style.cursor = 'pointer'
 enhanced_hidePreview.style.userSelect = 'none'
 enhanced_hidePreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_hidePreview.tabIndex = '0'
-enhanced_hidePreview.addEventListener('click', function() {
+enhanced_hidePreview.addEventListener('click', function () {
     enhanced_settings.hideMessagePreview = (enhanced_settings.hideMessagePreview + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('messagepreview', enhanced_settings.hideMessagePreview)
@@ -1876,7 +2037,7 @@ enhanced_quickReply.style.cursor = 'pointer'
 enhanced_quickReply.style.userSelect = 'none'
 enhanced_quickReply.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_quickReply.tabIndex = '0'
-enhanced_quickReply.addEventListener('click', function() {
+enhanced_quickReply.addEventListener('click', function () {
     enhanced_settings.hideQuickReply = (enhanced_settings.hideQuickReply + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('quickreply', enhanced_settings.hideQuickReply)
@@ -1891,7 +2052,7 @@ enhanced_inlineConvert.style.cursor = 'pointer'
 enhanced_inlineConvert.style.userSelect = 'none'
 enhanced_inlineConvert.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_inlineConvert.tabIndex = '0'
-enhanced_inlineConvert.addEventListener('click', function() {
+enhanced_inlineConvert.addEventListener('click', function () {
     enhanced_settings.hideInlinePreview = (enhanced_settings.hideInlinePreview + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('inlinepreview', enhanced_settings.hideInlinePreview)
@@ -1906,7 +2067,7 @@ enhanced_offlineUser.style.cursor = 'pointer'
 enhanced_offlineUser.style.userSelect = 'none'
 enhanced_offlineUser.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_offlineUser.tabIndex = '0'
-enhanced_offlineUser.addEventListener('click', function() {
+enhanced_offlineUser.addEventListener('click', function () {
     enhanced_settings.hideOfflineUsers = (enhanced_settings.hideOfflineUsers + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('offlineusers', enhanced_settings.hideOfflineUsers)
@@ -1920,7 +2081,7 @@ enhanced_invisibleUser.id = 'enhanced_lastMessage'
 enhanced_invisibleUser.style.cursor = 'pointer'
 enhanced_invisibleUser.style.userSelect = 'none'
 enhanced_invisibleUser.tabIndex = '0'
-enhanced_invisibleUser.addEventListener('click', function() {
+enhanced_invisibleUser.addEventListener('click', function () {
     enhanced_settings.hideInvisibleUsers = (enhanced_settings.hideInvisibleUsers + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('invisibleusers', enhanced_settings.hideInvisibleUsers)
@@ -1935,7 +2096,7 @@ enhanced_gameLabel.style.cursor = 'pointer'
 enhanced_gameLabel.style.userSelect = 'none'
 enhanced_gameLabel.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_gameLabel.tabIndex = '0'
-enhanced_gameLabel.addEventListener('click', function() {
+enhanced_gameLabel.addEventListener('click', function () {
     enhanced_settings.hideLabels = (enhanced_settings.hideLabels + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('gamelabel', enhanced_settings.hideLabels)
@@ -1950,7 +2111,7 @@ enhanced_dimOverlay.style.cursor = 'pointer'
 enhanced_dimOverlay.style.userSelect = 'none'
 enhanced_dimOverlay.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_dimOverlay.tabIndex = '0'
-enhanced_dimOverlay.addEventListener('click', function() {
+enhanced_dimOverlay.addEventListener('click', function () {
     enhanced_settings.dimOverlay = (enhanced_settings.dimOverlay + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('dimoverlay', enhanced_settings.dimOverlay)
@@ -1965,7 +2126,7 @@ enhanced_mediaPreview.style.cursor = 'pointer'
 enhanced_mediaPreview.style.userSelect = 'none'
 enhanced_mediaPreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_mediaPreview.tabIndex = '0'
-enhanced_mediaPreview.addEventListener('click', function() {
+enhanced_mediaPreview.addEventListener('click', function () {
     enhanced_settings.hideUserMedia = (enhanced_settings.hideUserMedia + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('mediapreview', enhanced_settings.hideUserMedia)
@@ -1980,7 +2141,7 @@ enhanced_categoryPreview.style.cursor = 'pointer'
 enhanced_categoryPreview.style.userSelect = 'none'
 enhanced_categoryPreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_categoryPreview.tabIndex = '0'
-enhanced_categoryPreview.addEventListener('click', function() {
+enhanced_categoryPreview.addEventListener('click', function () {
     enhanced_settings.hideCategories = (enhanced_settings.hideCategories + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('categorypreview', enhanced_settings.hideCategories)
@@ -1995,7 +2156,7 @@ enhanced_storeList.style.cursor = 'pointer'
 enhanced_storeList.style.userSelect = 'none'
 enhanced_storeList.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_storeList.tabIndex = '0'
-enhanced_storeList.addEventListener('click', function() {
+enhanced_storeList.addEventListener('click', function () {
     enhanced_settings.splitStore = (enhanced_settings.splitStore + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('storelist', enhanced_settings.splitStore)
@@ -2010,7 +2171,7 @@ enhanced_hideFamilyElements.style.cursor = 'pointer'
 enhanced_hideFamilyElements.style.userSelect = 'none'
 enhanced_hideFamilyElements.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_hideFamilyElements.tabIndex = '0'
-enhanced_hideFamilyElements.addEventListener('click', function() {
+enhanced_hideFamilyElements.addEventListener('click', function () {
     enhanced_settings.hideFamilySharing = (enhanced_settings.hideFamilySharing + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('familysharing', enhanced_settings.hideFamilySharing)
@@ -2025,26 +2186,12 @@ enhanced_showShortcut.style.cursor = 'pointer'
 enhanced_showShortcut.style.userSelect = 'none'
 enhanced_showShortcut.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_showShortcut.tabIndex = '0'
-enhanced_showShortcut.addEventListener('click', function() {
+enhanced_showShortcut.addEventListener('click', function () {
     enhanced_settings.enableShortcuts = (enhanced_settings.enableShortcuts + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('shortcuts', enhanced_settings.enableShortcuts)
 })
 enhanced_settingsComFeat.append(enhanced_showShortcut)
-
-// StadiaStatsGG
-var enhanced_showStadiaStats = document.createElement('div')
-enhanced_showStadiaStats.className = 'pBvcyf QAAyWd'
-enhanced_showStadiaStats.id = 'enhanced_showStadiaStats'
-enhanced_showStadiaStats.style.cursor = 'pointer'
-enhanced_showStadiaStats.style.userSelect = 'none'
-enhanced_showStadiaStats.tabIndex = '0'
-enhanced_showStadiaStats.addEventListener('click', function() {
-    enhanced_settings.enableStadiaStats = (enhanced_settings.enableStadiaStats + 1) % 2
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-    enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
-})
-enhanced_settingsComFeat.append(enhanced_showStadiaStats)
 
 // Stadia Database - By OriginalPenguin
 // https://twitter.com/OriginaIPenguin
@@ -2054,12 +2201,27 @@ enhanced_showStadiaDatabase.id = 'enhanced_showStadiaDatabase'
 enhanced_showStadiaDatabase.style.cursor = 'pointer'
 enhanced_showStadiaDatabase.style.userSelect = 'none'
 enhanced_showStadiaDatabase.tabIndex = '0'
-enhanced_showStadiaDatabase.addEventListener('click', function() {
+enhanced_showStadiaDatabase.addEventListener('click', function () {
     enhanced_settings.enableStadiaDatabase = (enhanced_settings.enableStadiaDatabase + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
 })
 enhanced_settingsComFeat.append(enhanced_showStadiaDatabase)
+
+// Stadia Hunters - By Endeavour
+// https://stadiahunters.com/
+var enhanced_showStadiaHunters = document.createElement('div')
+enhanced_showStadiaHunters.className = 'pBvcyf QAAyWd'
+enhanced_showStadiaHunters.id = 'enhanced_showStadiaHunters'
+enhanced_showStadiaHunters.style.cursor = 'pointer'
+enhanced_showStadiaHunters.style.userSelect = 'none'
+enhanced_showStadiaHunters.tabIndex = '0'
+enhanced_showStadiaHunters.addEventListener('click', function () {
+    enhanced_settings.enableStadiaHunters = (enhanced_settings.enableStadiaHunters + 1) % 2
+    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    enhanced_applySettings('stadiahunters', enhanced_settings.enableStadiaHunters)
+})
+enhanced_settingsComFeat.append(enhanced_showStadiaHunters)
 
 // Show Notifications
 var enhanced_setNotification = document.createElement('div')
@@ -2069,7 +2231,7 @@ enhanced_setNotification.style.cursor = 'pointer'
 enhanced_setNotification.style.userSelect = 'none'
 enhanced_setNotification.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_setNotification.tabIndex = '0'
-enhanced_setNotification.addEventListener('click', function() {
+enhanced_setNotification.addEventListener('click', function () {
     enhanced_settings.updateNotifications = (enhanced_settings.updateNotifications + 1) % 3
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('notification', enhanced_settings.updateNotifications)
@@ -2083,7 +2245,7 @@ enhanced_streamMode.id = 'enhanced_streamMode'
 enhanced_streamMode.style.cursor = 'pointer'
 enhanced_streamMode.style.userSelect = 'none'
 enhanced_streamMode.tabIndex = '0'
-enhanced_streamMode.addEventListener('click', function() {
+enhanced_streamMode.addEventListener('click', function () {
     enhanced_settings.streamMode = (enhanced_settings.streamMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('streammode', enhanced_settings.streamMode)
@@ -2097,7 +2259,7 @@ enhanced_customAvatar.id = 'enhanced_customAvatar'
 enhanced_customAvatar.role = 'button'
 enhanced_customAvatar.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">face</i></span><span class="caSJV snByac">' + enhanced_lang.avatar + '</span></div>'
 enhanced_customAvatar.tabIndex = '0'
-enhanced_customAvatar.addEventListener('click', function() {
+enhanced_customAvatar.addEventListener('click', function () {
     enhanced_avatarURL = prompt(enhanced_lang.avatarpopup)
     if (enhanced_avatarURL != null) {
         if (enhanced_avatarURL.length < 1) {
@@ -2111,17 +2273,99 @@ enhanced_customAvatar.addEventListener('click', function() {
     }
 })
 
-// StadiaStatsGG - Profile Link
-var enhanced_stadiaStatsProfile = document.createElement('div')
-enhanced_stadiaStatsProfile.className = 'CTvDXd QAAyWd Pjpac GShPJb edaWcd'
-enhanced_stadiaStatsProfile.id = 'enhanced_customAvatar'
-enhanced_stadiaStatsProfile.role = 'button'
-enhanced_stadiaStatsProfile.style.display = 'none'
-enhanced_stadiaStatsProfile.innerHTML = '<div class="KEaHo"><span class="X5peoe"><i class="google-material-icons lS1Wre Ce1Y1c xT8eqd" aria-hidden="true">account_circle</i></span><span class="caSJV snByac">' + enhanced_lang.stadiastats + '</span></div>'
-enhanced_stadiaStatsProfile.tabIndex = '0'
-enhanced_stadiaStatsProfile.addEventListener('click', function() {
-    window.open('https://stadiastats.gg/players/' + enhanced_AccountInfo[2] + '/' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1], '_blank')
+// Stadia Hunters - Profile Popup
+var enhanced_huntersContainer = document.createElement('li')
+enhanced_huntersContainer.className = 'OfFb0b tj2D'
+enhanced_huntersContainer.id = 'enhanced_huntersContainer'
+var enhanced_huntersDropdown = document.createElement('div')
+enhanced_huntersContainer.appendChild(enhanced_huntersDropdown)
+enhanced_huntersDropdown.className = 'ROpnrd QAAyWd wJYinb'
+enhanced_huntersDropdown.id = 'enhanced_huntersDropdown'
+enhanced_huntersDropdown.innerHTML = `
+    <div class="yNQThc">
+        <span class="jtYd1">
+            <img class="xduoyf" src="` + chrome.runtime.getURL('/media/included/hunters_logo.png') + `" style="width: 24px; height: 24px; border-radius: 50%;" >
+        </span>
+    </div>
+    <div class="RMEzA">
+        <span>0</span>
+    </div>`
+enhanced_huntersDropdown.style.position = 'relative'
+enhanced_huntersDropdown.style.padding = '0'
+enhanced_huntersDropdown.style.cursor = 'pointer'
+enhanced_huntersDropdown.style.userSelect = 'none'
+enhanced_huntersDropdown.tabIndex = '0'
+enhanced_huntersDropdown.addEventListener('click', function () {
+    if (enhanced_huntersDropContent.style.display === 'none') {
+        enhanced_huntersDropContent.style.display = 'block'
+    } else {
+        enhanced_huntersDropContent.style.display = 'none'
+    }
 })
+
+var enhanced_huntersDropContent = document.createElement('div')
+enhanced_huntersDropdown.append(enhanced_huntersDropContent)
+enhanced_huntersDropContent.id = 'enhanced_huntersDropContent'
+enhanced_huntersDropContent.className = 'us22N'
+enhanced_huntersDropContent.innerHTML = `
+    <img src="` + chrome.runtime.getURL('/media/included/hunters_banner.png') + `" style="width: 200px; padding-top: 0.5rem;">
+    <div class="WTRpgf">
+        <div class="d50Cgd VwFGMb" style="padding: 0 0.5rem 0.5rem 0.5rem; height: 0.375rem;" title="` + enhanced_lang.stadiahuntersxphover + `">
+            <div class="hPTRZ Jc3yuc" style="border-radius: 0.5rem; height: 100%; width: 100%; background-color: rgba(232,234,237,0.122); overflow: hidden;">
+                <div class="FxJ5Tc y2VB6d" style="width: 0%; height: 100%; background-color: #00e0ba;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="TZ0BN" style="">
+        <div class="lTHVjf QAAyWd RjcqTc AGhbCb" tabindex="0" style="border-radius: 0;">
+            <div class="uKRpKb">
+                <div class="rybUIf"></div>
+            </div>
+            <div class="Uwaqdf">
+                <div class="DlMyQd q3yMEf">
+                    <span class="VY8blf fSorq">` + enhanced_AccountInfo[0] + `<span class="rmIKk qUT0tf">` + '#' + enhanced_AccountInfo[1] + `</span></span>
+                </div>
+                <div>
+                    <div class="UxR5ob m8Kzt" style="align-items: flex-start; flex-direction: column;">
+                        <div class="HDKZKb LiQ6Hb">` + enhanced_lang.stadiahunterslevel + ` 0</div>
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,.4);">` + enhanced_lang.stadiahuntersworldrank + ` 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`
+
+enhanced_huntersDropContent.querySelector('.rybUIf').style.backgroundImage = document.getElementsByClassName('ksZYgc VGZcUb')[0].style.backgroundImage
+enhanced_huntersDropContent.style.position = 'absolute'
+enhanced_huntersDropContent.style.width = 'auto'
+enhanced_huntersDropContent.style.height = 'auto'
+enhanced_huntersDropContent.style.top = '3.5rem'
+enhanced_huntersDropContent.style.cursor = 'default'
+enhanced_huntersDropContent.style.textAlign = 'center'
+enhanced_huntersDropContent.style.boxShadow = '0 0.25rem 2.5rem rgba(0,0,0,0.30), 0 0.125rem 0.75rem rgba(0,0,0,0.4)'
+enhanced_huntersDropContent.style.overflow = 'hidden'
+enhanced_huntersDropContent.style.zIndex = '20'
+enhanced_huntersDropContent.style.display = 'none'
+
+enhanced_huntersDropContent.querySelector('.TZ0BN').addEventListener('click', function () {
+    if (Object.keys(enhanced_stadiaHunters).length < 2) {
+        window.open('https://stadiahunters.com/login', '_blank')
+    } else {
+        if (enhanced_AccountInfo[1] == '0000') {
+            window.open('https://stadiahunters.com/user/' + enhanced_AccountInfo[0], '_blank')
+        } else {
+            window.open('https://stadiahunters.com/user/' + enhanced_AccountInfo[0] + '-' + enhanced_AccountInfo[1], '_blank')
+        }
+    }
+})
+
+window.addEventListener('click', function (e) {
+    if (e.target != enhanced_huntersDropdown && enhanced_huntersDropdown.contains(e.target) === false) {
+        enhanced_huntersDropContent.style.display = 'none'
+    }
+})
+
+secureInsert(enhanced_huntersContainer, 'ZECEje', 1)
 
 // Store Container - Container to display store buttons
 var enhanced_StoreContainer = document.createElement('div')
@@ -2141,7 +2385,7 @@ enhanced_YouTube.tabIndex = '0'
 enhanced_YouTube.style.backgroundColor = '#c00'
 enhanced_YouTube.style.color = 'white'
 enhanced_YouTube.style.marginTop = '1.5rem'
-enhanced_YouTube.addEventListener('click', function() {
+enhanced_YouTube.addEventListener('click', function () {
     enhanced_GameTitle = document.querySelectorAll('.UG7HXc')[document.querySelectorAll('.UG7HXc').length - 1].textContent
     window.open('https://www.youtube.com/results?search_query=' + enhanced_GameTitle, '_blank')
 })
@@ -2158,7 +2402,7 @@ enhanced_Metacritic.tabIndex = '0'
 enhanced_Metacritic.style.backgroundColor = '#131416'
 enhanced_Metacritic.style.color = 'white'
 enhanced_Metacritic.style.marginTop = '1.5rem'
-enhanced_Metacritic.addEventListener('click', function() {
+enhanced_Metacritic.addEventListener('click', function () {
     enhanced_GameTitle = document.querySelectorAll('.UG7HXc')[document.querySelectorAll('.UG7HXc').length - 1].textContent;
     window.open('https://www.metacritic.com/search/game/' + enhanced_GameTitle + '/results', '_blank')
 })
@@ -2179,7 +2423,7 @@ enhanced_wishlistHeart.style.padding = '0'
 enhanced_wishlistHeart.style.cursor = 'pointer'
 enhanced_wishlistHeart.style.userSelect = 'none'
 enhanced_wishlistHeart.tabIndex = '0'
-enhanced_wishlistHeart.addEventListener('click', function() {
+enhanced_wishlistHeart.addEventListener('click', function () {
     var enhanced_currentSKU = document.location.href.split('sku/')[1].split('?')[0]
 
     if (enhanced_settings.wishlist.includes(enhanced_currentSKU)) {
@@ -2194,7 +2438,8 @@ enhanced_wishlistHeart.addEventListener('click', function() {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
 if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
-    document.getElementsByClassName('ZECEje')[0].append(enhanced_wishlistContainer)
+    // Currently deactivated, due to store changes
+    // document.getElementsByClassName('ZECEje')[0].append(enhanced_wishlistContainer)
 }
 
 // Account Menu - Changes to the account menu behaviour
@@ -2216,7 +2461,7 @@ enhanced_showAll.innerHTML = '<div role="button" tabindex="0" class="CTvDXd QAAy
 enhanced_showAll.style.cursor = 'pointer'
 enhanced_showAll.style.flexGrow = '0'
 enhanced_showAll.style.webkitFlexGrow = '0'
-enhanced_showAll.addEventListener('click', function() {
+enhanced_showAll.addEventListener('click', function () {
     switch (enhanced_showState) {
         case true:
             enhanced_showAll.innerHTML = '<div role="button" style="color: white" tabindex="0" class="CTvDXd QAAyWd JkRlwc"><i class="material-icons-extended" aria-hidden="true">visibility_off</i></div>'
@@ -2229,49 +2474,39 @@ enhanced_showAll.addEventListener('click', function() {
     }
 })
 
-// List Type Filter
+// List Type Filter [Language Supported]
 enhanced_activeListFilter = 0
 enhanced_listFilter = document.createElement('div')
 enhanced_listFilter.style.display = 'flex'
 
 enhanced_listFilterGames = document.createElement('div')
-enhanced_listFilterGames.innerHTML = enhanced_lang.games
+enhanced_listFilterGames.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].game
 enhanced_listFilterGames.className = 'Adwm6c'
 enhanced_listFilterGames.style.userSelect = 'none'
 enhanced_listFilterGames.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterGames)
-enhanced_listFilterGames.addEventListener('click', function() {
+enhanced_listFilterGames.addEventListener('click', function () {
     enhanced_switchListFilter(1)
 })
 
-enhanced_listFilterAddOns = document.createElement('div')
-enhanced_listFilterAddOns.innerHTML = enhanced_lang.addons
-enhanced_listFilterAddOns.className = 'Adwm6c'
-enhanced_listFilterAddOns.style.userSelect = 'none'
-enhanced_listFilterAddOns.style.marginLeft = '0.75rem'
-enhanced_listFilter.append(enhanced_listFilterAddOns)
-enhanced_listFilterAddOns.addEventListener('click', function() {
-    enhanced_switchListFilter(2)
-})
-
 enhanced_listFilterBundles = document.createElement('div')
-enhanced_listFilterBundles.innerHTML = enhanced_lang.bundles
+enhanced_listFilterBundles.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].bundle
 enhanced_listFilterBundles.className = 'Adwm6c'
 enhanced_listFilterBundles.style.userSelect = 'none'
 enhanced_listFilterBundles.style.marginLeft = '0.75rem'
 enhanced_listFilter.append(enhanced_listFilterBundles)
-enhanced_listFilterBundles.addEventListener('click', function() {
-    enhanced_switchListFilter(3)
+enhanced_listFilterBundles.addEventListener('click', function () {
+    enhanced_switchListFilter(2)
 })
 
-enhanced_listFilterWishlist = document.createElement('div')
-enhanced_listFilterWishlist.innerHTML = enhanced_lang.wishlist
-enhanced_listFilterWishlist.className = 'Adwm6c'
-enhanced_listFilterWishlist.style.userSelect = 'none'
-enhanced_listFilterWishlist.style.marginLeft = '0.75rem'
-enhanced_listFilter.append(enhanced_listFilterWishlist)
-enhanced_listFilterWishlist.addEventListener('click', function() {
-    enhanced_switchListFilter(4)
+enhanced_listFilterAddOns = document.createElement('div')
+enhanced_listFilterAddOns.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].addon
+enhanced_listFilterAddOns.className = 'Adwm6c'
+enhanced_listFilterAddOns.style.userSelect = 'none'
+enhanced_listFilterAddOns.style.marginLeft = '0.75rem'
+enhanced_listFilter.append(enhanced_listFilterAddOns)
+enhanced_listFilterAddOns.addEventListener('click', function () {
+    enhanced_switchListFilter(3)
 })
 
 function enhanced_switchListFilter(type) {
@@ -2285,52 +2520,28 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = 'line-through'
                 enhanced_listFilterAddOns.style.color = 'grey'
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_listFilterWishlist.style.color = 'grey'
-                enhanced_listFilterWishlist.style.textDecoration = 'line-through'
-                enhanced_injectStyle('.h6J22d.undefined.QAAyWd[jslog*="17:2"], .h6J22d.undefined.QAAyWd[jslog*="17:3"], .h6J22d.undefined.QAAyWd[jslog*="17:9"] { display: none }', 'enhanced_styleListFilter')
+                enhanced_applySettings('storefilter', 0)
                 break
             case 2:
                 enhanced_activeListFilter = 2
-                enhanced_listFilterGames.style.color = 'grey'
-                enhanced_listFilterGames.style.textDecoration = 'line-through'
-                enhanced_listFilterBundles.style.color = 'grey'
-                enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'white'
-                enhanced_listFilterAddOns.style.textDecoration = 'none'
-                enhanced_listFilterWishlist.style.color = 'grey'
-                enhanced_listFilterWishlist.style.textDecoration = 'line-through'
-                enhanced_injectStyle('.h6J22d.undefined.QAAyWd[jslog*="17:1"], .h6J22d.undefined.QAAyWd[jslog*="17:3"] { display: none }', 'enhanced_styleListFilter')
-                break
-            case 3:
-                enhanced_activeListFilter = 3
                 enhanced_listFilterGames.style.color = 'grey'
                 enhanced_listFilterGames.style.textDecoration = 'line-through'
                 enhanced_listFilterBundles.style.color = 'white'
                 enhanced_listFilterBundles.style.textDecoration = 'none'
                 enhanced_listFilterAddOns.style.color = 'grey'
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_listFilterWishlist.style.color = 'grey'
-                enhanced_listFilterWishlist.style.textDecoration = 'line-through'
-                enhanced_injectStyle('.h6J22d.undefined.QAAyWd[jslog*="17:1"], .h6J22d.undefined.QAAyWd[jslog*="17:2"], .h6J22d.undefined.QAAyWd[jslog*="17:9"] { display: none }', 'enhanced_styleListFilter')
+                enhanced_applySettings('storefilter', 1)
                 break
-            case 4:
-                enhanced_activeListFilter = 4
+            case 3:
+                enhanced_activeListFilter = 3
                 enhanced_listFilterGames.style.color = 'grey'
                 enhanced_listFilterGames.style.textDecoration = 'line-through'
                 enhanced_listFilterBundles.style.color = 'grey'
                 enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'grey'
-                enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_listFilterWishlist.style.color = 'white'
-                enhanced_listFilterWishlist.style.textDecoration = 'none'
-                var enhanced_wishlist = enhanced_settings.wishlist.substring(1, enhanced_settings.wishlist.length - 1).split(')(')
-                var enhanced_generateStyle = ''
-
-                for (var i = 0; i < enhanced_wishlist.length; i++) {
-                    enhanced_generateStyle += 'div[data-sku-id*="' + enhanced_wishlist[i] + '"], '
-                }
-                enhanced_generateStyle = '.h6J22d.undefined.QAAyWd { display: none; } ' + enhanced_generateStyle.substring(0, enhanced_generateStyle.length - 2) + ' { display: grid !important }'
-                enhanced_injectStyle(enhanced_generateStyle, 'enhanced_styleListFilter')
+                enhanced_listFilterAddOns.style.color = 'white'
+                enhanced_listFilterAddOns.style.textDecoration = 'none'
+                enhanced_applySettings('storefilter', 2)
+                break
         }
     } else {
         enhanced_activeListFilter = 0
@@ -2340,9 +2551,7 @@ function enhanced_switchListFilter(type) {
         enhanced_listFilterBundles.style.textDecoration = 'none'
         enhanced_listFilterAddOns.style.color = 'white'
         enhanced_listFilterAddOns.style.textDecoration = 'none'
-        enhanced_listFilterWishlist.style.color = 'white'
-        enhanced_listFilterWishlist.style.textDecoration = 'none'
-        enhanced_injectStyle('', 'enhanced_styleListFilter')
+        enhanced_applySettings('storefilter', 3)
     }
 }
 
@@ -2356,7 +2565,7 @@ enhanced_unlockedFilter.innerHTML = enhanced_lang.show + ': ' + enhanced_lang.al
 enhanced_unlockedFilter.className = 'Adwm6c'
 enhanced_unlockedFilter.style.userSelect = 'none'
 enhanced_unlockedFilter.style.marginLeft = '0.75rem'
-enhanced_unlockedFilter.addEventListener('click', function() {
+enhanced_unlockedFilter.addEventListener('click', function () {
     if (this.state == 0) {
         enhanced_injectStyle('.h6J22d.cWe8yc.QAAyWd { display: none !important } .h6J22d.cWe8yc.GIh6Af.QAAyWd { display: grid !important }', 'unlockedfilter')
         this.state = 1
@@ -2369,6 +2578,20 @@ enhanced_unlockedFilter.addEventListener('click', function() {
 })
 enhanced_achievementsFilter.append(enhanced_unlockedFilter)
 
+// Stadia Hunters - Achievements Link
+enhanced_huntersLinkContainer = document.createElement('div')
+enhanced_huntersLinkContainer.style.display = 'flex'
+
+enhanced_huntersLink = document.createElement('div')
+enhanced_huntersLink.innerHTML = '<img src="' + chrome.runtime.getURL('/media/included/hunters_banner.png') + '" style="height: 1.25rem;">'
+enhanced_huntersLink.className = 'Adwm6c'
+enhanced_huntersLink.style.userSelect = 'none'
+enhanced_huntersLink.style.marginLeft = '0.75rem'
+enhanced_huntersLink.addEventListener('click', function () {
+    window.open('https://stadiahunters.com/games/' + enhanced_huntersLink.gameID, '_blank')
+})
+enhanced_huntersLinkContainer.append(enhanced_huntersLink)
+
 // Gamelist Filter
 enhanced_gamelistFilter = document.createElement('div')
 enhanced_gamelistFilter.style.display = 'flex'
@@ -2379,7 +2602,7 @@ enhanced_gameStateFilter.innerHTML = enhanced_lang.show + ': ' + enhanced_lang.a
 enhanced_gameStateFilter.className = 'Adwm6c'
 enhanced_gameStateFilter.style.userSelect = 'none'
 enhanced_gameStateFilter.style.marginLeft = '0.75rem'
-enhanced_gameStateFilter.addEventListener('click', function() {
+enhanced_gameStateFilter.addEventListener('click', function () {
     this.state = (this.state + 1) % 3
     switch (this.state) {
         case 0:
@@ -2400,8 +2623,17 @@ var enhanced_installShortcut = document.createElement('div')
 enhanced_installShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc'
 enhanced_installShortcut.id = 'enhanced_installShortcut'
 enhanced_installShortcut.tabIndex = '0'
-enhanced_installShortcut.addEventListener('click', function() {
+enhanced_installShortcut.addEventListener('click', function () {
     window.open('https://stadiaicons.web.app/' + enhanced_installShortcut.gameID + '/?fullName=' + encodeURIComponent(enhanced_installShortcut.gameName), '_blank')
+})
+
+// Shortcut - Stadia Hunters
+var enhanced_stadiaHuntersShortcut = document.createElement('div')
+enhanced_stadiaHuntersShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc'
+enhanced_stadiaHuntersShortcut.id = 'enhanced_stadiaHuntersShortcut'
+enhanced_stadiaHuntersShortcut.tabIndex = '0'
+enhanced_stadiaHuntersShortcut.addEventListener('click', function () {
+    window.open('https://stadiahunters.com/games/' + enhanced_stadiaHuntersShortcut.gameID, '_blank')
 })
 
 // Shortcut - Last Played
@@ -2420,18 +2652,8 @@ enhanced_shortcutLastPlayed.style.borderRadius = '50%'
 enhanced_shortcutLastPlayed.style.padding = '0.2rem'
 enhanced_shortcutLastPlayed.style.cursor = 'pointer'
 enhanced_shortcutLastPlayed.style.zIndex = '2'
-enhanced_shortcutLastPlayed.addEventListener('click', function() {
+enhanced_shortcutLastPlayed.addEventListener('click', function () {
     window.open('https://stadiaicons.web.app/' + enhanced_shortcutLastPlayed.gameID + '/?fullName=' + encodeURIComponent(enhanced_shortcutLastPlayed.gameName), '_blank')
-})
-
-// StadiaStatsGG - Shortcut
-var enhanced_stadiaStatsShortcut = document.createElement('div')
-enhanced_stadiaStatsShortcut.className = 'CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b tlZCoe rpgZzc'
-enhanced_stadiaStatsShortcut.id = 'enhanced_stadiaStatsShortcut'
-enhanced_stadiaStatsShortcut.innerHTML = enhanced_lang.stadiastatsopen
-enhanced_stadiaStatsShortcut.tabIndex = '0'
-enhanced_stadiaStatsShortcut.addEventListener('click', function() {
-    window.open('https://stadiastats.gg/games/' + enhanced_stadiaStatsShortcut.gameID, '_blank')
 })
 
 // Stats Container
@@ -2461,12 +2683,12 @@ enhanced_captureScreenshot.style.width = '2.5rem'
 enhanced_captureScreenshot.style.padding = '0px'
 enhanced_captureScreenshot.style.marginRight = '1rem'
 enhanced_captureScreenshot.style.userSelect = 'none'
-enhanced_captureScreenshot.addEventListener('click', function() {
+enhanced_captureScreenshot.addEventListener('click', function () {
     if (enhanced_activeCapFilter != 'image') {
         enhanced_activeCapFilter = 'image'
         enhanced_captureScreenshot.style.color = '#ff773d'
         enhanced_captureClip.style.color = 'rgba(255,255,255,.9)'
-        enhanced_injectStyle('.MykDQe.QAAyWd.hWAuu.mESdP.d3Yvnc.Lkvyqc.MP0FQb { display: none }', 'enhanced_styleCaptureFilter')
+        enhanced_injectStyle('.au9T5d.lEPylf.sfe1Ff div[data-is-photo="false"] { display: none }', 'enhanced_styleCaptureFilter')
     } else {
         enhanced_activeCapFilter = 'none'
         enhanced_captureScreenshot.style.color = 'rgba(255,255,255,.9)'
@@ -2476,19 +2698,19 @@ enhanced_captureScreenshot.addEventListener('click', function() {
 enhanced_captureFilters.append(enhanced_captureScreenshot)
 
 enhanced_captureClip = document.createElement('div')
-enhanced_captureClip.id = 'enhanced_captureScreenshot'
+enhanced_captureClip.id = 'enhanced_captureClip'
 enhanced_captureClip.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_captureClip.innerHTML = '<i class="material-icons-extended" aria-hidden="true">movie</i>'
 enhanced_captureClip.tabIndex = '0'
 enhanced_captureClip.style.width = '2.5rem'
 enhanced_captureClip.style.padding = '0px'
 enhanced_captureClip.style.userSelect = 'none'
-enhanced_captureClip.addEventListener('click', function() {
+enhanced_captureClip.addEventListener('click', function () {
     if (enhanced_activeCapFilter != 'movie') {
         enhanced_activeCapFilter = 'movie'
         enhanced_captureScreenshot.style.color = 'rgba(255,255,255,.9)'
         enhanced_captureClip.style.color = '#ff773d'
-        enhanced_injectStyle('.MykDQe.QAAyWd.hWAuu.mESdP.d3Yvnc.Lkvyqc.GcgHfd { display: none }', 'enhanced_styleCaptureFilter')
+        enhanced_injectStyle('.au9T5d.lEPylf.sfe1Ff div[data-is-photo="true"] { display: none }', 'enhanced_styleCaptureFilter')
     } else {
         enhanced_activeCapFilter = 'none'
         enhanced_captureClip.style.color = 'rgba(255,255,255,.9)'
@@ -2528,9 +2750,6 @@ enhanced_letterBox.id = 'enhanced_letterBox'
 enhanced_letterBox.className = 'jkwub bJBQjf'
 enhanced_letterBox.style.marginRight = 'auto'
 enhanced_letterBox.style.textIndent = '-0.5rem'
-if (!enhanced_supportedLang.includes(enhanced_local)) {
-    enhanced_letterBox.style.display = 'none'
-}
 
 var enhanced_letters = []
 for (var i = 0; i < 26; i++) {
@@ -2545,32 +2764,12 @@ for (var i = 0; i < 26; i++) {
     }
     el.style.cursor = 'pointer'
     el.style.userSelect = 'none'
-    el.addEventListener('click', function() {
+    el.addEventListener('click', function () {
         enhanced_applySettings('letterbox', this.letter + ',' + this.state)
     })
     enhanced_letters.push(el)
     enhanced_letterBox.append(el)
 }
-
-// Find-a-buddy - Shortcut to stadiastats.gg find-a-buddy service
-var enhanced_buddyContainer = document.createElement('li')
-enhanced_buddyContainer.className = 'OfFb0b tj2D'
-enhanced_buddyContainer.id = 'enhanced_buddyContainer'
-enhanced_buddyContainer.style.display = 'none'
-var enhanced_openBuddy = document.createElement('div')
-enhanced_buddyContainer.appendChild(enhanced_openBuddy)
-enhanced_openBuddy.className = 'ROpnrd QAAyWd wJYinb'
-enhanced_openBuddy.id = 'enhanced_openBuddy'
-enhanced_openBuddy.innerHTML = '<i class="material-icons-extended" aria-hidden="true">group_add</i>'
-enhanced_openBuddy.style.width = '2.5rem'
-enhanced_openBuddy.style.padding = '0'
-enhanced_openBuddy.style.cursor = 'pointer'
-enhanced_openBuddy.style.userSelect = 'none'
-enhanced_openBuddy.tabIndex = '0'
-enhanced_openBuddy.addEventListener('click', function() {
-    window.open('https://stadiastats.gg/find-a-buddy', '_blank')
-})
-secureInsert(enhanced_buddyContainer, '.ZECEje', 1)
 
 // Favorites
 var enhanced_favorite = document.createElement('div')
@@ -2587,7 +2786,7 @@ enhanced_favorite.style.cursor = 'pointer'
 enhanced_favorite.style.background = '#202124'
 enhanced_favorite.style.zIndex = '2'
 enhanced_favorite.active = false
-enhanced_favorite.addEventListener('click', function() {
+enhanced_favorite.addEventListener('click', function () {
     if (this.active) {
         enhanced_favorite.active = false
         enhanced_favorite.style.color = ''
@@ -2613,7 +2812,7 @@ enhanced_visibility.style.cursor = 'pointer'
 enhanced_visibility.style.background = '#202124'
 enhanced_visibility.style.zIndex = '2'
 enhanced_visibility.active = false
-enhanced_visibility.addEventListener('click', function() {
+enhanced_visibility.addEventListener('click', function () {
     if (this.active) {
         this.active = false
         this.style.color = ''
@@ -2648,7 +2847,7 @@ var enhanced_sessionStart = 0
 var enhanced_wrappers = []
 
 // Main Loop
-setInterval(function() {
+setInterval(function () {
     // Location - Home & Library
     if (document.location.href.indexOf('/home') != -1 || document.location.href.indexOf('/library') != -1) {
 
@@ -2656,36 +2855,32 @@ setInterval(function() {
         var enhanced_gameList = document.getElementsByClassName('GqLi4d')
 
         // Resolution change on pop-ups
-        secureInsert(enhanced_resolutionPopup, '.EcfBLd', 3)
-
-        // StadiaStatsGG
-        if (enhanced_settings.enableStadiaStats == 1) {
-            //Shortcut
-            if (document.getElementById(enhanced_stadiaStatsShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
-                if (enhanced_stadiaStatsShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
-                    enhanced_stadiaStatsShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_stadiaStatsShortcut.gameID = document.querySelector('.h1uihb > c-wiz').getAttribute('data-app-id')
-                }
-                secureInsert(enhanced_stadiaStatsShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
-                enhanced_stadiaStatsShortcut.style.display = "inline-flex"
-            }
-        } else {
-            enhanced_stadiaStatsShortcut.style.display = 'none'
-        }
+        secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
 
         // Shortcuts
         if (enhanced_settings.enableShortcuts == 1) {
             enhanced_installShortcut.style.display = 'inline-flex'
             enhanced_shortcutLastPlayed.style.display = 'flex'
 
-            // Popup
+            // Popup - Stadia Icons
             if (document.getElementById(enhanced_installShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
                 if (enhanced_installShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
                     enhanced_installShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_installShortcut.gameID = document.querySelector('.h1uihb > c-wiz').getAttribute('data-app-id')
+                    enhanced_installShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
                     enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
                 }
                 secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+            }
+
+            // Popup - Stadia Hunters
+            if (enhanced_settings.enableStadiaHunters && document.getElementById(enhanced_stadiaHuntersShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
+                var enhanced_popupID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                if (enhanced_stadiaHuntersShortcut.gameID != enhanced_popupID) {
+                    enhanced_stadiaHuntersShortcut.gameName = document.querySelector('.Wq73hb').textContent
+                    enhanced_stadiaHuntersShortcut.gameID = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
+                    enhanced_stadiaHuntersShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_installShortcut.gameName + ' ' + enhanced_lang.stadiahunterstitle + '</div>'
+                }
+                secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
             }
 
             // Last Played
@@ -2736,10 +2931,12 @@ setInterval(function() {
         }
 
         // Letter Box
-        secureInsert(enhanced_letterBox, '.w83WBe.URhE4b', 1)
+        if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+            secureInsert(enhanced_letterBox, 'w83WBe URhE4b', 1)
+        }
 
         // Add Show-All Button
-        secureInsert(enhanced_showAll, '.w83WBe.URhE4b', 0)
+        secureInsert(enhanced_showAll, 'w83WBe URhE4b', 0)
         if (enhanced_settings.filter == 0) {
             enhanced_showAll.style.display = 'none'
             enhanced_showState = false
@@ -2751,7 +2948,7 @@ setInterval(function() {
         if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
             if (enhanced_favorite.name != document.querySelector('.Wq73hb').textContent) {
                 enhanced_favorite.name = document.querySelector('.Wq73hb').textContent
-                enhanced_favorite.sku = document.querySelector('.h1uihb > c-wiz').getAttribute('data-sku-id');
+                enhanced_favorite.sku = document.getElementsByClassName('h1uihb')[document.getElementsByClassName('h1uihb').length - 1].querySelector('c-wiz').getAttribute('data-sku-id')
 
                 if (enhanced_settings.favoriteList.includes(enhanced_favorite.sku)) {
                     enhanced_favorite.active = true
@@ -2766,8 +2963,10 @@ setInterval(function() {
 
         // Show/Hide Filter - Last Played
         if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc') && enhanced_settings.filter == 1) {
-            if (enhanced_visibility.sku != document.querySelector('.h1uihb > c-wiz').getAttribute('data-sku-id')) {
-                enhanced_visibility.sku = document.querySelector('.h1uihb > c-wiz').getAttribute('data-sku-id');
+            var enhanced_launchSKU = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-sku-id')
+
+            if (enhanced_visibility.sku != enhanced_launchSKU) {
+                enhanced_visibility.sku = enhanced_launchSKU
                 enhanced_visibility.name = document.querySelector('.Wq73hb').textContent
 
                 if (enhanced_settings.gameFilter.includes(enhanced_visibility.sku)) {
@@ -2820,6 +3019,7 @@ setInterval(function() {
             if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_showState === false && enhanced_settings.filter == 1) {
                 enhanced_gameList[i].style.display = 'none';
             } else {
+                // Letterbox
                 if (enhanced_activeLetter) {
                     enhanced_ariaLabel = enhanced_gameList[i].getAttribute('aria-label')
                     if ('en|sv|fr|it|es|da|ca|pt|no|fi'.includes(enhanced_local)) {
@@ -2857,14 +3057,14 @@ setInterval(function() {
     if (document.location.href.indexOf('/player/') != -1) {
 
         // Currrent Game Info
-        var enhanced_currentID = document.location.href.split('/')[4].split('?')[0]
+        var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
 
         enhanced_Windowed.style.display = 'flex'
         enhanced_Monitor.style.display = 'flex'
-        secureInsert(enhanced_Windowed, '.E0Zk9b', 0)
-        secureInsert(enhanced_Monitor, '.E0Zk9b', 0)
-        secureInsert(enhanced_filterUI.main.toggle, '.E0Zk9b', 0)
+        secureInsert(enhanced_Windowed, 'E0Zk9b', 0)
+        secureInsert(enhanced_Monitor, 'E0Zk9b', 0)
+        secureInsert(enhanced_filterUI.main.toggle, 'E0Zk9b', 0)
 
         // Filter Setup
         if (enhanced_currentStream && enhanced_currentStream.style.filter == 'url("#")') {
@@ -2877,7 +3077,7 @@ setInterval(function() {
 
         // Clock
         if (enhanced_settings.clockOption == 2 || enhanced_settings.clockOption == 3) {
-            secureInsert(enhanced_ClockOverlay, '.bYYDgf', 0)
+            secureInsert(enhanced_ClockOverlay, 'bYYDgf', 0)
             enhanced_ClockOverlay.style.display = 'flex'
         }
 
@@ -2894,11 +3094,10 @@ setInterval(function() {
         } else {
             var enhanced_sessionDur = Date.now()
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000)
-            enhanced_sessionTimer.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>'
+            if (enhanced_menuMonitorSessionTime.textContent != enhanced_lang.sessiontime + enhanced_sessionDur) {
+                enhanced_menuMonitorSessionTime.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>'
+            }
         }
-
-        // Session Timer
-        secureInsert(enhanced_sessionTimer, '.OWVtN', 0)
 
         // Discord Presence
         var enhanced_currentStatus = document.querySelector('.HDKZKb.LiQ6Hb')
@@ -2928,7 +3127,7 @@ setInterval(function() {
         }
 
         // Menu Monitor
-        secureInsert(enhanced_menuMonitor, '.OWVtN', 0)
+        secureInsert(enhanced_menuMonitor, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
     } else {
         enhanced_discordPresence = {}
         enhanced_Windowed.style.display = 'none'
@@ -2950,12 +3149,18 @@ setInterval(function() {
     // Location - Captures
     if (document.location.href.indexOf('/captures') != -1) {
         // Captures Filter
-        secureInsert(enhanced_captureFilters, '.dwGRGd', 0)
+        secureInsert(enhanced_captureFilters, 'dwGRGd', 0)
     }
 
     // Location - Profile Details
     if (document.location.href.match('profile.[0-9]+.detail') != null) {
-        secureInsert(enhanced_achievementsFilter, '.dwGRGd', 2)
+        // Stadia Hunters - Logo Link
+        if (enhanced_settings.enableStadiaHunters) {
+            enhanced_huntersLink.gameID = document.location.href.split('/detail/')[1].split('?')[0]
+            secureInsert(enhanced_huntersLinkContainer, 'dwGRGd', 3)
+        }
+
+        secureInsert(enhanced_achievementsFilter, 'dwGRGd', 2)
     }
 
     // Location - Store Details
@@ -2988,6 +3193,11 @@ setInterval(function() {
                             enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Pro Features</div><div class="tM4Phe">' + enhanced_database[i].proFeat + '</div></div>'
                         }
 
+                        // Entry - Stadia Features
+                        if (enhanced_database[i].stadiaFeat != '') {
+                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Stadia Features</div><div class="tM4Phe">' + enhanced_database[i].stadiaFeat + '</div></div>'
+                        }
+
                         // Entry - Crossplay
                         if (enhanced_database[i].crossplay != '') {
                             enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Crossplay</div><div class="tM4Phe">' + enhanced_database[i].crossplay + '</div></div>'
@@ -2998,14 +3208,14 @@ setInterval(function() {
                             enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
                         }
 
-                        secureInsert(enhanced_extendedDetails, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                        secureInsert(enhanced_extendedDetails, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
 
                         // Disclaimers
                         if (enhanced_database[i].tested != '') {
-                            secureInsert(enhanced_untestedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                            secureInsert(enhanced_untestedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
                         }
 
-                        secureInsert(enhanced_extendedDisclaimer, '.Dbr3vb.URhE4b.bqgeJc.wGziQb', 0)
+                        secureInsert(enhanced_extendedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
                     }
                 }
             }
@@ -3024,7 +3234,7 @@ setInterval(function() {
             enhanced_wishlistContainer.style.display = 'inline-block'
         }
 
-        secureInsert(enhanced_StoreContainer, '.WjVJKd', 0)
+        secureInsert(enhanced_StoreContainer, 'WjVJKd', 0)
     } else {
         // Reset extended game info
         enhanced_extendedDetails.innerHTML = ''
@@ -3037,7 +3247,9 @@ setInterval(function() {
     // Location - Store List
     if (document.location.href.indexOf('/list') != -1) {
         // List Filters
-        secureInsert(enhanced_listFilter, '.dwGRGd', 2)
+        if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+            secureInsert(enhanced_listFilter, 'B22Hnf', 3)
+        }
     } else if (enhanced_activeListFilter != 0) {
         enhanced_switchListFilter(enhanced_activeListFilter)
     }
@@ -3066,14 +3278,6 @@ setInterval(function() {
 
         // Add avatar option on own profile
         secureInsert(enhanced_customAvatar, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
-
-        // Add StadiaStatsGG Profile
-        if (enhanced_settings.enableStadiaStats == 1) {
-            secureInsert(enhanced_stadiaStatsProfile, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
-            enhanced_stadiaStatsProfile.style.display = 'flex'
-        } else {
-            enhanced_stadiaStatsProfile.style.display = 'none'
-        }
     }
 
     // Location - Player Statistics
@@ -3083,7 +3287,7 @@ setInterval(function() {
         if (document.querySelector('.MDSsFe') !== null) {
 
             // Gamelist Filter
-            secureInsert(enhanced_gamelistFilter, '.dwGRGd', 2)
+            secureInsert(enhanced_gamelistFilter, 'dwGRGd', 2)
 
             var enhanced_gameListBaseQuery = document.querySelectorAll('div[jsname="jlb53b"]')[document.querySelectorAll('div[jsname="jlb53b"]').length - 1]
             var enhanced_gameListRatioQuery = enhanced_gameListBaseQuery.querySelectorAll('.kPtFV')
@@ -3123,7 +3327,10 @@ setInterval(function() {
             }
 
             // Container
-            secureInsert(enhanced_statOverview, '.dkZt0b.qRvogc', 2)
+            secureInsert(enhanced_statOverview, 'dkZt0b qRvogc', 2)
+
+            // Statistics
+            var enhanced_loadStats
 
             // Playtime Calculation
             var enhanced_statsBaseQuery = document.querySelectorAll('div[jsname="jlb53b"]')[document.querySelectorAll('div[jsname="jlb53b"]').length - 1]
@@ -3143,7 +3350,7 @@ setInterval(function() {
 
             if (enhanced_timesAvailable) {
                 for (var i = 0; i < enhanced_timeQuery.length; i++) {
-                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.split(/[\s]/)
+                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.replace('.', '').split(/[\s]/)
 
                     switch (enhanced_titlePlaytime.length) {
                         case 2:
@@ -3163,7 +3370,7 @@ setInterval(function() {
                 }
                 enhanced_statsPlaytime = enhanced_secondsToHms(enhanced_statsPlaytime)
 
-                var enhanced_loadStats = `
+                enhanced_loadStats = `
                     <div class="xsbfy" style="margin-bottom: 1rem;">
                         <div class="qKSMec">
                             <i class="google-material-icons QxsLuc" aria-hidden="true">schedule</i>
@@ -3201,7 +3408,7 @@ setInterval(function() {
                 var enhanced_statsUnlockRate = (enhanced_statsUnlock * 100) / enhanced_statsTotal
                 var enhanced_statsFinishRate = (enhanced_statsFinished * 100) / enhanced_statsOwned
 
-                var enhanced_loadStats = `
+                enhanced_loadStats = `
                     <div class="HZ5mJ">` + enhanced_lang.statistics + `</div>
                     <div class="xsbfy" style="margin-bottom: 1rem;">
                         <div class="qKSMec">
@@ -3278,7 +3485,7 @@ setInterval(function() {
             }
 
             enhanced_friendCount.textContent = ', ' + i + ' ' + enhanced_lang.total.toLowerCase() + ')'
-            secureInsert(enhanced_friendCount, '.VE7aje', 2)
+            secureInsert(enhanced_friendCount, 'VE7aje', 2)
         }
 
         // Links 2 Images
@@ -3307,11 +3514,11 @@ setInterval(function() {
         }
 
         // Emoji Picker
-        secureInsert(enhanced_emojiswitch, '.IRyDt', 0)
-        secureInsert(enhanced_emojiPicker, '.pwUBOe.t7snHe', 2)
+        secureInsert(enhanced_emojiswitch, 'IRyDt', 0)
+        secureInsert(enhanced_emojiPicker, 'pwUBOe t7snHe', 2)
 
         // Clock
-        secureInsert(enhanced_ClockFriends, '.hxhAyf.OzUE7e.XY6ZL', 0)
+        secureInsert(enhanced_ClockFriends, 'hxhAyf OzUE7e XY6ZL', 0)
     }
 
     // Location - Settings
@@ -3347,7 +3554,7 @@ setInterval(function() {
                 enhanced_paytotal = enhanced_lang.total + ' ' + enhanced_currency.replace('CUR', enhanced_paytotal)
 
                 enhanced_allpayments.textContent = enhanced_paytotal
-                secureInsert(enhanced_allpayments, '.Ca4K1', 0)
+                secureInsert(enhanced_allpayments, 'Ca4K1', 0)
             }
         }
     }
@@ -3357,13 +3564,6 @@ setInterval(function() {
 
     // Update monitor position
     enhanced_settings.monitorPosition = enhanced_streamMonitor.style.top + '|' + enhanced_streamMonitor.style.left
-
-    // StadiaStatsGG - Find-a-buddy
-    if (enhanced_settings.enableStadiaStats == 1) {
-        enhanced_buddyContainer.style.display = 'inline-block'
-    } else {
-        enhanced_buddyContainer.style.display = 'none'
-    }
 
     // Codec - Set codec preference
     switch (enhanced_settings.codec) {
@@ -3723,7 +3923,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
-                    enhanced_CSS = '@media screen and (min-width: 1080px) { .URhE4b[jsname="gF9qbe"] { display: grid; grid-template-columns: auto auto; grid-template-rows: auto; grid-gap: 0 1rem; }'
+                    enhanced_CSS = '@media screen and (min-width: 1080px) { .Md1Yte.URhE4b .xPDr9b[jsname="azRXlc"] { display: grid; grid-template-columns: auto auto; min-height: auto; grid-gap: 0 1rem; }'
                     enhanced_storeList.style.color = '#00e0ba'
                     enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Enabled".', enhanced_consoleEnhanced, '')
@@ -3762,18 +3962,25 @@ function enhanced_applySettings(set, opt) {
                     break
             }
             break
-        case 'stadiastats':
+        case 'storefilter':
             switch (opt) {
                 case 0:
-                    enhanced_showStadiaStats.style.color = ''
-                    enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].game
                     break
                 case 1:
-                    enhanced_showStadiaStats.style.color = '#00e0ba'
-                    enhanced_showStadiaStats.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">analytics</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiastats + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiastatsdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Enabled".', enhanced_consoleEnhanced, '')
+                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].bundle
                     break
+                case 2:
+                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].addon
+                    break
+            }
+            var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].children
+            for (var i = 0; i < enhanced_listElements.length; i++) {
+                if (enhanced_listElements[i].classList.length == 0 && opt < 3 && enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != filter) {
+                    enhanced_listElements[i].style.display = 'none'
+                } else {
+                    enhanced_listElements[i].style.display = 'block'
+                }
             }
             break
         case 'stadiadatabase':
@@ -3790,19 +3997,39 @@ function enhanced_applySettings(set, opt) {
                     break
             }
             break
+        case 'stadiahunters':
+            switch (opt) {
+                case 0:
+                    enhanced_showStadiaHunters.style.color = ''
+                    enhanced_huntersContainer.style.display = 'none'
+                    enhanced_showStadiaHunters.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">emoji_events</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiahunters + ": " + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiahuntersdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    break
+                case 1:
+                    enhanced_showStadiaHunters.style.color = '#00e0ba'
+                    enhanced_huntersContainer.style.display = 'block'
+                    enhanced_showStadiaHunters.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">emoji_events</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.stadiahunters + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.stadiahuntersdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Set to "Enabled".', enhanced_consoleEnhanced, '')
+
+                    if (enhanced_stadiaHunters == null) {
+                        loadStadiaHunters(enhanced_AccountInfo[2])
+                    }
+                    break
+            }
+            break
         case 'streammode':
             switch (opt) {
                 case 0:
                     enhanced_CSS = ''
                     enhanced_streamMode.style.color = ''
                     enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - StadiaStatsGG: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Streaming Mode: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
                     enhanced_CSS = '.lzIqJf .Y1rZWd, .gI3hkd, .Uwaqdf, .KW2hBe, .DlMyQd.cAx65e, .DlMyQd.KPQoWd, .kBJKIf span, .CVhnkf, .h6J22d.BM7p1d.QAAyWd > .zRamU { filter: blur(0.25rem) brightness(1.2); text-shadow: 0.5rem 0px; }'
                     enhanced_streamMode.style.color = '#00e0ba'
                     enhanced_streamMode.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">preview</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.streammode + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammodedesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stream Mode: Set to "Enabled".', enhanced_consoleEnhanced, '')
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Streaming Mode: Set to "Enabled".', enhanced_consoleEnhanced, '')
                     break
             }
             enhanced_injectStyle(enhanced_CSS, 'enhanced_styleStreamMode')
@@ -3870,8 +4097,8 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
             enhanced_applySettings('storelist', enhanced_settings.splitStore)
             enhanced_applySettings('shortcuts', enhanced_settings.enableShortcuts)
-            enhanced_applySettings('stadiastats', enhanced_settings.enableStadiaStats)
             enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
+            enhanced_applySettings('stadiahunters', enhanced_settings.enableStadiaHunters)
             enhanced_applySettings('inlinepreview', enhanced_settings.hideInlinePreview)
             enhanced_applySettings('familysharing', enhanced_settings.hideFamilySharing)
             enhanced_applySettings('mediapreview', enhanced_settings.hideUserMedia)
@@ -3930,7 +4157,11 @@ function embed(fn, active = true) {
 
 // Insert elements
 function secureInsert(el, sel, opt = 0) {
-    var selector = document.querySelectorAll(sel)
+    if (/^[a-z 0-9]+$/i.test(sel)) {
+        var selector = document.getElementsByClassName(sel)
+    } else {
+        var selector = document.querySelectorAll(sel)
+    }
     var target = selector[selector.length - 1]
     if (target && el) {
         switch (opt) {
@@ -4038,7 +4269,7 @@ function enhanced_pushNotification(content, image, dura) {
         <div class="zHwKDd" style="background-image:url(` + image + `)"></div>
     </div>`
 
-    setTimeout(function() {
+    setTimeout(function () {
         // State - Show
         this.notification.className = 'OFe4V kVaHpd'
         this.notification.style.visibility = 'visible'
@@ -4049,7 +4280,7 @@ function enhanced_pushNotification(content, image, dura) {
     }, 1000)
 
     if (dura) {
-        setTimeout(function() {
+        setTimeout(function () {
             // State - Hide
             this.notification.className = 'OFe4V'
             this.notification.style.opacity = 0
@@ -4058,7 +4289,7 @@ function enhanced_pushNotification(content, image, dura) {
             this.active = false
         }, (dura * 1000) + 1000)
     } else {
-        window.addEventListener('click', function(e) {
+        window.addEventListener('click', function (e) {
             if (e.path.indexOf(this.notification) == -1 && this.active) {
                 // State - Hide
                 this.notification.className = 'OFe4V'
@@ -4078,7 +4309,7 @@ function enhanced_downloadFile(filename, type, text) {
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
     element.setAttribute('download', filename + "." + type)
     element.style.display = 'none'
-        // Process in page context
+    // Process in page context
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
@@ -4275,11 +4506,16 @@ function enhancedTranslate(lang, log = false) {
         shortcut: 'StadiaIcons',
         shortcuttitle: 'Install a shortcut for',
         shortcutdesc: 'Allows you to install a shortcut for a game on your device.',
-        stadiastats: 'StadiaStats',
-        stadiastatsopen: 'View on StadiaStats.GG',
-        stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
         stadiadatabase: 'Stadia Database',
         stadiadatabasedesc: 'Displays a "Extended Details" section on the store page of games, which showcases framerate, resolution and more about the game.',
+        stadiahunters: 'Stadia Hunters',
+        stadiahuntersdesc: 'Access to the Stadia Hunters community, including achievement tracking, guides, leaderboards and more. The perfect companion for achievement hunters.',
+        stadiahunterstitle: 'on Stadia Hunters',
+        stadiahunterslogin: 'Click to login',
+        stadiahuntersnotfound: 'User not found',
+        stadiahunterslevel: 'Level',
+        stadiahuntersworldrank: 'World Rank',
+        stadiahuntersxphover: 'Level Progress',
         gridsize: 'Grid Size',
         griddesc: 'Changes the amount of games per row in the library.',
         clock: 'Clock',
@@ -4414,11 +4650,16 @@ function enhancedTranslate(lang, log = false) {
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installiere eine Verknüpfung für',
                 shortcutdesc: 'Erlaubt das Erstellen einer Verknüpfung von Spielen auf dem Gerät.',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Auf StadiaStats.GG ansehen',
-                stadiastatsdesc: 'Stellt Statistiken für Spiele, eine Verknüpfung zum Profil und einen Weg Mitspieler zu finden via stadiastats.gg bereit.',
                 stadiadatabase: 'Stadia Datenbank',
                 stadiadatabasedesc: 'Zeigt einen "Erweiterte Details" Bereich auf der Store Seite von Spielen, welcher Framerate, Auflösung und weitere Informationen über das Spiel zeigt.',
+                stadiahunters: 'Stadia Hunters',
+                stadiahuntersdesc: 'Zugriff auf die Stadia Hunters Community, inclusive Hilfestellungen, Ranglisten und Erfolge. Der perfekte Begleiter für Erfolge Jäger.',
+                stadiahunterstitle: 'auf Stadia Hunters',
+                stadiahunterslogin: 'Hier klicken zum Anmelden',
+                stadiahuntersnotfound: 'Nutzer nicht gefunden',
+                stadiahunterslevel: 'Level',
+                stadiahuntersworldrank: 'Welt Rang',
+                stadiahuntersxphover: 'Level Fortschritt',
                 gridsize: 'Rastergröße',
                 griddesc: 'Ändert die Anzahl der Spiele pro Reihe in der Übersicht der Mediathek.',
                 clock: 'Uhr',
@@ -4530,9 +4771,9 @@ function enhancedTranslate(lang, log = false) {
                 fps: 'Képkocka',
                 testdiscl: undefined,
                 datadiscl: 'Ez a maximum elérhető képkockaszám 4K módban játszva (Pro előfizetés szükséges),\
-azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
-Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
+                            azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
+                            Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS 1080p módban',
@@ -4550,11 +4791,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Hivatkozás telepítése:',
                 shortcutdesc: 'Parancsikon létrehozása közvetlen játék indításhoz',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'StadiaStats.GG megnyitása',
-                stadiastatsdesc: 'Közvetlen elérés a játék statisztikákhoz, profilhoz és a "find-a-buddy" rendszerhez a stadiastats.gg',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Rács méret',
                 griddesc: 'Játékok száma soronként a Saját Játékkönyvtárban.',
                 clock: 'Óra',
@@ -4667,10 +4912,10 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Framerate',
                 testdiscl: undefined,
                 datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro odber).\
-                Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
-                je uprednostnené rozlíšenie.\
-                Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
-                a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
+                            Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
+                            je uprednostnené rozlíšenie.\
+                            Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                            a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS pri 1080p móde',
@@ -4688,11 +4933,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Nainštaluj skratku do hry',
                 shortcutdesc: 'Umožňuje inštaláciu skratky do hry na tomto zariadení.',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Pozri na StadiaStats.GG',
-                stadiastatsdesc: 'Umožňuje priamu skratku do hernej štatistiky, link do Tvojho profilu a "Nájdi kamoša" funkciu na stadiastats.gg.',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Veľkosť mriežky herných ikon',
                 griddesc: 'Nastavuje počet herných ikon na riadok v knižnici hier.',
                 clock: 'Hodiny',
@@ -4821,11 +5070,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installeer een snelkoppeling voor',
                 shortcutdesc: 'Laat je een snelkoppeling voor een game installeren op je apparaat',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Rooster Grootte',
                 griddesc: undefined,
                 clock: 'Klok',
@@ -4954,11 +5207,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instala un acceso directo para',
                 shortcutdesc: 'Permite instalar un acceso directo de un juego en tu dispositivo.',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Tamaño de la cuadrícula',
                 griddesc: undefined,
                 clock: 'Reloj',
@@ -5044,8 +5301,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 usermedia: 'Screenshot & Video',
                 searchbtnbase: 'Cerca su',
                 avatarpopup: 'Nuovo URL avatar (vuoto per impostazione predefinita):',
-                date: undefined,
-                time: undefined,
+                date: 'Data',
+                time: 'Ore',
                 sessiontime: 'Tempo sessione',
                 codec: 'Codec',
                 resolution: 'Risoluzione',
@@ -5068,18 +5325,18 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 extdetail: 'Dettaglio Esteso',
                 maxresolution: 'Risoluzione Massima',
                 fps: 'Framerate',
-                testdiscl: undefined,
+                testdiscl: '<b>Nota bene:</b> Questo gioco deve ancora essere testato.',
                 datadiscl: 'Questo è il framerate massimo ottenuto mentre si gioca in modalità 4k (devi essere un membro abbonato Pro).\
-                Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
-                Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
-                noteOne: undefined,
-                noteTwo: undefined,
+                            Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
+                            Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
+                noteOne: 'Modalità 4K',
+                noteTwo: 'Cambio 30/60 FPS',
                 noteThree: '60 FPS in modalità 1080p',
                 noteFour: '30 FPS in modalità 1080p',
                 noteFive: 'Non compatibile con la modalità 4K',
-                unsupported: undefined,
-                crossfriends: undefined,
+                unsupported: 'Non supportato',
+                crossfriends: 'Nessun sistema Amico Multipiattaforma',
                 community: 'Comunità',
                 speedtest: 'Speedtest',
                 quickaccess: 'Accesso Veloce',
@@ -5090,11 +5347,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installa una scorciatoia per',
                 shortcutdesc: 'Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Visualizza su StadiaStats.GG',
-                stadiastatsdesc: 'Abilita scorciatoie dirette alle statistiche di gioco, link al tuo profilo e al sistema trova un amico su stadiastats.gg.',
-                stadiadatabase: undefined,
-                stadiadatabasedesc: undefined,
+                stadiadatabase: 'Database Stadia ',
+                stadiadatabasedesc: 'Visualizza una sezione "Dettagli estesi" nella pagina del negozio dei giochi, che mostra framerate, risoluzione e altro ancora sul gioco.',
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Dimensione Griglia',
                 griddesc: 'Modifica la quantità di giochi per riga nella libreria.',
                 clock: 'Orologio',
@@ -5108,8 +5369,8 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 inviteactive: 'Copiato!',
                 gamelabel: 'Etichette Giochi',
                 gamelabeldesc: 'Rimuove le etichette "Pro" dai giochi nella schermata home.',
-                dimoverlay: undefined,
-                dimoverlaydesc: undefined,
+                dimoverlay: 'Overlay Oscurato',
+                dimoverlaydesc: 'Rimuove l\'effetto di oscuramento quando si apre il menu Stadia durante il gioco.',
                 homegallery: 'Galleria Utente',
                 homegallerydesc: 'Nasconde l\'area "Acquisizioni" nella parte inferiore della schermata home.',
                 quickprev: 'Anteprima Messaggio',
@@ -5142,9 +5403,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 familyelementsdesc: 'Nasconde l\'opzione "Condividi questo gioco con la famiglia".',
                 donations: 'Donazioni',
                 reportbug: 'Segnala un bug',
-                exportset: undefined,
-                importset: undefined,
-                importerror: undefined,
+                exportset: 'Esporta impostazioni',
+                importset: 'Importa impostazioni',
+                importerror: 'Il file che si sta tentando di aprire non contiene un profilo Stadia Enhanced valido.',
                 resetsettings: 'Ripristina Impostazioni'
             }
             break
@@ -5223,11 +5484,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installer en genvej for',
                 shortcutdesc: 'Giver dig mulighed for at installere en genvej til et spil på din enhed',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Gitterstørrelse',
                 griddesc: undefined,
                 clock: 'Ur',
@@ -5339,9 +5604,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Fotogrames per segon',
                 testdiscl: undefined,
                 datadiscl: 'Aquest és el màxim de fotogrames per segon aconseguit quan es juga un joc en mode 4K (cal ser subscriptor Pro).\
-                En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
-                Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
+                            En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
+                            Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS en mode 1080p',
@@ -5359,11 +5624,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instal·la una drecera per a',
                 shortcutdesc: 'Permet instal·lar una drecera per a un joc al dispositiu',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Veure a StadiaStats.GG',
-                stadiastatsdesc: 'Permet les dreceres directes a les estadístiques dels jocs, l\'enllaç al vostre perfil i el sistema de cerca d\'altres jugadors/es a stadiastats.gg.',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Tamany de la quadrícula',
                 griddesc: 'Canvia la quantitat de jocs per fila a la biblioteca.',
                 clock: 'Rellotge',
@@ -5475,9 +5744,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Fotogramas',
                 testdiscl: undefined,
                 datadiscl: 'Esta é a taxa máxima de fotogramas alcançada ao jogar um jogo em modo 4K (deve ser um subscritor PRO). \
-            Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
-            Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-            e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
+                            Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
+                            Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
                 noteOne: undefined,
                 noteTwo: undefined,
                 noteThree: '60FPS em 1080P',
@@ -5495,11 +5764,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Instalar atalho para',
                 shortcutdesc: 'Permite-te instalar um atalho para um jogo no teu dispositivo',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Ver em StadiaStats.gg',
-                stadiastatsdesc: 'Ativa atalhos para estatísticas de jogos, link para o perfil e um sistema para encontrar amigos em StadiaStats.gg',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Tamanho da Grelha',
                 griddesc: 'Muda a quantidade de jogos em cada linha na biblioteca',
                 clock: 'Relógio',
@@ -5628,11 +5901,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installera en genväg för',
                 shortcutdesc: 'Låter dig installera en genväg för ett spel på din enhet',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Rutnätsstorlek',
                 griddesc: undefined,
                 clock: 'Klocka',
@@ -5744,9 +6021,9 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 fps: 'Framerate',
                 testdiscl: '<b>Avertissement:</b> Ce jeu n\'a pas encore été testé.',
                 datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
-                        Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
-                        Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                        et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
+                            Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
+                            Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                            et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
                 noteOne: 'Mode 4K',
                 noteTwo: 'Option 30/60 FPS',
                 noteThree: '60FPS en mode 1080p',
@@ -5764,11 +6041,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Installer un raccourcis pour',
                 shortcutdesc: 'Permet d\'installer des raccourcis individuels pour vos jeux sur votre ordinateur',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Voir sur StadiaStats.GG',
-                stadiastatsdesc: 'Ajoute des liens stadiastats.gg vers votre profil, des statistiques pour chaque jeux et le système de recherche de joueurs "find-a-buddy".',
                 stadiadatabase: 'Base de données Stadia',
                 stadiadatabasedesc: 'Affiche une section "Détails Supplémentaires" sur la page de chaque jeu dans le Store. Cette section indique le taux de rafraîchissement, la résolution et d\'autres informations sur le jeu.',
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Taille de la Grille',
                 griddesc: 'Change le nombre de colonnes de jeux affichées sur la page d\'accueil.',
                 clock: 'Horloge',
@@ -5898,11 +6179,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Установить скриншот на',
                 shortcutdesc: 'Разрешить делать скриншоты в играх',
-                stadiastats: undefined,
-                stadiastatsopen: undefined,
-                stadiastatsdesc: undefined,
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Размер сетки',
                 griddesc: undefined,
                 clock: 'Часы',
@@ -5955,7 +6240,6 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 importerror: undefined,
                 resetsettings: 'Сбросить настройки'
             }
-
         case 'eo':
             translate_load = {
                 default: 'Defaŭta',
@@ -6034,11 +6318,15 @@ a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target
                 shortcut: 'StadiaIcons',
                 shortcuttitle: 'Krei ŝparvojon por',
                 shortcutdesc: 'Ebligas krei ŝparvojon por ludo en via aparato.',
-                stadiastats: 'StadiaStats',
-                stadiastatsopen: 'Vidi je StadiaStats.GG',
-                stadiastatsdesc: 'Enables direct shortcuts to game statistics, link to your profile and the find-a-buddy system on stadiastats.gg.',
                 stadiadatabase: undefined,
                 stadiadatabasedesc: undefined,
+                stadiahunters: undefined,
+                stadiahuntersdesc: undefined,
+                stadiahunterslogin: undefined,
+                stadiahuntersnotfound: undefined,
+                stadiahunterslevel: undefined,
+                stadiahuntersworldrank: undefined,
+                stadiahuntersxphover: undefined,
                 gridsize: 'Grid Size',
                 griddesc: 'Changes the amount of games per row in the library.',
                 clock: 'Horloĝo',
