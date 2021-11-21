@@ -43,8 +43,8 @@ Please note that installing the extension this way, removes the automatic update
 
 ## Permissions
 
-* Access to your data on stadia.google.com: This one should be obvious; The extension has to access the website to work, including your data (i.e. what games you own) and the right to manipulate it (to get the stream data, for example).
-* Access toy our browser history: The extension **will not read your actual history**. This permission is needed, because the extension uses wildcards to filter the pages it needs to actually run on and the current URL is part of the browser history permission. This helps stopping the extension from running on pages like `https://stadia.google.com/couch` that don't make use of the extension, while still loading it on `https://stadia.google.com/home`.
+* **"Access to your data on stadia.google.com"**: This one should be obvious; The extension has to access the website to work, including your data (i.e. what games you own) and the right to manipulate it (to get the stream data, for example). "Data" in this context simply means the content of the Stadia website.
+* **"Access toy our browser history"**: The extension **will not read your actual history**. This permission is needed, because the extension uses wildcards to filter the pages it needs to actually run on and the current URL is part of the "browser history" permission. This helps stopping the extension from running on pages like `https://stadia.google.com/couch` that don't make use of the extension, while still loading it on `https://stadia.google.com/home`.
 
 ## Ideas? Requests? Questions?
 Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
