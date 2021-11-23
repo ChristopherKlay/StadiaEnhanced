@@ -2,6 +2,12 @@
 
 ## Version 1.18
 
+### 1.18.2
+* Added translation options for several previously hardcoded texts (i.e. the filter settings)
+* Added a check for missing keys (keys not listed as undefined, but used by the extension) to the `debugEnhanced('translation')` command
+* Fixed DiscordRPC sometimes displaying the wrong status message
+* Fixed multiple styling issues with the split view option for store lists after changes on Stadias side
+
 ### 1.18.1
 * Updated french and italian translations
 * Added permission delcarations to the readme overview
