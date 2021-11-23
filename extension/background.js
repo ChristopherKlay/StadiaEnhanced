@@ -10,6 +10,18 @@ chrome.runtime.onMessage.addListener(
         }
     })
 
+// Stadia Hunters - Player Stats
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        if (request.action == "stadiahunters") {
+            var url = 'https://us-central1-stadiaachievements-34145.cloudfunctions.net/stadiaEnhanced?id=' + request.id
+            fetch(url)
+                .then(response => response.text())
+                .then(result => sendResponse(result))
+            return true
+        }
+    })
+
 // Discord RPC
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -22,7 +34,6 @@ chrome.runtime.onMessage.addListener(
         }
     })
 
-
 chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
     if (request.action == "presence") {
         chrome.tabs.sendMessage(request.tab, request.info, function (response) {
@@ -31,3 +42,8 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
     }
     return true
 })
+
+// encode URL
+function encodeURL(url) {
+    return encodeURIComponent(url)
+}
