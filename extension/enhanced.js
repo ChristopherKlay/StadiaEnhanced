@@ -909,7 +909,7 @@ enhanced_filterUI.main.frame.style.display = 'none'
 
 // Filter UI - Toggle
 enhanced_filterUI.main.toggle.className = 'R2s0be'
-enhanced_filterUI.main.toggle.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i></span><span class="caSJV" jsname="V67aGc">Filter Settings</span></div>'
+enhanced_filterUI.main.toggle.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i></span><span class="caSJV" jsname="V67aGc">' + enhanced_lang.filtersettings + '</span></div>'
 enhanced_filterUI.main.toggle.style.cursor = 'pointer'
 enhanced_filterUI.main.toggle.style.userSelect = 'none'
 enhanced_filterUI.main.toggle.tabIndex = '0'
@@ -924,7 +924,7 @@ enhanced_filterUI.main.toggle.addEventListener('click', function () {
 });
 
 // Filter UI - Structure
-enhanced_filterUI.main.tag.textContent = 'Filter Settings'
+enhanced_filterUI.main.tag.textContent = enhanced_lang.filtersettings
 enhanced_filterUI.main.tag.className = 'tag'
 enhanced_filterUI.main.frame.append(enhanced_filterUI.main.tag)
 enhanced_filterUI.main.grid.className = 'grid'
@@ -1053,10 +1053,10 @@ function enhanced_updateFilters(setup = false) {
         }
 
         // Update Labels
-        enhanced_filterUI.saturation.label.textContent = 'Saturation (' + (enhanced_settings.postprocess[enhanced_currentID].saturation * 100).toFixed(0) + '%)'
-        enhanced_filterUI.contrast.label.textContent = 'Contrast (' + (enhanced_settings.postprocess[enhanced_currentID].contrast * 100).toFixed(0) + '%)'
-        enhanced_filterUI.brightness.label.textContent = 'Brightness (' + (enhanced_settings.postprocess[enhanced_currentID].brightness * 100).toFixed(0) + '%)'
-        enhanced_filterUI.sharpen.label.textContent = 'Sharpen (' + enhanced_settings.postprocess[enhanced_currentID].sharpen + ')'
+        enhanced_filterUI.saturation.label.textContent = enhanced_lang.saturation + ' (' + (enhanced_settings.postprocess[enhanced_currentID].saturation * 100).toFixed(0) + '%)'
+        enhanced_filterUI.contrast.label.textContent = enhanced_lang.contrast + ' (' + (enhanced_settings.postprocess[enhanced_currentID].contrast * 100).toFixed(0) + '%)'
+        enhanced_filterUI.brightness.label.textContent = enhanced_lang.brightness + ' (' + (enhanced_settings.postprocess[enhanced_currentID].brightness * 100).toFixed(0) + '%)'
+        enhanced_filterUI.sharpen.label.textContent = enhanced_lang.sharpen + ' (' + enhanced_settings.postprocess[enhanced_currentID].sharpen + ')'
 
         localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     }
@@ -2520,7 +2520,6 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = 'line-through'
                 enhanced_listFilterAddOns.style.color = 'grey'
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_applySettings('storefilter', 0)
                 break
             case 2:
                 enhanced_activeListFilter = 2
@@ -2530,7 +2529,6 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = 'none'
                 enhanced_listFilterAddOns.style.color = 'grey'
                 enhanced_listFilterAddOns.style.textDecoration = 'line-through'
-                enhanced_applySettings('storefilter', 1)
                 break
             case 3:
                 enhanced_activeListFilter = 3
@@ -2540,7 +2538,6 @@ function enhanced_switchListFilter(type) {
                 enhanced_listFilterBundles.style.textDecoration = 'line-through'
                 enhanced_listFilterAddOns.style.color = 'white'
                 enhanced_listFilterAddOns.style.textDecoration = 'none'
-                enhanced_applySettings('storefilter', 2)
                 break
         }
     } else {
@@ -2551,7 +2548,6 @@ function enhanced_switchListFilter(type) {
         enhanced_listFilterBundles.style.textDecoration = 'none'
         enhanced_listFilterAddOns.style.color = 'white'
         enhanced_listFilterAddOns.style.textDecoration = 'none'
-        enhanced_applySettings('storefilter', 3)
     }
 }
 
@@ -3100,7 +3096,7 @@ setInterval(function () {
         }
 
         // Discord Presence
-        var enhanced_currentStatus = document.querySelector('.HDKZKb.LiQ6Hb')
+        var enhanced_currentStatus = document.querySelectorAll('.hxhAyf.OzUE7e.XY6ZL .TZ0BN .HDKZKb.LiQ6Hb')
         if (enhanced_currentStatus && enhanced_presenceData) {
             if (enhanced_presenceData[enhanced_currentID]) {
                 enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID]
@@ -3246,6 +3242,39 @@ setInterval(function () {
 
     // Location - Store List
     if (document.location.href.indexOf('/list') != -1) {
+        // Add class for page segements in split view
+        if (enhanced_settings.splitStore != 0) {
+            enhanced_loadedLists = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].querySelectorAll('div:not(.pW7Dlc) > streamable')
+            for (var i = 0; i < enhanced_loadedLists.length; i++) {
+                enhanced_loadedLists[i].parentNode.classList.add("splitstorefull")
+            }
+        }
+
+        // Filter by Store tags
+
+        // Set label
+        switch (enhanced_activeListFilter) {
+            case 1:
+                var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].game
+                break
+            case 2:
+                var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].bundle
+                break
+            case 3:
+                var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].addon
+                break
+        }
+
+        // Filter items
+        var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].getElementsByClassName('pW7Dlc')
+        for (var i = 0; i < enhanced_listElements.length; i++) {
+            if (enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != enhanced_storeFilterOption && enhanced_activeListFilter != 0) {
+                enhanced_listElements[i].parentNode.style.display = 'none'
+            } else {
+                enhanced_listElements[i].parentNode.style.display = 'block'
+            }
+        }
+
         // List Filters
         if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
             secureInsert(enhanced_listFilter, 'B22Hnf', 3)
@@ -3923,7 +3952,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
-                    enhanced_CSS = '@media screen and (min-width: 1080px) { .Md1Yte.URhE4b .xPDr9b[jsname="azRXlc"] { display: grid; grid-template-columns: auto auto; min-height: auto; grid-gap: 0 1rem; }'
+                    enhanced_CSS = '@media screen and (min-width: 1080px) { .splitstorefull { grid-column: 1 / -1; } .xPDr9b .OTiBA { margin-top: 0; padding-top: 1rem; border-top: 2px solid rgba(255,255,255,.06); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 0 1rem; } .Md1Yte.URhE4b .xPDr9b[jsname="azRXlc"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-height: auto; grid-gap: 0 1rem; }'
                     enhanced_storeList.style.color = '#00e0ba'
                     enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Enabled".', enhanced_consoleEnhanced, '')
@@ -3960,27 +3989,6 @@ function enhanced_applySettings(set, opt) {
                     enhanced_showShortcut.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">get_app</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.shortcut + ": " + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.shortcutdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Shortcuts: Set to "Enabled".', enhanced_consoleEnhanced, '')
                     break
-            }
-            break
-        case 'storefilter':
-            switch (opt) {
-                case 0:
-                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].game
-                    break
-                case 1:
-                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].bundle
-                    break
-                case 2:
-                    var filter = enhanced_languageSupport.storeFilters[enhanced_local].addon
-                    break
-            }
-            var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].children
-            for (var i = 0; i < enhanced_listElements.length; i++) {
-                if (enhanced_listElements[i].classList.length == 0 && opt < 3 && enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != filter) {
-                    enhanced_listElements[i].style.display = 'none'
-                } else {
-                    enhanced_listElements[i].style.display = 'block'
-                }
             }
             break
         case 'stadiadatabase':
@@ -4388,7 +4396,6 @@ function enhanced_updateSettings(obj) {
 
 // Debugging - Call via "debugEnhanced(); on Stadia
 function debugEnhanced(opt) {
-    var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
     switch (opt) {
         case 'translation':
             // Translations
@@ -4496,6 +4503,11 @@ function enhancedTranslate(lang, log = false) {
         noteFive: 'Not compatible with 4K mode',
         unsupported: 'Unsupported',
         crossfriends: 'No Cross-platform Buddy System',
+        filtersettings: 'Filter Settings',
+        saturation: 'Saturation',
+        contrast: 'Contrast',
+        brightness: 'Brightness',
+        sharpen: 'Sharpen',
         community: 'Community',
         speedtest: 'Speedtest',
         quickaccess: 'Quick Access',
@@ -4640,6 +4652,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Nicht kompatibel mit 4K Modus',
                 unsupported: 'Nicht unterstützt',
                 crossfriends: 'Kein plattformübergreifendes Freunde System',
+                filtersettings: 'Filter Einstellungen',
+                saturation: 'Sättigung',
+                contrast: 'Kontrast',
+                brightness: 'Helligkeit',
+                sharpen: 'Schärfe',
                 community: 'Community',
                 speedtest: 'Geschwindigkeitstest',
                 quickaccess: 'Schnellzugriff',
@@ -4781,6 +4798,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Nem kompatibilis a 4K móddal',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Közösség',
                 speedtest: 'Sebesség teszt',
                 quickaccess: 'Gyors elérés',
@@ -4795,6 +4817,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -4923,6 +4946,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Nekompatibilné so 4K módom',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Komunita',
                 speedtest: 'Test rýchlosti',
                 quickaccess: 'Rýchly prístup',
@@ -4937,6 +4965,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -5060,6 +5089,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Ondersteunt geen 4K modus',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Gemeenschap',
                 speedtest: 'Snelheidstest',
                 quickaccess: 'Snelle Toegang',
@@ -5074,6 +5108,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -5197,6 +5232,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'No es compatible con modo 4K',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Comunidad',
                 speedtest: 'Test de Velocidad',
                 quickaccess: 'Acceso Rápido',
@@ -5211,6 +5251,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -5337,6 +5378,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Non compatibile con la modalità 4K',
                 unsupported: 'Non supportato',
                 crossfriends: 'Nessun sistema Amico Multipiattaforma',
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Comunità',
                 speedtest: 'Speedtest',
                 quickaccess: 'Accesso Veloce',
@@ -5475,6 +5521,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: undefined,
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Fællesskab',
                 speedtest: 'Hastighedstest',
                 quickaccess: 'Hurtig adgang',
@@ -5489,6 +5540,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -5615,6 +5667,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'No compatible amb el mode 4K',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Comunitat',
                 speedtest: 'Prova de velocitat',
                 quickaccess: 'Accés ràpid',
@@ -5629,6 +5686,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -5755,6 +5813,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Não é compatível com 4K',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Comunidade',
                 speedtest: 'Teste de Velocidade',
                 quickaccess: 'Acesso Rápido',
@@ -5769,6 +5832,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -5892,6 +5956,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Ej kompatibelt med 4K-läge',
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Gemenskap',
                 speedtest: 'Hastighetstest',
                 quickaccess: 'Snabbmeny',
@@ -5906,6 +5975,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -6032,6 +6102,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Incompatible avec le mode 4K',
                 unsupported: 'Incompatible',
                 crossfriends: 'Aucun système d\'amis multiplatforme',
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Communauté',
                 speedtest: 'Test de Débit',
                 quickaccess: 'Accès Rapide',
@@ -6046,6 +6121,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: 'Affiche une section "Détails Supplémentaires" sur la page de chaque jeu dans le Store. Cette section indique le taux de rafraîchissement, la résolution et d\'autres informations sur le jeu.',
                 stadiahunters: 'Stadia Hunters',
                 stadiahuntersdesc: 'Accédez aux fonctionnalités de la communauté Stadia Hunters: suivi de trophées, guides, classements, etc. Le companion idéal des chasseurs de succès!',
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: 'sur Stadia Hunters',
                 stadiahuntersnotfound: 'Cliquez pour vous connecter',
                 stadiahunterslevel: 'Profil utilisateur introuvable',
@@ -6170,6 +6246,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: undefined,
                 unsupported: undefined,
                 crossfriends: undefined,
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Сообщество',
                 speedtest: 'Проверка скорости',
                 quickaccess: 'Быстрый доступ',
@@ -6184,6 +6265,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -6309,6 +6391,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Not compatible with 4K mode',
                 unsupported: 'Unsupported',
                 crossfriends: 'No Cross-platform Buddy System',
+                filtersettings: undefined,
+                saturation: undefined,
+                contrast: undefined,
+                brightness: undefined,
+                sharpen: undefined,
                 community: 'Komunumo',
                 speedtest: 'Speedtest',
                 quickaccess: 'Rapida aliro',
@@ -6323,6 +6410,7 @@ function enhancedTranslate(lang, log = false) {
                 stadiadatabasedesc: undefined,
                 stadiahunters: undefined,
                 stadiahuntersdesc: undefined,
+                stadiahunterstitle: undefined,
                 stadiahunterslogin: undefined,
                 stadiahuntersnotfound: undefined,
                 stadiahunterslevel: undefined,
@@ -6385,12 +6473,17 @@ function enhancedTranslate(lang, log = false) {
 
     // Merge fix entries
     var lang_filled = 0;
+    var lang_missing = []
     if (Object.keys(translate_load).length != 0) {
-        Object.entries(translate_load).forEach(([key, value]) => {
-            if (value != undefined) {
-                translation[key] = translate_load[key]
+        Object.entries(translation).forEach(([key]) => {
+            if (translate_load.hasOwnProperty(key)) {
+                if (translate_load[key] != undefined) {
+                    translation[key] = translate_load[key]
+                } else {
+                    lang_filled++
+                }
             } else {
-                lang_filled++
+                lang_missing.push(key)
             }
         });
     }
@@ -6398,8 +6491,11 @@ function enhancedTranslate(lang, log = false) {
     lang_load = window.performance.now() - lang_load
 
     if (log) {
-        console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Loading translation "' + lang + '" - ' + Object.keys(translate_load).length + ' keys in ' + lang_load.toFixed(2) + 'ms, ' + lang_filled + ' strings defaulting to "en".', enhanced_consoleEnhanced, '');
+        console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Loading translation "' + lang + '" - ' + Object.keys(translate_load).length + ' keys in ' + lang_load.toFixed(2) + 'ms, ' + lang_filled + ' key(s) defaulting to "en" and ' + Object.keys(lang_missing).length + ' key(s) missing.', enhanced_consoleEnhanced, '');
         console.table(translate_load)
+        if (Object.keys(lang_missing).length != 0) {
+            console.table(lang_missing)
+        }
         console.groupEnd()
     }
     return translation
