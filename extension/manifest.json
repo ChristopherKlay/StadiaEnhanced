@@ -1,7 +1,7 @@
 {
     "name": "Stadia Enhanced",
     "description": "Various new features for Google Stadia.",
-    "version": "1.18.2",
+    "version": "1.18.3",
     "manifest_version": 2,
     "author": "Christopher Klay",
     "homepage_url": "https://github.com/ChristopherKlay/StadiaEnhanced",
@@ -13,7 +13,7 @@
     },
     "browser_action": {
         "default_popup": "popup.html",
-        "default_title": "Stadia Enhanced v1.18.2",
+        "default_title": "Stadia Enhanced v1.18.3",
         "default_icon": {
             "16": "media/logo/16.png",
             "32": "media/logo/32.png",

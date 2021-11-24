@@ -3096,7 +3096,7 @@ setInterval(function () {
         }
 
         // Discord Presence
-        var enhanced_currentStatus = document.querySelectorAll('.hxhAyf.OzUE7e.XY6ZL .TZ0BN .HDKZKb.LiQ6Hb')
+        var enhanced_currentStatus = document.querySelectorAll('.hxhAyf.OzUE7e.XY6ZL .TZ0BN .HDKZKb.LiQ6Hb')[0]
         if (enhanced_currentStatus && enhanced_presenceData) {
             if (enhanced_presenceData[enhanced_currentID]) {
                 enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID]
@@ -5378,11 +5378,11 @@ function enhancedTranslate(lang, log = false) {
                 noteFive: 'Non compatibile con la modalità 4K',
                 unsupported: 'Non supportato',
                 crossfriends: 'Nessun sistema Amico Multipiattaforma',
-                filtersettings: undefined,
-                saturation: undefined,
-                contrast: undefined,
-                brightness: undefined,
-                sharpen: undefined,
+                filtersettings: 'Impostazioni Filtro',
+                saturation: 'Saturazione',
+                contrast: 'Contrasto',
+                brightness: 'Luminosità',
+                sharpen: 'Affinare',
                 community: 'Comunità',
                 speedtest: 'Speedtest',
                 quickaccess: 'Accesso Veloce',
