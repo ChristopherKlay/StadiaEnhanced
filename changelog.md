@@ -2,6 +2,10 @@
 
 ## Version 1.18
 
+### 1.18.3
+* Updated italian translation
+* Fixed a issue with current status detection for the Discord presence
+
 ### 1.18.2
 * Added translation options for several previously hardcoded texts (i.e. the filter settings)
 * Added a check for missing keys (keys not listed as undefined, but used by the extension) to the `debugEnhanced('translation')` command
