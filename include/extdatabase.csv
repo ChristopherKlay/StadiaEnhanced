@@ -86,7 +86,7 @@ Little Nightmares,3840x2160,60FPS,4K Mode | 5.1,None,None,3aed855f10b34f618e5f6c
 Little Nightmares 2,2880x1620,60FPS,4K Mode,None,None,0175bc876f55414ca207b2ea6691cfb2rcp1,
 Lost Words: Beyond the Page,Unsure,60FPS,4K Mode | HDR | 5.1,None,None,d334bea27ee64ef5a3a9bb14b1d6a88ercp1,
 Madden 21,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,0e6c703afde840148204847447b9c21drcp1,
-Marvel's Avengers,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,232ff8abc7f74421a477e9e09dbf487drcp1,
+Marvel's Avengers,3072x1728,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,232ff8abc7f74421a477e9e09dbf487drcp1,
 Metro 2033 Redux,2560x1440,60FPS,4K Mode | 5.1,None,None,9b3ea6519cac48d68ca821f07b1a6a3drcp1,
 Metro Exodus,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,879d82512f5441829250ead1aa678a70rcp1,
 Metro Last Light Redux,2560x1440,60FPS,4K Mode | HDR | 5.1,None,None,b65c1c4dcdf24446bcecda190c6a2fe7rcp1,
@@ -184,7 +184,7 @@ West of Loathing,3840x2160,60FPS,4K Mode,None,None,0a60fff637b445a797623d0c69433
 Windbound,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,657210fe20ad402b85bda8f816b80d98rcp1,
 Wolfenstein: Youngblood,2560x1440,60FPS,4K Mode | 5.1,None,None,4884bd9bd7864cf28deef05ef4b69e70rcp1,
 WWE 2K Battlegrounds,2560x1440,60FPS,4K Mode | 5.1,None,PC | Xbox | PlayStation | Nintendo Switch | No Cross-platform Buddy System,f28e66bbd0984c77ac6a54e8cc3007bdrcp1,
-Ys IX: Monstrum Nox,,,,None,None,b2c9b37fb3eb4089ad91f30b4e30ce92rcp1,checked
+Ys IX: Monstrum Nox,,60FPS,4K Mode,None,None,b2c9b37fb3eb4089ad91f30b4e30ce92rcp1,checked
 Ys VIII: Lacrimosa of DANA,3840x2160,60FPS,4K Mode,None,None,7ced0b517b144dd98529ceffab963791rcp1,
 Zombie Army 4: Dead War,2560x1440,60FPS,4K Mode | HDR | 5.1,None,None,cba537cccfe3470b8784f88660ea5f09rcp1,
 GRIME,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,HDR | 5.1,None,None,d7a58e7a34c843bc91106ef9be366b32rcp1,
@@ -200,14 +200,14 @@ Bloodstained: Ritual of the Night,1920x1080,60FPS,4K Mode,None,None,df3c9859e1d1
 Streets of Rage 4,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,,None,None,819f567cf2c64e5fb252c415a1184e53rcp1,
 Threta Revelations,,,,None,,#ERROR!,checked
 Control Ultimate Edition,2560x1440,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | 5.1,None,None,2cdcb63bc3604360a157c4a4021eca35rcp1,
-Merek's Market,,,5.1,None,None,1509dbd662b7403f9497661157b9ca6brcp1,checked
+Merek's Market,,,4K Mode | HDR | 5.1,None,None,1509dbd662b7403f9497661157b9ca6brcp1,checked
 ONE PIECE World Seeker,,,5.1,None,None,d7fce541196f4ec8b1bf36eef8b6f543rcp1,checked
 DreamWorks Dragons: Dawn of New Riders,3840x2160,60FPS,4K Mode,None,None,e15d4480e6e44c64b8fe79b3bfc57c9ercp1,
-Ice Age: Scrat's Nutty Adventure,,,,None,None,28c8c1c35b8c450083c980f1dd44b64drcp1,checked
-Gigantosaurus The Game,,,,None,None,106e912318b24f0394850cdeabf73b0arcp1,checked
+Ice Age: Scrat's Nutty Adventure,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode,None,None,28c8c1c35b8c450083c980f1dd44b64drcp1,
+Gigantosaurus The Game,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,106e912318b24f0394850cdeabf73b0arcp1,
 PAW Patrol Mighty Pups Save Adventure Bay,3840x2160,60FPS,4K Mode,None,None,ccf9e5615864445ba6a85cbd3557665frcp1,
 PAW Patrol The Movie: Adventure City Calls,,,,None,None,2e00fb54c35e47b08e3d56e0d59cb2ffrcp1,checked
-Young Souls,,60FPS in 1080p Mode,5.1,None,None,39b2419557a4479792c267dffa77fbbfrcp1,checked
+Young Souls,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,None,None,39b2419557a4479792c267dffa77fbbfrcp1,
 Madden NFL 22,,,5.1,None,None,451f31e0ce9e4ac4b928f4f6a9d2b3d0rcp1,checked
 Farming Simulator 22,,,,None,PC,3bb062e7f1274d4ca83af6b5f67d9abarcp1,checked
 Darkwood,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,848cb37ae8f64d4cbeddc5f2e290806ercp1,
@@ -225,7 +225,7 @@ Chorus,,,,None,,#ERROR!,checked
 FIFA 22,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,d45d390acba5479db7c47170b09d517drcp1,
 DreamWorks Spirit Lucky's Big Adventure,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,25567bfb599a46ecab0fc8b18682b3f8rcp1,
 Mafia III,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,HDR | 5.1,None,None,9092c5ed87224f3e8a277dac0479874frcp1,
-The Falconeer,,,,None,None,b7be5151de924478ab54ef9afeee4826rcp1,checked
+The Falconeer,3840x2160,60FPS,4K Mode | 5.1,None,None,b7be5151de924478ab54ef9afeee4826rcp1,
 Assassin's Creed Rogue Remastered,2880x1620,60FPS,4K Mode | 5.1,None,None,1aca0f17682540698822de0419062511rcp1,
 Child of Light,3840x2160,60FPS,4K Mode,None,None,0301058e2733436484091e5ca27c2298rcp1,
 Heist Simulator Early Access,,,,,None,513df9a0ecfd40199e077fc3bb9647f5rcp1,checked
@@ -234,3 +234,4 @@ DRAGON BALL Z: KAKAROT,3840x2160,,4K Mode,None,None,8275f275454340d78fb746ba97b6
 Saints Row: Re-Elected,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,,None,5325f670b13d4c959123c437948d1834rcp1,
 Wavetale,,,,,None,68297438f4ca40828f91b31db3ce746ercp1,checked
 The Jackbox Party Pack 8,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,5.1,Direct Touch,None,5553fb6e89514ca48891044b8e0ef47frcp1,
+Rayman Legends,3840x2160,60FPS,4K Mode,None,None,14b4e92868c9412ca7fd4ea88d733b2arcp1,
