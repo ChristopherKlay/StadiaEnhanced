@@ -2321,7 +2321,7 @@ enhanced_huntersDropContent.innerHTML = `
             <div class="uKRpKb">
                 <div class="rybUIf"></div>
             </div>
-            <div class="Uwaqdf">
+            <div class="Uwaqdf" style="text-align: left;">
                 <div class="DlMyQd q3yMEf">
                     <span class="VY8blf fSorq">` + enhanced_AccountInfo[0] + `<span class="rmIKk qUT0tf">` + '#' + enhanced_AccountInfo[1] + `</span></span>
                 </div>
