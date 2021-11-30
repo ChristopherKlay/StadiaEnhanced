@@ -2,6 +2,10 @@
 
 ## Version 1.18
 
+### 1.18.4
+* Fixed text spacing issues in the Stadia Hunters popup
+* Fixed extension loading issues on capture pages
+
 ### 1.18.3
 * Updated italian translation
 * Fixed a issue with current status detection for the Discord presence
