@@ -189,9 +189,9 @@ var enhanced_languageSupport = {
 // CSS Changes - Global styles and overwrites
 var enhanced_discordActive = false
 var enhanced_CSS = '.lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }' // Remove padding above avatar
-enhanced_CSS += '.DGX7fe { display: none }' // Hide the invite menu
 enhanced_CSS += '.VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }' // Fix searchbar text cutoff
 enhanced_CSS += '.qE7X4e { margin-right: 0.625rem; }' // Fix searchbar margin
+enhanced_CSS += '.JZQvPd { margin: 0; } .JZQvPd > .h1uihb { display: none; } .DGX7fe { width: 0; }' // Hide invite navbar icon
 enhanced_CSS += '.E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }' // Wrap menu items
 enhanced_CSS += '.hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }' // Adjust menu height
 enhanced_CSS += '.GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }' // Less padding on "Pro" lables
@@ -321,7 +321,7 @@ function loadStadiaHunters(id) {
         id: id
     }, function (response) {
         enhanced_stadiaHunters = JSON.parse(response)
-        if (Object.keys(enhanced_stadiaHunters).length > 1) {
+        if (!("error" in enhanced_stadiaHunters)) {
             enhanced_huntersDropdown.querySelector('.RMEzA').textContent = enhanced_stadiaHunters.level
             enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslevel + ' ' + enhanced_stadiaHunters.level
             enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersworldrank + ' ' + enhanced_stadiaHunters.rank
@@ -354,14 +354,18 @@ function loadStadiaHunters(id) {
                         </defs>
                     </svg>
                 </span>`
-
-            if (enhanced_AccountInfo[1] == '0000') {
-                enhanced_huntersDropContent.querySelector('.rmIKk.qUT0tf').outerHTML = enhanced_proReplace
-            }
         } else {
             enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslogin
             enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersnotfound
         }
+
+        // Replace tag for Pro users
+        if (enhanced_AccountInfo[1] == '0000') {
+            enhanced_huntersDropContent.querySelector('.rmIKk.qUT0tf').outerHTML = enhanced_proReplace
+        }
+
+        // Add infos for logging
+        enhanced_stadiaHunters.request = 'https://us-central1-stadiaachievements-34145.cloudfunctions.net/stadiaEnhanced?id=' + id
 
         console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Profile Data.', enhanced_consoleEnhanced, '')
         console.table(enhanced_stadiaHunters)
@@ -1396,6 +1400,7 @@ enhanced_StoreDropContent.append(enhanced_AllGames)
 // Language Dropdown - Adds a dropdown menu for language switching
 var enhanced_langContainer = document.createElement('li')
 enhanced_langContainer.className = 'OfFb0b tj2D'
+enhanced_langContainer.style.margin = '0 0 0 0.625rem'
 enhanced_langContainer.id = 'enhanced_langContainer'
 var enhanced_langDropdown = document.createElement('div')
 enhanced_langContainer.appendChild(enhanced_langDropdown)
@@ -1507,6 +1512,7 @@ window.addEventListener('click', function (e) {
 // Settings Dropdown - Adds a dropdown menu for quick access
 var enhanced_SettingsContainer = document.createElement('li')
 enhanced_SettingsContainer.className = 'OfFb0b tj2D'
+enhanced_SettingsContainer.style.margin = '0 0 0 0.625rem'
 enhanced_SettingsContainer.id = 'enhanced_SettingsContainer'
 var enhanced_SettingsDropdown = document.createElement('div')
 enhanced_SettingsContainer.appendChild(enhanced_SettingsDropdown)
@@ -2295,6 +2301,7 @@ enhanced_customAvatar.addEventListener('click', function () {
 // Stadia Hunters - Profile Popup
 var enhanced_huntersContainer = document.createElement('li')
 enhanced_huntersContainer.className = 'OfFb0b tj2D'
+enhanced_huntersContainer.style.margin = '0 0 0 0.625rem'
 enhanced_huntersContainer.id = 'enhanced_huntersContainer'
 var enhanced_huntersDropdown = document.createElement('div')
 enhanced_huntersContainer.appendChild(enhanced_huntersDropdown)
