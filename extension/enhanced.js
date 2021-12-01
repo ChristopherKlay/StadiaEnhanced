@@ -96,77 +96,92 @@ var enhanced_languageSupport = {
         ca: {
             game: 'Joc',
             bundle: 'Paquet',
-            addon: 'Complement'
+            addon: 'Complement',
+            free: 'Gratis'
         },
         da: {
             game: 'Spil',
             bundle: 'Pakke',
-            addon: 'Tilføjelse'
+            addon: 'Tilføjelse',
+            free: 'DKK 0'
         },
         de: {
             game: 'Spiel',
             bundle: 'Bundle',
-            addon: 'Add-on'
+            addon: 'Add-on',
+            free: 'Kostenlos'
         },
         en: {
             game: 'Game',
             bundle: 'Bundle',
-            addon: 'Add-On'
+            addon: 'Add-On',
+            free: 'Free'
         },
         es: {
             game: 'Juego',
             bundle: 'Paquete',
-            addon: 'Complemento'
+            addon: 'Complemento',
+            free: 'Gratis'
         },
         fi: {
             game: 'Peli',
             bundle: 'Paketti',
-            addon: 'Laajennus'
+            addon: 'Laajennus',
+            free: 'Maksuton'
         },
         fr: {
             game: 'Jeu',
             bundle: 'Pack',
-            addon: 'Extension'
+            addon: 'Extension',
+            free: 'Sans frais'
         },
         hu: {
             game: 'Játék',
             bundle: 'Csomag',
-            addon: 'Kiegészítő'
+            addon: 'Kiegészítő',
+            free: 'Díjmentes'
         },
         it: {
             game: 'Gioco',
             bundle: 'Bundle',
-            addon: 'Contenuto aggiuntivo'
+            addon: 'Contenuto aggiuntivo',
+            free: 'Senza costi'
         },
         nl: {
             game: 'Game',
             bundle: 'Bundel',
-            addon: 'Add-On'
+            addon: 'Add-On',
+            free: 'Kosteloos'
         },
         no: {
             game: 'Spill',
             bundle: 'Pakke',
-            addon: 'Tillegg'
+            addon: 'Tillegg',
+            free: 'Gratis'
         },
         pl: {
             game: 'Gra',
             bundle: 'Pakiet',
-            addon: 'Dotatek'
+            addon: 'Dotatek',
+            free: 'Bezpłatne'
         },
         pt: {
             game: 'Game',
             bundle: 'Bundle',
-            addon: 'Add-On'
+            addon: 'Add-On',
+            free: 'Gratuito'
         },
         sk: {
             game: 'Hra',
             bundle: 'Balíček',
-            addon: 'Doplnok'
+            addon: 'Doplnok',
+            free: 'Za 0'
         },
         sv: {
             game: 'Spel',
             bundle: 'Paket',
-            addon: 'Extra innehåll'
+            addon: 'Extra innehåll',
+            free: 'Utan kostnad'
         }
     }
 }
@@ -188,9 +203,13 @@ enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem;
 enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }' // Settings menu scrollbar style
 enhanced_CSS += '@media screen and (min-width: 1080px) { .ZjQyU { display: flex !important; } .uSz8se { display: none !important; } }' // Searchbar displayed at >1080px
 
-// CSS Changes - Mobile Mode
+// CSS Changes
 enhanced_CSS += `@media screen and (max-width: 639px) {
                     #enhanced_letterBox { display: none; }
+                }
+                .enhanced_btnDisabled {
+                    color: grey;
+                    text-decoration: line-through;
                 }`
 
 // Stream Monitor
@@ -2509,45 +2528,55 @@ enhanced_listFilterAddOns.addEventListener('click', function () {
     enhanced_switchListFilter(3)
 })
 
+enhanced_listFilterPro = document.createElement('div')
+enhanced_listFilterPro.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].free
+enhanced_listFilterPro.className = 'Adwm6c'
+enhanced_listFilterPro.style.userSelect = 'none'
+enhanced_listFilterPro.style.marginLeft = '0.75rem'
+enhanced_listFilter.append(enhanced_listFilterPro)
+enhanced_listFilterPro.addEventListener('click', function () {
+    enhanced_switchListFilter(4)
+})
+
 function enhanced_switchListFilter(type) {
     if (enhanced_activeListFilter != type) {
         switch (type) {
             case 1:
                 enhanced_activeListFilter = 1
-                enhanced_listFilterGames.style.color = 'white'
-                enhanced_listFilterGames.style.textDecoration = 'none'
-                enhanced_listFilterBundles.style.color = 'grey'
-                enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'grey'
-                enhanced_listFilterAddOns.style.textDecoration = 'line-through'
+                enhanced_listFilterGames.classList.remove("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.add("enhanced_btnDisabled")
                 break
             case 2:
                 enhanced_activeListFilter = 2
-                enhanced_listFilterGames.style.color = 'grey'
-                enhanced_listFilterGames.style.textDecoration = 'line-through'
-                enhanced_listFilterBundles.style.color = 'white'
-                enhanced_listFilterBundles.style.textDecoration = 'none'
-                enhanced_listFilterAddOns.style.color = 'grey'
-                enhanced_listFilterAddOns.style.textDecoration = 'line-through'
+                enhanced_listFilterGames.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.remove("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.add("enhanced_btnDisabled")
                 break
             case 3:
                 enhanced_activeListFilter = 3
-                enhanced_listFilterGames.style.color = 'grey'
-                enhanced_listFilterGames.style.textDecoration = 'line-through'
-                enhanced_listFilterBundles.style.color = 'grey'
-                enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'white'
-                enhanced_listFilterAddOns.style.textDecoration = 'none'
+                enhanced_listFilterGames.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.remove("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.add("enhanced_btnDisabled")
                 break
+            case 4:
+                enhanced_activeListFilter = 4
+                enhanced_listFilterGames.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.remove("enhanced_btnDisabled")
+                break
+
         }
     } else {
         enhanced_activeListFilter = 0
-        enhanced_listFilterGames.style.color = 'white'
-        enhanced_listFilterGames.style.textDecoration = 'none'
-        enhanced_listFilterBundles.style.color = 'white'
-        enhanced_listFilterBundles.style.textDecoration = 'none'
-        enhanced_listFilterAddOns.style.color = 'white'
-        enhanced_listFilterAddOns.style.textDecoration = 'none'
+        enhanced_listFilterGames.classList.remove("enhanced_btnDisabled")
+        enhanced_listFilterBundles.classList.remove("enhanced_btnDisabled")
+        enhanced_listFilterAddOns.classList.remove("enhanced_btnDisabled")
+        enhanced_listFilterPro.classList.remove("enhanced_btnDisabled")
     }
 }
 
@@ -3263,14 +3292,33 @@ setInterval(function () {
             case 3:
                 var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].addon
                 break
+            case 4:
+                var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].free
+                break
         }
 
         // Filter items
         var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].getElementsByClassName('pW7Dlc')
-        for (var i = 0; i < enhanced_listElements.length; i++) {
-            if (enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != enhanced_storeFilterOption && enhanced_activeListFilter != 0) {
-                enhanced_listElements[i].parentNode.style.display = 'none'
+        if (enhanced_activeListFilter != 0) {
+            if (enhanced_activeListFilter < 4) {
+                for (var i = 0; i < enhanced_listElements.length; i++) {
+                    if (enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != enhanced_storeFilterOption) {
+                        enhanced_listElements[i].parentNode.style.display = 'none'
+                    } else {
+                        enhanced_listElements[i].parentNode.style.display = 'block'
+                    }
+                }
             } else {
+                for (var i = 0; i < enhanced_listElements.length; i++) {
+                    if (enhanced_listElements[i].querySelector('.Ndt9Fc') && enhanced_listElements[i].querySelector('.Ndt9Fc').textContent.includes(enhanced_storeFilterOption)) {
+                        enhanced_listElements[i].parentNode.style.display = 'block'
+                    } else {
+                        enhanced_listElements[i].parentNode.style.display = 'none'
+                    }
+                }
+            }
+        } else {
+            for (var i = 0; i < enhanced_listElements.length; i++) {
                 enhanced_listElements[i].parentNode.style.display = 'block'
             }
         }
