@@ -2,6 +2,12 @@
 
 ## Version 1.18
 
+### 1.18.6
+* Added the request path to the console log for Stadia Hunters
+* Changed the padding on injected navigation buttons to match the base buttons
+* Fixed the "Invite a friend" functionality not being displayed when opened via the homescreen
+* Fixed issues with the founder tag not being replaced when there's a loading issue with Stadia Hunters data
+
 ### 1.18.5
 * Added a "Free" filter to the list filter options, to filter out i.e. unclaimed Pro titles
 * Fixed the extension not loading when reloading the page while the library is open
