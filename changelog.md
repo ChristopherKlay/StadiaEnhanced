@@ -2,6 +2,10 @@
 
 ## Version 1.18
 
+### 1.18.5
+* Added a "Free" filter to the list filter options, to filter out i.e. unclaimed Pro titles
+* Fixed the extension not loading when reloading the page while the library is open
+
 ### 1.18.4
 * Fixed text spacing issues in the Stadia Hunters popup
 * Fixed extension loading issues on capture pages
