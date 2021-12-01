@@ -23,7 +23,7 @@
     },
     "content_scripts": [{
         "run_at": "document_end",
-        "matches": ["https://stadia.google.com/u/*", "*://stadia.google.com/home*", "*://stadia.google.com/store*", "*://stadia.google.com/player*", "*://stadia.google.com/explore*", "*://stadia.google.com/profile*", "*://stadia.google.com/settings*", "*://stadia.google.com/captures*", "*://stadia.google.com/library*"],
+        "matches": ["*://stadia.google.com/u/*", "*://stadia.google.com/home*", "*://stadia.google.com/store*", "*://stadia.google.com/player*", "*://stadia.google.com/explore*", "*://stadia.google.com/profile*", "*://stadia.google.com/settings*", "*://stadia.google.com/captures*", "*://stadia.google.com/library*"],
         "js": ["enhanced.js"]
     }],
     "background": {
@@ -31,6 +31,6 @@
         "persistent": false
     },
     "web_accessible_resources": ["media/included/hunters_logo.png", "media/included/hunters_banner.png"],
-    "permissions": ["tabs", "*://stadia.google.com/*"],
+    "permissions": ["*://stadia.google.com/*"],
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoURhfz19FyU5ZeKbi/+jNShvXObytvh7OQfsrZJrjHScWiejv1LnsVsTkmqlAdKYozBOTs6SqXeYU8MS23wmJSYnbfwBR/vBrbc0PqpFXjEqkmW4ZrOMFYajvC2P5odhyNqxG0M22InytfrCaez63jgviUNW6O09GL9i25ERxMBeDmU6xMk+kAKFQQLRgMy/FhdT+2vQuEs++Xa6x8k7Y91jJ2SRgPzbv4i3Rm3pCt28bnN2tE29g2/eBM7SnolFNNAF/63VFU5p4sFfJCNTP5xgv0QLOra8qgbQYXW0KGN1Sy8jzcUSrdRpfRSBpyLBYQWcp73zIYs56NfKKem5gwIDAQAB"
 }
