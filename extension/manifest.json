@@ -24,7 +24,7 @@
     "content_scripts": [{
         "run_at": "document_end",
         "matches": ["https://stadia.google.com/u/*", "*://stadia.google.com/home*", "*://stadia.google.com/store*", "*://stadia.google.com/player*", "*://stadia.google.com/explore*", "*://stadia.google.com/profile*", "*://stadia.google.com/settings*", "*://stadia.google.com/captures*"],
-        "js": ["enhanced.js"]
+        "js": ["monitor.js", "menu_monitor.js", "enhanced.js"]
     }],
     "background": {
         "scripts": ["background.js"],

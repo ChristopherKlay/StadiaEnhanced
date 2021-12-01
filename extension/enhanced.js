@@ -443,64 +443,65 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 // Credits to the base by AquaRegia
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 var enhanced_monitorState = 0
-var enhanced_streamMonitor = document.createElement('div')
-enhanced_streamMonitor.id = 'enhanced_streamMonitor'
-enhanced_streamMonitor.style.position = 'fixed'
-enhanced_streamMonitor.style.top = enhanced_settings.monitorPosition.split("|")[0]
-enhanced_streamMonitor.style.left = enhanced_settings.monitorPosition.split("|")[1]
-enhanced_streamMonitor.style.display = 'block'
+
+const monitor = new StreamMonitor()
+
+var enhanced_streamMonitor = monitor.getElement()
+
 enhanced_streamMonitor.addEventListener('dblclick', function () {
     enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
+
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
+
 document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 
 // Minified Menu Monitor
-var enhanced_menuMonitor = document.createElement('div')
-enhanced_menuMonitor.style.whiteSpace = 'nowrap'
+const menuMonitor = new MenuMonitor()
+var enhanced_menuMonitor = menuMonitor.getElement()
 
 // Session Time
 var enhanced_menuMonitorSessionTime = document.createElement('div')
 enhanced_menuMonitorSessionTime.id = 'enhanced_menuMonitorCodec'
 enhanced_menuMonitorSessionTime.className = 'HPX1od'
 enhanced_menuMonitorSessionTime.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">00:00:00</span></div>'
-enhanced_menuMonitor.append(enhanced_menuMonitorSessionTime)
+menuMonitor.appendElement(enhanced_menuMonitorSessionTime)
 
 // Codec
 var enhanced_menuMonitorCodec = document.createElement('div')
 enhanced_menuMonitorCodec.id = 'enhanced_menuMonitorCodec'
 enhanced_menuMonitorCodec.className = 'HPX1od'
 enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-enhanced_menuMonitor.append(enhanced_menuMonitorCodec)
+menuMonitor.appendElement(enhanced_menuMonitorCodec)
 
 // Resolution
 var enhanced_menuMonitorRes = document.createElement('div')
 enhanced_menuMonitorRes.id = 'enhanced_menuMonitorRes'
 enhanced_menuMonitorRes.className = 'HPX1od'
 enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-enhanced_menuMonitor.append(enhanced_menuMonitorRes)
+menuMonitor.appendElement(enhanced_menuMonitorRes)
 
 // Latency + Fps
 var enhanced_menuMonitorLatFps = document.createElement('div')
 enhanced_menuMonitorLatFps.id = 'enhanced_menuMonitorLatFps'
 enhanced_menuMonitorLatFps.className = 'HPX1od'
 enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">- | -</span></div>'
-enhanced_menuMonitor.append(enhanced_menuMonitorLatFps)
+menuMonitor.appendElement(enhanced_menuMonitorLatFps)
 
 // Frame Drop
 var enhanced_menuMonitorFDrop = document.createElement('div')
 enhanced_menuMonitorFDrop.id = 'enhanced_menuMonitorFDrop'
 enhanced_menuMonitorFDrop.className = 'HPX1od'
 enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-enhanced_menuMonitor.append(enhanced_menuMonitorFDrop)
+menuMonitor.appendElement(enhanced_menuMonitorFDrop)
 
 // Decode
 var enhanced_menuMonitorDecode = document.createElement('div')
 enhanced_menuMonitorDecode.id = 'enhanced_menuMonitorDecode'
 enhanced_menuMonitorDecode.className = 'HPX1od'
 enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
-enhanced_menuMonitor.append(enhanced_menuMonitorDecode)
+menuMonitor.appendElement(enhanced_menuMonitorDecode)
 
 function enhanced_updateMonitor(opt) {
     switch (opt) {
@@ -660,7 +661,7 @@ embed(enhanced_RTCMonitor)
 
 // Update Stream Elements
 setInterval(function () {
-    if (document.location.href.indexOf('/player/') != -1) {
+    if (gameIsReady()) {
 
         // Get local stream data
         enhanced_streamData = localStorage.getItem('enhanced_streamData')
@@ -831,12 +832,7 @@ setInterval(function () {
         enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
 
         // Full Monitor
-        enhanced_streamMonitor.innerHTML = `
-            <section>
-                <div class="grid">
-                    <span style="grid-column: 1 / 4;">Loading stream data.</span>
-                </div>
-            </section>`
+        monitor.setPlaceholderContent()
     }
 }, 1000)
 
@@ -6501,3 +6497,21 @@ function enhancedTranslate(lang, log = false) {
     return translation
 }
 embed(enhancedTranslate, false)
+
+function gameIsLoading() {
+    return document.location.href.indexOf('/player/') === -1
+}
+
+function gameIsReady() {
+    return document.location.href.indexOf('/player/') != -1
+}
+
+// this is done every second. doesn't need to be done
+function setQuickPlaceholderContent() {
+    console.log("SET QUICK CONTENT PALCEHOLDER")
+    enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+    enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+    enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS !!!!!</span><span class="Ce1Y1c qFZbbe">- | -</span></div>'
+    enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+    enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">-</span></div>'
+}
