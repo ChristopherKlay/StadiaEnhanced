@@ -13,7 +13,7 @@ class MenuMonitor {
     decodeElement;
 
     constructor(translations) {
-        console.log("Initializing Menu Stream Monitor...")
+        console.debug("Initializing Menu Stream Monitor...")
         this.translations = translations
 
         this.parentElement = this._createParent()
@@ -29,40 +29,16 @@ class MenuMonitor {
         return this.parentElement
     }
 
-    getSessionElement() {
-        return this.sessionElement
+    updateSessionTime(duration) {
+        this.sessionElement.querySelector("span.Ce1Y1c").textContent = duration
     }
 
     updateContent(codec, resolution, latency, fps, frameDrop, decode) {
-        this.codecElement.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.codec}</span><span class="Ce1Y1c qFZbbe">${codec}</span>
-            </div>
-        `
-
-        this.resolutionElement.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.resolution}</span><span class="Ce1Y1c qFZbbe">${resolution}</span>
-            </div>
-        `
-
-        this.latencyElement.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.latency} | FPS</span><span class="Ce1Y1c qFZbbe">${latency} | ${fps}</span>
-            </div>
-        `
-
-         this.frameDropElement.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.framedrop}</span><span class="Ce1Y1c qFZbbe">${frameDrop}</span>
-            </div>
-        `
-
-        this.decodeElement.innerHTML = `
-            <div class="Qg73if"><span class="zsXqkb">
-                ${this.translations.decodetime}</span><span class="Ce1Y1c qFZbbe">${decode || "-"}</span>
-            </div>
-        `
+        this.codecElement.querySelector("span.Ce1Y1c").textContent = codec
+        this.resolutionElement.querySelector("span.Ce1Y1c").textContent = resolution
+        this.latencyElement.querySelector("span.Ce1Y1c").textContent = latency + " | " + fps
+        this.frameDropElement.querySelector("span.Ce1Y1c").textContent = frameDrop
+        this.decodeElement.querySelector("span.Ce1Y1c").textContent = decode
     }
 
     _createParent() {
@@ -74,8 +50,12 @@ class MenuMonitor {
 
     _createSessionTime() {
         const element = document.createElement('div')
-        element.id = 'enhanced_menuMonitorCodec'
         element.className = 'HPX1od'
+        element.innerHTML = `
+            <div class="Qg73if">
+                <span class="zsXqkb">${this.translations.sessiontime}</span><span class="Ce1Y1c qFZbbe">-</span>
+            </div>
+        `
 
         this.sessionElement = element
 
@@ -84,8 +64,12 @@ class MenuMonitor {
 
     _createCodec() {
         const element = document.createElement('div')
-        element.id = 'enhanced_menuMonitorCodec'
         element.className = 'HPX1od'
+        element.innerHTML = `
+            <div class="Qg73if">
+                <span class="zsXqkb">${this.translations.codec}</span><span class="Ce1Y1c qFZbbe">-</span>
+            </div>
+        `
 
         this.codecElement = element
 
@@ -94,8 +78,12 @@ class MenuMonitor {
 
     _createResolution() {
         const element = document.createElement('div')
-        element.id = 'enhanced_menuMonitorRes'
         element.className = 'HPX1od'
+        element.innerHTML = `
+            <div class="Qg73if">
+                <span class="zsXqkb">${this.translations.resolution}</span><span class="Ce1Y1c qFZbbe">-</span>
+            </div>
+        `
 
         this.resolutionElement = element
 
@@ -104,8 +92,12 @@ class MenuMonitor {
 
     _createLatency() {
         const element = document.createElement('div');
-        element.id = 'enhanced_menuMonitorLatFps'
         element.className = 'HPX1od'
+        element.innerHTML = `
+            <div class="Qg73if">
+                <span class="zsXqkb">${this.translations.latency} | FPS</span><span class="Ce1Y1c qFZbbe">- | -</span>
+            </div>
+        `
 
         this.latencyElement = element
 
@@ -114,8 +106,12 @@ class MenuMonitor {
 
     _createFrameDrop() {
         const element = document.createElement('div');
-        element.id = 'enhanced_menuMonitorFDrop'
         element.className = 'HPX1od'
+        element.innerHTML = `
+            <div class="Qg73if">
+                <span class="zsXqkb">${this.translations.framedrop}</span><span class="Ce1Y1c qFZbbe">-</span>
+            </div>
+        `
 
         this.frameDropElement = element
 
@@ -124,8 +120,12 @@ class MenuMonitor {
 
     _createDecode() {
         const element = document.createElement('div');
-        element.id = 'enhanced_menuMonitorDecode'
         element.className = 'HPX1od'
+        element.innerHTML = `
+            <div class="Qg73if"><span class="zsXqkb">
+                ${this.translations.decodetime}</span><span class="Ce1Y1c qFZbbe">-</span>
+            </div>
+        `
 
         this.decodeElement = element
 

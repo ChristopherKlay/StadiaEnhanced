@@ -3039,14 +3039,7 @@ setInterval(function () {
             var enhanced_sessionDur = Date.now()
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000)
 
-            if (menuMonitor.getSessionElement().textContent != enhanced_lang.sessiontime + enhanced_sessionDur) {
-
-
-                // this updates the session time -> move this to the menu monitor - then its done
-
-                console.log("ALSO HERE!!")
-                menuMonitor.getSessionElement().innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.sessiontime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_sessionDur + '</span></div>'
-            }
+            menuMonitor.updateSessionTime(enhanced_sessionDur)
         }
 
         // Discord Presence
