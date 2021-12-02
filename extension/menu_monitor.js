@@ -1,7 +1,7 @@
 /**
  * Minified Menu Stream Monitor
  */
-class MenuMonitor {
+class MenuStreamMonitor {
     translations;
 
     parentElement;
@@ -39,6 +39,10 @@ class MenuMonitor {
         this.latencyElement.querySelector("span.Ce1Y1c").textContent = latency + " | " + fps
         this.frameDropElement.querySelector("span.Ce1Y1c").textContent = frameDrop
         this.decodeElement.querySelector("span.Ce1Y1c").textContent = decode
+    }
+
+    reset() {
+        this.updateContent("-", "-", "-", "-", "-")
     }
 
     _createParent() {

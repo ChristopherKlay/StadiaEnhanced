@@ -6,17 +6,24 @@
 class StreamMonitor {
     ELEMENT_ID = "enhanced_streamMonitor"
 
-    element; // full monitor element (doesnt contain quick menu)
+    translations;
+    element;
 
-    constructor() {
+    constructor(translations) {
         console.log("Initializing Stream Monitor...")
+        this.translations = translations
 
         this.element = this._createElement()
-        this.init()
+        this.reset()
     }
 
     getElement() {
         return this.element
+    }
+
+    // used as monitorPosition (stored in settings)
+    getCurrentPosition() {
+        return this.element.style.top + '|' + this.element.style.left
     }
 
     // is this different than getELment???
@@ -31,9 +38,10 @@ class StreamMonitor {
         this.element.style.display = 'block'
     }
 
-    show() {
-        this.element.style.top = enhanced_settings.monitorPosition.split('|')[0]
-        this.element.style.left = enhanced_settings.monitorPosition.split('|')[1]
+    // position can be changed, due to dragging
+    show(monitorPosition) {
+        this.element.style.top = monitorPosition.split('|')[0]
+        this.element.style.left = monitorPosition.split('|')[1]
         this.element.style.display = 'block'
 
         // not sure if this is needed
@@ -45,13 +53,229 @@ class StreamMonitor {
         this.element.style.display = 'none'
     }
 
-    setPlaceholderContent() {
+    toggle(monitorPosition) {
+        this._isHidden()
+            ? this.show(monitorPosition)
+            : this.hide()
+    }
+
+    reset() {
         this.element.innerHTML = `
             <section>
                 <div class="grid">
                     <span style="grid-column: 1 / 4;">Loading stream data.</span>
                 </div>
             </section>`
+    }
+
+    toggleMode() {
+        this._simpleModeIsActive() ? this.refreshContent(true) : this.refreshContent(false)
+    }
+
+    refreshContent(showFull) {
+        const data = this._getData()
+
+        this.updateStyle();
+
+        data.codec = data.codec
+            .replace('Hardware', this.translations.hardware)
+            .replace('Software', this.translations.software)
+
+        this.element.innerHTML = showFull
+            ? this._createFull(data)
+            : this._createSimple(data)
+    }
+
+    updateStyle() {
+        const boundingBox = this.element.getBoundingClientRect();
+        if (boundingBox.top <= 0
+            && boundingBox.left <= 0
+            && boundingBox.bottom >= window.availHeight
+            && boundingBox.right >= window.availWidth
+        ) {
+            this.element.style.top = '1rem'
+            this.element.style.left = '1rem'
+        }
+    }
+
+    _createFull(data) {
+        let html = `
+            <!-- Session -->
+            <section>               
+                <div class="tag">${this.translations.session}</div>
+                <div class="grid">
+                    <span>${this.translations.date}</span><span>${data.date}</span>
+                    <span></span>
+                    <div class="border"></div>                    
+                    <span>${this.translations.time}</span><span>${data.time}</span>
+                    <span></span>
+                    <div class="border"></div>
+                    <span>${this.translations.sessiontime}</span><span>${data.sessiontime}</span>
+                    <span></span>
+                </div>
+            </section>
+            
+            <!-- Stream -->            
+            <section>
+                <div class="tag">` + this.translations.stream + `</div>
+                <div class="grid">
+                    <span>${this.translations.codec}</span><span>${data.codec}</span>
+                    <span></span>
+                    <div class="border"></div>
+                    <span>${this.translations.resolution}</span>
+                    <span>${data.resolution}</span>
+                    <span></span>
+                    <div class="border"></div>
+                    <span>FPS</span>
+                    <span>${data.fps}</span>
+                    <span></span>
+        `
+
+        if (data.codec.includes('VP9')) {
+            html += `
+                <div class="border"></div>
+                <span>${this.translations.compression}</span>
+                <span>${data.compression}</span>
+                <span></span>
+            `
+        }
+
+        const decodeColor = this._calculateDecodeColor(data.decode);
+        html += `
+            <div class="border"></div>
+            <span>${this.translations.decodetime}</span>
+            <span>${data.decode} ms</span>
+            <span class="connection" style="color: ${decodeColor};">⬤</span>
+        `
+
+        const framedropColor = this._calculateFrameDropColor(data.framedropPerc)
+        html += `
+            <div class="border"></div>
+            <span>${this.translations.framedrop}</span>
+            <span>${data.framedrop}</span>
+            <span class="connection" style="color: ${framedropColor};">⬤</span>
+        `
+
+        html += `
+                </div>
+            </section>
+            <section>
+                <div class="tag">` + this.translations.network + `</div>
+                <div class="grid">
+                    <span>` + this.translations.trafficsession + `</span>
+                    <span>` + data.sessionTraffic + `</span>
+                    <span></span>
+                    <div class="border"></div>
+                    <span>` + this.translations.trafficcurrent + `</span>
+                    <span>` + data.currentTraffic + `</span>
+                    <span></span>
+                    <div class="border"></div>
+                    <span>` + this.translations.trafficaverage + `</span>
+                    <span>` + data.averageTraffic + `</span>
+                    <span></span>
+                    <div class="border"></div>
+                    <span>` + this.translations.packetloss + `</span>
+                    <span>` + data.packetloss + `</span>
+                    <span></span>
+                    <div class="border"></div>`
+
+        if (data.latency > 100) {
+            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
+        } else if (data.latency > 75) {
+            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
+        } else if (data.latency > 40) {
+            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
+        } else {
+            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
+        }
+
+        html += `
+                        <div class="border"></div>
+                        <span>` + this.translations.jitter + `</span>
+                        <span>` + data.jitter + `</span>
+                        <span></span>
+                    </div>
+                </div>
+            </section>
+        `
+
+        return html
+    }
+
+    _createSimple(data) {
+        const color =  this._calculateConnectionStatusColor(data.fps, data.decode, data.framedropPerc, data.latency)
+
+        return `
+            <section id="monitor_simple">
+                <div class="grid">
+                    <span style="grid-column: 1 / 4;">
+                        ${data.codec}
+                        <div class="split">|</div>
+                        ${data.resolution}
+                        <div class="split">|</div>
+                        ${data.fps} fps
+                         <div class="split">|</div>
+                        ${data.latency} ms
+                        <div class="split">|</div>
+                        ${data.decode} ms
+                        <div class="split">|</div>
+                        <span style="color: ${color};">⬤</span>
+                    </span>
+                </div>
+            </section>
+        `
+    }
+
+    _calculateConnectionStatusColor(fps, decode, framedropPerc, latency) {
+        if (parseInt(fps) < 1) {
+            return 'white'
+        }
+
+        if (decode > 12 || framedropPerc > 1 || latency > 100) {
+            return '#FF7070' // Red
+        }
+
+        if (decode > 10 || framedropPerc > 0.5 || latency > 75) {
+            return '#FFB83D' // Yellow
+        }
+
+        if (decode > 8.33 || framedropPerc > 0.2 || latency > 40) {
+            return '#00E0BA' // Green
+        }
+
+        return '#44BBD8' // Blue
+    }
+    
+    _calculateDecodeColor(decode) {
+        if (decode > 12) {
+            return "#FF7070"
+        } 
+        
+        if (decode > 10) {
+            return "#FFB83D"
+        }
+        
+        if (decode > 8.33) {
+           return "#00E0BA"
+        } 
+        
+        return "#44BBD8"
+    }
+
+    _calculateFrameDropColor(framedropPerc) {
+        if (framedropPerc > 1) {
+            return "#FF7070"
+        }
+
+        if (framedropPerc > 0.5) {
+            return "#FFB83D"
+        }
+
+        if (framedropPerc > 0.2) {
+            return "#00E0BA"
+        }
+
+        return "#44BBD8"
     }
 
     _createElement() {
@@ -61,171 +285,23 @@ class StreamMonitor {
 
         return element
     }
-}
 
-function showInGameMonitor() {
-    console.log("Showing in-game monitor...")
+    _simpleModeIsActive() {
+        return this.element.querySelector("#monitor_simple") != null
+    }
 
-    // Get local stream data
-    enhanced_streamData = localStorage.getItem('enhanced_streamData')
-    if (enhanced_streamData != null) {
-        enhanced_streamData = JSON.parse(enhanced_streamData)
-
-        // Reset outside of viewport
-        var enhanced_boundingBox = this.element.getBoundingClientRect()
-        if (enhanced_boundingBox.top <= 0 && enhanced_boundingBox.left <= 0 && enhanced_boundingBox.bottom >= window.availHeight && enhanced_boundingBox.right >= window.availWidth) {
-            this.element.style.top = '1rem'
-            this.element.style.left = '1rem'
+    _getData() {
+        const data = localStorage.getItem('enhanced_streamData');
+        if (data == null) {
+            throw new Error("Unable to get stream data from local storage");
         }
 
-        // Update Position
-        enhanced_newMonitorPos = this.element.style.top + '|' + this.element.style.left
-        if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
-            enhanced_newMonitorPos = enhanced_settings.monitorPosition
-            localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-        }
+        return JSON.parse(data)
+    }
 
-        // Quick Overview
-        enhanced_menuMonitorCodec.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.codec + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.codec + '</span></div>'
-        enhanced_menuMonitorRes.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.resolution + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.resolution + '</span></div>'
-        enhanced_menuMonitorLatFps.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.latency + ' | FPS</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.latency + ' ms | ' + enhanced_streamData.fps + '</span></div>'
-        enhanced_menuMonitorFDrop.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.framedrop + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.framedrop + '</span></div>'
-        enhanced_menuMonitorDecode.innerHTML = '<div class="Qg73if"><span class="zsXqkb">' + enhanced_lang.decodetime + '</span><span class="Ce1Y1c qFZbbe">' + enhanced_streamData.decode + ' ms</span></div>'
-
-
-        // Translation
-        enhanced_streamData.codec = enhanced_streamData.codec
-            .replace('Hardware', enhanced_lang.hardware)
-            .replace('Software', enhanced_lang.software)
-
-        // Full Monitor
-        switch (enhanced_settings.monitorMode) {
-            case 0:
-                enhanced_streamInfo = `
-                    <section>
-                        <div class="tag">` + enhanced_lang.session + `</div>
-                        <div class="grid">
-                            <span>` + enhanced_lang.date + `</span>
-                            <span>` + enhanced_streamData.date + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>` + enhanced_lang.time + `</span>
-                            <span>` + enhanced_streamData.time + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>` + enhanced_lang.sessiontime + `</span>
-                            <span>` + enhanced_streamData.sessiontime + `</span>
-                            <span></span>
-                        </div>
-                    </section>
-                    <section>
-                        <div class="tag">` + enhanced_lang.stream + `</div>
-                        <div class="grid">
-                            <span>` + enhanced_lang.codec + `</span><span>` + enhanced_streamData.codec + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>` + enhanced_lang.resolution + `</span>
-                            <span>` + enhanced_streamData.resolution + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>FPS</span>
-                            <span>` + enhanced_streamData.fps + `</span>
-                            <span></span>`
-
-                if (enhanced_streamData.codec.includes('VP9')) {
-                    enhanced_streamInfo += '<div class="border"></div><span>' + enhanced_lang.compression + '</span><span>' + enhanced_streamData.compression + '</span><span></span>'
-                }
-
-                enhanced_streamInfo += '<div class="border"></div>'
-
-                if (enhanced_streamData.decode > 12) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                } else if (enhanced_streamData.decode > 10) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                } else if (enhanced_streamData.decode > 8.33) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                } else {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                }
-
-                enhanced_streamInfo += '<div class="border"></div>'
-
-                if (enhanced_streamData.framedropPerc > 1) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                } else if (enhanced_streamData.framedropPerc > 0.5) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                } else if (enhanced_streamData.framedropPerc > 0.2) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                } else {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                }
-
-                enhanced_streamInfo += `
-                    </div>
-                </section>
-                <section>
-                    <div class="tag">` + enhanced_lang.network + `</div>
-                    <div class="grid">
-                        <span>` + enhanced_lang.trafficsession + `</span>
-                        <span>` + enhanced_streamData.sessionTraffic + `</span>
-                        <span></span>
-                        <div class="border"></div>
-                        <span>` + enhanced_lang.trafficcurrent + `</span>
-                        <span>` + enhanced_streamData.currentTraffic + `</span>
-                        <span></span>
-                        <div class="border"></div>
-                        <span>` + enhanced_lang.trafficaverage + `</span>
-                        <span>` + enhanced_streamData.averageTraffic + `</span>
-                        <span></span>
-                        <div class="border"></div>
-                        <span>` + enhanced_lang.packetloss + `</span>
-                        <span>` + enhanced_streamData.packetloss + `</span>
-                        <span></span>
-                        <div class="border"></div>`
-
-                if (enhanced_streamData.latency > 100) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                } else if (enhanced_streamData.latency > 75) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                } else if (enhanced_streamData.latency > 40) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                } else {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                }
-
-                enhanced_streamInfo += `
-                                <div class="border"></div>
-                                <span>` + enhanced_lang.jitter + `</span>
-                                <span>` + enhanced_streamData.jitter + `</span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </section>`
-                break
-            case 1:
-                // Connection Check
-                if (parseInt(enhanced_streamData.fps) < 1) {
-                    enhanced_connectionStatus = 'white'
-                } else if (enhanced_streamData.decode > 12 || enhanced_streamData.framedropPerc > 1 || enhanced_streamData.latency > 100) {
-                    enhanced_connectionStatus = 'FF7070' // Red
-                } else if (enhanced_streamData.decode > 10 || enhanced_streamData.framedropPerc > 0.5 || enhanced_streamData.latency > 75) {
-                    enhanced_connectionStatus = 'FFB83D' // Yellow
-                } else if (enhanced_streamData.decode > 8.33 || enhanced_streamData.framedropPerc > 0.2 || enhanced_streamData.latency > 40) {
-                    enhanced_connectionStatus = '00E0BA' // Green
-                } else {
-                    enhanced_connectionStatus = '#44BBD8' // Blue
-                }
-
-                enhanced_streamInfo = `
-                <section>
-                    <div class="grid">
-                        <span style="grid-column: 1 / 4;">` + enhanced_streamData.codec + `<div class="split">|</div>` + enhanced_streamData.resolution + `<div class="split">|</div>` + enhanced_streamData.fps + ` fps<div class="split">|</div>` + enhanced_streamData.latency + `ms<div class="split">|</div>` + enhanced_streamData.decode + `ms<div class="split">|</div><span style="color: ` + enhanced_connectionStatus + `;">⬤</span></span>
-                    </div>
-                </section>`
-                break
-        }
-
-        this.element.innerHTML = enhanced_streamInfo
+    _isHidden() {
+        return this.element.style.display === "none"
     }
 }
+
 

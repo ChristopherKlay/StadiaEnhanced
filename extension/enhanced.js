@@ -445,33 +445,32 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 // Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 var enhanced_monitorState = 0
 
-const monitor = new StreamMonitor()
+const monitor = new StreamMonitor(enhanced_lang)
 
-var enhanced_streamMonitor = monitor.getElement()
+const enhanced_streamMonitor = monitor.getElement();
 
 enhanced_streamMonitor.addEventListener('dblclick', function () {
-    enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
+    monitor.toggleMode()
 
+    // save monitor mode
+    enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
 
 document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 
-// Minified Menu Monitor
-const menuMonitor = new MenuMonitor(enhanced_lang)
+const menuMonitor = new MenuStreamMonitor(enhanced_lang)
 
+// do something with the full monitor
+// can be 0 or 1
 function enhanced_updateMonitor(opt) {
     switch (opt) {
         case 0:
-            enhanced_streamMonitor.style.display = 'none'
+            monitor.hide()
             break
         case 1:
-            enhanced_streamMonitor.style.top = enhanced_settings.monitorPosition.split('|')[0]
-            enhanced_streamMonitor.style.left = enhanced_settings.monitorPosition.split('|')[1]
-            enhanced_streamMonitor.style.right = ''
-            enhanced_streamMonitor.style.bottom = ''
-            enhanced_streamMonitor.style.display = 'block'
+            monitor.show(enhanced_settings.monitorPosition)
             break
     }
 }
@@ -620,172 +619,34 @@ embed(enhanced_RTCMonitor)
 // Update Stream Elements
 setInterval(function () {
     if (!isInGame()) {
-        menuMonitor.updateContent("-", "-", "-", "-", "-")
-        monitor.setPlaceholderContent()
+        menuMonitor.reset()
+        monitor.reset()
         return
     }
 
     // Get local stream data
-    enhanced_streamData = localStorage.getItem('enhanced_streamData')
-    if (enhanced_streamData != null) {
-        enhanced_streamData = JSON.parse(enhanced_streamData)
-
-        // Reset outside of viewport
-        var enhanced_boundingBox = enhanced_streamMonitor.getBoundingClientRect()
-        if (enhanced_boundingBox.top <= 0 && enhanced_boundingBox.left <= 0 && enhanced_boundingBox.bottom >= window.availHeight && enhanced_boundingBox.right >= window.availWidth) {
-            enhanced_streamMonitor.style.top = '1rem'
-            enhanced_streamMonitor.style.left = '1rem'
-        }
-
-        // Update Position
-        enhanced_newMonitorPos = enhanced_streamMonitor.style.top + '|' + enhanced_streamMonitor.style.left
-        if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
-            enhanced_newMonitorPos = enhanced_settings.monitorPosition
-            localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-        }
-
-        menuMonitor.updateContent(
-            enhanced_streamData.codec,
-            enhanced_streamData.resolution,
-            enhanced_streamData.latency + " ms",
-            enhanced_streamData.fps,
-            enhanced_streamData.framedrop,
-            enhanced_streamData.decode + " ms"
-        )
-
-        // Translation
-        enhanced_streamData.codec = enhanced_streamData.codec
-            .replace('Hardware', enhanced_lang.hardware)
-            .replace('Software', enhanced_lang.software)
-
-        // Full Monitor
-        switch (enhanced_settings.monitorMode) {
-            case 0:
-                enhanced_streamInfo = `
-                    <section>
-                        <div class="tag">` + enhanced_lang.session + `</div>
-                        <div class="grid">
-                            <span>` + enhanced_lang.date + `</span>
-                            <span>` + enhanced_streamData.date + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>` + enhanced_lang.time + `</span>
-                            <span>` + enhanced_streamData.time + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>` + enhanced_lang.sessiontime + `</span>
-                            <span>` + enhanced_streamData.sessiontime + `</span>
-                            <span></span>
-                        </div>
-                    </section>
-                    <section>
-                        <div class="tag">` + enhanced_lang.stream + `</div>
-                        <div class="grid">
-                            <span>` + enhanced_lang.codec + `</span><span>` + enhanced_streamData.codec + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>` + enhanced_lang.resolution + `</span>
-                            <span>` + enhanced_streamData.resolution + `</span>
-                            <span></span>
-                            <div class="border"></div>
-                            <span>FPS</span>
-                            <span>` + enhanced_streamData.fps + `</span>
-                            <span></span>`
-
-                if (enhanced_streamData.codec.includes('VP9')) {
-                    enhanced_streamInfo += '<div class="border"></div><span>' + enhanced_lang.compression + '</span><span>' + enhanced_streamData.compression + '</span><span></span>'
-                }
-
-                enhanced_streamInfo += '<div class="border"></div>'
-
-                if (enhanced_streamData.decode > 12) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                } else if (enhanced_streamData.decode > 10) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                } else if (enhanced_streamData.decode > 8.33) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                } else {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.decodetime + '</span><span>' + enhanced_streamData.decode + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                }
-
-                enhanced_streamInfo += '<div class="border"></div>'
-
-                if (enhanced_streamData.framedropPerc > 1) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                } else if (enhanced_streamData.framedropPerc > 0.5) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                } else if (enhanced_streamData.framedropPerc > 0.2) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                } else {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.framedrop + '</span><span>' + enhanced_streamData.framedrop + '</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                }
-
-                enhanced_streamInfo += `
-                    </div>
-                </section>
-                <section>
-                    <div class="tag">` + enhanced_lang.network + `</div>
-                    <div class="grid">
-                        <span>` + enhanced_lang.trafficsession + `</span>
-                        <span>` + enhanced_streamData.sessionTraffic + `</span>
-                        <span></span>
-                        <div class="border"></div>
-                        <span>` + enhanced_lang.trafficcurrent + `</span>
-                        <span>` + enhanced_streamData.currentTraffic + `</span>
-                        <span></span>
-                        <div class="border"></div>
-                        <span>` + enhanced_lang.trafficaverage + `</span>
-                        <span>` + enhanced_streamData.averageTraffic + `</span>
-                        <span></span>
-                        <div class="border"></div>
-                        <span>` + enhanced_lang.packetloss + `</span>
-                        <span>` + enhanced_streamData.packetloss + `</span>
-                        <span></span>
-                        <div class="border"></div>`
-
-                if (enhanced_streamData.latency > 100) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-                } else if (enhanced_streamData.latency > 75) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-                } else if (enhanced_streamData.latency > 40) {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-                } else {
-                    enhanced_streamInfo += '<span>' + enhanced_lang.latency + '</span><span>' + enhanced_streamData.latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-                }
-
-                enhanced_streamInfo += `
-                                <div class="border"></div>
-                                <span>` + enhanced_lang.jitter + `</span>
-                                <span>` + enhanced_streamData.jitter + `</span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </section>`
-                break
-            case 1:
-                // Connection Check
-                if (parseInt(enhanced_streamData.fps) < 1) {
-                    enhanced_connectionStatus = 'white'
-                } else if (enhanced_streamData.decode > 12 || enhanced_streamData.framedropPerc > 1 || enhanced_streamData.latency > 100) {
-                    enhanced_connectionStatus = 'FF7070' // Red
-                } else if (enhanced_streamData.decode > 10 || enhanced_streamData.framedropPerc > 0.5 || enhanced_streamData.latency > 75) {
-                    enhanced_connectionStatus = 'FFB83D' // Yellow
-                } else if (enhanced_streamData.decode > 8.33 || enhanced_streamData.framedropPerc > 0.2 || enhanced_streamData.latency > 40) {
-                    enhanced_connectionStatus = '00E0BA' // Green
-                } else {
-                    enhanced_connectionStatus = '#44BBD8' // Blue
-                }
-
-                enhanced_streamInfo = `
-                <section>
-                    <div class="grid">
-                        <span style="grid-column: 1 / 4;">` + enhanced_streamData.codec + `<div class="split">|</div>` + enhanced_streamData.resolution + `<div class="split">|</div>` + enhanced_streamData.fps + ` fps<div class="split">|</div>` + enhanced_streamData.latency + `ms<div class="split">|</div>` + enhanced_streamData.decode + `ms<div class="split">|</div><span style="color: ` + enhanced_connectionStatus + `;">⬤</span></span>
-                    </div>
-                </section>`
-                break
-        }
-        enhanced_streamMonitor.innerHTML = enhanced_streamInfo
+    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
+    if (enhanced_streamData == null) {
+        return;
     }
+    const data = JSON.parse(enhanced_streamData)
+
+    if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
+        var enhanced_newMonitorPos = enhanced_settings.monitorPosition
+        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    }
+
+    menuMonitor.updateContent(
+        data.codec,
+        data.resolution,
+        data.latency + " ms",
+        data.fps,
+        data.framedrop,
+        data.decode + " ms"
+    )
+
+    let fullMode = enhanced_settings.monitorMode === 0;
+    monitor.refreshContent(fullMode)
 }, 1000)
 
 // Streaming Monitor
@@ -796,11 +657,15 @@ enhanced_Monitor.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMY
 enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
 enhanced_Monitor.tabIndex = '0'
-enhanced_Monitor.addEventListener('click', function () {
-    enhanced_monitorState = (enhanced_monitorState + 1) % 2
-    enhanced_updateMonitor(enhanced_monitorState)
+
+// click on menu item "stream monitor"
+enhanced_Monitor.addEventListener('click', () => {
+    monitor.toggle(enhanced_settings.monitorPosition)
 });
+
+// double-click on menu item "stream monitor"
 enhanced_Monitor.addEventListener('dblclick', function () {
+
     // Generate new Window
     var enhanced_popMonitor = window.open('', '_blank', 'width=280,height=500,toolbar=0')
     enhanced_popMonitor.document.title = 'Stream Monitor'
@@ -817,7 +682,7 @@ enhanced_Monitor.addEventListener('dblclick', function () {
         if (enhanced_popMonitor.closed) {
             clearInterval(enhanced_upPop)
         } else {
-            enhanced_popMonitor.document.body.innerHTML = enhanced_streamMonitor.outerHTML
+            enhanced_popMonitor.document.body.innerHTML = monitor.getElement().outerHTML
         }
     }, 1000)
 })
@@ -3029,7 +2894,8 @@ setInterval(function () {
         if (enhanced_settings.monitorAutostart == 1 && enhanced_monitorStarted == false) {
             enhanced_monitorStarted = true
             enhanced_monitorState = 1
-            enhanced_updateMonitor(enhanced_monitorState)
+
+            monitor.show(enhanced_settings.monitorPosition)
         }
 
         // Session Time
@@ -3539,7 +3405,7 @@ setInterval(function () {
     // Location - Always active
 
     // Update monitor position
-    enhanced_settings.monitorPosition = enhanced_streamMonitor.style.top + '|' + enhanced_streamMonitor.style.left
+    enhanced_settings.monitorPosition = monitor.getCurrentPosition()
 
     // Codec - Set codec preference
     switch (enhanced_settings.codec) {
@@ -4034,7 +3900,7 @@ function enhanced_applySettings(set, opt) {
             location.reload()
             break
         case 'updateall':
-            enhanced_updateMonitor(0)
+            monitor.hide()
             enhanced_applySettings('gridsize', enhanced_settings.gridSize)
             enhanced_applySettings('clock', enhanced_settings.clockOption)
             enhanced_applySettings('filter', enhanced_settings.filter)
