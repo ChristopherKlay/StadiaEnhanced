@@ -649,7 +649,7 @@ setInterval(function () {
     monitor.refreshContent(fullMode)
 }, 1000)
 
-// Streaming Monitor
+// Streaming Monitor (Menu Icon)
 var enhanced_Monitor = document.createElement('div')
 enhanced_Monitor.className = 'R2s0be'
 enhanced_Monitor.id = 'enhanced_Monitor'
