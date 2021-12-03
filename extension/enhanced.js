@@ -682,7 +682,7 @@ enhanced_Monitor.addEventListener('dblclick', function () {
     // Copy styles
     var el = document.createElement('style')
     enhanced_popMonitor.document.head.appendChild(el)
-    el.innerHTML = enhanced_monitorStyle + '#enhanced_streamMonitor { display: block !important; }'
+    el.innerHTML = enhanced_streamMonitorStyle + '#enhanced_streamMonitor { display: block !important; }'
 
     // Update
     enhanced_upPop = setInterval(function () {
@@ -6368,4 +6368,3 @@ function isHome() {
 function isLibrary() {
     return document.location.href.indexOf('/library') != -1
 }
-
