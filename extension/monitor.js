@@ -15,7 +15,7 @@ class StreamMonitor {
     element;
 
     constructor(translations, initialPosition) {
-        console.log("Initializing Stream Monitor...")
+        console.debug("Initializing Stream Monitor...")
         this.translations = translations
 
         this.element = this._createElement()
