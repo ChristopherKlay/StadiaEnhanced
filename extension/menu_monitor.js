@@ -1,5 +1,5 @@
 /**
- * Minified Menu Stream Monitor
+ * Menu-attached Stream Monitor
  */
 class MenuStreamMonitor {
     CODEC_ID = "menu-monitor-codec";
