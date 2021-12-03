@@ -97,77 +97,92 @@ var enhanced_languageSupport = {
         ca: {
             game: 'Joc',
             bundle: 'Paquet',
-            addon: 'Complement'
+            addon: 'Complement',
+            free: 'Gratis'
         },
         da: {
             game: 'Spil',
             bundle: 'Pakke',
-            addon: 'Tilføjelse'
+            addon: 'Tilføjelse',
+            free: 'DKK 0'
         },
         de: {
             game: 'Spiel',
             bundle: 'Bundle',
-            addon: 'Add-on'
+            addon: 'Add-on',
+            free: 'Kostenlos'
         },
         en: {
             game: 'Game',
             bundle: 'Bundle',
-            addon: 'Add-On'
+            addon: 'Add-On',
+            free: 'Free'
         },
         es: {
             game: 'Juego',
             bundle: 'Paquete',
-            addon: 'Complemento'
+            addon: 'Complemento',
+            free: 'Gratis'
         },
         fi: {
             game: 'Peli',
             bundle: 'Paketti',
-            addon: 'Laajennus'
+            addon: 'Laajennus',
+            free: 'Maksuton'
         },
         fr: {
             game: 'Jeu',
             bundle: 'Pack',
-            addon: 'Extension'
+            addon: 'Extension',
+            free: 'Sans frais'
         },
         hu: {
             game: 'Játék',
             bundle: 'Csomag',
-            addon: 'Kiegészítő'
+            addon: 'Kiegészítő',
+            free: 'Díjmentes'
         },
         it: {
             game: 'Gioco',
             bundle: 'Bundle',
-            addon: 'Contenuto aggiuntivo'
+            addon: 'Contenuto aggiuntivo',
+            free: 'Senza costi'
         },
         nl: {
             game: 'Game',
             bundle: 'Bundel',
-            addon: 'Add-On'
+            addon: 'Add-On',
+            free: 'Kosteloos'
         },
         no: {
             game: 'Spill',
             bundle: 'Pakke',
-            addon: 'Tillegg'
+            addon: 'Tillegg',
+            free: 'Gratis'
         },
         pl: {
             game: 'Gra',
             bundle: 'Pakiet',
-            addon: 'Dotatek'
+            addon: 'Dotatek',
+            free: 'Bezpłatne'
         },
         pt: {
             game: 'Game',
             bundle: 'Bundle',
-            addon: 'Add-On'
+            addon: 'Add-On',
+            free: 'Gratuito'
         },
         sk: {
             game: 'Hra',
             bundle: 'Balíček',
-            addon: 'Doplnok'
+            addon: 'Doplnok',
+            free: 'Za 0'
         },
         sv: {
             game: 'Spel',
             bundle: 'Paket',
-            addon: 'Extra innehåll'
+            addon: 'Extra innehåll',
+            free: 'Utan kostnad'
         }
     }
 }
@@ -175,9 +190,9 @@ var enhanced_languageSupport = {
 // CSS Changes - Global styles and overwrites
 var enhanced_discordActive = false
 var enhanced_CSS = '.lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }' // Remove padding above avatar
-enhanced_CSS += '.DGX7fe { display: none }' // Hide the invite menu
 enhanced_CSS += '.VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }' // Fix searchbar text cutoff
 enhanced_CSS += '.qE7X4e { margin-right: 0.625rem; }' // Fix searchbar margin
+enhanced_CSS += '.JZQvPd { margin: 0; } .JZQvPd > .h1uihb { display: none; } .DGX7fe { width: 0; }' // Hide invite navbar icon
 enhanced_CSS += '.E0Zk9b { justify-content: flex-start !important; flex-flow: row wrap; }' // Wrap menu items
 enhanced_CSS += '.hxhAyf.fi8Jxd .TZ0BN { min-height: auto !important; }' // Adjust menu height
 enhanced_CSS += '.GqLi4d.XUBkDd .a1l9D { margin: 0 0 .5rem .5rem !important; }' // Less padding on "Pro" lables
@@ -189,9 +204,13 @@ enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem;
 enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }' // Settings menu scrollbar style
 enhanced_CSS += '@media screen and (min-width: 1080px) { .ZjQyU { display: flex !important; } .uSz8se { display: none !important; } }' // Searchbar displayed at >1080px
 
-// CSS Changes - Mobile Mode
+// CSS Changes
 enhanced_CSS += `@media screen and (max-width: 639px) {
                     #enhanced_letterBox { display: none; }
+                }
+                .enhanced_btnDisabled {
+                    color: grey;
+                    text-decoration: line-through;
                 }`
 
 // Stream Monitor
@@ -303,7 +322,7 @@ function loadStadiaHunters(id) {
         id: id
     }, function (response) {
         enhanced_stadiaHunters = JSON.parse(response)
-        if (Object.keys(enhanced_stadiaHunters).length > 1) {
+        if (!("error" in enhanced_stadiaHunters)) {
             enhanced_huntersDropdown.querySelector('.RMEzA').textContent = enhanced_stadiaHunters.level
             enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslevel + ' ' + enhanced_stadiaHunters.level
             enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersworldrank + ' ' + enhanced_stadiaHunters.rank
@@ -336,14 +355,18 @@ function loadStadiaHunters(id) {
                         </defs>
                     </svg>
                 </span>`
-
-            if (enhanced_AccountInfo[1] == '0000') {
-                enhanced_huntersDropContent.querySelector('.rmIKk.qUT0tf').outerHTML = enhanced_proReplace
-            }
         } else {
             enhanced_huntersDropContent.querySelector('.HDKZKb.LiQ6Hb').textContent = enhanced_lang.stadiahunterslogin
             enhanced_huntersDropContent.querySelector('.UxR5ob.m8Kzt > span').textContent = enhanced_lang.stadiahuntersnotfound
         }
+
+        // Replace tag for Pro users
+        if (enhanced_AccountInfo[1] == '0000') {
+            enhanced_huntersDropContent.querySelector('.rmIKk.qUT0tf').outerHTML = enhanced_proReplace
+        }
+
+        // Add infos for logging
+        enhanced_stadiaHunters.request = 'https://us-central1-stadiaachievements-34145.cloudfunctions.net/stadiaEnhanced?id=' + id
 
         console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Stadia Hunters: Profile Data.', enhanced_consoleEnhanced, '')
         console.table(enhanced_stadiaHunters)
@@ -1174,6 +1197,7 @@ enhanced_StoreDropContent.append(enhanced_AllGames)
 // Language Dropdown - Adds a dropdown menu for language switching
 var enhanced_langContainer = document.createElement('li')
 enhanced_langContainer.className = 'OfFb0b tj2D'
+enhanced_langContainer.style.margin = '0 0 0 0.625rem'
 enhanced_langContainer.id = 'enhanced_langContainer'
 var enhanced_langDropdown = document.createElement('div')
 enhanced_langContainer.appendChild(enhanced_langDropdown)
@@ -1285,6 +1309,7 @@ window.addEventListener('click', function (e) {
 // Settings Dropdown - Adds a dropdown menu for quick access
 var enhanced_SettingsContainer = document.createElement('li')
 enhanced_SettingsContainer.className = 'OfFb0b tj2D'
+enhanced_SettingsContainer.style.margin = '0 0 0 0.625rem'
 enhanced_SettingsContainer.id = 'enhanced_SettingsContainer'
 var enhanced_SettingsDropdown = document.createElement('div')
 enhanced_SettingsContainer.appendChild(enhanced_SettingsDropdown)
@@ -2073,6 +2098,7 @@ enhanced_customAvatar.addEventListener('click', function () {
 // Stadia Hunters - Profile Popup
 var enhanced_huntersContainer = document.createElement('li')
 enhanced_huntersContainer.className = 'OfFb0b tj2D'
+enhanced_huntersContainer.style.margin = '0 0 0 0.625rem'
 enhanced_huntersContainer.id = 'enhanced_huntersContainer'
 var enhanced_huntersDropdown = document.createElement('div')
 enhanced_huntersContainer.appendChild(enhanced_huntersDropdown)
@@ -2306,45 +2332,55 @@ enhanced_listFilterAddOns.addEventListener('click', function () {
     enhanced_switchListFilter(3)
 })
 
+enhanced_listFilterPro = document.createElement('div')
+enhanced_listFilterPro.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].free
+enhanced_listFilterPro.className = 'Adwm6c'
+enhanced_listFilterPro.style.userSelect = 'none'
+enhanced_listFilterPro.style.marginLeft = '0.75rem'
+enhanced_listFilter.append(enhanced_listFilterPro)
+enhanced_listFilterPro.addEventListener('click', function () {
+    enhanced_switchListFilter(4)
+})
+
 function enhanced_switchListFilter(type) {
     if (enhanced_activeListFilter != type) {
         switch (type) {
             case 1:
                 enhanced_activeListFilter = 1
-                enhanced_listFilterGames.style.color = 'white'
-                enhanced_listFilterGames.style.textDecoration = 'none'
-                enhanced_listFilterBundles.style.color = 'grey'
-                enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'grey'
-                enhanced_listFilterAddOns.style.textDecoration = 'line-through'
+                enhanced_listFilterGames.classList.remove("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.add("enhanced_btnDisabled")
                 break
             case 2:
                 enhanced_activeListFilter = 2
-                enhanced_listFilterGames.style.color = 'grey'
-                enhanced_listFilterGames.style.textDecoration = 'line-through'
-                enhanced_listFilterBundles.style.color = 'white'
-                enhanced_listFilterBundles.style.textDecoration = 'none'
-                enhanced_listFilterAddOns.style.color = 'grey'
-                enhanced_listFilterAddOns.style.textDecoration = 'line-through'
+                enhanced_listFilterGames.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.remove("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.add("enhanced_btnDisabled")
                 break
             case 3:
                 enhanced_activeListFilter = 3
-                enhanced_listFilterGames.style.color = 'grey'
-                enhanced_listFilterGames.style.textDecoration = 'line-through'
-                enhanced_listFilterBundles.style.color = 'grey'
-                enhanced_listFilterBundles.style.textDecoration = 'line-through'
-                enhanced_listFilterAddOns.style.color = 'white'
-                enhanced_listFilterAddOns.style.textDecoration = 'none'
+                enhanced_listFilterGames.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.remove("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.add("enhanced_btnDisabled")
                 break
+            case 4:
+                enhanced_activeListFilter = 4
+                enhanced_listFilterGames.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterBundles.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterAddOns.classList.add("enhanced_btnDisabled")
+                enhanced_listFilterPro.classList.remove("enhanced_btnDisabled")
+                break
+
         }
     } else {
         enhanced_activeListFilter = 0
-        enhanced_listFilterGames.style.color = 'white'
-        enhanced_listFilterGames.style.textDecoration = 'none'
-        enhanced_listFilterBundles.style.color = 'white'
-        enhanced_listFilterBundles.style.textDecoration = 'none'
-        enhanced_listFilterAddOns.style.color = 'white'
-        enhanced_listFilterAddOns.style.textDecoration = 'none'
+        enhanced_listFilterGames.classList.remove("enhanced_btnDisabled")
+        enhanced_listFilterBundles.classList.remove("enhanced_btnDisabled")
+        enhanced_listFilterAddOns.classList.remove("enhanced_btnDisabled")
+        enhanced_listFilterPro.classList.remove("enhanced_btnDisabled")
     }
 }
 
@@ -3063,14 +3099,33 @@ setInterval(function () {
             case 3:
                 var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].addon
                 break
+            case 4:
+                var enhanced_storeFilterOption = enhanced_languageSupport.storeFilters[enhanced_local].free
+                break
         }
 
         // Filter items
         var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].getElementsByClassName('pW7Dlc')
-        for (var i = 0; i < enhanced_listElements.length; i++) {
-            if (enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != enhanced_storeFilterOption && enhanced_activeListFilter != 0) {
-                enhanced_listElements[i].parentNode.style.display = 'none'
+        if (enhanced_activeListFilter != 0) {
+            if (enhanced_activeListFilter < 4) {
+                for (var i = 0; i < enhanced_listElements.length; i++) {
+                    if (enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != enhanced_storeFilterOption) {
+                        enhanced_listElements[i].parentNode.style.display = 'none'
+                    } else {
+                        enhanced_listElements[i].parentNode.style.display = 'block'
+                    }
+                }
             } else {
+                for (var i = 0; i < enhanced_listElements.length; i++) {
+                    if (enhanced_listElements[i].querySelector('.Ndt9Fc') && enhanced_listElements[i].querySelector('.Ndt9Fc').textContent.includes(enhanced_storeFilterOption)) {
+                        enhanced_listElements[i].parentNode.style.display = 'block'
+                    } else {
+                        enhanced_listElements[i].parentNode.style.display = 'none'
+                    }
+                }
+            }
+        } else {
+            for (var i = 0; i < enhanced_listElements.length; i++) {
                 enhanced_listElements[i].parentNode.style.display = 'block'
             }
         }
