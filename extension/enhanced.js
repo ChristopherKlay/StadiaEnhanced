@@ -440,12 +440,9 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
     sendResponse(enhanced_discordPresence)
 })
 
-// Stream Monitor
-// Credits to the base by AquaRegia
-// Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
 var enhanced_monitorState = 0
 
-const monitor = new StreamMonitor(enhanced_lang)
+const monitor = new StreamMonitor(enhanced_lang, enhanced_settings.monitorPosition)
 
 const enhanced_streamMonitor = monitor.getElement();
 
@@ -461,19 +458,6 @@ document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 
 const menuMonitor = new MenuStreamMonitor(enhanced_lang)
-
-// do something with the full monitor
-// can be 0 or 1
-function enhanced_updateMonitor(opt) {
-    switch (opt) {
-        case 0:
-            monitor.hide()
-            break
-        case 1:
-            monitor.show(enhanced_settings.monitorPosition)
-            break
-    }
-}
 
 function enhanced_RTCMonitor() {
     // RTC Stream Inject
@@ -2952,7 +2936,10 @@ setInterval(function () {
         enhanced_monitorStarted = false
         enhanced_monitorState = 0
         enhanced_sessionStart = 0
-        enhanced_updateMonitor(enhanced_monitorState)
+
+        enhanced_monitorState === 0
+            ? monitor.hide()
+            : monitor.show(enhanced_settings.monitorPosition)
     }
 
     // Location - Captures

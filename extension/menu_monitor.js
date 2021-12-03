@@ -2,138 +2,71 @@
  * Minified Menu Stream Monitor
  */
 class MenuStreamMonitor {
-    translations;
+    CODEC_ID = "menu-monitor-codec";
+    SESSION_TIME_ID = "menu-monitor-sessiontime";
+    RESOLUTION_ID = "menu-monitor-resolution";
+    LATENCY_ID = "menu-monitor-latency";
+    FRAME_DROP_ID = "menu-monitor-framedrop";
+    DECODE_ID = "menu-monitor-decode";
 
-    parentElement;
-    sessionElement;
-    codecElement;
-    resolutionElement;
-    latencyElement;
-    frameDropElement;
-    decodeElement;
+    translations;
+    element;
 
     constructor(translations) {
         console.debug("Initializing Menu Stream Monitor...")
         this.translations = translations
-
-        this.parentElement = this._createParent()
-        this.parentElement.append(this._createSessionTime())
-        this.parentElement.append(this._createCodec())
-        this.parentElement.append(this._createResolution())
-        this.parentElement.append(this._createLatency())
-        this.parentElement.append(this._createFrameDrop())
-        this.parentElement.append(this._createDecode())
-    }
-
-    getElement() {
-        return this.parentElement
+        this.element = this._createElement()
     }
 
     updateSessionTime(duration) {
-        this.sessionElement.querySelector("span.Ce1Y1c").textContent = duration
+        this._updateValue(this.SESSION_TIME_ID, duration)
     }
 
     updateContent(codec, resolution, latency, fps, frameDrop, decode) {
-        this.codecElement.querySelector("span.Ce1Y1c").textContent = codec
-        this.resolutionElement.querySelector("span.Ce1Y1c").textContent = resolution
-        this.latencyElement.querySelector("span.Ce1Y1c").textContent = latency + " | " + fps
-        this.frameDropElement.querySelector("span.Ce1Y1c").textContent = frameDrop
-        this.decodeElement.querySelector("span.Ce1Y1c").textContent = decode
+        this._updateValue(this.CODEC_ID, codec)
+        this._updateValue(this.RESOLUTION_ID, resolution)
+        this._updateValue(this.LATENCY_ID, latency + " | " + fps)
+        this._updateValue(this.FRAME_DROP_ID, frameDrop)
+        this._updateValue(this.DECODE_ID, decode)
     }
 
     reset() {
         this.updateContent("-", "-", "-", "-", "-")
     }
 
-    _createParent() {
+    getElement() {
+        return this.element
+    }
+
+    _createElement() {
         const element = document.createElement('div');
         element.style.whiteSpace = 'nowrap'
 
-        return element
-    }
-
-    _createSessionTime() {
-        const element = document.createElement('div')
-        element.className = 'HPX1od'
         element.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.sessiontime}</span><span class="Ce1Y1c qFZbbe">-</span>
-            </div>
+            ${this._createMenuEntry(this.SESSION_TIME_ID, this.translations.sessiontime, "-")}
+            ${this._createMenuEntry(this.CODEC_ID, this.translations.codec, "-")}
+            ${this._createMenuEntry(this.RESOLUTION_ID, this.translations.resolution, "-")}
+            ${this._createMenuEntry(this.LATENCY_ID, this.translations.latency + " | FPS", "- | -")}
+            ${this._createMenuEntry(this.FRAME_DROP_ID, this.translations.framedrop, "-")}
+            ${this._createMenuEntry(this.DECODE_ID, this.translations.decodetime, "-")}
         `
-
-        this.sessionElement = element
 
         return element
     }
 
-    _createCodec() {
-        const element = document.createElement('div')
-        element.className = 'HPX1od'
-        element.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.codec}</span><span class="Ce1Y1c qFZbbe">-</span>
+    _createMenuEntry(id, label, value) {
+        return `
+            <div class="HPX1od">
+                <div class="Qg73if">
+                    <span class="zsXqkb">${label}</span>
+                    <span id="${id}" class="Ce1Y1c qFZbbe">${value}</span>
+                </div>
             </div>
         `
-
-        this.codecElement = element
-
-        return element
     }
 
-    _createResolution() {
-        const element = document.createElement('div')
-        element.className = 'HPX1od'
-        element.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.resolution}</span><span class="Ce1Y1c qFZbbe">-</span>
-            </div>
-        `
-
-        this.resolutionElement = element
-
-        return element
-    }
-
-    _createLatency() {
-        const element = document.createElement('div');
-        element.className = 'HPX1od'
-        element.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.latency} | FPS</span><span class="Ce1Y1c qFZbbe">- | -</span>
-            </div>
-        `
-
-        this.latencyElement = element
-
-        return element
-    }
-
-    _createFrameDrop() {
-        const element = document.createElement('div');
-        element.className = 'HPX1od'
-        element.innerHTML = `
-            <div class="Qg73if">
-                <span class="zsXqkb">${this.translations.framedrop}</span><span class="Ce1Y1c qFZbbe">-</span>
-            </div>
-        `
-
-        this.frameDropElement = element
-
-        return element
-    }
-
-    _createDecode() {
-        const element = document.createElement('div');
-        element.className = 'HPX1od'
-        element.innerHTML = `
-            <div class="Qg73if"><span class="zsXqkb">
-                ${this.translations.decodetime}</span><span class="Ce1Y1c qFZbbe">-</span>
-            </div>
-        `
-
-        this.decodeElement = element
-
-        return element
+    _updateValue(id, value) {
+        this.element.querySelector("#" + id).textContent = value
     }
 }
 

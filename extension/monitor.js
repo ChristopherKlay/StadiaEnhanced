@@ -4,44 +4,34 @@
  * Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
  */
 class StreamMonitor {
-    ELEMENT_ID = "enhanced_streamMonitor"
+    ELEMENT_ID = "enhanced_streamMonitor";
+
+    COLOR_VERY_BAD = "#FF7070"; // red
+    COLOR_BAD =  "#FFB83D"; // yellow
+    COLOR_GOOD = "#00E0BA" // green
+    COLOR_PERFECT = "#44BBD8" // blue
 
     translations;
     element;
 
-    constructor(translations) {
+    constructor(translations, initialPosition) {
         console.log("Initializing Stream Monitor...")
         this.translations = translations
 
         this.element = this._createElement()
+        this._setPositionFromString(initialPosition)
         this.reset()
-    }
-
-    getElement() {
-        return this.element
     }
 
     // used as monitorPosition (stored in settings)
     getCurrentPosition() {
-        return this.element.style.top + '|' + this.element.style.left
-    }
-
-    // is this different than getELment???
-    getOuterHtml() {
-        return this.element.outerHTML
-    }
-
-    init() {
-        this.element.style.position = 'fixed'
-        this.element.style.top = enhanced_settings.monitorPosition.split("|")[0]
-        this.element.style.left = enhanced_settings.monitorPosition.split("|")[1]
-        this.element.style.display = 'block'
+        return this._positionAsString()
     }
 
     // position can be changed, due to dragging
-    show(monitorPosition) {
-        this.element.style.top = monitorPosition.split('|')[0]
-        this.element.style.left = monitorPosition.split('|')[1]
+    show(positionString) {
+        this._setPositionFromString(positionString)
+
         this.element.style.display = 'block'
 
         // not sure if this is needed
@@ -65,7 +55,8 @@ class StreamMonitor {
                 <div class="grid">
                     <span style="grid-column: 1 / 4;">Loading stream data.</span>
                 </div>
-            </section>`
+            </section>
+        `
     }
 
     toggleMode() {
@@ -75,207 +66,141 @@ class StreamMonitor {
     refreshContent(showFull) {
         const data = this._getData()
 
-        this.updateStyle();
+        this.ensurePosition();
 
         data.codec = data.codec
-            .replace('Hardware', this.translations.hardware)
-            .replace('Software', this.translations.software)
+            .replace("Hardware", this.translations.hardware)
+            .replace("Software", this.translations.software)
 
         this.element.innerHTML = showFull
             ? this._createFull(data)
             : this._createSimple(data)
     }
 
-    updateStyle() {
+    // reposition if outside of visible area
+    ensurePosition() {
         const boundingBox = this.element.getBoundingClientRect();
         if (boundingBox.top <= 0
             && boundingBox.left <= 0
             && boundingBox.bottom >= window.availHeight
             && boundingBox.right >= window.availWidth
         ) {
-            this.element.style.top = '1rem'
-            this.element.style.left = '1rem'
+            this._setPosition('1rem', '1rem')
         }
+    }
+
+    getElement() {
+        return this.element
     }
 
     _createFull(data) {
-        let html = `
-            <!-- Session -->
-            <section>               
-                <div class="tag">${this.translations.session}</div>
-                <div class="grid">
-                    <span>${this.translations.date}</span><span>${data.date}</span>
-                    <span></span>
-                    <div class="border"></div>                    
-                    <span>${this.translations.time}</span><span>${data.time}</span>
-                    <span></span>
-                    <div class="border"></div>
-                    <span>${this.translations.sessiontime}</span><span>${data.sessiontime}</span>
-                    <span></span>
-                </div>
-            </section>
-            
-            <!-- Stream -->            
-            <section>
-                <div class="tag">` + this.translations.stream + `</div>
-                <div class="grid">
-                    <span>${this.translations.codec}</span><span>${data.codec}</span>
-                    <span></span>
-                    <div class="border"></div>
-                    <span>${this.translations.resolution}</span>
-                    <span>${data.resolution}</span>
-                    <span></span>
-                    <div class="border"></div>
-                    <span>FPS</span>
-                    <span>${data.fps}</span>
-                    <span></span>
+        return `
+            ${this._createSessionSection(data.date, data.time, data.sessiontime)}
+            ${this._createStreamSection(data)}
+            ${this._createNetworkSection(data)}
         `
-
-        if (data.codec.includes('VP9')) {
-            html += `
-                <div class="border"></div>
-                <span>${this.translations.compression}</span>
-                <span>${data.compression}</span>
-                <span></span>
-            `
-        }
-
-        const decodeColor = this._calculateDecodeColor(data.decode);
-        html += `
-            <div class="border"></div>
-            <span>${this.translations.decodetime}</span>
-            <span>${data.decode} ms</span>
-            <span class="connection" style="color: ${decodeColor};">⬤</span>
-        `
-
-        const framedropColor = this._calculateFrameDropColor(data.framedropPerc)
-        html += `
-            <div class="border"></div>
-            <span>${this.translations.framedrop}</span>
-            <span>${data.framedrop}</span>
-            <span class="connection" style="color: ${framedropColor};">⬤</span>
-        `
-
-        html += `
-                </div>
-            </section>
-            <section>
-                <div class="tag">` + this.translations.network + `</div>
-                <div class="grid">
-                    <span>` + this.translations.trafficsession + `</span>
-                    <span>` + data.sessionTraffic + `</span>
-                    <span></span>
-                    <div class="border"></div>
-                    <span>` + this.translations.trafficcurrent + `</span>
-                    <span>` + data.currentTraffic + `</span>
-                    <span></span>
-                    <div class="border"></div>
-                    <span>` + this.translations.trafficaverage + `</span>
-                    <span>` + data.averageTraffic + `</span>
-                    <span></span>
-                    <div class="border"></div>
-                    <span>` + this.translations.packetloss + `</span>
-                    <span>` + data.packetloss + `</span>
-                    <span></span>
-                    <div class="border"></div>`
-
-        if (data.latency > 100) {
-            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #FF7070;">⬤</span>'
-        } else if (data.latency > 75) {
-            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #FFB83D;">⬤</span>'
-        } else if (data.latency > 40) {
-            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #00E0BA;">⬤</span>'
-        } else {
-            html += '<span>' + this.translations.latency + '</span><span>' + data.latency + ' ms</span><span class="connection" style="color: #44BBD8;">⬤</span>'
-        }
-
-        html += `
-                        <div class="border"></div>
-                        <span>` + this.translations.jitter + `</span>
-                        <span>` + data.jitter + `</span>
-                        <span></span>
-                    </div>
-                </div>
-            </section>
-        `
-
-        return html
     }
 
     _createSimple(data) {
-        const color =  this._calculateConnectionStatusColor(data.fps, data.decode, data.framedropPerc, data.latency)
-
         return `
             <section id="monitor_simple">
                 <div class="grid">
                     <span style="grid-column: 1 / 4;">
+                    
+                        <!-- Codec -->
                         ${data.codec}
                         <div class="split">|</div>
+
+                        <!-- Resolution -->
                         ${data.resolution}
                         <div class="split">|</div>
+
+                        <!-- FPS -->                        
                         ${data.fps} fps
                          <div class="split">|</div>
+
+                        <!-- Latency -->
                         ${data.latency} ms
                         <div class="split">|</div>
+
+                        <!-- Decoding time -->                        
                         ${data.decode} ms
                         <div class="split">|</div>
-                        <span style="color: ${color};">⬤</span>
+
+                        <!-- Connection -->
+                        <span style="color: ${(this._calculateConnectionColor(data.fps, data.decode, data.framedropPerc, data.latency))};">⬤</span>
                     </span>
                 </div>
             </section>
         `
     }
 
-    _calculateConnectionStatusColor(fps, decode, framedropPerc, latency) {
+    _calculateConnectionColor(fps, decode, frameDropPerc, latency) {
         if (parseInt(fps) < 1) {
             return 'white'
         }
 
-        if (decode > 12 || framedropPerc > 1 || latency > 100) {
-            return '#FF7070' // Red
+        if (decode > 12 || frameDropPerc > 1 || latency > 100) {
+            return this.COLOR_VERY_BAD
         }
 
-        if (decode > 10 || framedropPerc > 0.5 || latency > 75) {
-            return '#FFB83D' // Yellow
+        if (decode > 10 || frameDropPerc > 0.5 || latency > 75) {
+            return this.COLOR_BAD
         }
 
-        if (decode > 8.33 || framedropPerc > 0.2 || latency > 40) {
-            return '#00E0BA' // Green
+        if (decode > 8.33 || frameDropPerc > 0.2 || latency > 40) {
+            return this.COLOR_GOOD
         }
 
-        return '#44BBD8' // Blue
+        return this.COLOR_PERFECT
     }
     
     _calculateDecodeColor(decode) {
         if (decode > 12) {
-            return "#FF7070"
+            return this.COLOR_VERY_BAD
         } 
         
         if (decode > 10) {
-            return "#FFB83D"
+            return this.COLOR_BAD
         }
         
         if (decode > 8.33) {
-           return "#00E0BA"
+           return this.COLOR_GOOD
         } 
         
-        return "#44BBD8"
+        return this.COLOR_PERFECT
     }
 
-    _calculateFrameDropColor(framedropPerc) {
-        if (framedropPerc > 1) {
-            return "#FF7070"
+    _calculateFrameDropColor(frameDropPerc) {
+        if (frameDropPerc > 1) {
+            return this.COLOR_VERY_BAD
         }
 
-        if (framedropPerc > 0.5) {
-            return "#FFB83D"
+        if (frameDropPerc > 0.5) {
+            return this.COLOR_BAD
         }
 
-        if (framedropPerc > 0.2) {
-            return "#00E0BA"
+        if (frameDropPerc > 0.2) {
+            return this.COLOR_GOOD
         }
 
-        return "#44BBD8"
+        return this.COLOR_PERFECT
+    }
+
+    _calculateLatencyColor(latency) {
+        if (latency > 100) {
+            return this.COLOR_VERY_BAD;
+        }
+
+        if (latency > 75) {
+            return this.COLOR_BAD
+        }
+
+        if (latency > 40) {
+            return this.COLOR_GOOD
+        }
+
+        return this.COLOR_PERFECT
     }
 
     _createElement() {
@@ -301,6 +226,148 @@ class StreamMonitor {
 
     _isHidden() {
         return this.element.style.display === "none"
+    }
+
+    _createStreamSection(data) {
+        return `
+            <section>
+                <!-- Header -->
+                <div class="tag">${this.translations.stream}</div>
+                
+                <div class="grid">
+                    <!-- Codec -->
+                    <span>${this.translations.codec}</span><span>${data.codec}</span>
+                    <span></span>
+                    
+                    <!-- Resolution -->
+                    <div class="border"></div>
+                    <span>${this.translations.resolution}</span>
+                    <span>${data.resolution}</span>
+                    <span></span>
+                    
+                    <!-- FPS -->
+                    <div class="border"></div>
+                    <span>FPS</span>
+                    <span>${data.fps}</span>
+                    <span></span>
+                    
+                    <!-- Compression (if VP9 ) -->
+                    ${this._createCompression(data)}
+
+                    <!-- Decode -->
+                    <div class="border"></div>
+                    <span>${this.translations.decodetime}</span>
+                    <span>${data.decode} ms</span>
+                    <span class="connection" style="color: ${(this._calculateDecodeColor(data.decode))};">⬤</span>
+                    
+                    <!-- Framedrop -->
+                    <div class="border"></div>
+                    <span>${this.translations.framedrop}</span>
+                    <span>${data.framedrop}</span>
+                    <span class="connection" style="color: ${(this._calculateFrameDropColor(data.framedropPerc))};">⬤</span>
+                    
+                 </div>
+            </section>
+        `
+    }
+
+    _createSessionSection(date, time, sessionDuration) {
+        return `
+            <section>           
+                <!-- Header -->    
+                <div class="tag">${this.translations.session}</div>
+                
+                <div class="grid">
+                    <!-- Date -->
+                    <span>${this.translations.date}</span><span>${date}</span>
+                    <span></span>
+                    
+                    <!-- Time -->
+                    <div class="border"></div>                    
+                    <span>${this.translations.time}</span><span>${time}</span>
+                    <span></span>
+
+                    <!-- Session time -->
+                    <div class="border"></div>
+                    <span>${this.translations.sessiontime}</span><span>${sessionDuration}</span>
+                    <span></span>
+                    
+                </div>
+            </section>
+        `
+    }
+
+    _createNetworkSection(data) {
+        return `
+            <section>
+                <!-- Header -->
+                <div class="tag">${this.translations.network}</div>
+
+                <div class="grid">
+                    <!-- Session Traffic -->
+                    <span>${this.translations.trafficsession}</span>
+                    <span>${data.sessionTraffic}</span>
+                    <span></span>
+                    
+                    <!-- Current Traffic -->
+                    <div class="border"></div>
+                    <span>${this.translations.trafficcurrent}</span>
+                    <span>${data.currentTraffic}</span>
+                    <span></span>
+                    
+                    <!-- Avg Traffic -->
+                    <div class="border"></div>
+                    <span>${this.translations.trafficaverage}</span>
+                    <span>${data.averageTraffic}</span>
+                    <span></span>
+                    
+                    <!-- Packetloss -->
+                    <div class="border"></div>
+                    <span>${this.translations.packetloss}</span>
+                    <span>${data.packetloss}</span>
+                    <span></span>
+                    
+                    <!-- Latency -->
+                    <div class="border"></div>
+                    <span>${this.translations.latency}</span><span>${data.latency} ms</span><span class="connection" style="color: ${(this._calculateLatencyColor(data.latency))};">⬤</span>
+                    
+                    <!-- Jitter -->
+                    <div class="border"></div>
+                    <span>${this.translations.jitter}</span>
+                    <span>${data.jitter}</span>
+                    <span></span>
+                   
+                </div>
+            </section>
+        `
+    }
+
+    _createCompression(data) {
+        if (!data.codec.includes('VP9')) {
+            return ""
+        }
+
+        return `
+            <div class="border"></div>
+            <span>${this.translations.compression}</span>
+            <span>${data.compression}</span>
+            <span></span>
+        `
+    }
+
+    _setPositionFromString(positionString) {
+        const positionTokens = positionString.split('|')
+
+        this._setPosition(positionTokens[0], positionTokens[1])
+    }
+
+    _setPosition(top, left) {
+        this.element.style.top = top
+        this.element.style.left = left
+    }
+
+    _positionAsString() {
+        return this.element.style.top + '|' + this.element.style.left
     }
 }
 
