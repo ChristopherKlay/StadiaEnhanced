@@ -15,9 +15,7 @@ if (enhanced_AccountInfo) {
 }
 
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
-var enhanced_lang = enhancedTranslate(enhanced_local, true)
-embed(enhanced_loadUserInfo, false)
-
+var enhanced_lang = enhanced_loadTranslations(enhanced_local, true)
 
 // Load existing settings
 var enhanced_storedSettings = localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1])
@@ -482,146 +480,6 @@ enhanced_dragElement(enhanced_streamMonitor)
 
 const menuMonitor = new MenuStreamMonitor(enhanced_lang)
 
-function enhanced_RTCMonitor() {
-    // RTC Stream Inject
-    var peerConnections = [];
-    (function (original) {
-        RTCPeerConnection = function () {
-            var connection = new original(arguments[0], arguments[1])
-            peerConnections.push(connection)
-            return connection
-        }
-        RTCPeerConnection.prototype = original.prototype
-    })(RTCPeerConnection);
-
-    // Setup
-    var enhanced_lastTime = new Date()
-    var enhanced_lastBytes = 0
-    var enhanced_lastFrames = 0
-    var enhanced_lastFramesDecoded = 0
-    var enhanced_lastQpSum = 0
-    var enhanced_sessionStart = 0
-    var decodingType = ''
-    var enhanced_sessionActive = false
-
-    function enhanced_formatBytes(a, b) {
-        if (0 == a) return '0 Bytes'
-        var c = 1024,
-            d = b || 2,
-            e = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-            f = Math.floor(Math.log(a) / Math.log(c))
-        return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
-    }
-
-    function enhanced_formatTime(seconds) {
-        var hours = Math.floor(seconds / 3600)
-        seconds -= hours * 3600
-        var minutes = Math.floor(seconds / 60)
-        seconds -= minutes * 60
-        return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + Math.floor(seconds)
-    }
-
-    setInterval(function () {
-        if (document.location.href.indexOf('/player/') == -1) {
-            peerConnections = []
-            enhanced_lastBytes = 0
-            enhanced_lastFrames = 0
-            enhanced_sessionActive = false
-            localStorage.removeItem('enhanced_streamData')
-        } else if (peerConnections.length >= 2) {
-            if (!enhanced_sessionActive) {
-                enhanced_sessionStart = new Date()
-                enhanced_sessionActive = true
-            }
-            const openConnections = peerConnections.filter(x => x.connectionState == 'connected')
-            openConnections[1].getStats().then(function (stats) {
-                for (var key of stats.keys()) {
-                    if (key.indexOf('RTCIceCandidatePair') != -1) {
-                        var tmp4 = stats.get(key)
-                    }
-                    if (key.indexOf('RTCInboundRTPVideoStream') != -1) {
-                        var tmp1 = stats.get(key)
-                        var tmp2 = stats.get(tmp1.trackId)
-
-                        openConnections[1].getStats(function (stats) {
-                            var tmp3 = stats.result().find(function (f) {
-                                return 'ssrc' == f.type && f.id.endsWith('recv') && f.names().includes('mediaType') && 'video' == f.stat('mediaType')
-                            });
-
-                            // Stream Data
-                            var time = new Date()
-                            var timeSinceUpdate = (time - enhanced_lastTime) / 1000
-                            enhanced_lastTime = time
-                            var sessionDuration = (time - enhanced_sessionStart) / 1000
-                            time = new Date(time - time.getTimezoneOffset() * 60 * 1000).toISOString().replace("T", " ").split(".")[0]
-                            var resolution = tmp2.frameWidth + 'x' + tmp2.frameHeight
-                            var framesReceived = tmp2.framesReceived
-                            var framesReceivedPerSecond = (framesReceived - enhanced_lastFrames) / timeSinceUpdate
-                            var framesDecoded = tmp2.framesDecoded
-                            var codec = tmp3.stat('googCodecName')
-                            var bytesReceived = tmp4.bytesReceived
-                            var bytesReceivedPerSecond = (bytesReceived - enhanced_lastBytes) / timeSinceUpdate
-                            var averageData = ((((bytesReceived / sessionDuration) * 3600) / 1024) / 1024) / 1024
-                            var packetsLost = tmp1.packetsLost
-                            var packetsReceived = tmp1.packetsReceived
-                            var framesDropped = tmp2.framesDropped
-                            var framesDroppedPerc = ((framesDropped / framesReceived) * 100).toFixed(3)
-                            var latency = tmp4.currentRoundTripTime * 1000
-                            if (isNaN(latency)) {
-                                latency = '0'
-                            }
-                            var jitterBufferDelay = tmp2.jitterBufferDelay * 1000
-                            var jitterBufferEmittedCount = tmp2.jitterBufferEmittedCount
-                            var jitterBuffer = jitterBufferDelay / jitterBufferEmittedCount
-                            if (codec == 'VP9') {
-                                var compression = (tmp1.qpSum - enhanced_lastQpSum) / (framesDecoded - enhanced_lastFramesDecoded)
-                                compression = compression.toFixed(1)
-                                if (isNaN(compression)) {
-                                    compression = '-'
-                                }
-                            }
-                            var decodingTime = (tmp1.totalDecodeTime / tmp2.framesDecoded) * 1000
-                            if (tmp3.stat('codecImplementationName') == 'ExternalDecoder') {
-                                decodingType = 'Hardware'
-                            } else {
-                                decodingType = 'Software'
-                            }
-
-                            enhanced_lastFrames = framesReceived
-                            enhanced_lastFramesDecoded = framesDecoded
-                            enhanced_lastBytes = bytesReceived
-                            enhanced_lastQpSum = tmp1.qpSum
-
-                            if (framesReceived > 0) {
-                                // Store stream data
-                                enhanced_streamData = {
-                                    date: time.split(' ')[0],
-                                    time: time.split(' ')[1],
-                                    sessiontime: enhanced_formatTime(sessionDuration),
-                                    codec: decodingType + ' ' + codec,
-                                    resolution: resolution,
-                                    fps: framesReceivedPerSecond.toFixed(1),
-                                    compression: compression,
-                                    decode: decodingTime.toFixed(2),
-                                    framedrop: framesDropped + ' (' + framesDroppedPerc + '%)',
-                                    framedropPerc: framesDroppedPerc,
-                                    sessionTraffic: enhanced_formatBytes(bytesReceived, 2),
-                                    currentTraffic: enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + 'b',
-                                    averageTraffic: averageData.toFixed(2) + ' GB/h',
-                                    packetloss: packetsLost + ' (' + ((packetsLost / packetsReceived) * 100).toFixed(3) + '%)',
-                                    latency: latency,
-                                    jitter: jitterBuffer.toPrecision(4) + ' ms'
-                                }
-                                localStorage.setItem('enhanced_streamData', JSON.stringify(enhanced_streamData))
-                            }
-                        })
-                    }
-                }
-            })
-        }
-    }, 500)
-}
-embed(enhanced_RTCMonitor)
 
 // Update Stream Elements
 setInterval(function () {
@@ -1646,48 +1504,6 @@ enhanced_resolutionPopup.addEventListener('click', function () {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     enhanced_applySettings('resolution', enhanced_settings.resolution)
 })
-
-function enhanced_changeResolution() {
-    var enhanced_AccountInfo = enhanced_loadUserInfo()
-    var x, y
-    setInterval(function () {
-        var enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]))
-        switch (enhanced_settings.resolution) {
-            case 0:
-                x = enhanced_settings.desktopWidth
-                y = enhanced_settings.desktopHeight
-                break
-            case 1:
-                x = 2560
-                y = 1440
-                break
-            case 2:
-                x = 3840
-                y = 2160
-                break
-        }
-
-        Object.defineProperties(window.screen, {
-            "availWidth": {
-                value: x,
-                configurable: true
-            },
-            "width": {
-                value: x,
-                configurable: true
-            },
-            "availHeight": {
-                value: y,
-                configurable: true
-            },
-            "height": {
-                value: y,
-                configurable: true
-            }
-        })
-    }, 1000)
-}
-embed(enhanced_changeResolution)
 
 // Stream Monitor Autostart
 var enhanced_monitorStarted = false
@@ -4007,17 +3823,6 @@ function openStadia(url) {
     }
 }
 
-// Embed scripts to execute on the websites layer
-function embed(fn, active = true) {
-    const script = document.createElement('script')
-    if (active === true) {
-        script.text = `(${fn.toString()})();`
-    } else {
-        script.text = `${fn.toString()}`
-    }
-    (document.head || document.documentElement).appendChild(script)
-}
-
 // Insert elements
 function secureInsert(el, sel, opt = 0) {
     if (/^[a-z 0-9]+$/i.test(sel)) {
@@ -4249,83 +4054,7 @@ function enhanced_updateSettings(obj) {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 }
 
-// Debugging - Call via "debugEnhanced(); on Stadia
-function debugEnhanced(opt) {
-    switch (opt) {
-        case 'translation':
-            // Translations
-            console.groupCollapsed('Stadia Enhanced: Translation Output')
-            var languages = ['fr', 'nl', 'sv', 'pt', 'ca', 'da', 'it', 'es', 'de', 'ru', 'hu', 'sk', 'eo']
-            for (var i = 0; i < languages.length; i++) {
-                debug_load = enhancedTranslate(languages[i], true)
-            }
-            console.groupEnd()
-            break
-        case 'profile':
-            var enhanced_activeUser = document.getElementsByClassName('DlMyQd NTLMMc')[0].textContent
-            console.table(JSON.parse(localStorage.getItem('enhanced_' + enhanced_activeUser)))
-            break
-        case 'restorelists':
-            var enhanced_activeUser = document.getElementsByClassName('DlMyQd NTLMMc')[0].textContent
-            enhanced_settings = JSON.parse(localStorage.getItem('enhanced_' + enhanced_activeUser))
-            if (localStorage.getItem('enhanced_gameFilter')) {
-                enhanced_settings.gameFilter = localStorage.getItem('enhanced_gameFilter')
-            }
-            if (localStorage.getItem('enhanced_favlist')) {
-                enhanced_settings.favoriteList = localStorage.getItem('enhanced_favlist')
-            }
-            if (localStorage.getItem('enhanced_wishlist')) {
-                enhanced_settings.wishlist = localStorage.getItem('enhanced_wishlist')
-            }
-            localStorage.setItem('enhanced_' + enhanced_activeUser, JSON.stringify(enhanced_settings))
-            location.reload()
-            break
-    }
-}
-embed(debugEnhanced, false)
-
-// Translation
-function enhancedTranslate(lang, log = false) {
-    // Debug
-    var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
-    var lang_load = window.performance.now()
-
-    // Load defaults
-    var translation = getDefaultTranslation()
-
-    // Load translation
-    var translate_load = getTranslationByLang(lang)
-
-    // Merge fix entries
-    var lang_filled = 0;
-    var lang_missing = []
-    if (Object.keys(translate_load).length != 0) {
-        Object.entries(translation).forEach(([key]) => {
-            if (translate_load.hasOwnProperty(key)) {
-                if (translate_load[key] != undefined) {
-                    translation[key] = translate_load[key]
-                } else {
-                    lang_filled++
-                }
-            } else {
-                lang_missing.push(key)
-            }
-        });
-    }
-
-    lang_load = window.performance.now() - lang_load
-
-    if (log) {
-        console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - Loading translation "' + lang + '" - ' + Object.keys(translate_load).length + ' keys in ' + lang_load.toFixed(2) + 'ms, ' + lang_filled + ' key(s) defaulting to "en" and ' + Object.keys(lang_missing).length + ' key(s) missing.', enhanced_consoleEnhanced, '');
-        console.table(translate_load)
-        if (Object.keys(lang_missing).length != 0) {
-            console.table(lang_missing)
-        }
-        console.groupEnd()
-    }
-    return translation
-}
-
+// Get user settings
 function isInGame() {
     return document.location.href.indexOf('/player/') != -1
 }
