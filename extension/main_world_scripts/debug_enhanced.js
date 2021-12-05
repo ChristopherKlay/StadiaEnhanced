@@ -41,7 +41,7 @@ function debugEnhanced(opt) {
             break
 
         case 'translation':
-            _printTranslations();
+            enhanced_logTranslations()
             break
 
         default:
@@ -92,15 +92,6 @@ function debugEnhanced(opt) {
         _updateSettings(username, settings)
 
         location.reload()
-    }
-
-    function _printTranslations() {
-        console.groupCollapsed('Stadia Enhanced: Translation Output')
-        var languages = ['fr', 'nl', 'sv', 'pt', 'ca', 'da', 'it', 'es', 'de', 'ru', 'hu', 'sk', 'eo']
-        for (var i = 0; i < languages.length; i++) {
-            debug_load = enhanced_loadTranslations(languages[i], true)
-        }
-        console.groupEnd()
     }
 
     function _getStadiaUsername() {

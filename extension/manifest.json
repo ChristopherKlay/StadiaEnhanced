@@ -26,6 +26,22 @@
         "matches": ["*://stadia.google.com/u/*", "*://stadia.google.com/home*", "*://stadia.google.com/store*", "*://stadia.google.com/player*", "*://stadia.google.com/explore*", "*://stadia.google.com/profile*", "*://stadia.google.com/settings*", "*://stadia.google.com/captures*", "*://stadia.google.com/library*"],
         "js": [
             "inject.js",
+
+            "translations/ca.js",
+            "translations/da.js",
+            "translations/de.js",
+            "translations/en.js",
+            "translations/eo.js",
+            "translations/es.js",
+            "translations/fr.js",
+            "translations/hu.js",
+            "translations/it.js",
+            "translations/nl.js",
+            "translations/pt.js",
+            "translations/ru.js",
+            "translations/sk.js",
+            "translations/sv.js",
+
             "translations.js",
             "monitor.js",
             "menu_monitor.js",
@@ -39,7 +55,23 @@
     "web_accessible_resources": [
         "main_world_scripts/collect_stream_info.js",
         "main_world_scripts/set_resolution.js",
+        "main_world_scripts/log_translations.js",
         "main_world_scripts/debug_enhanced.js",
+
+        "translations/ca.js",
+        "translations/da.js",
+        "translations/de.js",
+        "translations/en.js",
+        "translations/eo.js",
+        "translations/es.js",
+        "translations/fr.js",
+        "translations/hu.js",
+        "translations/it.js",
+        "translations/nl.js",
+        "translations/pt.js",
+        "translations/ru.js",
+        "translations/sk.js",
+        "translations/sv.js",
 
         "media/included/hunters_logo.png",
         "media/included/hunters_banner.png"
