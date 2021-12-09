@@ -1,4 +1,5 @@
 // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/67
+
 const TRANSLATION_ES = {
     default: 'Por defecto',
     native: 'Nativa',

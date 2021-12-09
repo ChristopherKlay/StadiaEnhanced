@@ -1,4 +1,5 @@
 // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7
+
 const TRANSLATION_IT = {
     default: 'Predefinito',
     native: 'Nativo',
@@ -70,7 +71,7 @@ const TRANSLATION_IT = {
     saturation: 'Saturazione',
     contrast: 'Contrasto',
     brightness: 'Luminosità',
-    sharpen: 'Affinare',
+    sharpen: 'Nitidezza',
     community: 'Comunità',
     speedtest: 'Speedtest',
     quickaccess: 'Accesso Veloce',

@@ -1,4 +1,6 @@
 /**
+ * WebRTC Injection
+ * 
  * The anonymous function hooks into the constructor of the RTCPeerConnection class, so everytime a new connection
  * instance is initialized by Stadia, the instance is pushed into a global array. This global array of connections
  * is accessed by the stream monitor code to get streaming information.
@@ -9,7 +11,7 @@ var peerConnections = [];
 
 (function (original) {
 
-    // this injects in the constructor. so everytime a new connection is opened, it gets pushed to the array
+    // This injects in the constructor. so everytime a new connection is opened, it gets pushed to the array
     RTCPeerConnection = function () {
         console.debug("Initialized new RTCPeerConnection")
 
@@ -22,9 +24,7 @@ var peerConnections = [];
 
 })(RTCPeerConnection);
 
-/**
- * Uses global peerConnection array to obtain streaming info and writes it to localstorage.
- */
+// Uses global peerConnection array to obtain streaming info and writes it to localstorage.
 function collectStreamInfo() {
     var enhanced_lastTime = new Date()
     var enhanced_lastBytes = 0

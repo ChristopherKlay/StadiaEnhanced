@@ -1,4 +1,5 @@
 // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/11
+
 const TRANSLATION_SV = {
     default: 'Standard',
     native: 'Inbyggd',

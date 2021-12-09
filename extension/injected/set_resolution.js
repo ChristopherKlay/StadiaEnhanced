@@ -1,9 +1,11 @@
 /**
+ * Resolution Changer (4K Support)
+ * 
  * Listens for forced resolution via home > enhanced-menu > Stream > Resolution
  * and updates the window.screen properties accordingly. Available options are:
  * 0 = native
  * 1 = 1440p
- * 2 = 2160 aka 4K
+ * 2 = 2160p aka 4K
  *
  * This script has to be placed at the end of the page, since reads content from other scripts placed on the site.
  */

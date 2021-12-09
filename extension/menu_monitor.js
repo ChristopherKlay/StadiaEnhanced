@@ -69,4 +69,3 @@ class MenuStreamMonitor {
         this.element.querySelector("#" + id).textContent = value
     }
 }
-

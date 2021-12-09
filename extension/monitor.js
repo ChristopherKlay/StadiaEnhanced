@@ -1,13 +1,15 @@
 /**
  * Stream Monitor
+ * 
  * Credits to the base by AquaRegia
  * Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
  */
 class StreamMonitor {
     ELEMENT_ID = "enhanced_streamMonitor";
 
+    // Stadias Color Coding
     COLOR_VERY_BAD = "#FF7070"; // red
-    COLOR_BAD =  "#FFB83D"; // yellow
+    COLOR_BAD = "#FFB83D"; // yellow
     COLOR_GOOD = "#00E0BA" // green
     COLOR_PERFECT = "#44BBD8" // blue
 
@@ -23,18 +25,18 @@ class StreamMonitor {
         this.reset()
     }
 
-    // used as monitorPosition (stored in settings)
+    // Used as monitorPosition (stored in settings)
     getCurrentPosition() {
         return this._positionAsString()
     }
 
-    // position can be changed, due to dragging
+    // Position can be changed, due to dragging
     show(positionString) {
         this._setPositionFromString(positionString)
 
         this.element.style.display = 'block'
 
-        // not sure if this is needed
+        // Not sure if this is needed
         this.element.style.right = ''
         this.element.style.bottom = ''
     }
@@ -44,9 +46,9 @@ class StreamMonitor {
     }
 
     toggle(monitorPosition) {
-        this._isHidden()
-            ? this.show(monitorPosition)
-            : this.hide()
+        this._isHidden() ?
+            this.show(monitorPosition) :
+            this.hide()
     }
 
     reset() {
@@ -72,18 +74,18 @@ class StreamMonitor {
             .replace("Hardware", this.translations.hardware)
             .replace("Software", this.translations.software)
 
-        this.element.innerHTML = showFull
-            ? this._createFull(data)
-            : this._createSimple(data)
+        this.element.innerHTML = showFull ?
+            this._createFull(data) :
+            this._createSimple(data)
     }
 
-    // reposition if outside of visible area
+    // Reposition if outside of visible area
     ensurePosition() {
         const boundingBox = this.element.getBoundingClientRect();
-        if (boundingBox.top <= 0
-            && boundingBox.left <= 0
-            && boundingBox.bottom >= window.availHeight
-            && boundingBox.right >= window.availWidth
+        if (boundingBox.top <= 0 &&
+            boundingBox.left <= 0 &&
+            boundingBox.bottom >= window.availHeight &&
+            boundingBox.right >= window.availWidth
         ) {
             this._setPosition('1rem', '1rem')
         }
@@ -154,20 +156,20 @@ class StreamMonitor {
 
         return this.COLOR_PERFECT
     }
-    
+
     _calculateDecodeColor(decode) {
         if (decode > 12) {
             return this.COLOR_VERY_BAD
-        } 
-        
+        }
+
         if (decode > 10) {
             return this.COLOR_BAD
         }
-        
+
         if (decode > 8.33) {
-           return this.COLOR_GOOD
-        } 
-        
+            return this.COLOR_GOOD
+        }
+
         return this.COLOR_PERFECT
     }
 
@@ -370,5 +372,3 @@ class StreamMonitor {
         return this.element.style.top + '|' + this.element.style.left
     }
 }
-
-

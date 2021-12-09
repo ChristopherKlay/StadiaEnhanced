@@ -1,4 +1,5 @@
 // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/142
+
 const TRANSLATION_SK = {
     default: 'Pôvodné',
     native: 'Natívne',

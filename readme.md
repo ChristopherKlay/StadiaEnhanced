@@ -4,7 +4,7 @@
   <img src="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/media/header-mockup.gif"/>
 </p>
 
-![](https://img.shields.io/badge/GitHub-1.18.6-green?style=for-the-badge)
+![](https://img.shields.io/badge/GitHub-1.19.0-green?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/rating/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
@@ -106,13 +106,6 @@ Simply follow these two steps:
   1. This is a project for the community and i want to respect the work spend on everything included in it. While it would *legally* be perfectly fine to just implement their work, effectively claiming that i "came up" with this as a solution, for me *personally*, is not.
   2. Simply copying their work, would also make it basically impossible for the user to also use DiscordRPC, due to compatibility issues, like the priority management. Using Discords presence system via the browser is only covered by not even a handful of well working projects and i want to avoid cutting that down further - especially if the cost is simply having to run a second, unnoticeable (performance-whise) extension that works as install-and-forget.
 </details>
-
-## Pull Requests
-The main point about this repository is to provide the sourcecode of the current release version of Stadia Enhanced.
-
-Pull requests for new feature implementations will be manually merged into the (non-public) dev version and tested for errors, before being released with the next public version of the extension.
-
-Please post updates to translations in their respective discussions. No content will be pulled directly into the current release version.
 
 ## Screenshots
 

@@ -69,7 +69,7 @@ if (enhanced_storedSettings) {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 }
 
-// Check for update
+// Check for updates
 window.addEventListener('load', function () {
     window.addEventListener('click', function () {
         if (enhanced_newVersion(enhanced_settings.version, enhanced_manifest.version)) {
@@ -88,7 +88,12 @@ window.addEventListener('load', function () {
     })
 })
 
-// Language Support
+/**
+ *   Language Support
+ * 
+ *   Adds support for features not possible via DOM filtering, by using language based comparisons.
+ *   Example: The "Game", or "Bundle" label in store lists.
+ */
 var enhanced_languageSupport = {
     supportedCodes: 'ca|da|de|en|es|fi|fr|hu|it|nl|no|pl|pt|sk|sv',
     storeFilters: {
@@ -185,7 +190,11 @@ var enhanced_languageSupport = {
     }
 }
 
-// CSS Changes - Global styles and overwrites
+/**
+ * CSS Changes
+ * 
+ * Global style changes and overwrites, as well as fixes for specific issues.
+ */
 var enhanced_discordActive = false
 var enhanced_CSS = '.lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }' // Remove padding above avatar
 enhanced_CSS += '.VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }' // Fix searchbar text cutoff
@@ -372,8 +381,12 @@ function loadStadiaHunters(id) {
     })
 }
 
-// Stadia Public Database by OriginalPenguin
-// Source: https://linktr.ee/StadiaDatabase
+/**
+ * Stadia Public Database
+ * 
+ * Author: OriginalPenguin
+ * Source: https://linktr.ee/StadiaDatabase
+ */
 var enhanced_database = []
 chrome.runtime.sendMessage({
     action: 'extdatabase'
@@ -429,8 +442,12 @@ enhanced_extendedDisclaimer.className = 'uM5FUc'
 enhanced_extendedDisclaimer.style.marginTop = '1.5rem'
 enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 
-// Discord Presence
-// Via DiscordRPC - https://github.com/lolamtisch/Discord-RPC-Extension/
+/**
+ * Discord Presence
+ * 
+ * Support for Discords "Rich Presence" feature.
+ * Via DiscordRPC - https://github.com/lolamtisch/Discord-RPC-Extension/
+ */
 
 // Get presence data
 var enhanced_discordPresence = {}
@@ -470,7 +487,7 @@ const enhanced_streamMonitor = monitor.getElement();
 enhanced_streamMonitor.addEventListener('dblclick', function () {
     monitor.toggleMode()
 
-    // save monitor mode
+    // Save monitor mode
     enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
@@ -483,7 +500,7 @@ const menuMonitor = new MenuStreamMonitor(enhanced_lang)
 
 // Update Stream Elements
 setInterval(function () {
-    if (!isInGame()) {
+    if (!isLocation('ingame')) {
         menuMonitor.reset()
         monitor.reset()
         return
@@ -670,7 +687,7 @@ enhanced_filterUI.sharpen.slider.onchange = function () {
 
 // Filter UI - Update Settings
 function enhanced_updateFilters(setup = false) {
-    if (isInGame()) {
+    if (isLocation('ingame')) {
         // Get Current Game
         var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
@@ -781,8 +798,11 @@ enhanced_svgUnsharpMask.filter.appendChild(enhanced_svgUnsharpMask.feComposite)
 enhanced_svg.appendChild(enhanced_svgUnsharpMask.filter)
 document.body.appendChild(enhanced_svg)
 
-// Windowed Mode
-// Source: Mafrans - https://github.com/Mafrans/StadiaPlus
+/**
+ * Windowed Mode
+ * 
+ * Source: Mafrans - https://github.com/Mafrans/StadiaPlus
+ */
 var enhanced_BlockFullscreen = false
 var enhanced_Windowed = document.createElement('div')
 enhanced_Windowed.className = 'R2s0be'
@@ -1451,7 +1471,7 @@ enhanced_ReportIssue.addEventListener('click', function () {
 })
 enhanced_settingsEnhanced.append(enhanced_ReportIssue)
 
-// BuyMeACoffee - Shortcut to donations
+// Ko-fi - Shortcut to donations
 var enhanced_CoffeeLink = document.createElement('div')
 enhanced_CoffeeLink.className = 'pBvcyf QAAyWd'
 enhanced_CoffeeLink.id = 'enhanced_ChangelogLink'
@@ -1461,7 +1481,7 @@ enhanced_CoffeeLink.style.userSelect = 'none'
 enhanced_CoffeeLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_CoffeeLink.tabIndex = '0'
 enhanced_CoffeeLink.addEventListener('click', function () {
-    window.open('https://www.buymeacoffee.com/christopherklay', '_blank')
+    window.open('https://ko-fi.com/christopherklay', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_CoffeeLink)
 
@@ -2494,7 +2514,7 @@ var enhanced_wrappers = []
 // Main Loop
 setInterval(function () {
     // Location - Home & Library
-    if (isHome() || isLibrary()) {
+    if (isLocation('home') || isLocation('library')) {
 
         // Game List
         var enhanced_gameList = document.getElementsByClassName('GqLi4d')
@@ -2545,7 +2565,7 @@ setInterval(function () {
     }
 
     // Location - Home
-    if (isHome()) {
+    if (isLocation('home')) {
         // Remove filter elements
         for (var i = 0; i < enhanced_gameList.length; i++) {
             if (enhanced_gameList[i].style.display = 'none') {
@@ -2562,7 +2582,7 @@ setInterval(function () {
     }
 
     // Location - Library
-    if (isLibrary()) {
+    if (isLocation('library')) {
 
         // Enable grid size option
         enhanced_Grid.style.display = 'block'
@@ -2699,7 +2719,7 @@ setInterval(function () {
     }
 
     // Location - In-Game
-    if (isInGame()) {
+    if (isLocation('ingame')) {
 
         // Currrent Game Info
         var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
@@ -2789,19 +2809,19 @@ setInterval(function () {
         enhanced_monitorState = 0
         enhanced_sessionStart = 0
 
-        enhanced_monitorState === 0
-            ? monitor.hide()
-            : monitor.show(enhanced_settings.monitorPosition)
+        enhanced_monitorState === 0 ?
+            monitor.hide() :
+            monitor.show(enhanced_settings.monitorPosition)
     }
 
     // Location - Captures
-    if (document.location.href.indexOf('/captures') != -1) {
+    if (isLocation('captures')) {
         // Captures Filter
         secureInsert(enhanced_captureFilters, 'dwGRGd', 0)
     }
 
     // Location - Profile Details
-    if (document.location.href.match('profile.[0-9]+.detail') != null) {
+    if (isLocation('profiledetails')) {
         // Stadia Hunters - Logo Link
         if (enhanced_settings.enableStadiaHunters) {
             enhanced_huntersLink.gameID = document.location.href.split('/detail/')[1].split('?')[0]
@@ -2812,7 +2832,7 @@ setInterval(function () {
     }
 
     // Location - Store Details
-    if (document.location.href.indexOf('/store/details/') != -1) {
+    if (isLocation('storedetails')) {
 
         // Database Infos
         if (enhanced_database && enhanced_settings.enableStadiaDatabase == 1) {
@@ -2893,7 +2913,7 @@ setInterval(function () {
     }
 
     // Location - Store List
-    if (document.location.href.indexOf('/list') != -1) {
+    if (isLocation('storelist')) {
         // Add class for page segements in split view
         if (enhanced_settings.splitStore != 0) {
             enhanced_loadedLists = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].querySelectorAll('div:not(.pW7Dlc) > streamable')
@@ -2955,7 +2975,7 @@ setInterval(function () {
     }
 
     // Location - Pro Games
-    if (document.location.href.indexOf('/store/list/2001') != -1) {
+    if (isLocation('progames')) {
 
         // UI changes and count of currently unclaimed games
         document.querySelector('.ZECEje > li:nth-child(3) > a').classList.remove('YySNWc')
@@ -2974,14 +2994,14 @@ setInterval(function () {
     }
 
     // Location - Personal Profile
-    if (document.location.href.indexOf('/profile/' + enhanced_AccountInfo[2]) != -1) {
+    if (isLocation('profile')) {
 
         // Add avatar option on own profile
         secureInsert(enhanced_customAvatar, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
     }
 
     // Location - Player Statistics
-    if (document.location.href.indexOf('/gameactivities/all') != -1) {
+    if (isLocation('playerstats')) {
 
         // Game Statistics
         if (document.querySelector('.MDSsFe') !== null) {
@@ -3152,7 +3172,7 @@ setInterval(function () {
     }
 
     // Location - Stadia Menu
-    if (document.querySelector('.X1asv.ahEBEd.LJni0').style.opacity == '1') {
+    if (isLocation('stadiamenu')) {
 
         // Offline Users
         var enhanced_statusList = document.querySelectorAll('.eXdFqc .rtsndf.WTetv .DfyMcd');
@@ -3222,7 +3242,7 @@ setInterval(function () {
     }
 
     // Location - Settings
-    if (document.location.href.indexOf('/settings') != -1) {
+    if (isLocation('settings')) {
 
         // Resolution - Enable 'Up to 4K' option
         var enhanced_selector = document.getElementsByClassName('sx2eZe QAAyWd aKIhz OWB6Me')
@@ -3259,7 +3279,6 @@ setInterval(function () {
         }
     }
 
-
     // Location - Always active
 
     // Update monitor position
@@ -3268,7 +3287,7 @@ setInterval(function () {
     // Codec - Set codec preference
     switch (enhanced_settings.codec) {
         case 0:
-            if (isHome()) {
+            if (isLocation('home')) {
                 localStorage.removeItem('video_codec_implementation_by_codec_key')
             }
             break
@@ -3930,12 +3949,12 @@ function enhanced_pushNotification(content, image, dura) {
 
     // Set Content
     this.notification.innerHTML = `
-    <div class="lWnUzb">
-        <div class="NbJOkd">` + content + `</div>
-    </div>
-    <div class="dyknFc BYsype">
-        <div class="zHwKDd" style="background-image:url(` + image + `)"></div>
-    </div>`
+        <div class="lWnUzb">
+            <div class="NbJOkd">` + content + `</div>
+        </div>
+        <div class="dyknFc BYsype">
+            <div class="zHwKDd" style="background-image:url(` + image + `)"></div>
+        </div>`
 
     setTimeout(function () {
         // State - Show
@@ -4054,15 +4073,32 @@ function enhanced_updateSettings(obj) {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 }
 
-// Get user settings
-function isInGame() {
-    return document.location.href.indexOf('/player/') != -1
-}
-
-function isHome() {
-    return document.location.href.indexOf('/home') != -1
-}
-
-function isLibrary() {
-    return document.location.href.indexOf('/library') != -1
+// Get active content
+function isLocation(loc) {
+    switch (loc) {
+        case 'home':
+            return document.location.href.indexOf('/home') != -1
+        case 'library':
+            return document.location.href.indexOf('/library') != -1
+        case 'ingame':
+            return document.location.href.indexOf('/player') != -1
+        case 'captures':
+            return document.location.href.indexOf('/captures') != -1
+        case 'profiledetails':
+            return document.location.href.match('profile.[0-9]+.detail') != null
+        case 'storedetails':
+            return document.location.href.indexOf('/store/details/') != -1
+        case 'storelist':
+            return document.location.href.indexOf('/list') != -1
+        case 'progames':
+            return document.location.href.indexOf('/store/list/2001') != -1
+        case 'profile':
+            return document.location.href.indexOf('/profile/' + enhanced_AccountInfo[2]) != -1
+        case 'playerstats':
+            return document.location.href.indexOf('/gameactivities/all') != -1
+        case 'stadiamenu':
+            return document.querySelector('.X1asv.ahEBEd.LJni0').style.opacity != '0'
+        case 'settings':
+            return document.location.href.indexOf('/settings') != -1
+    }
 }

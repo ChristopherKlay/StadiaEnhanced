@@ -1,4 +1,5 @@
 // https://github.com/ChristopherKlay/StadiaEnhanced/discussions/97
+
 const TRANSLATION_HU = {
     default: 'Alapértelmezett',
     native: 'Eredeti',

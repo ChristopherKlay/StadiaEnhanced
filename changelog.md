@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 1.19
+
+### 1.19.0
+* Added contributing guidelines to the project page
+* Updated all donation options to use Ko-fi
+* Updated the extension to use Manifest V3 ([Details](https://developer.chrome.com/docs/extensions/mv3/intro/))
+* Updated code structure for better overview/management of the code and manifest V3 restrictions [[#204]](https://github.com/ChristopherKlay/StadiaEnhanced/pull/204)
+* Updated italian translation [[7#]](https://github.com/ChristopherKlay/StadiaEnhanced/discussions/7#discussioncomment-1746448)
+* Fixed the stream monitor not being visible in new windows [[#206]](https://github.com/ChristopherKlay/StadiaEnhanced/pull/206)
+
 ## Version 1.18
 
 ### 1.18.6

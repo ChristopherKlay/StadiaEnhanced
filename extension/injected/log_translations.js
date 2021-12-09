@@ -1,4 +1,6 @@
 /**
+ * Translation Logs
+ * 
  * Provide the enhanced_logTranslations function on a "main world" level so it can be used in the debug utility.
  * This is separate from the loadTranslations function used by the actual extension.
  */
@@ -25,11 +27,11 @@ function enhanced_logTranslations() {
         const keysMissing = []
 
         Object.entries(result).forEach(([key]) => {
-            if (languageTranslation.hasOwnProperty(key)) { // language-entry exists, overwrite the english text
+            if (languageTranslation.hasOwnProperty(key)) { // Language-entry exists, overwrite the english text
                 if (languageTranslation[key] != undefined) {
                     result[key] = languageTranslation[key]
                 } else {
-                    keySubstitutionCount++ // key doesn't exist in language, keep english translation
+                    keySubstitutionCount++ // Key doesn't exist in language, keep english translation
                 }
             } else {
                 keysMissing.push(key)
