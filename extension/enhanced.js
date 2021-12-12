@@ -495,13 +495,9 @@ enhanced_streamMonitor.addEventListener('dblclick', function () {
 document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 
-const menuMonitor = new MenuStreamMonitor(enhanced_lang)
-
-
 // Update Stream Elements
 setInterval(function () {
     if (!isLocation('ingame')) {
-        menuMonitor.reset()
         monitor.reset()
         return
     }
@@ -518,15 +514,6 @@ setInterval(function () {
         localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     }
 
-    menuMonitor.updateContent(
-        data.codec,
-        data.resolution,
-        data.latency + " ms",
-        data.fps,
-        data.framedrop,
-        data.decode + " ms"
-    )
-
     let fullMode = enhanced_settings.monitorMode === 0;
     monitor.refreshContent(fullMode)
 }, 1000)
@@ -535,14 +522,42 @@ setInterval(function () {
 var enhanced_Monitor = document.createElement('div')
 enhanced_Monitor.className = 'R2s0be'
 enhanced_Monitor.id = 'enhanced_Monitor'
-enhanced_Monitor.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i></span><span class="caSJV" jsname="V67aGc">' + enhanced_lang.streammon + '</span></div>'
+enhanced_Monitor.innerHTML = `
+    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
+
+        <!-- Icon -->
+        <span class="X5peoe" jsname="pYFhU">
+            <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i>
+        </span>
+        
+        <!-- Text -->
+        <span class="caSJV" jsname="V67aGc">${enhanced_lang.streammon}</span>
+        
+        <span id="monitor-type" style="color: rgba(255,255,255,.4);font-size: 0.7rem; display: none;">Standard</span>        
+    </div>
+`
 enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
 enhanced_Monitor.tabIndex = '0'
 
 // click on menu item "stream monitor"
 enhanced_Monitor.addEventListener('click', () => {
-    monitor.toggle(enhanced_settings.monitorPosition)
+    const button = enhanced_Monitor
+    const $icon = button.querySelector("span.X5peoe")
+    const $typeDescription = button.querySelector("#monitor-type")
+
+    monitor.toggleMode(enhanced_settings.monitorPosition)
+
+    // update color
+    if (monitor.currentMode === "hidden") {
+        $icon.style.color = ""
+        $typeDescription.style.display = "none"
+    } else {
+        $icon.style.color = "#00e0ba"
+
+        $typeDescription.textContent = monitor.currentMode
+        $typeDescription.style.display = "block"
+    }
 });
 
 // double-click on menu item "stream monitor"
@@ -2751,7 +2766,7 @@ setInterval(function () {
             enhanced_monitorStarted = true
             enhanced_monitorState = 1
 
-            monitor.show(enhanced_settings.monitorPosition)
+            monitor.showAt(enhanced_settings.monitorPosition)
         }
 
         // Session Time
@@ -2761,7 +2776,7 @@ setInterval(function () {
             var enhanced_sessionDur = Date.now()
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000)
 
-            menuMonitor.updateSessionTime(enhanced_sessionDur)
+            monitor.updateSessionTime(enhanced_sessionDur)
         }
 
         // Discord Presence
@@ -2792,7 +2807,7 @@ setInterval(function () {
         }
 
         // Menu Monitor
-        secureInsert(menuMonitor.getElement(), '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
+        secureInsert(monitor.menuElement, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
     } else {
         enhanced_discordPresence = {}
         enhanced_Windowed.style.display = 'none'
@@ -2811,7 +2826,7 @@ setInterval(function () {
 
         enhanced_monitorState === 0 ?
             monitor.hide() :
-            monitor.show(enhanced_settings.monitorPosition)
+            monitor.showAt(enhanced_settings.monitorPosition)
     }
 
     // Location - Captures
@@ -3371,7 +3386,7 @@ function enhanced_applySettings(set, opt) {
                     break
             }
             break
-        case 'monitorautostart':
+        case 'monitorautostart': // stadia menu (home)
             switch (opt) {
                 case 0:
                     enhanced_monitorAutostart.style.color = ''

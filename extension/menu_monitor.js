@@ -16,6 +16,10 @@ class MenuStreamMonitor {
         console.debug("Initializing Menu Stream Monitor...")
         this.translations = translations
         this.element = this._createElement()
+
+        // insert
+        // document.querySelector(".FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)").append(this.element)
+        // secureInsert(monitor.menuElement, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
     }
 
     updateSessionTime(duration) {

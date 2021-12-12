@@ -16,11 +16,15 @@ class StreamMonitor {
     translations;
     element;
 
+    _currentMode = "hidden"; // hidden, standard, compact, menu, chart
+
     constructor(translations, initialPosition) {
         console.debug("Initializing Stream Monitor...")
         this.translations = translations
 
         this.element = this._createElement()
+        this._menuElement = new MenuStreamMonitor(translations)
+
         this._setPositionFromString(initialPosition)
         this.reset()
     }
@@ -31,10 +35,10 @@ class StreamMonitor {
     }
 
     // Position can be changed, due to dragging
-    show(positionString) {
+    showAt(positionString) {
         this._setPositionFromString(positionString)
 
-        this.element.style.display = 'block'
+        this._switchToMode("standard")
 
         // Not sure if this is needed
         this.element.style.right = ''
@@ -45,12 +49,6 @@ class StreamMonitor {
         this.element.style.display = 'none'
     }
 
-    toggle(monitorPosition) {
-        this._isHidden() ?
-            this.show(monitorPosition) :
-            this.hide()
-    }
-
     reset() {
         this.element.innerHTML = `
             <section>
@@ -59,10 +57,32 @@ class StreamMonitor {
                 </div>
             </section>
         `
+
+        this._menuElement.reset()
     }
 
-    toggleMode() {
-        this._simpleModeIsActive() ? this.refreshContent(true) : this.refreshContent(false)
+    toggleMode(position) {
+        console.log("current mode: " + this._currentMode)
+        switch (this._currentMode) {
+            case "hidden":
+                this._setPositionFromString(position)
+                this._switchToMode("standard")
+
+                // Not sure if this is needed
+                this.element.style.right = ''
+                this.element.style.bottom = ''
+
+                break
+            case "standard":
+                this._switchToMode("compact")
+                break
+            case "compact":
+                this._switchToMode("hidden")
+        }
+    }
+
+    get currentMode() {
+        return this._currentMode;
     }
 
     refreshContent(showFull) {
@@ -70,13 +90,33 @@ class StreamMonitor {
 
         this.ensurePosition();
 
-        data.codec = data.codec
-            .replace("Hardware", this.translations.hardware)
-            .replace("Software", this.translations.software)
-
         this.element.innerHTML = showFull ?
             this._createFull(data) :
             this._createSimple(data)
+
+        // show in menu
+        this._menuElement.updateContent(
+            data.codec,
+            data.resolution,
+            data.latency + " ms",
+            data.fps,
+            data.framedrop,
+            data.decode + " ms"
+        )
+    }
+
+    _showStandard(data) {
+        this.ensurePosition();
+
+        this.element.innerHTML = this._createFull(data)
+        this.element.style.display = "block"
+    }
+
+    _showCompact(data) {
+        this.ensurePosition();
+
+        this.element.innerHTML = this._createSimple(data)
+        this.element.style.display = "block"
     }
 
     // Reposition if outside of visible area
@@ -91,8 +131,41 @@ class StreamMonitor {
         }
     }
 
+    isVisible() {
+        return !this._isHidden()
+    }
+
     getElement() {
         return this.element
+    }
+
+    get menuElement() {
+        return this._menuElement.getElement();
+    }
+
+    // legacy support, TODO: remove as soon as possible
+    updateSessionTime(duration) {
+        this._menuElement.updateSessionTime(duration)
+    }
+
+    _switchToMode(mode) {
+        console.log("SWITCH TO: " + mode)
+        switch (mode) {
+            case "standard":
+                this.ensurePosition();
+                this._showStandard(this._getData())
+                this._currentMode = "standard"
+                break
+            case "compact":
+                this.ensurePosition();
+                this._showCompact(this._getData())
+                this._currentMode = "compact"
+                break
+            case "hidden":
+                this.hide()
+                this._currentMode = "hidden"
+                break
+        }
     }
 
     _createFull(data) {
@@ -218,16 +291,23 @@ class StreamMonitor {
     }
 
     _getData() {
-        const data = localStorage.getItem('enhanced_streamData');
-        if (data == null) {
+        const json = localStorage.getItem("enhanced_streamData");
+        if (json == null) {
             throw new Error("Unable to get stream data from local storage");
         }
 
-        return JSON.parse(data)
+        const data = JSON.parse(json)
+
+        data.codec = data.codec
+            .replace("Hardware", this.translations.hardware)
+            .replace("Software", this.translations.software)
+
+        return data
     }
 
     _isHidden() {
-        return this.element.style.display === "none"
+        return this._currentMode === "hidden"
+        // return this.element.style.display === "none"
     }
 
     _createStreamSection(data) {
