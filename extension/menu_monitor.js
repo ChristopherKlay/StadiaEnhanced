@@ -38,13 +38,21 @@ class MenuStreamMonitor {
         this.updateContent("-", "-", "-", "-", "-")
     }
 
+    show() {
+        this.element.style.display = "block"
+    }
+
+    hide() {
+        this.element.style.display = "none"
+    }
+
     getElement() {
         return this.element
     }
 
     _createElement() {
-        const element = document.createElement('div');
-        element.style.whiteSpace = 'nowrap'
+        const element = document.createElement("div");
+        element.style.whiteSpace = "nowrap"
 
         element.innerHTML = `
             ${this._createMenuEntry(this.SESSION_TIME_ID, this.translations.sessiontime, "-")}

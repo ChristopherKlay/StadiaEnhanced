@@ -485,84 +485,6 @@ const monitor = new StreamMonitor(enhanced_lang, enhanced_settings.monitorPositi
 const enhanced_streamMonitor = monitor.getElement();
 
 enhanced_streamMonitor.addEventListener('dblclick', function () {
-    monitor.toggleMode()
-
-    // Save monitor mode
-    enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-})
-
-document.body.appendChild(enhanced_streamMonitor)
-enhanced_dragElement(enhanced_streamMonitor)
-
-// Update Stream Elements
-setInterval(function () {
-    if (!isLocation('ingame')) {
-        monitor.reset()
-        return
-    }
-
-    // Get local stream data
-    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
-    if (enhanced_streamData == null) {
-        return;
-    }
-    const data = JSON.parse(enhanced_streamData)
-
-    if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
-        var enhanced_newMonitorPos = enhanced_settings.monitorPosition
-        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-    }
-
-    let fullMode = enhanced_settings.monitorMode === 0;
-    monitor.refreshContent(fullMode)
-}, 1000)
-
-// Streaming Monitor (Menu Icon)
-var enhanced_Monitor = document.createElement('div')
-enhanced_Monitor.className = 'R2s0be'
-enhanced_Monitor.id = 'enhanced_Monitor'
-enhanced_Monitor.innerHTML = `
-    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
-
-        <!-- Icon -->
-        <span class="X5peoe" jsname="pYFhU">
-            <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i>
-        </span>
-        
-        <!-- Text -->
-        <span class="caSJV" jsname="V67aGc">${enhanced_lang.streammon}</span>
-        
-        <span id="monitor-type" style="color: rgba(255,255,255,.4);font-size: 0.7rem; display: none;">Standard</span>        
-    </div>
-`
-enhanced_Monitor.style.cursor = 'pointer'
-enhanced_Monitor.style.userSelect = 'none'
-enhanced_Monitor.tabIndex = '0'
-
-// click on menu item "stream monitor"
-enhanced_Monitor.addEventListener('click', () => {
-    const button = enhanced_Monitor
-    const $icon = button.querySelector("span.X5peoe")
-    const $typeDescription = button.querySelector("#monitor-type")
-
-    monitor.toggleMode(enhanced_settings.monitorPosition)
-
-    // update color
-    if (monitor.currentMode === "hidden") {
-        $icon.style.color = ""
-        $typeDescription.style.display = "none"
-    } else {
-        $icon.style.color = "#00e0ba"
-
-        $typeDescription.textContent = monitor.currentMode
-        $typeDescription.style.display = "block"
-    }
-});
-
-// double-click on menu item "stream monitor"
-enhanced_Monitor.addEventListener('dblclick', function () {
-
     // Generate new Window
     var enhanced_popMonitor = window.open('', '_blank', 'width=280,height=500,toolbar=0')
     enhanced_popMonitor.document.title = 'Stream Monitor'
@@ -583,6 +505,72 @@ enhanced_Monitor.addEventListener('dblclick', function () {
         }
     }, 1000)
 })
+
+document.body.appendChild(enhanced_streamMonitor)
+enhanced_dragElement(enhanced_streamMonitor)
+
+// Update Stream Elements
+setInterval(function () {
+    if (!isLocation('ingame')) {
+        monitor.reset()
+        return
+    }
+
+    // Get local stream data
+    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
+    if (enhanced_streamData == null) {
+        return;
+    }
+
+    const data = JSON.parse(enhanced_streamData)
+
+    if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
+        var enhanced_newMonitorPos = enhanced_settings.monitorPosition
+        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    }
+
+    let fullMode = enhanced_settings.monitorMode === 0;
+    monitor.updateValues(data)
+}, 1000)
+
+// Streaming Monitor (Menu Icon)
+var enhanced_Monitor = document.createElement('div')
+enhanced_Monitor.className = 'R2s0be'
+enhanced_Monitor.id = 'enhanced_Monitor'
+enhanced_Monitor.innerHTML = `
+    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
+
+        <!-- Icon -->
+        <span class="X5peoe" jsname="pYFhU">
+            <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i>
+        </span>
+        
+        <!-- Text -->
+        <span class="caSJV" jsname="V67aGc">${enhanced_lang.streammon}</span>
+        
+        <span id="monitor-type" style="color: rgba(255,255,255,.4);font-size: 0.7rem; height: 0.5rem;"></span>        
+    </div>
+`
+enhanced_Monitor.style.cursor = 'pointer'
+enhanced_Monitor.style.userSelect = 'none'
+enhanced_Monitor.tabIndex = '0'
+
+// click on menu item "stream monitor"
+enhanced_Monitor.addEventListener('click', () => {
+    const button = enhanced_Monitor
+    const $icon = button.querySelector("span.X5peoe")
+    const $typeDescription = button.querySelector("#monitor-type")
+
+    monitor.toggleMode(enhanced_settings.monitorPosition)
+
+    if (monitor.isVisible()) {
+        $icon.style.color = "#00e0ba"
+        $typeDescription.textContent = monitor.currentMode
+    } else {
+        $icon.style.color = ""
+        $typeDescription.textContent = ""
+    }
+});
 
 // Filter UI
 var enhanced_filterUI = {
