@@ -337,7 +337,7 @@ class StreamMonitor {
                 
                 <div class="grid">
                     <!-- Codec -->
-                    <span>${this.translations.codec}</span><span>${data.codec | "-"}</span>
+                    <span>${this.translations.codec}</span><span>${data.codec || "-"}</span>
                     <span></span>
                     
                     <!-- Resolution -->
