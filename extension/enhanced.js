@@ -584,7 +584,6 @@ setInterval(function () {
     // enable monitor-icon
     enhanced_Monitor.disabled = false
     const loadingElements = enhanced_Monitor.querySelectorAll(".loading")
-    console.log("elements found: " + loadingElements.length)
     loadingElements.forEach(el => el.classList.remove("loading"))
 
     if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
@@ -594,6 +593,7 @@ setInterval(function () {
 
     let fullMode = enhanced_settings.monitorMode === 0;
     monitor.updateValues(data)
+    monitor.showMode(monitor.currentMode)
 }, 1000)
 
 // Filter UI

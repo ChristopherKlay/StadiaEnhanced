@@ -66,13 +66,14 @@ class StreamMonitor {
     }
 
     reset() {
-        this.element.innerHTML = `
-            <section>
-                <div class="grid">
-                    <span style="grid-column: 1 / 4;">Loading stream data.</span>
-                </div>
-            </section>
-        `
+        // this.element.innerHTML = `
+        //     <section>
+        //         <div class="grid">
+        //             <span style="grid-column: 1 / 4;">Loading stream data.</span>
+        //         </div>
+        //     </section>
+        // `
+        this.updateValues(null)
 
         this._menuElement.reset()
     }
@@ -94,12 +95,35 @@ class StreamMonitor {
         }
     }
 
+    showMode(mode) {
+        switch (mode) {
+            case this._MODE.standard:
+                this._switchToStandard()
+                break
+            case this._MODE.compact:
+                this._switchToCompact()
+                break
+            case this._MODE.menu:
+                this._switchToMenu()
+                break
+            case this._MODE.hidden:
+                this._switchToHidden()
+                break
+        }
+    }
+
     get currentMode() {
         return this._currentMode;
     }
 
     // every second or so
     updateValues(data) {
+        this._currentData = data
+
+        if (data == null) {
+            return
+        }
+
         this.ensurePosition();
 
         data.codec = data.codec
@@ -129,8 +153,6 @@ class StreamMonitor {
             default:
                 break
         }
-
-        this._currentData = data
     }
 
     // Reposition if outside of visible area
@@ -164,7 +186,7 @@ class StreamMonitor {
 
     _switchToStandard() {
         this.ensurePosition();
-        this._showStandard(this._currentData)
+        this._showStandard()
         this._currentMode = this._MODE.standard
     }
 
@@ -186,10 +208,10 @@ class StreamMonitor {
         this._currentMode = this._MODE.hidden
     }
 
-    _showStandard(data) {
+    _showStandard() {
         this.ensurePosition();
 
-        this.element.innerHTML = this._createFull(data)
+        this.element.innerHTML = this._createFull(this._currentData)
         this.element.style.display = "block"
     }
 
@@ -201,9 +223,20 @@ class StreamMonitor {
     }
 
     _showMenu(data) {
+        if (data == null) {
+            this._menuElement.reset()
+        } else {
+            this._menuElement.updateContent(
+                data.codec,
+                data.resolution,
+                data.latency + " ms",
+                data.fps,
+                data.framedrop,
+                data.decode + " ms"
+            )
+        }
+
         this._menuElement.show()
-        // this.element.innerHTML = this._createSimple(data)
-        // this.element.style.display = "block"
     }
 
     _createFull(data) {
