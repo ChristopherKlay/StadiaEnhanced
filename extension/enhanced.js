@@ -509,36 +509,19 @@ enhanced_streamMonitor.addEventListener('dblclick', function () {
 document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 
-// Update Stream Elements
-setInterval(function () {
-    if (!isLocation('ingame')) {
-        monitor.reset()
-        return
-    }
-
-    // Get local stream data
-    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
-    if (enhanced_streamData == null) {
-        return;
-    }
-
-    const data = JSON.parse(enhanced_streamData)
-
-    if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
-        var enhanced_newMonitorPos = enhanced_settings.monitorPosition
-        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-    }
-
-    let fullMode = enhanced_settings.monitorMode === 0;
-    monitor.updateValues(data)
-}, 1000)
-
 // Streaming Monitor (Menu Icon)
 var enhanced_Monitor = document.createElement('div')
 enhanced_Monitor.className = 'R2s0be'
 enhanced_Monitor.id = 'enhanced_Monitor'
 enhanced_Monitor.innerHTML = `
-    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
+    <style>
+      .loading {
+        pointer-events: none !important;
+        opacity: 0.3;
+      }
+      
+    </style>
+    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX loading">
 
         <!-- Icon -->
         <span class="X5peoe" jsname="pYFhU">
@@ -551,6 +534,7 @@ enhanced_Monitor.innerHTML = `
         <span id="monitor-type" style="color: rgba(255,255,255,.4);font-size: 0.7rem; height: 0.5rem;"></span>        
     </div>
 `
+enhanced_Monitor.disabled = true
 enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
 enhanced_Monitor.tabIndex = '0'
@@ -558,6 +542,10 @@ enhanced_Monitor.tabIndex = '0'
 // click on menu item "stream monitor"
 enhanced_Monitor.addEventListener('click', () => {
     const button = enhanced_Monitor
+    if (button.disabled) {
+        return
+    }
+
     const $icon = button.querySelector("span.X5peoe")
     const $typeDescription = button.querySelector("#monitor-type")
 
@@ -571,6 +559,42 @@ enhanced_Monitor.addEventListener('click', () => {
         $typeDescription.textContent = ""
     }
 });
+
+// Update Stream Elements
+setInterval(function () {
+    if (!isLocation('ingame')) {
+        monitor.reset()
+
+        // disable monitor-icon
+        enhanced_Monitor.disabled = true
+        const button = enhanced_Monitor.querySelector("div.CTvDXd")
+        button.classList.add("loading")
+
+        return
+    }
+
+    // Get local stream data
+    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
+    if (enhanced_streamData == null) {
+        return;
+    }
+
+    const data = JSON.parse(enhanced_streamData)
+
+    // enable monitor-icon
+    enhanced_Monitor.disabled = false
+    const loadingElements = enhanced_Monitor.querySelectorAll(".loading")
+    console.log("elements found: " + loadingElements.length)
+    loadingElements.forEach(el => el.classList.remove("loading"))
+
+    if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
+        var enhanced_newMonitorPos = enhanced_settings.monitorPosition
+        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    }
+
+    let fullMode = enhanced_settings.monitorMode === 0;
+    monitor.updateValues(data)
+}, 1000)
 
 // Filter UI
 var enhanced_filterUI = {

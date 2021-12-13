@@ -100,7 +100,6 @@ class StreamMonitor {
 
     // every second or so
     updateValues(data) {
-        console.log("update value:" + data)
         this.ensurePosition();
 
         data.codec = data.codec
@@ -208,7 +207,6 @@ class StreamMonitor {
     }
 
     _createFull(data) {
-        console.log("update standard mode: " + data.decodetime + " ms, " + data.fps)
         return `
             ${this._createSessionSection(data.date, data.time, data.sessiontime)}
             ${this._createStreamSection(data)}
