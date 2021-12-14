@@ -4121,19 +4121,6 @@ function enhanced_updateSettings(obj) {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 }
 
-/**
- * The setting key "monitorMode" (0/1) is used persist the current mode of the streaming monitor. In the previous
- * version, these modes were 0=Standard and 1=Compact. With this version we are introducing two more modes
- * 2=Menu and 9=Hidden/Off. We keep using numbers for this to prevent an immediate migration. However, We should migrate
- * these numbers to string values to their associated string values in the future. That is why the number conversion is
- * done in this method, so it can be removed quickly in a future update.
- *
- * Mode values:
- *  0 = Standard
- *  1 = Compact
- *  2 = Menu
- *  9 = Hidden/Off
- */
 function enhanced_saveMonitorMode(mode) {
     console.debug(`Saving monitor mode '${mode}'`)
 
