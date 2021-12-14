@@ -13,21 +13,24 @@ if (enhanced_AccountInfo) {
 } else {
     throw new Error("No logged in user detected.");
 }
+const username = enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]
 
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = loadTranslations(enhanced_local)
 
 // Load existing settings
-var enhanced_storedSettings = localStorage.getItem('enhanced_' + enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1])
+var enhanced_storedSettings = enhanced_getSettings(username)
 
 // Default settings
 var enhanced_settings = {
-    user: enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1],
+    user: username,
     version: '0.0.0',
     avatar: '',
-    monitorMode: 0,
-    monitorAutostart: 0,
-    monitorPosition: '1rem|1rem',
+
+    monitorMode: 9, // 0=Standard, 1=Compact, 2=Menu, 9=Hidden/Off
+    monitorAutostart: 0, // 0=don't show on startup, 1=show on startup
+    monitorPosition: '1rem|1rem', // top + "|" + left
+
     clockMode: 0,
     clockOption: 0,
     codec: 0,
@@ -60,7 +63,7 @@ var enhanced_settings = {
 
 // Merge settings
 if (enhanced_storedSettings) {
-    enhanced_oldSettings = JSON.parse(enhanced_storedSettings)
+    const enhanced_oldSettings = enhanced_storedSettings
     enhanced_settings.version = enhanced_oldSettings.version
     enhanced_updateSettings(enhanced_oldSettings)
     console.log('%cStadia Enhanced' + '%c ⚙️ - Profile: ' + enhanced_settings.user + ' loaded.', enhanced_consoleEnhanced, '')
@@ -480,7 +483,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 
 var enhanced_monitorState = 0
 
-const monitor = new StreamMonitor(enhanced_lang, enhanced_settings.monitorPosition)
+const monitor = new StreamMonitor(enhanced_lang, enhanced_settings.monitorMode, enhanced_settings.monitorPosition)
 
 const enhanced_streamMonitor = monitor.getElement();
 
@@ -539,6 +542,15 @@ enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
 enhanced_Monitor.tabIndex = '0'
 
+// set initial mode description
+if (monitor.isVisible()) {
+    const $icon = enhanced_Monitor.querySelector("span.X5peoe")
+    const $typeDescription = enhanced_Monitor.querySelector("#monitor-type")
+
+    $icon.style.color = "#00e0ba"
+    $typeDescription.textContent = monitor.currentMode
+}
+
 // click on menu item "stream monitor"
 enhanced_Monitor.addEventListener('click', () => {
     const button = enhanced_Monitor
@@ -550,6 +562,7 @@ enhanced_Monitor.addEventListener('click', () => {
     const $typeDescription = button.querySelector("#monitor-type")
 
     monitor.toggleMode(enhanced_settings.monitorPosition)
+    enhanced_saveMonitorMode(monitor.currentMode)
 
     if (monitor.isVisible()) {
         $icon.style.color = "#00e0ba"
@@ -4089,6 +4102,14 @@ function enhanced_dragElement(el) {
     }
 }
 
+function enhanced_getSettings(username) {
+    return JSON.parse(localStorage.getItem("enhanced_" + username))
+}
+
+function enhanced_saveAllSettings(settings) {
+    localStorage.setItem("enhanced_" + settings.user, JSON.stringify(settings))
+}
+
 // Update user settings
 function enhanced_updateSettings(obj) {
     var ign = 'user|version|desktopHeight|desktopWidth'
@@ -4098,6 +4119,27 @@ function enhanced_updateSettings(obj) {
         }
     }
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+}
+
+/**
+ * The setting key "monitorMode" (0/1) is used persist the current mode of the streaming monitor. In the previous
+ * version, these modes were 0=Standard and 1=Compact. With this version we are introducing two more modes
+ * 2=Menu and 9=Hidden/Off. We keep using numbers for this to prevent an immediate migration. However, We should migrate
+ * these numbers to string values to their associated string values in the future. That is why the number conversion is
+ * done in this method, so it can be removed quickly in a future update.
+ *
+ * Mode values:
+ *  0 = Standard
+ *  1 = Compact
+ *  2 = Menu
+ *  9 = Hidden/Off
+ */
+function enhanced_saveMonitorMode(mode) {
+    console.debug(`Saving monitor mode '${mode}'`)
+
+    enhanced_settings.monitorMode = mode
+
+    enhanced_saveAllSettings(enhanced_settingsEnhanced)
 }
 
 // Get active content

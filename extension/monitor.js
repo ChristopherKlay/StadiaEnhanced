@@ -17,12 +17,10 @@ class StreamMonitor {
     COLOR_PERFECT = "#44BBD8" // blue
 
     _MODE = {
-        hidden: "Hidden",
-        standard: "Standard",
-        compact: "Compact",
-        menu: "Menu"
-        // standalone
-        // chart
+        standard: "Standard", // 0
+        compact: "Compact", // 1
+        menu: "Menu", // 2
+        hidden: "Hidden" // 9
     }
 
     translations;
@@ -31,7 +29,7 @@ class StreamMonitor {
     _currentMode;
     _currentData; // convert to array for chart
 
-    constructor(translations, initialPosition) {
+    constructor(translations, initialMode, initialPosition) {
         console.debug("Initializing Stream Monitor...")
         this.translations = translations
 
@@ -42,7 +40,13 @@ class StreamMonitor {
         this._setPositionFromString(initialPosition)
         this.reset()
 
-        this._currentMode = this._MODE.hidden
+        const isLegacy = Number.isInteger(initialMode)
+
+        this._currentMode = isLegacy
+            ? this._modeFromSettingsNumber(initialMode)
+            : initialMode
+
+        console.debug("Setting initial mode to: " + this.currentMode)
     }
 
     // Used as monitorPosition (stored in settings)
@@ -502,5 +506,18 @@ class StreamMonitor {
 
     _positionAsString() {
         return this.element.style.top + '|' + this.element.style.left
+    }
+
+    _modeFromSettingsNumber(settingsNumber) {
+        switch (settingsNumber) {
+            case 0:
+                return this._MODE.standard
+            case 1:
+                return this._MODE.compact
+            case 2:
+                return this._MODE.menu
+            default:
+                return this._MODE.hidden
+        }
     }
 }
