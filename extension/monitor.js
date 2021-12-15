@@ -17,10 +17,10 @@ class StreamMonitor {
     COLOR_PERFECT = "#44BBD8" // blue
 
     _MODE = {
-        standard: "Standard", // 0
-        compact: "Compact", // 1
-        menu: "Menu", // 2
-        hidden: "Hidden" // 9
+        standard: "Standard",
+        compact: "Compact",
+        menu: "Menu",
+        hidden: "Hidden"
     }
 
     translations;
@@ -29,7 +29,13 @@ class StreamMonitor {
     _currentMode;
     _currentData; // convert to array for chart
 
-    constructor(translations, initialMode, initialPosition) {
+    /**
+     * @param {translation[]} translations
+     * @param {string} initialMode
+     * @param {string} initialPosition - position on screen where the monitor should be shown
+     * @param {boolean} autoStartEnabled - if monitor should be automatically shown on startup
+     */
+    constructor(translations, initialMode, initialPosition, autoStartEnabled) {
         console.debug("Initializing Stream Monitor...")
         this.translations = translations
 
@@ -38,13 +44,21 @@ class StreamMonitor {
         this._menuElement.hide()
 
         this._setPositionFromString(initialPosition)
-        this.reset()
+        this.reset(autoStartEnabled)
 
         const isLegacy = Number.isInteger(initialMode)
 
-        this._currentMode = isLegacy
-            ? this._modeFromSettingsNumber(initialMode)
-            : initialMode
+        if (isLegacy) {
+            const legacyMode = this._modeFromSettingsNumber(initialMode)
+            this._currentMode = legacyMode
+
+            return
+        }
+
+        this._currentMode = initialMode
+        if (autoStartEnabled && initialMode === this._MODE.hidden) {
+            this._currentMode = this._MODE.standard
+        }
 
         console.debug("Setting initial mode to: " + this.currentMode)
     }
@@ -69,17 +83,22 @@ class StreamMonitor {
         this.element.style.display = 'none'
     }
 
-    reset() {
-        // this.element.innerHTML = `
-        //     <section>
-        //         <div class="grid">
-        //             <span style="grid-column: 1 / 4;">Loading stream data.</span>
-        //         </div>
-        //     </section>
-        // `
+    /**
+     * @param {boolean} autoStartEnabled - if monitor should be automatically shown on startup
+     */
+    reset(autoStartEnabled) {
         this.updateValues(null)
 
         this._menuElement.reset()
+
+        if (autoStartEnabled) {
+            console.log("AUTOSTART ON")
+            this._switchToStandard()
+        } else {
+            console.log("AUTOSTART OFF")
+        }
+
+        console.log("SET MODE TO: " + this._currentMode)
     }
 
     toggleMode() {
@@ -244,6 +263,10 @@ class StreamMonitor {
     }
 
     _createFull(data) {
+        if (data == null) {
+            return ""
+        }
+
         return `
             ${this._createSessionSection(data.date, data.time, data.sessiontime)}
             ${this._createStreamSection(data)}
@@ -362,8 +385,7 @@ class StreamMonitor {
     }
 
     _isHidden() {
-        return this._currentMode === "hidden"
-        // return this.element.style.display === "none"
+        return this.element.style.display === "none"
     }
 
     _createStreamSection(data) {
@@ -494,7 +516,7 @@ class StreamMonitor {
     }
 
     _setPositionFromString(positionString) {
-        const positionTokens = positionString.split('|')
+        const positionTokens = positionString.split("|")
 
         this._setPosition(positionTokens[0], positionTokens[1])
     }

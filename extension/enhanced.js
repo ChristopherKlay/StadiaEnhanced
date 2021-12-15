@@ -564,7 +564,7 @@ enhanced_Monitor.addEventListener('click', () => {
     monitor.toggleMode(enhanced_settings.monitorPosition)
     enhanced_saveMonitorMode(monitor.currentMode)
 
-    if (monitor.isVisible()) {
+    if (monitor.isVisible() && monitor.currentMode !== "Hidden") {
         $icon.style.color = "#00e0ba"
         $typeDescription.textContent = monitor.currentMode
     } else {
@@ -576,7 +576,7 @@ enhanced_Monitor.addEventListener('click', () => {
 // Update Stream Elements
 setInterval(function () {
     if (!isLocation('ingame')) {
-        monitor.reset()
+        monitor.reset(enhanced_settings.monitorAutostart === 1)
 
         // disable monitor-icon
         enhanced_Monitor.disabled = true
@@ -604,9 +604,13 @@ setInterval(function () {
         localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     }
 
-    let fullMode = enhanced_settings.monitorMode === 0;
-    monitor.updateValues(data)
-    monitor.showMode(monitor.currentMode)
+    if (monitor.isVisible()) {
+        monitor.updateValues(data)
+
+        console.log("SHOW MODE: " + monitor.currentMode)
+        monitor.showMode(monitor.currentMode)
+    }
+
 }, 1000)
 
 // Filter UI
