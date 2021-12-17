@@ -184,7 +184,7 @@ West of Loathing,3840x2160,60FPS,4K Mode,None,None,0a60fff637b445a797623d0c69433
 Windbound,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,657210fe20ad402b85bda8f816b80d98rcp1,
 Wolfenstein: Youngblood,2560x1440,60FPS,4K Mode | 5.1,None,None,4884bd9bd7864cf28deef05ef4b69e70rcp1,
 WWE 2K Battlegrounds,2560x1440,60FPS,4K Mode | 5.1,None,PC | Xbox | PlayStation | Nintendo Switch | No Cross-platform Buddy System,f28e66bbd0984c77ac6a54e8cc3007bdrcp1,
-Ys IX: Monstrum Nox,,60FPS,4K Mode,None,None,b2c9b37fb3eb4089ad91f30b4e30ce92rcp1,checked
+Ys IX: Monstrum Nox,1920x1080,60FPS,4K Mode,None,None,b2c9b37fb3eb4089ad91f30b4e30ce92rcp1,
 Ys VIII: Lacrimosa of DANA,3840x2160,60FPS,4K Mode,None,None,7ced0b517b144dd98529ceffab963791rcp1,
 Zombie Army 4: Dead War,2560x1440,60FPS,4K Mode | HDR | 5.1,None,None,cba537cccfe3470b8784f88660ea5f09rcp1,
 GRIME,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,HDR | 5.1,None,None,d7a58e7a34c843bc91106ef9be366b32rcp1,
@@ -206,7 +206,7 @@ DreamWorks Dragons: Dawn of New Riders,3840x2160,60FPS,4K Mode,None,None,e15d448
 Ice Age: Scrat's Nutty Adventure,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode,None,None,28c8c1c35b8c450083c980f1dd44b64drcp1,
 Gigantosaurus The Game,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,106e912318b24f0394850cdeabf73b0arcp1,
 PAW Patrol Mighty Pups Save Adventure Bay,3840x2160,60FPS,4K Mode,None,None,ccf9e5615864445ba6a85cbd3557665frcp1,
-PAW Patrol The Movie: Adventure City Calls,,,,None,None,2e00fb54c35e47b08e3d56e0d59cb2ffrcp1,checked
+PAW Patrol The Movie: Adventure City Calls,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,2e00fb54c35e47b08e3d56e0d59cb2ffrcp1,
 Young Souls,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,None,None,39b2419557a4479792c267dffa77fbbfrcp1,
 Madden NFL 22,,,5.1,None,None,451f31e0ce9e4ac4b928f4f6a9d2b3d0rcp1,checked
 Farming Simulator 22,3200x1800,60FPS,4K Mode | HDR | 5.1,None,PC,3bb062e7f1274d4ca83af6b5f67d9abarcp1,
@@ -221,7 +221,7 @@ My Friend Peppa Pig,1920x1080,60FPS in 1080p Mode,None,None,None,5e294a10f1d848c
 Darksiders III,,,,None,None,d05ef34140f34f5e91f7c2ea9e58b135rcp1,checked
 Assassin's Creed Black Flag,2560x1440,60FPS,4K Mode | 5.1,None,None,ba56dcf3117a4a3a8323f49341f454a4rcp1,
 From Space,Unsure,60FPS,4K Mode | 5.1,None,None,5cfd984e8a9f4ad2b93662db5f645ac7rcp1,
-Chorus,,,,None,None,fd6fc2b44158435497f23450fa656dcdrcp1,checked
+Chorus,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | 5.1,None,None,fd6fc2b44158435497f23450fa656dcdrcp1,
 FIFA 22,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,d45d390acba5479db7c47170b09d517drcp1,
 DreamWorks Spirit Lucky's Big Adventure,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,25567bfb599a46ecab0fc8b18682b3f8rcp1,
 Mafia III,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,HDR | 5.1,None,None,9092c5ed87224f3e8a277dac0479874frcp1,
@@ -241,4 +241,8 @@ Hunting Simulator 2,,,,None,None,51fb212122da4f78ab3afc79dff66dd3rcp1,checked
 Blaze and the Monster Machines: Axle City Racers,,,,,None,1af0dac45ab84f4aafe61fb42c0a8badrcp1,checked
 Chicken Police - Paint it RED!,,,,None,None,7482e6a205f840d2a31ee967dfdc8f73rcp1,checked
 The Jackbox Party Pack 7,,,,,None,155df2871ce84e26839216542747b1fbrcp1,checked
-Nine To Five Early Access,,,4K Mode | 5.1,,,#ERROR!,checked
+Nine To Five Early Access,2560x1440,60FPS,4K Mode | 5.1,None,PC,40655663a955472ebd69d2a6ca93b995rcp1,
+Super Animal Royale,,60FPS,4K Mode,None,PC | Xbox | PlayStation | Nintendo Switch,1170cdbc5a234580aeb5a8cc52a37fccrcp1,checked
+Assassin's Creed Liberation HD,,,,None,None,f0cac2d2f8a244f893c4567bb9e5af81rcp1,checked
+Assassin's Creed III Remastered,,,,None,None,be5c488f89db474bb5b42e54dab1fe5drcp1,checked
+MONOPOLY Madness,,,,,None,#ERROR!,checked
