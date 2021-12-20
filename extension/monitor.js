@@ -5,6 +5,7 @@
  * Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
  */
 class StreamMonitor {
+
     ELEMENT_ID = "enhanced_streamMonitor";
 
     ELEMENT_CODEC_SELECTOR = ".monitor-codec"
@@ -23,6 +24,7 @@ class StreamMonitor {
         hidden: "Hidden"
     }
 
+    _settingsService;
     translations;
     element;
 
@@ -30,22 +32,27 @@ class StreamMonitor {
     _currentData; // convert to array for chart
 
     /**
+     * @param {SettingsService} settingsService - used for persisting monitor-related settings
      * @param {translation[]} translations
      * @param {string} initialMode
      * @param {string} initialPosition - position on screen where the monitor should be shown
      * @param {boolean} autoStartEnabled - if monitor should be automatically shown on startup
      */
-    constructor(translations, initialMode, initialPosition, autoStartEnabled) {
+    constructor(settingsService, translations, initialPosition, autoStartEnabled) {
         console.debug("Initializing Stream Monitor...")
+        this._settingsService = settingsService
         this.translations = translations
 
         this.element = this._createElement()
         this._menuElement = new MenuStreamMonitor(translations)
         this._menuElement.hide()
 
+        this._iconElement = this._createIconElement()
+
         this._setPositionFromString(initialPosition)
         this.reset(autoStartEnabled)
 
+        const initialMode = this._settingsService.getMonitorMode();
         const isLegacy = Number.isInteger(initialMode)
 
         if (isLegacy) {
@@ -57,8 +64,10 @@ class StreamMonitor {
 
         this._currentMode = initialMode
         if (autoStartEnabled && initialMode === this._MODE.hidden) {
-            this._currentMode = this._MODE.standard
+            this._switchToStandard()
         }
+
+        this._updateIcon(this._currentMode)
 
         console.debug("Setting initial mode to: " + this.currentMode)
     }
@@ -91,14 +100,12 @@ class StreamMonitor {
 
         this._menuElement.reset()
 
-        if (autoStartEnabled) {
-            console.log("AUTOSTART ON")
+        if (this._currentMode === this._MODE.hidden && autoStartEnabled) {
+            console.debug(`Overwriting monitor mode to "${this._MODE.standard}" because of enabled autostart`)
             this._switchToStandard()
-        } else {
-            console.log("AUTOSTART OFF")
         }
 
-        console.log("SET MODE TO: " + this._currentMode)
+        this._disableIcon()
     }
 
     toggleMode() {
@@ -202,6 +209,10 @@ class StreamMonitor {
         return this._menuElement.getElement();
     }
 
+    get iconElement() {
+        return this._iconElement;
+    }
+
     // legacy support, TODO: remove as soon as possible
     updateSessionTime(duration) {
         this._menuElement.updateSessionTime(duration)
@@ -210,24 +221,36 @@ class StreamMonitor {
     _switchToStandard() {
         this.ensurePosition();
         this._showStandard()
+        this._updateIcon(this._MODE.standard)
+        this._settingsService.saveMonitorMode(this._MODE.standard)
+
         this._currentMode = this._MODE.standard
     }
 
     _switchToCompact() {
         this.ensurePosition();
         this._showCompact(this._currentData)
+        this._updateIcon(this._MODE.compact)
+        this._settingsService.saveMonitorMode(this._MODE.compact)
+
         this._currentMode = this._MODE.compact
     }
 
     _switchToMenu() {
         this.hide()
         this._showMenu(this._currentData)
+        this._updateIcon(this._MODE.menu)
+        this._settingsService.saveMonitorMode(this._MODE.menu)
+
         this._currentMode = this._MODE.menu
     }
 
     _switchToHidden() {
         this.hide()
         this._menuElement.hide()
+        this._updateIcon(this._MODE.hidden)
+        this._settingsService.saveMonitorMode(this._MODE.hidden)
+
         this._currentMode = this._MODE.hidden
     }
 
@@ -541,5 +564,63 @@ class StreamMonitor {
             default:
                 return this._MODE.hidden
         }
+    }
+
+    _createIconElement() {
+        const element = document.createElement('div');
+        element.className = 'R2s0be'
+        element.id = 'enhanced_Monitor'
+        element.innerHTML = `
+            <style>
+              .loading {
+                pointer-events: none !important;
+                opacity: 0.3;
+              }
+              
+            </style>
+            <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX loading">
+        
+                <!-- Icon -->
+                <span class="X5peoe" jsname="pYFhU">
+                    <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i>
+                </span>
+                
+                <!-- Text -->
+                <span class="caSJV" jsname="V67aGc">${enhanced_lang.streammon}</span>
+                
+                <span id="monitor-type" style="color: rgba(255,255,255,.4);font-size: 0.7rem; height: 0.5rem;"></span>        
+            </div>
+        `
+
+        element.disabled = true
+        element.style.cursor = 'pointer'
+        element.style.userSelect = 'none'
+        element.tabIndex = '0'
+
+        return element
+    }
+
+    /**
+     * @param {string} mode
+     */
+    _updateIcon(mode) {
+        const $icon = this._iconElement.querySelector("span.X5peoe")
+        const $typeDescription = this._iconElement.querySelector("#monitor-type")
+
+        $icon.style.color = mode === this._MODE.hidden ? "" : "#00e0ba"
+        $typeDescription.textContent = mode === this._MODE.hidden ? "" : mode
+    }
+
+    _disableIcon() {
+        this._iconElement.disabled = true
+        const button = this._iconElement.querySelector("div.CTvDXd")
+        button.classList.add("loading")
+    }
+
+    // TODO: make private
+    enableIcon() {
+        this._iconElement.disabled = false
+        const loadingElements = this._iconElement.querySelectorAll(".loading")
+        loadingElements.forEach(el => el.classList.remove("loading"))
     }
 }

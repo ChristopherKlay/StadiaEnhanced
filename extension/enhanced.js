@@ -19,7 +19,8 @@ var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = loadTranslations(enhanced_local)
 
 // Load existing settings
-var enhanced_storedSettings = enhanced_getSettings(username)
+const settingsService = new SettingsService(username)
+var enhanced_storedSettings = settingsService.getSettings()
 
 // Default settings
 var enhanced_settings = {
@@ -69,7 +70,7 @@ if (enhanced_storedSettings) {
     console.log('%cStadia Enhanced' + '%c ⚙️ - Profile: ' + enhanced_settings.user + ' loaded.', enhanced_consoleEnhanced, '')
 } else {
     console.log('%cStadia Enhanced' + '%c ⚙️ - Profile: Not found. Generating new profile with default values.', enhanced_consoleEnhanced, '')
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    settingsService.saveSettings(enhanced_settings)
 }
 
 // Check for updates
@@ -483,7 +484,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 
 var enhanced_monitorState = 0
 
-const monitor = new StreamMonitor(enhanced_lang, enhanced_settings.monitorMode, enhanced_settings.monitorPosition)
+const monitor = new StreamMonitor(settingsService, enhanced_lang, enhanced_settings.monitorMode, enhanced_settings.monitorPosition)
 
 const enhanced_streamMonitor = monitor.getElement();
 
@@ -513,76 +514,22 @@ document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 
 // Streaming Monitor (Menu Icon)
-var enhanced_Monitor = document.createElement('div')
-enhanced_Monitor.className = 'R2s0be'
-enhanced_Monitor.id = 'enhanced_Monitor'
-enhanced_Monitor.innerHTML = `
-    <style>
-      .loading {
-        pointer-events: none !important;
-        opacity: 0.3;
-      }
-      
-    </style>
-    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX loading">
-
-        <!-- Icon -->
-        <span class="X5peoe" jsname="pYFhU">
-            <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i>
-        </span>
-        
-        <!-- Text -->
-        <span class="caSJV" jsname="V67aGc">${enhanced_lang.streammon}</span>
-        
-        <span id="monitor-type" style="color: rgba(255,255,255,.4);font-size: 0.7rem; height: 0.5rem;"></span>        
-    </div>
-`
-enhanced_Monitor.disabled = true
-enhanced_Monitor.style.cursor = 'pointer'
-enhanced_Monitor.style.userSelect = 'none'
-enhanced_Monitor.tabIndex = '0'
-
-// set initial mode description
-if (monitor.isVisible()) {
-    const $icon = enhanced_Monitor.querySelector("span.X5peoe")
-    const $typeDescription = enhanced_Monitor.querySelector("#monitor-type")
-
-    $icon.style.color = "#00e0ba"
-    $typeDescription.textContent = monitor.currentMode
-}
+var enhanced_monitorButton = monitor.iconElement
 
 // click on menu item "stream monitor"
-enhanced_Monitor.addEventListener('click', () => {
-    const button = enhanced_Monitor
-    if (button.disabled) {
+enhanced_monitorButton.addEventListener('click', () => {
+    if (enhanced_monitorButton.disabled) {
         return
     }
 
-    const $icon = button.querySelector("span.X5peoe")
-    const $typeDescription = button.querySelector("#monitor-type")
-
     monitor.toggleMode(enhanced_settings.monitorPosition)
     enhanced_saveMonitorMode(monitor.currentMode)
-
-    if (monitor.isVisible() && monitor.currentMode !== "Hidden") {
-        $icon.style.color = "#00e0ba"
-        $typeDescription.textContent = monitor.currentMode
-    } else {
-        $icon.style.color = ""
-        $typeDescription.textContent = ""
-    }
 });
 
 // Update Stream Elements
 setInterval(function () {
     if (!isLocation('ingame')) {
         monitor.reset(enhanced_settings.monitorAutostart === 1)
-
-        // disable monitor-icon
-        enhanced_Monitor.disabled = true
-        const button = enhanced_Monitor.querySelector("div.CTvDXd")
-        button.classList.add("loading")
-
         return
     }
 
@@ -594,10 +541,7 @@ setInterval(function () {
 
     const data = JSON.parse(enhanced_streamData)
 
-    // enable monitor-icon
-    enhanced_Monitor.disabled = false
-    const loadingElements = enhanced_Monitor.querySelectorAll(".loading")
-    loadingElements.forEach(el => el.classList.remove("loading"))
+    monitor.enableIcon()
 
     if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
         var enhanced_newMonitorPos = enhanced_settings.monitorPosition
@@ -606,11 +550,8 @@ setInterval(function () {
 
     if (monitor.isVisible()) {
         monitor.updateValues(data)
-
-        console.log("SHOW MODE: " + monitor.currentMode)
         monitor.showMode(monitor.currentMode)
     }
-
 }, 1000)
 
 // Filter UI
@@ -1570,7 +1511,6 @@ enhanced_resolutionPopup.addEventListener('click', function () {
 })
 
 // Stream Monitor Autostart
-var enhanced_monitorStarted = false
 var enhanced_monitorAutostart = document.createElement('div')
 enhanced_monitorAutostart.className = 'pBvcyf QAAyWd'
 enhanced_monitorAutostart.id = 'enhanced_monitorAutostart'
@@ -2770,9 +2710,9 @@ setInterval(function () {
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
 
         enhanced_Windowed.style.display = 'flex'
-        enhanced_Monitor.style.display = 'flex'
+        enhanced_monitorButton.style.display = 'flex'
         secureInsert(enhanced_Windowed, 'E0Zk9b', 0)
-        secureInsert(enhanced_Monitor, 'E0Zk9b', 0)
+        secureInsert(enhanced_monitorButton, 'E0Zk9b', 0)
         secureInsert(enhanced_filterUI.main.toggle, 'E0Zk9b', 0)
 
         // Filter Setup
@@ -2788,14 +2728,6 @@ setInterval(function () {
         if (enhanced_settings.clockOption == 2 || enhanced_settings.clockOption == 3) {
             secureInsert(enhanced_ClockOverlay, 'bYYDgf', 0)
             enhanced_ClockOverlay.style.display = 'flex'
-        }
-
-        // Stream Monitor
-        if (enhanced_settings.monitorAutostart == 1 && enhanced_monitorStarted == false) {
-            enhanced_monitorStarted = true
-            enhanced_monitorState = 1
-
-            monitor.showAt(enhanced_settings.monitorPosition)
         }
 
         // Session Time
@@ -2840,7 +2772,7 @@ setInterval(function () {
     } else {
         enhanced_discordPresence = {}
         enhanced_Windowed.style.display = 'none'
-        enhanced_Monitor.style.display = 'none'
+        enhanced_monitorButton.style.display = 'none'
         enhanced_ClockOverlay.style.display = 'none'
 
         if (enhanced_filterUI.main.frame.style.display == 'block') {
@@ -2849,7 +2781,6 @@ setInterval(function () {
         }
 
         enhanced_filterApplied = false
-        enhanced_monitorStarted = false
         enhanced_monitorState = 0
         enhanced_sessionStart = 0
 
@@ -4106,15 +4037,7 @@ function enhanced_dragElement(el) {
     }
 }
 
-function enhanced_getSettings(username) {
-    return JSON.parse(localStorage.getItem("enhanced_" + username))
-}
-
-function enhanced_saveAllSettings(settings) {
-    localStorage.setItem("enhanced_" + settings.user, JSON.stringify(settings))
-}
-
-// Update user settings
+// Updates values existing variable "enhanced_settings" and persists the new state to localstorage
 function enhanced_updateSettings(obj) {
     var ign = 'user|version|desktopHeight|desktopWidth'
     for (var key in enhanced_settings) {
@@ -4122,7 +4045,7 @@ function enhanced_updateSettings(obj) {
             enhanced_settings[key] = obj[key]
         }
     }
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    settingsService.saveSettings(enhanced_settings)
 }
 
 function enhanced_saveMonitorMode(mode) {
@@ -4130,7 +4053,7 @@ function enhanced_saveMonitorMode(mode) {
 
     enhanced_settings.monitorMode = mode
 
-    enhanced_saveAllSettings(enhanced_settingsEnhanced)
+    settingsService.saveSettings(enhanced_settingsEnhanced)
 }
 
 // Get active content
