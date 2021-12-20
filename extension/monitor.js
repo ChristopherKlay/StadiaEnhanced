@@ -538,6 +538,9 @@ class StreamMonitor {
         `
     }
 
+    /**
+     * @param {string} positionString - Top and left pixels divided by a pipe (e.g "1rem|1rem")
+     */
     _setPositionFromString(positionString) {
         const positionTokens = positionString.split("|")
 

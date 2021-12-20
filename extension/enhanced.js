@@ -486,7 +486,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 
 var enhanced_monitorState = 0
 
-const monitor = new StreamMonitor(settingsService, enhanced_lang, enhanced_settings.monitorMode, enhanced_settings.monitorPosition)
+const monitor = new StreamMonitor(settingsService, enhanced_lang, enhanced_settings.monitorPosition, enhanced_settings.monitorAutostart === 1)
 
 const enhanced_streamMonitor = monitor.getElement();
 
