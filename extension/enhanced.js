@@ -18,6 +18,8 @@ const username = enhanced_AccountInfo[0] + '#' + enhanced_AccountInfo[1]
 var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = loadTranslations(enhanced_local)
 
+const streamDataService = new StreamDataService()
+
 // Load existing settings
 const settingsService = new SettingsService(username)
 var enhanced_storedSettings = settingsService.getSettings()
@@ -534,12 +536,10 @@ setInterval(function () {
     }
 
     // Get local stream data
-    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
+    const enhanced_streamData = streamDataService.getData();
     if (enhanced_streamData == null) {
         return;
     }
-
-    const data = JSON.parse(enhanced_streamData)
 
     monitor.enableIcon()
 
@@ -549,7 +549,7 @@ setInterval(function () {
     }
 
     if (monitor.isVisible()) {
-        monitor.updateValues(data)
+        monitor.updateValues(enhanced_streamData)
         monitor.showMode(monitor.currentMode)
     }
 }, 1000)

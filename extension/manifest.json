@@ -53,6 +53,7 @@
             "translations/sv.js",
 
             "settings.js",
+            "data.js",
             "translations.js",
             "monitor.js",
             "menu_monitor.js",
