@@ -17,6 +17,11 @@ class StreamMonitor {
     COLOR_GOOD = "#00E0BA" // green
     COLOR_PERFECT = "#44BBD8" // blue
 
+    /**
+     * Enum for available monitor modes.
+     * @readonly
+     * @enum {string}
+     */
     _MODE = {
         standard: "Standard",
         compact: "Compact",
@@ -35,9 +40,9 @@ class StreamMonitor {
      * @param {SettingsService} settingsService - used for persisting monitor-related settings
      * @param {translation[]} translations
      * @param {string} initialPosition - position on screen where the monitor should be shown
-     * @param {boolean} autoStartEnabled - if monitor should be automatically shown on startup
+     * @param {("Standard"|"Compact"|"Menu"|"Hidden")} autoStartMode
      */
-    constructor(settingsService, translations, initialPosition, autoStartEnabled) {
+    constructor(settingsService, translations, initialPosition, autoStartMode) {
         console.debug("Initializing Stream Monitor...")
         this._settingsService = settingsService
         this.translations = translations
@@ -49,12 +54,12 @@ class StreamMonitor {
         this._iconElement = this._createIconElement()
 
         this._setPositionFromString(initialPosition)
-        this.reset(autoStartEnabled)
+        this.reset(autoStartMode)
 
         const initialMode = this._settingsService.getMonitorMode();
         const isLegacyMode = Number.isInteger(initialMode)
 
-        if (isLegacyMode && autoStartEnabled) {
+        if (isLegacyMode && autoStartMode !== this._MODE.hidden) {
             const legacyMode = this._modeFromSettingsNumber(initialMode)
             this._currentMode = legacyMode
 
@@ -62,8 +67,8 @@ class StreamMonitor {
         }
 
         this._currentMode = initialMode
-        if (autoStartEnabled && initialMode === this._MODE.hidden) {
-            this._switchToStandard()
+        if (initialMode === this._MODE.hidden && autoStartMode !== this._MODE.hidden) {
+            this.showMode(autoStartMode)
         }
 
         this._updateIcon(this._currentMode)
@@ -92,16 +97,16 @@ class StreamMonitor {
     }
 
     /**
-     * @param {boolean} autoStartEnabled - if monitor should be automatically shown on startup
+     * @param {("Standard"|"Compact"|"Menu"|"Hidden")} autoStartMode
      */
-    reset(autoStartEnabled) {
+    reset(autoStartMode) {
         this.updateValues(null)
 
         this._menuElement.reset()
 
-        if (this._currentMode === this._MODE.hidden && autoStartEnabled) {
-            console.debug(`Overwriting monitor mode to "${this._MODE.standard}" because of enabled autostart`)
-            this._switchToStandard()
+        if (this._currentMode === this._MODE.hidden && autoStartMode !== this._MODE.hidden) {
+            console.debug(`Overwriting monitor mode to "${autoStartMode}" because of enabled autostart`)
+            this.showMode(autoStartMode)
         }
 
         this._disableIcon()
@@ -303,27 +308,27 @@ class StreamMonitor {
                     <span style="grid-column: 1 / 4;">
                     
                         <!-- Codec -->
-                        <span class="monitor-codec">${data.codec}</span>
+                        <span class="monitor-codec">${ data != null ? data.codec : ""}</span>
                         <div class="split">|</div>
 
                         <!-- Resolution -->
-                        ${data.resolution}
+                        ${data != null ? data.resolution : ""}
                         <div class="split">|</div>
 
                         <!-- FPS -->                        
-                        ${data.fps} fps
+                        ${data != null ? data.fps : ""} fps
                          <div class="split">|</div>
 
                         <!-- Latency -->
-                        <span class="monitor-latency">${data.latency}</span> ms
+                        <span class="monitor-latency">${data != null ? data.latency : ""}</span> ms
                         <div class="split">|</div>
 
                         <!-- Decoding time -->                        
-                        ${data.decode} ms
+                        ${data != null ? data.decode : ""} ms
                         <div class="split">|</div>
 
                         <!-- Connection -->
-                        <span style="color: ${(this._calculateConnectionColor(data.fps, data.decode, data.framedropPerc, data.latency))};">⬤</span>
+                        <span style="color: ${data != null ? (this._calculateConnectionColor(data.fps, data.decode, data.framedropPerc, data.latency)) : ""};">⬤</span>
                     </span>
                 </div>
             </section>

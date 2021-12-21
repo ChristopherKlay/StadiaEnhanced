@@ -531,7 +531,7 @@ enhanced_monitorButton.addEventListener('click', () => {
 // Update Stream Elements
 setInterval(function () {
     if (!isLocation('ingame')) {
-        monitor.reset(enhanced_settings.monitorAutostart === 1)
+        monitor.reset(enhanced_settings.monitorAutostart)
         return
     }
 
@@ -1518,9 +1518,23 @@ enhanced_monitorAutostart.style.cursor = 'pointer'
 enhanced_monitorAutostart.style.userSelect = 'none'
 enhanced_monitorAutostart.tabIndex = '0'
 enhanced_monitorAutostart.addEventListener('click', function () {
-    enhanced_settings.monitorAutostart = (enhanced_settings.monitorAutostart + 1) % 2
+    let option
+    if (enhanced_settings.monitorAutostart === 0 || enhanced_settings.monitorAutostart === "Hidden") {
+        option = "Standard"
+    } else if (enhanced_settings.monitorAutostart === 1 || enhanced_settings.monitorAutostart === "Standard") {
+        option = "Compact"
+    } else if (enhanced_settings.monitorAutostart === "Compact") {
+        option = "Menu"
+    } else {
+        option = "Hidden"
+    }
+
+    // persist settings
+    enhanced_settings.monitorAutostart = option
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-    enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
+
+    // update ui
+    enhanced_applySettings('monitorautostart', option)
 })
 enhanced_settingsStream.append(enhanced_monitorAutostart)
 
@@ -3294,6 +3308,12 @@ setInterval(function () {
     }
 }, 200)
 
+/**
+ * Updates the home menu option corresponding to the specified "set" parameter.
+ *
+ * @param {string} set - Setting identifier: "codec", "resolution", "monitorautostart", ...
+ * @param {number} opt - Option state represented by an integer
+ */
 function enhanced_applySettings(set, opt) {
     switch (set) {
         case 'codec':
@@ -3347,18 +3367,7 @@ function enhanced_applySettings(set, opt) {
             }
             break
         case 'monitorautostart': // stadia menu (home)
-            switch (opt) {
-                case 0:
-                    enhanced_monitorAutostart.style.color = ''
-                    enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.manual + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stream Monitor Start: Set to "Manual".', enhanced_consoleEnhanced, '')
-                    break
-                case 1:
-                    enhanced_monitorAutostart.style.color = "#00e0ba"
-                    enhanced_monitorAutostart.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.streammon + ": " + enhanced_lang.auto + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.streammondesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.manual + '</span></span>'
-                    console.log('%cStadia Enhanced' + '%c ⚙️ - Stream Monitor Start: Set to "Auto".', enhanced_consoleEnhanced, '')
-                    break
-            }
+            _applyMonitorAutoStart(enhanced_lang, opt)
             break
         case 'notification':
             switch (opt) {
@@ -3781,6 +3790,80 @@ function enhanced_applySettings(set, opt) {
             }
             break
     }
+
+    /**
+     * @param {Object} translations
+     * @param {string} translations.streammon
+     * @param {string} translations.streammondesc
+     * @param {string} translations.default
+     * @param {string} translations.manual
+     * @param {string} translations.streammonmodestandard - Standard mode translation
+     * @param {string} translations.streammonmodecompact - Compact mode translation
+     * @param {string} translations.streammonmodemenu - Menu mode translation
+     * @param {string|number} option - Option state represented by a string value (e.g. "Standard", "Compact") or an
+     * integer value of 0 or 1 (legacy)
+     */
+    function _applyMonitorAutoStart(translations, option) {
+        const COLOR_ACTIVE = "#00e0ba"
+
+        switch (option) {
+            case 0: // legacy support
+            case "Hidden":
+                showInactive();
+                break
+            case 1: // legacy support
+            case "Standard":
+                showActive(translations.streammonmodestandard || "Standard")
+                break
+            case "Compact":
+                showActive(translations.streammonmodecompact || "Compact")
+                break
+            case "Menu":
+                showActive(translations.streammonmodemenu || "Menu")
+                break
+        }
+        enhanced_log(`Stream Monitor Start: Set to "${option}".`)
+
+        function showInactive() {
+            enhanced_monitorAutostart.style.color = ''
+            enhanced_monitorAutostart.innerHTML = `
+                
+                <!-- Icon -->
+                <i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i>
+                
+                <span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">
+                    <!-- Title -->
+                    ${translations.streammon}: ${translations.manual}<br>
+                    
+                    <!-- Description -->
+                    <span style="color: #fff;font-size: 0.7rem;">${translations.streammondesc}</span><br>
+
+                    <!-- Default -->
+                    <span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">${translations.default}: ${translations.manual}</span>
+                </span>
+            `
+        }
+
+        function showActive(modeTranslation) {
+            enhanced_monitorAutostart.style.color = COLOR_ACTIVE
+            enhanced_monitorAutostart.innerHTML = `
+                
+                <!-- Icon -->
+                <i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i>
+                
+                <span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">
+                    <!-- Title -->
+                    ${translations.streammon}: ${modeTranslation}<br>
+                
+                    <!-- Description -->
+                    <span style="color: #fff;font-size: 0.7rem;">${translations.streammondesc}</span><br>
+    
+                    <!-- Default -->
+                    <span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">${translations.default}: ${translations.manual}</span>
+                </span>
+            `
+        }
+    }
 }
 
 function enhanced_injectStyle(content, id) {
@@ -4084,4 +4167,8 @@ function isLocation(loc) {
         case 'settings':
             return document.location.href.indexOf('/settings') != -1
     }
+}
+
+function enhanced_log(log) {
+    console.log(`%cStadia Enhanced%c ⚙️ - ${log}`, enhanced_consoleEnhanced, '')
 }
