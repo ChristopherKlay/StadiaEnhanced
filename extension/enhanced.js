@@ -486,7 +486,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 
 var enhanced_monitorState = 0
 
-const monitor = new StreamMonitor(settingsService, enhanced_lang, enhanced_settings.monitorPosition, enhanced_settings.monitorAutostart === 1)
+const monitor = new StreamMonitor(settingsService, enhanced_lang, enhanced_settings.monitorPosition)
 
 const enhanced_streamMonitor = monitor.getElement();
 
@@ -531,7 +531,7 @@ enhanced_monitorButton.addEventListener('click', () => {
 // Update Stream Elements
 setInterval(function () {
     if (!isLocation('ingame')) {
-        monitor.reset(enhanced_settings.monitorAutostart)
+        monitor.reset(settingsService.getMonitorAutoStart())
         return
     }
 
@@ -1518,20 +1518,20 @@ enhanced_monitorAutostart.style.cursor = 'pointer'
 enhanced_monitorAutostart.style.userSelect = 'none'
 enhanced_monitorAutostart.tabIndex = '0'
 enhanced_monitorAutostart.addEventListener('click', function () {
+    const autoStartMode = settingsService.getMonitorAutoStart()
     let option
-    if (enhanced_settings.monitorAutostart === 0 || enhanced_settings.monitorAutostart === "Hidden") {
-        option = "Standard"
-    } else if (enhanced_settings.monitorAutostart === 1 || enhanced_settings.monitorAutostart === "Standard") {
-        option = "Compact"
-    } else if (enhanced_settings.monitorAutostart === "Compact") {
-        option = "Menu"
+    if (autoStartMode === 0 || autoStartMode === monitor.MODE.HIDDEN) {
+        option = monitor.MODE.STANDARD
+    } else if (autoStartMode === 1 || autoStartMode === monitor.MODE.STANDARD) {
+        option = monitor.MODE.COMPACT
+    } else if (autoStartMode === monitor.MODE.COMPACT) {
+        option = monitor.MODE.MENU
     } else {
-        option = "Hidden"
+        option = monitor.MODE.HIDDEN
     }
 
-    // persist settings
-    enhanced_settings.monitorAutostart = option
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    enhanced_settings.monitorAutostart = option // updates current settings, used in other parts of the code
+    settingsService.saveMonitorAutoStart(option)
 
     // update ui
     enhanced_applySettings('monitorautostart', option)

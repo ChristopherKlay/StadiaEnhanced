@@ -22,11 +22,11 @@ class StreamMonitor {
      * @readonly
      * @enum {string}
      */
-    _MODE = {
-        standard: "Standard",
-        compact: "Compact",
-        menu: "Menu",
-        hidden: "Hidden"
+    MODE = {
+        STANDARD: "Standard",
+        COMPACT: "Compact",
+        MENU: "Menu",
+        HIDDEN: "Hidden"
     }
 
     _settingsService;
@@ -40,9 +40,8 @@ class StreamMonitor {
      * @param {SettingsService} settingsService - used for persisting monitor-related settings
      * @param {translation[]} translations
      * @param {string} initialPosition - position on screen where the monitor should be shown
-     * @param {("Standard"|"Compact"|"Menu"|"Hidden")} autoStartMode
      */
-    constructor(settingsService, translations, initialPosition, autoStartMode) {
+    constructor(settingsService, translations, initialPosition) {
         console.debug("Initializing Stream Monitor...")
         this._settingsService = settingsService
         this.translations = translations
@@ -54,12 +53,14 @@ class StreamMonitor {
         this._iconElement = this._createIconElement()
 
         this._setPositionFromString(initialPosition)
+
+        const autoStartMode = settingsService.getMonitorAutoStart()
         this.reset(autoStartMode)
 
         const initialMode = this._settingsService.getMonitorMode();
         const isLegacyMode = Number.isInteger(initialMode)
 
-        if (isLegacyMode && autoStartMode !== this._MODE.hidden) {
+        if (isLegacyMode && autoStartMode !== this.MODE.HIDDEN) {
             const legacyMode = this._modeFromSettingsNumber(initialMode)
             this._currentMode = legacyMode
 
@@ -67,7 +68,7 @@ class StreamMonitor {
         }
 
         this._currentMode = initialMode
-        if (initialMode === this._MODE.hidden && autoStartMode !== this._MODE.hidden) {
+        if (initialMode === this.MODE.HIDDEN && autoStartMode !== this.MODE.HIDDEN) {
             this.showMode(autoStartMode)
         }
 
@@ -104,7 +105,7 @@ class StreamMonitor {
 
         this._menuElement.reset()
 
-        if (this._currentMode === this._MODE.hidden && autoStartMode !== this._MODE.hidden) {
+        if (this._currentMode === this.MODE.HIDDEN && autoStartMode !== this.MODE.HIDDEN) {
             console.debug(`Overwriting monitor mode to "${autoStartMode}" because of enabled autostart`)
             this.showMode(autoStartMode)
         }
@@ -114,16 +115,16 @@ class StreamMonitor {
 
     toggleMode() {
         switch (this._currentMode) {
-            case this._MODE.hidden:
+            case this.MODE.HIDDEN:
                 this._switchToStandard()
                 break
-            case this._MODE.standard:
+            case this.MODE.STANDARD:
                 this._switchToCompact()
                 break
-            case this._MODE.compact:
+            case this.MODE.COMPACT:
                 this._switchToMenu()
                 break
-            case this._MODE.menu:
+            case this.MODE.MENU:
                 this._switchToHidden()
                 break
         }
@@ -131,16 +132,16 @@ class StreamMonitor {
 
     showMode(mode) {
         switch (mode) {
-            case this._MODE.standard:
+            case this.MODE.STANDARD:
                 this._switchToStandard()
                 break
-            case this._MODE.compact:
+            case this.MODE.COMPACT:
                 this._switchToCompact()
                 break
-            case this._MODE.menu:
+            case this.MODE.MENU:
                 this._switchToMenu()
                 break
-            case this._MODE.hidden:
+            case this.MODE.HIDDEN:
                 this._switchToHidden()
                 break
         }
@@ -165,15 +166,15 @@ class StreamMonitor {
             .replace("Software", this.translations.software)
 
         switch (this._currentMode) {
-            case this._MODE.standard:
+            case this.MODE.STANDARD:
                 this.element.innerHTML = this._createFull(data)
                 break
 
-            case this._MODE.compact:
+            case this.MODE.COMPACT:
                 this.element.innerHTML = this._createSimple(data)
                 break
 
-            case this._MODE.menu:
+            case this.MODE.MENU:
                 this._menuElement.updateContent(
                     data.codec,
                     data.resolution,
@@ -202,7 +203,7 @@ class StreamMonitor {
     }
 
     isVisible() {
-        return this._currentMode !== this._MODE.hidden
+        return this._currentMode !== this.MODE.HIDDEN
     }
 
     getElement() {
@@ -225,37 +226,37 @@ class StreamMonitor {
     _switchToStandard() {
         this.ensurePosition();
         this._showStandard()
-        this._updateIcon(this._MODE.standard)
-        this._settingsService.saveMonitorMode(this._MODE.standard)
+        this._updateIcon(this.MODE.STANDARD)
+        this._settingsService.saveMonitorMode(this.MODE.STANDARD)
 
-        this._currentMode = this._MODE.standard
+        this._currentMode = this.MODE.STANDARD
     }
 
     _switchToCompact() {
         this.ensurePosition();
         this._showCompact(this._currentData)
-        this._updateIcon(this._MODE.compact)
-        this._settingsService.saveMonitorMode(this._MODE.compact)
+        this._updateIcon(this.MODE.COMPACT)
+        this._settingsService.saveMonitorMode(this.MODE.COMPACT)
 
-        this._currentMode = this._MODE.compact
+        this._currentMode = this.MODE.COMPACT
     }
 
     _switchToMenu() {
         this.hide()
         this._showMenu(this._currentData)
-        this._updateIcon(this._MODE.menu)
-        this._settingsService.saveMonitorMode(this._MODE.menu)
+        this._updateIcon(this.MODE.MENU)
+        this._settingsService.saveMonitorMode(this.MODE.MENU)
 
-        this._currentMode = this._MODE.menu
+        this._currentMode = this.MODE.MENU
     }
 
     _switchToHidden() {
         this.hide()
         this._menuElement.hide()
-        this._updateIcon(this._MODE.hidden)
-        this._settingsService.saveMonitorMode(this._MODE.hidden)
+        this._updateIcon(this.MODE.HIDDEN)
+        this._settingsService.saveMonitorMode(this.MODE.HIDDEN)
 
-        this._currentMode = this._MODE.hidden
+        this._currentMode = this.MODE.HIDDEN
     }
 
     _showStandard() {
@@ -563,13 +564,13 @@ class StreamMonitor {
     _modeFromSettingsNumber(settingsNumber) {
         switch (settingsNumber) {
             case 0:
-                return this._MODE.standard
+                return this.MODE.STANDARD
             case 1:
-                return this._MODE.compact
+                return this.MODE.COMPACT
             case 2:
-                return this._MODE.menu
+                return this.MODE.MENU
             default:
-                return this._MODE.hidden
+                return this.MODE.HIDDEN
         }
     }
 
@@ -614,8 +615,8 @@ class StreamMonitor {
         const $icon = this._iconElement.querySelector("span.X5peoe")
         const $typeDescription = this._iconElement.querySelector("#monitor-type")
 
-        $icon.style.color = mode === this._MODE.hidden ? "" : "#00e0ba"
-        $typeDescription.textContent = mode === this._MODE.hidden ? "" : mode
+        $icon.style.color = mode === this.MODE.HIDDEN ? "" : "#00e0ba"
+        $typeDescription.textContent = mode === this.MODE.HIDDEN ? "" : mode
     }
 
     _disableIcon() {

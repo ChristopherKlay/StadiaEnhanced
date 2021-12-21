@@ -38,4 +38,18 @@ class SettingsService {
         settings.monitorMode = mode
         this.saveSettings(settings)
     }
+
+    getMonitorAutoStart() {
+        const settings = this.getSettings()
+        return settings.monitorAutostart
+    }
+
+    /**
+     * @param {string} mode
+     */
+    saveMonitorAutoStart(mode) {
+        const settings = this.getSettings()
+        settings.monitorAutostart = mode
+        this.saveSettings(settings)
+    }
 }
