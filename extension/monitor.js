@@ -34,7 +34,6 @@ class StreamMonitor {
     /**
      * @param {SettingsService} settingsService - used for persisting monitor-related settings
      * @param {translation[]} translations
-     * @param {string} initialMode
      * @param {string} initialPosition - position on screen where the monitor should be shown
      * @param {boolean} autoStartEnabled - if monitor should be automatically shown on startup
      */
@@ -53,9 +52,9 @@ class StreamMonitor {
         this.reset(autoStartEnabled)
 
         const initialMode = this._settingsService.getMonitorMode();
-        const isLegacy = Number.isInteger(initialMode)
+        const isLegacyMode = Number.isInteger(initialMode)
 
-        if (isLegacy) {
+        if (isLegacyMode && autoStartEnabled) {
             const legacyMode = this._modeFromSettingsNumber(initialMode)
             this._currentMode = legacyMode
 
