@@ -30,7 +30,7 @@ class StreamMonitor {
     }
 
     _settingsService;
-    translations;
+    _translations;
     element;
 
     _currentMode;
@@ -45,7 +45,7 @@ class StreamMonitor {
     constructor(settingsService, translations, initialPosition) {
         console.debug("Initializing Stream Monitor...")
         this._settingsService = settingsService
-        this.translations = translations
+        this._translations = translations
 
         this.element = this._createElement()
         this._menuElement = new MenuStreamMonitor(translations)
@@ -171,8 +171,8 @@ class StreamMonitor {
         this.ensurePosition();
 
         data.codec = data.codec
-            .replace("Hardware", this.translations.hardware)
-            .replace("Software", this.translations.software)
+            .replace("Hardware", this._translations.hardware)
+            .replace("Software", this._translations.software)
 
         switch (this._currentMode) {
             case this.MODE.STANDARD:
@@ -299,6 +299,15 @@ class StreamMonitor {
         this._menuElement.show()
     }
 
+    /**
+     * @param {Object|null} data
+     * @param {("Hardware H264"|"Hardware VP9"|"Software VP9")} data.codec - The video compression standard used
+     * @param {string} data.resolution
+     * @param {number} data.fps
+     * @param {number} data.latency
+     * @param {number} data.decode
+     * @param {number} data.frameDropPerc
+     */
     _createFull(data) {
         if (data == null) {
             return ""
@@ -311,6 +320,15 @@ class StreamMonitor {
         `
     }
 
+    /**
+     * @param {Object|null} data
+     * @param {("Hardware H264"|"Hardware VP9"|"Software VP9")} data.codec - The video compression standard used
+     * @param {string} data.resolution
+     * @param {number} data.fps
+     * @param {number} data.latency
+     * @param {number} data.decode
+     * @param {number} data.frameDropPerc
+     */
     _createSimple(data) {
         return `
             <section id="monitor_simple">
@@ -345,9 +363,15 @@ class StreamMonitor {
         `
     }
 
+    /**
+     * @param {number} fps
+     * @param {number} decode
+     * @param {number} frameDropPerc
+     * @param {number} latency
+     */
     _calculateConnectionColor(fps, decode, frameDropPerc, latency) {
-        if (parseInt(fps) < 1) {
-            return 'white'
+        if (fps < 1) {
+            return "white"
         }
 
         if (decode > 12 || frameDropPerc > 1 || latency > 100) {
@@ -365,6 +389,9 @@ class StreamMonitor {
         return this.COLOR_PERFECT
     }
 
+    /**
+     * @param {number} decode
+     */
     _calculateDecodeColor(decode) {
         if (decode > 12) {
             return this.COLOR_VERY_BAD
@@ -381,6 +408,9 @@ class StreamMonitor {
         return this.COLOR_PERFECT
     }
 
+    /**
+     * @param {number} frameDropPerc
+     */
     _calculateFrameDropColor(frameDropPerc) {
         if (frameDropPerc > 1) {
             return this.COLOR_VERY_BAD
@@ -397,6 +427,9 @@ class StreamMonitor {
         return this.COLOR_PERFECT
     }
 
+    /**
+     * @param {number} latency
+     */
     _calculateLatencyColor(latency) {
         if (latency > 100) {
             return this.COLOR_VERY_BAD;
@@ -425,20 +458,31 @@ class StreamMonitor {
         return this.element.style.display === "none"
     }
 
+    /**
+     * @param {Object|null} data
+     * @param {("Hardware H264"|"Hardware VP9"|"Software VP9")} data.codec - The video compression standard used
+     * @param {string} data.resolution
+     * @param {number} data.fps
+     * @param {number} data.latency
+     * @param {number} data.decode
+     * @param {string} data.framedrop
+     * @param {number} data.framedropPerc
+     * @param {string} data.compression
+     */
     _createStreamSection(data) {
         return `
             <section>
                 <!-- Header -->
-                <div class="tag">${this.translations.stream}</div>
+                <div class="tag">${this._translations.stream}</div>
                 
                 <div class="grid">
                     <!-- Codec -->
-                    <span>${this.translations.codec}</span><span>${data.codec || "-"}</span>
+                    <span>${this._translations.codec}</span><span>${data.codec || "-"}</span>
                     <span></span>
                     
                     <!-- Resolution -->
                     <div class="border"></div>
-                    <span>${this.translations.resolution}</span>
+                    <span>${this._translations.resolution}</span>
                     <span>${data.resolution}</span>
                     <span></span>
                     
@@ -449,17 +493,17 @@ class StreamMonitor {
                     <span></span>
                     
                     <!-- Compression (if VP9 ) -->
-                    ${this._createCompression(data)}
+                    ${this._createCompression(data.codec, data.compression)}
 
                     <!-- Decode -->
                     <div class="border"></div>
-                    <span>${this.translations.decodetime}</span>
+                    <span>${this._translations.decodetime}</span>
                     <span>${data.decode} ms</span>
                     <span class="connection" style="color: ${(this._calculateDecodeColor(data.decode))};">⬤</span>
                     
                     <!-- Framedrop -->
                     <div class="border"></div>
-                    <span>${this.translations.framedrop}</span>
+                    <span>${this._translations.framedrop}</span>
                     <span>${data.framedrop}</span>
                     <span class="connection" style="color: ${(this._calculateFrameDropColor(data.framedropPerc))};">⬤</span>
                     
@@ -472,21 +516,21 @@ class StreamMonitor {
         return `
             <section>           
                 <!-- Header -->    
-                <div class="tag">${this.translations.session}</div>
+                <div class="tag">${this._translations.session}</div>
                 
                 <div class="grid">
                     <!-- Date -->
-                    <span>${this.translations.date}</span><span>${date}</span>
+                    <span>${this._translations.date}</span><span>${date}</span>
                     <span></span>
                     
                     <!-- Time -->
                     <div class="border"></div>                    
-                    <span>${this.translations.time}</span><span>${time}</span>
+                    <span>${this._translations.time}</span><span>${time}</span>
                     <span></span>
 
                     <!-- Session time -->
                     <div class="border"></div>
-                    <span>${this.translations.sessiontime}</span><span>${sessionDuration}</span>
+                    <span>${this._translations.sessiontime}</span><span>${sessionDuration}</span>
                     <span></span>
                     
                 </div>
@@ -498,39 +542,39 @@ class StreamMonitor {
         return `
             <section>
                 <!-- Header -->
-                <div class="tag">${this.translations.network}</div>
+                <div class="tag">${this._translations.network}</div>
 
                 <div class="grid">
                     <!-- Session Traffic -->
-                    <span>${this.translations.trafficsession}</span>
+                    <span>${this._translations.trafficsession}</span>
                     <span>${data.sessionTraffic}</span>
                     <span></span>
                     
                     <!-- Current Traffic -->
                     <div class="border"></div>
-                    <span>${this.translations.trafficcurrent}</span>
+                    <span>${this._translations.trafficcurrent}</span>
                     <span>${data.currentTraffic}</span>
                     <span></span>
                     
                     <!-- Avg Traffic -->
                     <div class="border"></div>
-                    <span>${this.translations.trafficaverage}</span>
+                    <span>${this._translations.trafficaverage}</span>
                     <span>${data.averageTraffic}</span>
                     <span></span>
                     
                     <!-- Packetloss -->
                     <div class="border"></div>
-                    <span>${this.translations.packetloss}</span>
+                    <span>${this._translations.packetloss}</span>
                     <span>${data.packetloss}</span>
                     <span></span>
                     
                     <!-- Latency -->
                     <div class="border"></div>
-                    <span>${this.translations.latency}</span><span>${data.latency} ms</span><span class="connection" style="color: ${(this._calculateLatencyColor(data.latency))};">⬤</span>
+                    <span>${this._translations.latency}</span><span>${data.latency} ms</span><span class="connection" style="color: ${(this._calculateLatencyColor(data.latency))};">⬤</span>
                     
                     <!-- Jitter -->
                     <div class="border"></div>
-                    <span>${this.translations.jitter}</span>
+                    <span>${this._translations.jitter}</span>
                     <span>${data.jitter}</span>
                     <span></span>
                    
@@ -539,15 +583,19 @@ class StreamMonitor {
         `
     }
 
-    _createCompression(data) {
-        if (!data.codec.includes('VP9')) {
+    /**
+     * @param {string} codec
+     * @param {string} compression
+     */
+    _createCompression(codec, compression) {
+        if (!codec.includes("VP9")) {
             return ""
         }
 
         return `
             <div class="border"></div>
-            <span>${this.translations.compression}</span>
-            <span>${data.compression}</span>
+            <span>${this._translations.compression}</span>
+            <span>${compression}</span>
             <span></span>
         `
     }

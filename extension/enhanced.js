@@ -25,54 +25,18 @@ const settingsService = new SettingsService(username)
 var enhanced_storedSettings = settingsService.getSettings()
 
 // Default settings
-var enhanced_settings = {
-    user: username,
-    version: '0.0.0',
-    avatar: '',
-
-    monitorMode: 9, // 0=Standard, 1=Compact, 2=Menu, 9=Hidden/Off
-    monitorAutostart: 0, // 0=don't show on startup, 1=show on startup
-    monitorPosition: '1rem|1rem', // top + "|" + left
-
-    clockMode: 0,
-    clockOption: 0,
-    codec: 0,
-    resolution: 0,
-    gridSize: 0,
-    desktopWidth: screen.width,
-    desktopHeight: screen.height,
-    filter: 0,
-    hideMessagePreview: 0,
-    hideQuickReply: 0,
-    hideInlinePreview: 0,
-    hideOfflineUsers: 0,
-    hideInvisibleUsers: 0,
-    hideLabels: 0,
-    dimOverlay: 0,
-    hideUserMedia: 0,
-    hideCategories: 0,
-    splitStore: 0,
-    hideFamilySharing: 0,
-    enableShortcuts: 0,
-    enableStadiaDatabase: 1,
-    enableStadiaHunters: 0,
-    updateNotifications: 0,
-    streamMode: 0,
-    wishlist: "",
-    gameFilter: "",
-    favoriteList: "",
-    postprocess: {}
-}
+var enhanced_settings = settingsService.getDefaultSettings()
 
 // Merge settings
 if (enhanced_storedSettings) {
     const enhanced_oldSettings = enhanced_storedSettings
     enhanced_settings.version = enhanced_oldSettings.version
     enhanced_updateSettings(enhanced_oldSettings)
-    console.log('%cStadia Enhanced' + '%c ⚙️ - Profile: ' + enhanced_settings.user + ' loaded.', enhanced_consoleEnhanced, '')
+
+    enhanced_log(`Profile: ${enhanced_settings.user} loaded.`)
 } else {
-    console.log('%cStadia Enhanced' + '%c ⚙️ - Profile: Not found. Generating new profile with default values.', enhanced_consoleEnhanced, '')
     settingsService.saveSettings(enhanced_settings)
+    enhanced_log("Profile: Not found. Generating new profile with default values.")
 }
 
 // Check for updates
@@ -1519,10 +1483,12 @@ enhanced_monitorAutostart.style.userSelect = 'none'
 enhanced_monitorAutostart.tabIndex = '0'
 enhanced_monitorAutostart.addEventListener('click', function () {
     const autoStartMode = settingsService.getMonitorAutoStart()
+
+    // cycle through the available modes
     let option
-    if (autoStartMode === 0 || autoStartMode === monitor.MODE.HIDDEN) {
+    if (autoStartMode === monitor.MODE.HIDDEN) {
         option = monitor.MODE.STANDARD
-    } else if (autoStartMode === 1 || autoStartMode === monitor.MODE.STANDARD) {
+    } else if (autoStartMode === monitor.MODE.STANDARD) {
         option = monitor.MODE.COMPACT
     } else if (autoStartMode === monitor.MODE.COMPACT) {
         option = monitor.MODE.MENU
@@ -3311,8 +3277,8 @@ setInterval(function () {
 /**
  * Updates the home menu option corresponding to the specified "set" parameter.
  *
- * @param {string} set - Setting identifier: "codec", "resolution", "monitorautostart", ...
- * @param {number} opt - Option state represented by an integer
+ * @param {("codec"|"resolution"|"monitorautostart"|"notification"|"gridsize"|"clock"|"filter"|"messagepreview"|"quickreply"|"inlinepreview"|"offlineusers"|"invisibleusers"|"gamelabel"|"dimoverlay"|"mediapreview"|"categorypreview"|"storelist"|"familysharing"|"shortcuts"|"stadiadatabase"|"stadiahunters"|"streammode"|"letterbox"|"avatar"|"favorite"|"resetall"|"updateall")} set - Setting identifier
+ * @param {number|string} opt - Option state represented by an integer
  */
 function enhanced_applySettings(set, opt) {
     switch (set) {
@@ -3776,7 +3742,7 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings('usermedia', enhanced_settings.hideUserMedia)
             enhanced_applySettings('streammode', enhanced_settings.streamMode)
             enhanced_applySettings('categorypreview', enhanced_settings.hideCategories)
-            enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
+            enhanced_applySettings('monitorautostart', settingsService.getMonitorAutoStart())
             enhanced_applySettings('storelist', enhanced_settings.splitStore)
             enhanced_applySettings('shortcuts', enhanced_settings.enableShortcuts)
             enhanced_applySettings('stadiadatabase', enhanced_settings.enableStadiaDatabase)
