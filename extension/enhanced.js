@@ -3822,6 +3822,9 @@ function enhanced_applySettings(set, opt) {
                 showActive(translations.streammonmodemenu || "Menu")
                 break
         }
+
+        monitor.showMode(option)
+
         enhanced_log(`Stream Monitor Start: Set to "${option}".`)
 
         function showInactive() {

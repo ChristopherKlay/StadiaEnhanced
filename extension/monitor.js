@@ -12,8 +12,8 @@ class StreamMonitor {
     ELEMENT_LATENCY_SELECTOR = ".monitor-latency"
 
     // Stadias Color Coding
-    COLOR_VERY_BAD = "#FF7070"; // red
-    COLOR_BAD = "#FFB83D"; // yellow
+    COLOR_VERY_BAD = "#FF7070" // red
+    COLOR_BAD = "#FFB83D" // yellow
     COLOR_GOOD = "#00E0BA" // green
     COLOR_PERFECT = "#44BBD8" // blue
 
@@ -35,6 +35,7 @@ class StreamMonitor {
 
     _currentMode;
     _currentData; // convert to array for chart
+    _isInGame = false; // holds current state
 
     /**
      * @param {SettingsService} settingsService - used for persisting monitor-related settings
@@ -101,16 +102,22 @@ class StreamMonitor {
      * @param {("Standard"|"Compact"|"Menu"|"Hidden")} autoStartMode
      */
     reset(autoStartMode) {
+        if (!this._isInGame) { // already reset, no need to do it again
+            return
+        }
+
         this.updateValues(null)
 
         this._menuElement.reset()
 
-        if (this._currentMode === this.MODE.HIDDEN && autoStartMode !== this.MODE.HIDDEN) {
+        // overwrite mode for next game startup if autoStart option has been set
+        if (autoStartMode !== this.MODE.HIDDEN) {
             console.debug(`Overwriting monitor mode to "${autoStartMode}" because of enabled autostart`)
             this.showMode(autoStartMode)
         }
 
         this._disableIcon()
+        this._isInGame = false
     }
 
     toggleMode() {
@@ -156,8 +163,10 @@ class StreamMonitor {
         this._currentData = data
 
         if (data == null) {
+            this._isInGame = false
             return
         }
+        this._isInGame = true
 
         this.ensurePosition();
 

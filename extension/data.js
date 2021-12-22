@@ -16,7 +16,7 @@ class StreamDataService {
      *          Codec from Google that was developed from technology acquired when Google purchased On2 Technologies in
      *          February 2010. Supports resolutions up to 4K. In Stadia, uses a higher bitrate than H264.
      *      - "Software VP9":
-     *          See "Hardware VP9".
+     *          See "Hardware VP9". When hardware doesn't support VP, you can force it anyway.
      * @property {string} resolution - Current browser resolution in width by height (e.g. "2560x1440")
      * @property {string} fps - Frames per second of the video stream (NOT the game itself)
      * @property {string} compression
