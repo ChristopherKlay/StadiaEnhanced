@@ -55,6 +55,7 @@
             "settings.js",
             "data.js",
             "translations.js",
+            "main_menu.js",
             "monitor.js",
             "menu_monitor.js",
             "enhanced.js"

@@ -1475,13 +1475,8 @@ enhanced_resolutionPopup.addEventListener('click', function () {
 })
 
 // Stream Monitor Autostart
-var enhanced_monitorAutostart = document.createElement('div')
-enhanced_monitorAutostart.className = 'pBvcyf QAAyWd'
-enhanced_monitorAutostart.id = 'enhanced_monitorAutostart'
-enhanced_monitorAutostart.style.cursor = 'pointer'
-enhanced_monitorAutostart.style.userSelect = 'none'
-enhanced_monitorAutostart.tabIndex = '0'
-enhanced_monitorAutostart.addEventListener('click', function () {
+const autoStartElement = new MonitorAutoStartOption(enhanced_lang)
+autoStartElement.onClick(function () {
     const autoStartMode = settingsService.getMonitorAutoStart()
 
     // cycle through the available modes
@@ -1502,7 +1497,7 @@ enhanced_monitorAutostart.addEventListener('click', function () {
     // update ui
     enhanced_applySettings('monitorautostart', option)
 })
-enhanced_settingsStream.append(enhanced_monitorAutostart)
+enhanced_settingsStream.append(autoStartElement.element)
 
 // Grid - Control element for the homescreen library grid
 var enhanced_Grid = document.createElement('div')
@@ -3770,68 +3765,26 @@ function enhanced_applySettings(set, opt) {
      * integer value of 0 or 1 (legacy)
      */
     function _applyMonitorAutoStart(translations, option) {
-        const COLOR_ACTIVE = "#00e0ba"
-
         switch (option) {
             case 0: // legacy support
             case "Hidden":
-                showInactive();
+                autoStartElement.setInactive()
                 break
             case 1: // legacy support
             case "Standard":
-                showActive(translations.streammonmodestandard || "Standard")
+                autoStartElement.setActive(translations.streammonmodestandard || "Standard")
                 break
             case "Compact":
-                showActive(translations.streammonmodecompact || "Compact")
+                autoStartElement.setActive(translations.streammonmodecompact || "Compact")
                 break
             case "Menu":
-                showActive(translations.streammonmodemenu || "Menu")
+                autoStartElement.setActive(translations.streammonmodemenu || "Menu")
                 break
         }
 
         monitor.showMode(option)
 
         enhanced_log(`Stream Monitor Start: Set to "${option}".`)
-
-        function showInactive() {
-            enhanced_monitorAutostart.style.color = ''
-            enhanced_monitorAutostart.innerHTML = `
-                
-                <!-- Icon -->
-                <i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i>
-                
-                <span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">
-                    <!-- Title -->
-                    ${translations.streammon}: ${translations.manual}<br>
-                    
-                    <!-- Description -->
-                    <span style="color: #fff;font-size: 0.7rem;">${translations.streammondesc}</span><br>
-
-                    <!-- Default -->
-                    <span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">${translations.default}: ${translations.manual}</span>
-                </span>
-            `
-        }
-
-        function showActive(modeTranslation) {
-            enhanced_monitorAutostart.style.color = COLOR_ACTIVE
-            enhanced_monitorAutostart.innerHTML = `
-                
-                <!-- Icon -->
-                <i class="material-icons-extended STPv1" aria-hidden="true">settings_power</i>
-                
-                <span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">
-                    <!-- Title -->
-                    ${translations.streammon}: ${modeTranslation}<br>
-                
-                    <!-- Description -->
-                    <span style="color: #fff;font-size: 0.7rem;">${translations.streammondesc}</span><br>
-    
-                    <!-- Default -->
-                    <span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">${translations.default}: ${translations.manual}</span>
-                </span>
-            `
-        }
     }
 }
 

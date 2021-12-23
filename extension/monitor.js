@@ -38,8 +38,33 @@ class StreamMonitor {
     _isInGame = false; // holds current state
 
     /**
+     * @typedef {Object} Translations
+     * @property {string} hardware
+     * @property {string} software
+     * @property {string} stream
+     * @property {string} codec
+     * @property {string} resolution
+     * @property {string} decodetime
+     * @property {string} framedrop
+     * @property {string} session
+     * @property {string} date
+     * @property {string} time
+     * @property {string} sessiontime
+     * @property {string} network
+     * @property {string} trafficsession
+     * @property {string} trafficcurrent
+     * @property {string} trafficaverage
+     * @property {string} packetloss
+     * @property {string} latency
+     * @property {string} jitter
+     * @property {string} streammonmodestandard
+     * @property {string} streammonmodecompact
+     * @property {string} streammonmodemenu
+     */
+
+    /**
      * @param {SettingsService} settingsService - used for persisting monitor-related settings
-     * @param {translation[]} translations
+     * @param {Translations} translations
      * @param {string} initialPosition - position on screen where the monitor should be shown
      */
     constructor(settingsService, translations, initialPosition) {
@@ -673,7 +698,16 @@ class StreamMonitor {
         const $typeDescription = this._iconElement.querySelector("#monitor-type")
 
         $icon.style.color = mode === this.MODE.HIDDEN ? "" : "#00e0ba"
-        $typeDescription.textContent = mode === this.MODE.HIDDEN ? "" : mode
+        $typeDescription.textContent = this._textForMode(mode)
+    }
+
+    _textForMode(mode) {
+        switch (mode) {
+            case this.MODE.STANDARD: return this._translations.streammonmodestandard || "Standard";
+            case this.MODE.COMPACT: return this._translations.streammonmodecompact || "Compact";
+            case this.MODE.MENU: return this._translations.streammonmodemenu || "Menu";
+            default: return "";
+        }
     }
 
     _disableIcon() {
