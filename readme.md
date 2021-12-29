@@ -20,7 +20,7 @@
 - [x] Settings for used stream codec and resolution
 - [x] Quick access menu for screenshots and video captures, speedtest, the community and more
 - [x] Direct links to a list of Pro titles and games currently on sale
-- [x] Many possible adjustments for the user interface to allow for a cleaner homescreen
+- [x] Many possible adjustments for the user interface, to allow for a cleaner homescreen
 - [x] The ability to filter games, or install shortcuts for them on your device
 - [x] Slight tweaks to your messaging experience, including emoji support
 - [x] Discord presence support via DiscordRPC
@@ -30,8 +30,8 @@
 ## Installation & Usage
 
 ### Chrome Store
-* Install the extension from the official Chrome web store [here](https://chrome.google.com/webstore/detail/stadia-enhanced/ldeakaihfnkjmelifgmbmjlphdfncbfg).
-* The extension fits itself into the existing website and its main menu can be found at the top-right when opening Stadia after installation.
+* Install the extension from the official chrome web store [here](https://chrome.google.com/webstore/detail/stadia-enhanced/ldeakaihfnkjmelifgmbmjlphdfncbfg).
+* The extensions fits itself into the existing website and it's main menu can be found at the top-right when opening Stadia after installation.
 
 ### Manual
 1. Download the [newest files of the extension](https://github.com/ChristopherKlay/StadiaEnhanced/tree/main/extension).
@@ -39,18 +39,18 @@
 3. Enable developer mode.
 4. Load the downloaded files via the "Load unpacked" option.
 
-Please note that installing the extension this way removes the automatic update functionality.
+Please note that installing the extension this way, removes the automatic update functionality.
 
 ## Permissions
 
-* **"Access to your data on stadia.google.com"**: This one should be obvious; The extension requires access to the website to work, including your data (i.e. what games you own) and the right to manipulate it (to get the stream data, for example). "Data" in this context simply means the content of the Stadia website.
+* **"Access to your data on stadia.google.com"**: This one should be obvious; The extension has to access the website to work, including your data (i.e. what games you own) and the right to manipulate it (to get the stream data, for example). "Data" in this context simply means the content of the Stadia website.
 * **"Access to your browser history"**: The extension **will not read your actual history**. This permission is needed, because the extension uses wildcards to filter the pages it needs to actually run on and the current URL is part of the "browser history" permission. This helps stopping the extension from running on pages like `https://stadia.google.com/couch` that don't make use of the extension, while still loading it on `https://stadia.google.com/home`.
 
 ## Ideas? Requests? Questions?
 Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
 
 ## Translation
-If the project isn't available in your own language or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/translations.md).
+If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/translations.md).
 
 ## Community Features
 These are features developed by the community, made more accessible via Stadia Enhanced.
@@ -95,16 +95,16 @@ Simply follow these two steps:
   
   ### Why DiscordRPC?
 
-  Using Discord via your browser directly isn't possible due to multiple limitations, as it will require a dedicated desktop app that acts as the middleman for Discord and your browser — the team behind DiscordRPC provides exactly that while also allowing you to use the same extension/app combination to display other presences (i.e. for your music), including the management of active (games) vs. passive (music) presences and other things.
+  Using Discord via your browser directly isn't possible due to multiple limitations, it will require a dedicated desktop app that acts as the middleman for Discord and your browser - the team behind DiscordRPC is providing exactly that, while also allowing you to use the same extension/app combination to display other presences (i.e. for your music), including the management of active (games) vs. passive (music) presences and other things.
 
-  **"But, why don't you just develop your own app to do this or "copy" their work?"**
+  **"Why don't you just develop your own app to do this, or "copy" their work?"**
 
-  The reason I'm not developing my own solution for this feature is rather simple; time. Increasing the time I have to spend on the project by adding more and more onto it would decrease the time available to actually make sure things are working correctly in the first place. DiscordRPC offers an easy to implement solution (that is entirely optional for the user) while taking care of the maintenance at the same time.
+  The reason i'm not developing my own solution for this feature is rather simple; time. Increasing the time i have to spend on the project by adding more and more onto it, would decrease the time available to actually make sure that things are working correctly in the first place. Discord RPC offers a easy to implement solution (that is entirely optional for the user) while taking care of the maintenance at the same time.
 
-  I *could* simply copy their work (as in; fork their project and effectively copy the functionality of their extension into mine while using their desktop app), but that would result in two issues:
+  I *could* simply copy their work (as in; fork their project and effectively copy the functionality of their extension into mine, while using their desktop app) but that would result in two issues:
 
-  1. This is a project for the community and I want to respect the work spent on everything included in it. While it would *legally* be perfectly fine to just implement their work, effectively claiming that I "came up" with this as a solution, for me *personally*, it is not.
-  2. Simply copying their work would also make it basically impossible for the user to also use DiscordRPC due to compatibility issues, i.e. priority management. Using Discord's presence system via the browser is only covered by not even a handful of well-working projects and I want to avoid cutting that down further — especially if the cost is simply having to run a second, unnoticeable extension (performance-wise) that works as install-and-forget.
+  1. This is a project for the community and i want to respect the work spend on everything included in it. While it would *legally* be perfectly fine to just implement their work, effectively claiming that i "came up" with this as a solution, for me *personally*, is not.
+  2. Simply copying their work, would also make it basically impossible for the user to also use DiscordRPC, due to compatibility issues, like the priority management. Using Discords presence system via the browser is only covered by not even a handful of well working projects and i want to avoid cutting that down further - especially if the cost is simply having to run a second, unnoticeable (performance-whise) extension that works as install-and-forget.
 </details>
 
 ## Screenshots
