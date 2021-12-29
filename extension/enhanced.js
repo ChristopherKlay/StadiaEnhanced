@@ -445,22 +445,12 @@ enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 /**
  * Discord Presence
  * 
- * Support for Discords "Rich Presence" feature.
+ * Support for Discord's "Rich Presence" feature.
  * Via DiscordRPC - https://github.com/lolamtisch/Discord-RPC-Extension/
  */
 
 // Get presence data
 var enhanced_discordPresence = {}
-
-var enhanced_presenceData
-chrome.runtime.sendMessage({
-    action: 'presencedata'
-}, function (response) {
-    enhanced_presenceData = response
-    console.groupCollapsed('%cStadia Enhanced' + '%c ⚙️ - DiscordRPC: ' + Object.keys(response).length + ' entries loaded successfully.', enhanced_consoleEnhanced, '')
-    console.log(response)
-    console.groupEnd()
-})
 
 // Register
 chrome.runtime.sendMessage('agnaejlkbiiggajjmnpmeheigkflbnoo', {
@@ -2173,6 +2163,7 @@ enhanced_listFilterPro.innerHTML = enhanced_languageSupport.storeFilters[enhance
 enhanced_listFilterPro.className = 'Adwm6c'
 enhanced_listFilterPro.style.userSelect = 'none'
 enhanced_listFilterPro.style.marginLeft = '0.75rem'
+enhanced_listFilterPro.style.display = 'none'
 enhanced_listFilter.append(enhanced_listFilterPro)
 enhanced_listFilterPro.addEventListener('click', function () {
     enhanced_switchListFilter(4)
@@ -2766,18 +2757,16 @@ setInterval(function () {
 
         // Discord Presence
         var enhanced_currentStatus = document.querySelectorAll('.hxhAyf.OzUE7e.XY6ZL .TZ0BN .HDKZKb.LiQ6Hb')[0]
-        if (enhanced_currentStatus && enhanced_presenceData) {
-            if (enhanced_presenceData[enhanced_currentID]) {
-                enhanced_presenceLargeImage = enhanced_presenceData[enhanced_currentID]
-            } else {
-                enhanced_presenceLargeImage = 'stadialogo'
-            }
+        if (document.getElementsByClassName('Vvs9Me').length > 0) {
+            var enhanced_currentBackdrop = document.getElementsByClassName('Vvs9Me')[document.getElementsByClassName('Vvs9Me').length - 1].getAttribute('src') || undefined
+        }
 
+        if (enhanced_currentStatus) {
             enhanced_discordPresence = {
                 clientId: '667381280656064544',
                 presence: {
                     state: enhanced_currentStatus.textContent.replace(/[™®]/g, ' '),
-                    largeImageKey: enhanced_presenceLargeImage,
+                    largeImageKey: enhanced_currentBackdrop || 'stadialogo',
                     startTimestamp: enhanced_sessionStart,
                     instance: true,
                     buttons: [{
@@ -2884,6 +2873,7 @@ setInterval(function () {
                         }
 
                         secureInsert(enhanced_extendedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+
                     }
                 }
             }
@@ -2976,6 +2966,8 @@ setInterval(function () {
 
     // Location - Pro Games
     if (isLocation('progames')) {
+        // Display filter
+        enhanced_listFilterPro.style.display = 'flex'
 
         // UI changes and count of currently unclaimed games
         document.querySelector('.ZECEje > li:nth-child(3) > a').classList.remove('YySNWc')
@@ -2987,6 +2979,8 @@ setInterval(function () {
             }
         }
     } else {
+        enhanced_listFilterPro.style.display = 'none'
+
         enhanced_ProGamesLink.classList.remove('YySNWc')
         if (enhanced_ProGamesLink.textContentL != 'Pro') {
             enhanced_ProGamesLink.textContent = 'Pro'
