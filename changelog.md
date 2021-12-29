@@ -2,6 +2,10 @@
 
 ## Version 1.19
 
+### 1.19.1
+* Changed the "free" filter to only display on the "Pro Games" page
+* Changed the Discord RPC feature to support live game images, instead of preloaded assets
+
 ### 1.19.0
 * Added contributing guidelines to the project page
 * Updated all donation options to use Ko-fi
