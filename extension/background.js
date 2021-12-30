@@ -2,7 +2,7 @@
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.action == "extdatabase") {
-            var url = "https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/master/include/extdatabase.csv"
+            var url = "https://raw.githubusercontent.com/ChristopherKlay/StadiaEnhanced/main/include/extdatabase.csv"
             fetch(url)
                 .then(response => response.text())
                 .then(result => sendResponse(result))

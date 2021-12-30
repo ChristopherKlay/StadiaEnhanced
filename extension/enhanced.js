@@ -75,10 +75,10 @@ window.addEventListener('load', function () {
         if (enhanced_newVersion(enhanced_settings.version, enhanced_manifest.version)) {
             switch (enhanced_settings.updateNotifications) {
                 case 0:
-                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png')
+                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png')
                     break
                 case 1:
-                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png', 5)
+                    enhanced_pushNotification('Update: Version ' + enhanced_manifest.version + ' - <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/changelog.md#' + enhanced_manifest.version.replaceAll(".", "") + '" target="_blank">View Changes</a>', 'https://i.imgur.com/OBav9Gt.png', 5)
             }
             enhanced_settings.version = enhanced_manifest.version
             localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
@@ -1443,7 +1443,7 @@ enhanced_ChangelogLink.style.userSelect = 'none'
 enhanced_ChangelogLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ChangelogLink.tabIndex = '0'
 enhanced_ChangelogLink.addEventListener('click', function () {
-    window.open('https://github.com/ChristopherKlay/StadiaEnhanced/blob/master/changelog.md', '_blank')
+    window.open('https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/changelog.md', '_blank')
 })
 enhanced_settingsEnhanced.append(enhanced_ChangelogLink)
 
