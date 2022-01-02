@@ -95,13 +95,19 @@ window.addEventListener('load', function () {
  *   Example: The "Game", or "Bundle" label in store lists.
  */
 var enhanced_languageSupport = {
-    supportedCodes: 'ca|da|de|en|es|fi|fr|hu|it|nl|no|pl|pt|sk|sv',
+    supportedCodes: 'ca|cs|da|de|en|es|fi|fr|hu|it|nl|no|pl|pt|sk|sv',
     storeFilters: {
         ca: {
             game: 'Joc',
             bundle: 'Paquet',
             addon: 'Complement',
             free: 'Gratis'
+        },
+        cs: {
+            game: 'Hry',
+            bundle: 'Balíček',
+            addon: 'Doplněk',
+            free: 'Za 0'
         },
         da: {
             game: 'Spil',
@@ -2129,7 +2135,9 @@ enhanced_listFilter = document.createElement('div')
 enhanced_listFilter.style.display = 'flex'
 
 enhanced_listFilterGames = document.createElement('div')
-enhanced_listFilterGames.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].game
+if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+    enhanced_listFilterGames.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].game
+}
 enhanced_listFilterGames.className = 'Adwm6c'
 enhanced_listFilterGames.style.userSelect = 'none'
 enhanced_listFilterGames.style.marginLeft = '0.75rem'
@@ -2139,7 +2147,9 @@ enhanced_listFilterGames.addEventListener('click', function () {
 })
 
 enhanced_listFilterBundles = document.createElement('div')
-enhanced_listFilterBundles.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].bundle
+if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+    enhanced_listFilterBundles.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].bundle
+}
 enhanced_listFilterBundles.className = 'Adwm6c'
 enhanced_listFilterBundles.style.userSelect = 'none'
 enhanced_listFilterBundles.style.marginLeft = '0.75rem'
@@ -2149,7 +2159,9 @@ enhanced_listFilterBundles.addEventListener('click', function () {
 })
 
 enhanced_listFilterAddOns = document.createElement('div')
-enhanced_listFilterAddOns.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].addon
+if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+    enhanced_listFilterAddOns.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].addon
+}
 enhanced_listFilterAddOns.className = 'Adwm6c'
 enhanced_listFilterAddOns.style.userSelect = 'none'
 enhanced_listFilterAddOns.style.marginLeft = '0.75rem'
@@ -2159,7 +2171,9 @@ enhanced_listFilterAddOns.addEventListener('click', function () {
 })
 
 enhanced_listFilterPro = document.createElement('div')
-enhanced_listFilterPro.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].free
+if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
+    enhanced_listFilterPro.innerHTML = enhanced_languageSupport.storeFilters[enhanced_local].free
+}
 enhanced_listFilterPro.className = 'Adwm6c'
 enhanced_listFilterPro.style.userSelect = 'none'
 enhanced_listFilterPro.style.marginLeft = '0.75rem'
@@ -2675,12 +2689,12 @@ setInterval(function () {
             if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_showState === false && enhanced_settings.filter == 1) {
                 enhanced_gameList[i].style.display = 'none';
             } else {
-                // Letterbox
+                // Letterbox [Language Supported]
                 if (enhanced_activeLetter) {
                     enhanced_ariaLabel = enhanced_gameList[i].getAttribute('aria-label')
                     if ('en|sv|fr|it|es|da|ca|pt|no|fi'.includes(enhanced_local)) {
                         enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[1].charAt(0).toUpperCase()
-                    } else if ('pl'.includes(enhanced_local)) {
+                    } else if ('pl|cs'.includes(enhanced_local)) {
                         enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[2].charAt(0).toUpperCase()
                     } else if ('sk'.includes(enhanced_local)) {
                         enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[3].charAt(0).toUpperCase()

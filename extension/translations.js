@@ -1,8 +1,16 @@
-// loads english translations by default,
+// Stadia Enhanced Translations
+// Loads english translations by default,
 // then replaces keys that are available in the user's browser language
+var enhanced_consoleEnhanced = 'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;'
+var supportedLanguages = 'ca|da|de|eo|es|fr|hu|it|nl|pt|ru|sk|sv'
+
 function loadTranslations(lang) {
     let result = _getTranslationByLang("en")
     const languageTranslation = _getTranslationByLang(lang)
+
+    if (!supportedLanguages.includes(lang)) {
+        lang = 'en'
+    }
 
     // Overwrite default (english) entry if available in the specified language
     Object.entries(result).forEach(([key]) => {
@@ -12,11 +20,7 @@ function loadTranslations(lang) {
     });
 
     let keySize = Object.keys(languageTranslation).length;
-    console.log(
-        `%cStadia Enhanced%c ⚙️ - Loading translation "${lang}" - ${keySize} keys.`,
-        'background: linear-gradient(135deg, rgba(255,76,29,0.75) 0%, rgba(155,0,99,0.75) 100%); color: white; padding: 4px 8px;',
-        ''
-    )
+    console.log('%cStadia Enhanced%c ⚙️ - Loading translation "' + lang + '" - ' + keySize + ' keys', enhanced_consoleEnhanced, '')
 
     return result
 
