@@ -2,6 +2,13 @@
 
 ## Version 1.19
 
+### 1.19.2
+* Added Romanian to the list of language-supported features
+* Updated Spanish translation
+* Fixed language based filtering breaking on unlisted languages  [[#217]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/217)
+* Fixed GitHub paths still using "master" instead of "main" [[#215]](https://github.com/ChristopherKlay/StadiaEnhanced/pull/215)
+* Fixed start up logs displaying a incorrect language when no translation exists
+
 ### 1.19.1
 * Changed the "free" filter to only display on the "Pro Games" page
 * Changed the Discord RPC feature to support live game images instead of preloaded assets
