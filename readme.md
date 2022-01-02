@@ -49,6 +49,9 @@ Please note that installing the extension this way, removes the automatic update
 ## Ideas? Requests? Questions?
 Check out the [discussions page](https://github.com/ChristopherKlay/StadiaEnhanced/discussions) and stay in contact with the community.
 
+## Can i contribute?
+Development of the extension is currently not public. For details see the [contributing infos](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/.github/contributing.md).
+
 ## Translation
 If the project isn't available in your own language, or incomplete, feel free to check out the [translation info page](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/translations.md).
 
