@@ -1,9 +1,18 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change.
+This repository is solely meant to allow users of the project to easily access the current source code of the project, push updates to translations and more.
 
-While the source code of this project is openly available and support (not just in terms of development, but feedback, translations and other sources) is always welcome, there's guidelines (structure, stability, but also legal restrictions in terms of usage with the Google Stadia service and more) the project aims to maintain. Any changes (outside of translations) to this project will be tested (by the maintainer of this project) in a (non-public) developer version of the extension first, before being pushed to the project page and Chrome Store, as a new release build.
+Pull requests for smaller fixes/changes are fine, but (see explanation below) development/management of the extension including the dev build, is limited to the author of this project.
+
+<details>
+    <summary>Detailed Explanation</summary>
+    The community has always been a vital part of the development of this project, especially feature requests, bug reports and translations.
+    
+    I however decided to limit development of the actual extension (as in; features, code structure, ..) to myself in the future, mostly for personal reasons.
+    I personally feel like i can push out new features faster and work on the extension more often, when i work on it alone, without the need to keep other changes in the back of my head, especially when juggling with multiple projects in the future and/or in moments where my time available to spend on these projects is limited and i have to either test/integrate/manage other changes, or work on my own updates.
+    
+    Outside of the actual development, everything (including the mentioned feature requests, translations and more) everything else will stay the same.
+</details>
 
 ## Translation Files
 
