@@ -61,12 +61,12 @@ HITMAN 3,2560x1440,60FPS,4K Mode | HDR | 5.1,State Share,None,990ec302c2cd4ba781
 Hotline Miami,Pixel Art/Retro,60FPS,4K Mode | 5.1,None,None,5f54e869de4441f8998e80d2c54fa74brcp1,
 Hotline Miami 2: Wrong Number,Pixel Art/Retro,60FPS,4K Mode | 5.1,None,None,68add0d67fe3491f94cb439664b1ffc7rcp1,
 Human: Fall Flat,1280x720,60FPS,4K Mode,None,None,16d98de80a3340ffa4129953ae4e3206rcp1,
-HUMANKIND - Digital Deluxe Edition,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,Direct Touch,None,3f40802097224fa1aaa0dcc4555828b7rcp1,
-Hundred Days - Winemaking Simulator,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode,None,None,0b14eb3560f94ed69375f6ca5b7491fercp1,
+HUMANKIND,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,Direct Touch,None,3f40802097224fa1aaa0dcc4555828b7rcp1,
+Hundred Days - Winemaking Simulator,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode,Direct Touch,None,0b14eb3560f94ed69375f6ca5b7491fercp1,
 IMMORTALS FENYX RISING,2880x1620,60FPS in 1080p Mode | 30/60FPS Toggle,4K Mode | HDR | 5.1,None,None,161f276db10947a199cd0260ed4dc248rcp1,
 Into the Breach,Pixel Art/Retro,60FPS,4K Mode | HDR | 5.1,None,None,1a871cfe8a7d4ebc8592c2ad4bc07150rcp1,
 It Came From Space And Ate Our Brains,3840x2160,60FPS,4K Mode,None,None,004b82924b0441c5a2ba6488cca19b90rcp1,
-Jotun: Valhalla Edition,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,c727a9083ce649e5b1cc6999c4fa2e5frcp1,
+Jotun,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,c727a9083ce649e5b1cc6999c4fa2e5frcp1,
 Journey to the Savage Planet,3840x2160,60FPS,4K Mode | 5.1,None,None,22c6d03e67474644a139de4f04a08c11rcp1,
 Judgment,1920x1080,60FPS,4K Mode | 5.1,State Share,None,3b8cebf1104f4705b8e8d1994429ec4crcp1,
 Just Dance 2020,1920x1080,60FPS,4K Mode,None,PlayStation | Xbox | Nintendo Switch,4b7f307c37364d659118bf7d435733c7rcp1,
@@ -107,7 +107,7 @@ Olympic Games Tokyo 2020,1920x1080,60FPS,4K Mode | 5.1 | HDR,Crowd Play,None,b5b
 One Hand Clapping,3840x2160,60FPS,4K Mode | HDR,None,None,76309b9f2f294b07b410e8b6aa879273rcp1,
 Orcs Must Die 3,3840x2160,60FPS,4K Mode | 5.1,Stream Connect,None,c1928530515748da9f55afc7243fd3e1rcp1,
 Outcasters,3840x2160 | Unsure,60FPS,4K Mode | HDR | 5.1,Crowd Choice | Crowd Play,None,8533fb04b9174c3f8dce10a2fec7b062rcp1,
-Outriders,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,Stream Connect,None,ad1e34961f2148568d215a8101df7693rcp1,
+Outriders,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,Stream Connect,PC | PlayStation | Xbox,ad1e34961f2148568d215a8101df7693rcp1,
 Outward,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,None,None,8185df0ce9d74d61aab58a12d4bf21a0rcp1,
 PAC-MAN Mega Tunnel Battle,3840x2160,60FPS,4K Mode | 5.1,None,None,9affbc684aeb422086bfb5d0c8bf2f55rcp1,
 Panzer Dragoon: Remake,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,ffda0b7e397243f8956f92f89b6902c4rcp1,
@@ -116,7 +116,7 @@ Phoenix Point,3840x2160,30FPS,4K Mode | HDR,None,None,18ea8c5d2f7e4f40ad783a512d
 PHOGS!,3840x2160,60FPS,4K Mode,None,None,05b9db9b9b5b489995568afd930a9db3rcp1,
 Pikuniku,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode,None,None,c02a86f966b044569ee03f80fbc86035rcp1,
 PixelJunk Raiders,2880x1620,60FPS,4K Mode | 5.1,State Share,None,5903b3b139194aefa713f216669ee334rcp1,
-PLAYERUNKNOWN'S BATTLEGROUNDS,2560x1440,60FPS,4K Mode | HDR,None,PC | PlayStation | Xbox,a4c5eb3f4e614b7fadbba64cba68f849rcp1,
+PLAYERUNKNOWN'S BATTLEGROUNDS,2560x1440,60FPS,4K Mode | HDR,None,PlayStation | Xbox,a4c5eb3f4e614b7fadbba64cba68f849rcp1,
 Power Rangers: Battle for the Grid,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,PC | PlayStation | Xbox | Nintendo Switch,bbb1a143aa3449a5a1f236a05c305c9frcp1,
 RAGE 2,1920x1080,60FPS,4K Mode | 5.1,None,None,8615c857d7d54efebd94fe17e3f2896crcp1,
 Red Dead Redemption 2,2560x1440,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,2152a1e96d5b47b18a5df7ca9bb0751frcp1,
@@ -130,12 +130,12 @@ Risk of Rain 2,1920x1080,60FPS,4K Mode,None,None,7b6d79b833354dcaa9b2461086a7763
 Rock of Ages 3: Make and Break,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,d3d8e467203d401387857d5b6cc27263rcp1,
 Saints Row: The Third Remastered,2112x1188,60FPS,4K Mode | HDR | 5.1,None,None,8d30307256df491c9d578792d11bd474rcp1,
 SAMURAI SHODOWN (Standard Ver.),2560x1440,60FPS,4K Mode | HDR | 5.1,Crowd Play,None,120348c2707740b99b509fad49a2f45drcp1,
-Scott Pilgrim VS The World: The Game Complete Edition,Pixel Art/Retro,60FPS,4K Mode,None,None,a3725b4a70aa4447b4c193125f3a2529rcp1,
+Scott Pilgrim VS The World: The Game,Pixel Art/Retro,60FPS,4K Mode,None,None,a3725b4a70aa4447b4c193125f3a2529rcp1,
 Secret Neighbor,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,4K Mode | HDR,None,None,8f8d583a2ae843e0b31fa653cea5d27drcp1,
 Sekiro: Shadows Die Twice,1920x1080,60FPS,4K Mode | HDR | 5.1,None,None,cc3f233990754f77a5819a583594f399rcp1,
 Serious Sam 4,2560x1440,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,State Share | Crowd Play,None,b3bd32ef05444a189dcdc88f8e85d7f2rcp1,
 Serious Sam Collection,2560x1440,60FPS,4K Mode | 5.1,None,None,cabec52b78264dafac69011aeacd5753rcp1,
-Shadow of the Tomb Raider Definitive Edition,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,efa3b6108d3e41689b2223ba9d48f5c8rcp1,
+Shadow of the Tomb Raider,3840x2160,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,efa3b6108d3e41689b2223ba9d48f5c8rcp1,
 Shantae: Half-Genie Hero,Not Compatible With 4K Mode,60FPS in 1080p Mode,,None,None,bd913a37ecfe4b8d8c68280f4e1781bbrcp1,
 Shantae: Risky's Revenge - Director's Cut,Pixel Art/Retro | Not Compatible With 4K Mode,60FPS in 1080p Mode,,None,None,4fe5de76fee2427591e4a61d046a20d0rcp1,
 Sniper Elite 4,2560x1440,60FPS,4K Mode | HDR | 5.1,None,None,1376a179ca87458b85acd44341854772rcp1,
@@ -151,7 +151,7 @@ SteamWorld Quest: Hand of Gilgamech,1920x1080,60FPS,4K Mode | HDR | 5.1,None,Non
 Strange Brigade,2560x1440,60FPS,4K Mode | HDR | 5.1,None,None,8e77c7a4368944589b4c9d8179d2eb4crcp1,
 Street Power Football,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,a997c2d05c1b4680b47e376367c187ecrcp1,
 Submerged: Hidden Depths,1920x1080,60FPS,4K Mode | HDR | 5.1,None,None,3c39a33bbc064308941f9276c38c30e7rcp1,
-Sundered: Eldritch Edition,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,5ec4424b963f44d18d0016322c19c9f0rcp1,
+Sundered,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,5ec4424b963f44d18d0016322c19c9f0rcp1,
 SUPER BOMBERMAN R ONLINE,2560x1440,60FPS,4K Mode | 5.1,Crowd Play,PC | PlayStation | Xbox | Nintendo Switch,2847419bbb5146ed877a308d9884f504rcp1,
 SUPERHOT,3840x2160,60FPS,4K Mode,None,None,f7afcff709e74227a5648aacadf03815rcp1,
 Superhot: Mind Control Delete,3840x2160,60FPS,4K Mode,None,None,382fe14629e148449e7b8f94e8aecb38rcp1,
@@ -169,7 +169,7 @@ TOHU,Unsure,60FPS,4K Mode,None,None,df0f55ed73d946b8a70398fea9805e2drcp1,
 Tom Clancy's Ghost Recon Breakpoint,3840x2160,30FPS | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,Stream Connect,None,11c9ece5b3a045908d77cf2b66adb010rcp1,
 Tom Clancy's Ghost Recon Wildlands,3200x1800,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,a1ce1274a83244f1a099bebef7ae1233rcp1,
 The Division 2,3840x2160,60FPS,4K Mode | HDR | 5.1,Stream Connect,PC,d43cd46c81734ca48e1a615310d0237crcp1,
-Tomb Raider: Definitive Edition,3456x1944,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,42503ac2cfcf40018c15c86b86a5508drcp1,
+Tomb Raider,3456x1944,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,42503ac2cfcf40018c15c86b86a5508drcp1,
 Trials Rising,3840x2160,60FPS,4K Mode | 5.1,None,None,a031419410cc48469ff8954ea0732640rcp1,
 Trine 4: The Nightmare Prince,2304x1296,60FPS,4K Mode,None,None,30fd580936bb43b782ec2dbdac8b2f45rcp1,
 UNO,3840x2160,60FPS,4K Mode,None,None,1694aaa3968344228424092f180a3e0ercp1,
@@ -199,7 +199,7 @@ Moonlighter,Pixel Art/Retro,60FPS,4K Mode | 5.1,None,None,703fbd4ee94441299adeaa
 Bloodstained: Ritual of the Night,1920x1080,60FPS,4K Mode,None,None,df3c9859e1d14300941f62a693d140e2rcp1,
 Streets of Rage 4,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,,None,None,819f567cf2c64e5fb252c415a1184e53rcp1,
 Threta Revelations,,,,None,,#ERROR!,checked
-Control Ultimate Edition,2560x1440,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | 5.1,None,None,2cdcb63bc3604360a157c4a4021eca35rcp1,
+Control,2560x1440,30/60FPS Toggle | 60FPS in 1080p Mode,4K Mode | 5.1,None,None,2cdcb63bc3604360a157c4a4021eca35rcp1,
 Merek's Market,3840x2160,60FPS,4K Mode | HDR | 5.1,None,None,1509dbd662b7403f9497661157b9ca6brcp1,
 ONE PIECE World Seeker,,,5.1,None,None,d7fce541196f4ec8b1bf36eef8b6f543rcp1,checked
 DreamWorks Dragons: Dawn of New Riders,3840x2160,60FPS,4K Mode,None,None,e15d4480e6e44c64b8fe79b3bfc57c9ercp1,
@@ -212,7 +212,7 @@ Madden NFL 22,,,5.1,None,None,451f31e0ce9e4ac4b928f4f6a9d2b3d0rcp1,checked
 Farming Simulator 22,3200x1800,60FPS,4K Mode | HDR | 5.1,None,PC,3bb062e7f1274d4ca83af6b5f67d9abarcp1,
 Darkwood,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,848cb37ae8f64d4cbeddc5f2e290806ercp1,
 Katamari Damacy REROLL,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,26f5878eb1ac46458bd275469f7a83fdrcp1,
-Darksiders II Deathinitive Edition,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | 5.1,None,None,694bb88862a84a4d86ef09c447094763rcp1,
+Darksiders II,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | 5.1,None,None,694bb88862a84a4d86ef09c447094763rcp1,
 ARK: Survival Evolved,1920x1080,30FPS | 30FPS in 1080p Mode,4K Mode,None,PC,805de0d15b8b4beea63e282aa6f7e8fercp1,
 Fast & Furious: Spy Racers Rise of SH1FT3R,,,,None,,#ERROR!,checked
 PJ Masks: Heroes of the Night,,,,None,None,7eb71ccf6f374859909aacc5afb8264arcp1,checked
@@ -228,7 +228,7 @@ Mafia III,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,HDR | 5.1,
 The Falconeer,3840x2160,60FPS,4K Mode | 5.1,None,None,b7be5151de924478ab54ef9afeee4826rcp1,
 Assassin's Creed Rogue Remastered,2880x1620,60FPS,4K Mode | 5.1,None,None,1aca0f17682540698822de0419062511rcp1,
 Child of Light,3840x2160,60FPS,4K Mode,None,None,0301058e2733436484091e5ca27c2298rcp1,
-Heist Simulator Early Access,,,,,None,513df9a0ecfd40199e077fc3bb9647f5rcp1,checked
+Heist Simulator Early Access,,,,None,None,513df9a0ecfd40199e077fc3bb9647f5rcp1,checked
 Ben 10: Power Trip,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,None,None,None,35cbf2108a6c4f1a982076cd41252112rcp1,
 DRAGON BALL Z: KAKAROT,3840x2160,,4K Mode,None,None,8275f275454340d78fb746ba97b6b8earcp1,checked
 Saints Row IV: Re-Elected,1920x1080 | Not Compatible With 4K Mode,60FPS in 1080p Mode,5.1,,None,5325f670b13d4c959123c437948d1834rcp1,
@@ -236,13 +236,14 @@ Wavetale,1920x1080,60FPS,4K Mode,,None,68297438f4ca40828f91b31db3ce746ercp1,
 The Jackbox Party Pack 8,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,5.1,Direct Touch,None,5553fb6e89514ca48891044b8e0ef47frcp1,
 Rayman Legends,3840x2160,60FPS,4K Mode,None,None,14b4e92868c9412ca7fd4ea88d733b2arcp1,
 Wreckfest,3840x2160,45FPS | 60FPS in 1080p Mode,4K Mode | 5.1,None,None,586beac11cb345289d46125b859396farcp1,
-TRANSFORMERS: BATTLEGROUNDS ,1920x1080 | Not Compatible With 4K Mode,30FPS,None,None,None,6ae8f01d51f04274aaec6b7e1180d62arcp1,
+TRANSFORMERS: BATTLEGROUNDS ,1920x1080 | Not Compatible With 4K Mode,30FPS in 1080p Mode,None,None,None,6ae8f01d51f04274aaec6b7e1180d62arcp1,
 Hunting Simulator 2,3840x2160,30FPS | 30FPS in 1080p Mode,4K Mode | HDR | 5.1,None,None,51fb212122da4f78ab3afc79dff66dd3rcp1,
-Blaze and the Monster Machines: Axle City Racers,,,,,None,1af0dac45ab84f4aafe61fb42c0a8badrcp1,checked
+Blaze and the Monster Machines: Axle City Racers,,,,None,None,1af0dac45ab84f4aafe61fb42c0a8badrcp1,checked
 Chicken Police - Paint it RED!,,,,None,None,7482e6a205f840d2a31ee967dfdc8f73rcp1,checked
-The Jackbox Party Pack 7,,,,,None,155df2871ce84e26839216542747b1fbrcp1,checked
+The Jackbox Party Pack 7,,,,Direct Touch,None,155df2871ce84e26839216542747b1fbrcp1,checked
 Nine To Five Early Access,2560x1440,60FPS,4K Mode | 5.1,None,PC,40655663a955472ebd69d2a6ca93b995rcp1,
 Super Animal Royale,1920x1080,60FPS,4K Mode,None,PC | Xbox | PlayStation | Nintendo Switch,1170cdbc5a234580aeb5a8cc52a37fccrcp1,
 Assassin's Creed Liberation HD,,,,None,None,f0cac2d2f8a244f893c4567bb9e5af81rcp1,checked
-Assassin's Creed III Remastered,,,,None,None,be5c488f89db474bb5b42e54dab1fe5drcp1,checked
-MONOPOLY Madness,,,,,None,#ERROR!,checked
+Assassin's Creed III Remastered,1920x1080,60FPS,4K Mode | HDR | 5.1,None,None,be5c488f89db474bb5b42e54dab1fe5drcp1,
+MONOPOLY Madness,,,,None,None,21ff68b166e1400c876b57c1276e921drcp1,checked
+The Jackbox Party Pack 6,,,,Direct Touch,None,a107146e18db4da4b3781d8b75781f88rcp1,checked
