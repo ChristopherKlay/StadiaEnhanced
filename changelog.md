@@ -2,6 +2,10 @@
 
 ## Version 1.19
 
+### 1.19.3
+* Added a "Report a bug" option via the Stadia Database community feature
+* Added a enabled/disabled status message to the filter settings option
+
 ### 1.19.2
 * Added Romanian to the list of language-supported features
 * Updated Spanish translation

@@ -94,9 +94,9 @@ var translation = {
     fps: 'Framerate',
     testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
     datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
-                On games with a resolution/framerate toggle, resolution was picked. \
-                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+        On games with a resolution/framerate toggle, resolution was picked. \
+        This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+        and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
     noteOne: '4K Mode',
     noteTwo: '30/60 FPS Toggle',
     noteThree: '60 FPS in 1080p mode',
@@ -104,6 +104,11 @@ var translation = {
     noteFive: 'Not compatible with 4K mode',
     unsupported: 'Unsupported',
     crossfriends: 'No Cross-platform Buddy System',
+    filtersettings: 'Filter Settings',
+    saturation: 'Saturation',
+    contrast: 'Contrast',
+    brightness: 'Brightness',
+    sharpen: 'Sharpen',
     community: 'Community',
     speedtest: 'Speedtest',
     quickaccess: 'Quick Access',
@@ -116,6 +121,7 @@ var translation = {
     shortcutdesc: 'Allows you to install a shortcut for a game on your device.',
     stadiadatabase: 'Stadia Database',
     stadiadatabasedesc: 'Displays a "Extended Details" section on the store page of games, which showcases framerate, resolution and more about the game.',
+    contactdev: 'Contact developer/publisher',
     stadiahunters: 'Stadia Hunters',
     stadiahuntersdesc: 'Access to the Stadia Hunters community, including achievement tracking, guides, leaderboards and more. The perfect companion for achievement hunters.',
     stadiahunterstitle: 'on Stadia Hunters',
