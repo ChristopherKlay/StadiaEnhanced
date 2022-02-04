@@ -84,6 +84,7 @@ const TRANSLATION_PT = {
     shortcutdesc: 'Permite-te instalar um atalho para um jogo no teu dispositivo',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

@@ -85,6 +85,7 @@ const TRANSLATION_SK = {
     shortcutdesc: 'Umožňuje inštaláciu skratky do hry na tomto zariadení.',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

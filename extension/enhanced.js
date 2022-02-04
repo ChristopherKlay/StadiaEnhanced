@@ -423,7 +423,8 @@ chrome.runtime.sendMessage({
                 .replace('None', enhanced_lang.unsupported)
                 .replace('No Cross-platform Buddy System', enhanced_lang.crossfriends),
             id: data[i][6],
-            tested: data[i][7]
+            tested: data[i][7],
+            contact: data[i][8]
         }
         enhanced_database.push(json)
     }
@@ -447,6 +448,25 @@ var enhanced_extendedDisclaimer = document.createElement('div')
 enhanced_extendedDisclaimer.className = 'uM5FUc'
 enhanced_extendedDisclaimer.style.marginTop = '1.5rem'
 enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
+
+// Report a bug
+var enhanced_reportBug = document.createElement('div')
+enhanced_reportBug.className = 'VCcUVc'
+enhanced_reportBug.style.paddingTop = '0'
+enhanced_reportBug.innerHTML = `<div role="button" tabindex="0" class="CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b h3mOBd rpgZzc RkyH1e">
+					                <div class="Pyflbb">
+						                <div class="tYJnXb">` + enhanced_lang.reportbug + `</div>
+					                </div>
+				                </div>`
+enhanced_reportBug.addEventListener('click', function () {
+    if (enhanced_reportBug.id.includes('https')) {
+        //Link
+        window.open(enhanced_reportBug.contact, '_blank')
+    } else {
+        //Mail
+        window.open('mailto:' + enhanced_reportBug.contact, '_blank')
+    }
+})
 
 /**
  * Discord Presence
@@ -590,6 +610,7 @@ var enhanced_filterUI = {
         slider: document.createElement('input')
     }
 }
+enhanced_filterApplied = false
 
 // Filter UI - Main
 enhanced_filterUI.main.frame.id = 'enhanced_filterUI'
@@ -600,7 +621,13 @@ enhanced_filterUI.main.frame.style.display = 'none'
 
 // Filter UI - Toggle
 enhanced_filterUI.main.toggle.className = 'R2s0be'
-enhanced_filterUI.main.toggle.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i></span><span class="caSJV" jsname="V67aGc">' + enhanced_lang.filtersettings + '</span></div>'
+enhanced_filterUI.main.toggle.innerHTML = `<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
+                                                <span class="X5peoe" jsname="pYFhU">
+                                                    <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i>
+                                                </span>
+                                                <span class="caSJV" jsname="V67aGc">` + enhanced_lang.filtersettings + `</span>
+                                                <span class="dgrMg" style="font-size: 0.75rem;"></span>
+                                            </div>`
 enhanced_filterUI.main.toggle.style.cursor = 'pointer'
 enhanced_filterUI.main.toggle.style.userSelect = 'none'
 enhanced_filterUI.main.toggle.tabIndex = '0'
@@ -749,11 +776,19 @@ function enhanced_updateFilters(setup = false) {
         enhanced_filterUI.brightness.label.textContent = enhanced_lang.brightness + ' (' + (enhanced_settings.postprocess[enhanced_currentID].brightness * 100).toFixed(0) + '%)'
         enhanced_filterUI.sharpen.label.textContent = enhanced_lang.sharpen + ' (' + enhanced_settings.postprocess[enhanced_currentID].sharpen + ')'
 
+        // Update status
+        if (enhanced_completeFilter) {
+            if (enhanced_completeFilter == 'url(#)') {
+                enhanced_filterUI.main.toggle.querySelector('.dgrMg').textContent = enhanced_lang.disabled
+            } else {
+                enhanced_filterUI.main.toggle.querySelector('.dgrMg').textContent = enhanced_lang.enabled
+            }
+        }
+
         localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
     }
 }
 
-enhanced_filterApplied = false
 document.body.appendChild(enhanced_filterUI.main.frame)
 
 // Filter - SVG
@@ -2759,6 +2794,26 @@ setInterval(function () {
             monitor.show(enhanced_settings.monitorPosition)
         }
 
+        // Stadia Database - Report a bug
+        if (enhanced_settings.enableStadiaDatabase) {
+            // Get contact from database
+            if (enhanced_reportBug.id != enhanced_currentID) {
+                for (var i in enhanced_database) {
+                    if (enhanced_database[i].id == enhanced_currentID) {
+                        enhanced_reportBug.contact = enhanced_database[i].contact
+                        break
+                    }
+                }
+            }
+
+            if (enhanced_reportBug.contact != undefined) {
+                enhanced_reportBug.style.display = 'flex'
+                secureInsert(enhanced_reportBug, 'VCcUVc', 2)
+            }
+        } else {
+            enhanced_reportBug.style.display = 'none'
+        }
+
         // Session Time
         if (enhanced_sessionStart == 0) {
             enhanced_sessionStart = Date.now()
@@ -2811,6 +2866,8 @@ setInterval(function () {
         enhanced_monitorStarted = false
         enhanced_monitorState = 0
         enhanced_sessionStart = 0
+
+        enhanced_reportBug.contact = undefined
 
         enhanced_monitorState === 0 ?
             monitor.hide() :
@@ -2872,6 +2929,17 @@ setInterval(function () {
                         // Entry - Crossplay
                         if (enhanced_database[i].crossplay != '') {
                             enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Crossplay</div><div class="tM4Phe">' + enhanced_database[i].crossplay + '</div></div>'
+                        }
+
+                        // Entry - Contact
+                        if (enhanced_database[i].contact != '') {
+                            if (enhanced_database[i].contact.includes('https')) {
+                                // Link
+                                enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.reportbug + '</div><div class="tM4Phe"><a href="' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div></div>'
+                            } else {
+                                //Mail
+                                enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.reportbug + '</div><div class="tM4Phe"><a href="mailto:' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div></div>'
+                            }
                         }
 
                         // Check for changes

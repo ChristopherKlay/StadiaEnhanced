@@ -81,6 +81,7 @@ const TRANSLATION_DA = {
     shortcutdesc: 'Giver dig mulighed for at installere en genvej til et spil på din enhed',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

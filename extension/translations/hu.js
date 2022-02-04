@@ -84,6 +84,7 @@ const TRANSLATION_HU = {
     shortcutdesc: 'Parancsikon létrehozása közvetlen játék indításhoz',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

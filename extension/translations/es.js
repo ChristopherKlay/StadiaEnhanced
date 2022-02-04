@@ -84,6 +84,7 @@ const TRANSLATION_ES = {
     shortcutdesc: 'Permite instalar un acceso directo de un juego en tu dispositivo',
     stadiadatabase: 'Detalles extendidos',
     stadiadatabasedesc: 'Muestra una sección de "Detalles extendidos" en la página de la tienda de juegos, que muestra la velocidad de fotogramas, la resolución y más sobre el juego',
+    contactdev: undefined,
     stadiahunters: 'Stadia Hunters',
     stadiahuntersdesc: 'Acceso a la comunidad de Stadia Hunters, que incluye seguimiento de logros, guías, tablas de clasificación y más. El compañero perfecto para los cazadores de logros',
     stadiahunterstitle: 'en Stadia Hunters',

@@ -79,6 +79,7 @@ const TRANSLATION_RU = {
     shortcutdesc: 'Разрешить делать скриншоты в играх',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

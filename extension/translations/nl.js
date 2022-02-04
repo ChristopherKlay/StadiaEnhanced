@@ -81,6 +81,7 @@ const TRANSLATION_NL = {
     shortcutdesc: 'Laat je een snelkoppeling voor een game installeren op je apparaat',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

@@ -82,6 +82,7 @@ const TRANSLATION_EO = {
     shortcutdesc: 'Ebligas krei ŝparvojon por ludo en via aparato.',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

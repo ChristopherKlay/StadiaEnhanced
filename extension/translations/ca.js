@@ -84,6 +84,7 @@ const TRANSLATION_CA = {
     shortcutdesc: 'Permet instal·lar una drecera per a un joc al dispositiu',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

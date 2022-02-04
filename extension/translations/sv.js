@@ -81,6 +81,7 @@ const TRANSLATION_SV = {
     shortcutdesc: 'Låter dig installera en genväg för ett spel på din enhet',
     stadiadatabase: undefined,
     stadiadatabasedesc: undefined,
+    contactdev: undefined,
     stadiahunters: undefined,
     stadiahuntersdesc: undefined,
     stadiahunterstitle: undefined,

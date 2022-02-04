@@ -84,6 +84,7 @@ const TRANSLATION_IT = {
     shortcutdesc: 'Ti permette di installare una scorciatoia per un gioco sul tuo dispositivo',
     stadiadatabase: 'Database Stadia ',
     stadiadatabasedesc: 'Visualizza una sezione "Dettagli estesi" nella pagina del negozio dei giochi, che mostra framerate, risoluzione e altro ancora sul gioco.',
+    contactdev: undefined,
     stadiahunters: 'Stadia Hunters',
     stadiahuntersdesc: 'Abilita la community Stadia Hunters, include il tracking degli obbiettivi, le guide, le classifiche e altro ancora. Il compagno perfetto per i cacciatori di obiettivi.',
     stadiahunterstitle: 'su Stadia Hunters',

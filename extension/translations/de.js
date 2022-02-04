@@ -84,6 +84,7 @@ const TRANSLATION_DE = {
     shortcutdesc: 'Erlaubt das Erstellen einer Verknüpfung von Spielen auf dem Gerät.',
     stadiadatabase: 'Stadia Datenbank',
     stadiadatabasedesc: 'Zeigt einen "Erweiterte Details" Bereich auf der Store Seite von Spielen, welcher Framerate, Auflösung und weitere Informationen über das Spiel zeigt.',
+    contactdev: 'Entwickler/Publisher kontaktieren',
     stadiahunters: 'Stadia Hunters',
     stadiahuntersdesc: 'Zugriff auf die Stadia Hunters Community, inclusive Hilfestellungen, Ranglisten und Erfolge. Der perfekte Begleiter für Erfolge Jäger.',
     stadiahunterstitle: 'auf Stadia Hunters',

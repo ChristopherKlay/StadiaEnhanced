@@ -84,6 +84,7 @@ const TRANSLATION_FR = {
     shortcutdesc: 'Permet d\'installer des raccourcis individuels pour vos jeux sur votre ordinateur',
     stadiadatabase: 'Base de données Stadia',
     stadiadatabasedesc: 'Affiche une section "Détails Supplémentaires" sur la page de chaque jeu dans le Store. Cette section indique le taux de rafraîchissement, la résolution et d\'autres informations sur le jeu.',
+    contactdev: undefined,
     stadiahunters: 'Stadia Hunters',
     stadiahuntersdesc: 'Accédez aux fonctionnalités de la communauté Stadia Hunters: suivi de trophées, guides, classements, etc. Le companion idéal des chasseurs de succès!',
     stadiahunterstitle: 'sur Stadia Hunters',

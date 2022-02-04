@@ -82,6 +82,7 @@ const TRANSLATION_EN = {
     shortcutdesc: 'Allows you to install a shortcut for a game on your device.',
     stadiadatabase: 'Stadia Database',
     stadiadatabasedesc: 'Displays a "Extended Details" section on the store page of games, which showcases framerate, resolution and more about the game.',
+    contactdev: 'Contact developer/publisher',
     stadiahunters: 'Stadia Hunters',
     stadiahuntersdesc: 'Access to the Stadia Hunters community, including achievement tracking, guides, leaderboards and more. The perfect companion for achievement hunters.',
     stadiahunterstitle: 'on Stadia Hunters',
