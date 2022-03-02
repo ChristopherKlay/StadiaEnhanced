@@ -1,7 +1,7 @@
 {
     "name": "Stadia Enhanced",
     "description": "Various new features for Google Stadia.",
-    "version": "1.19.3",
+    "version": "1.20.0",
     "manifest_version": 3,
     "author": "Christopher Klay",
     "homepage_url": "https://github.com/ChristopherKlay/StadiaEnhanced",
@@ -13,7 +13,7 @@
     },
     "action": {
         "default_popup": "popup.html",
-        "default_title": "Stadia Enhanced v1.19.3",
+        "default_title": "Stadia Enhanced v1.20.0",
         "default_icon": {
             "16": "media/logo/16.png",
             "32": "media/logo/32.png",
@@ -35,26 +35,7 @@
             "*://stadia.google.com/library*"
         ],
         "js": [
-            "inject.js",
-
-            "translations/ca.js",
-            "translations/da.js",
-            "translations/de.js",
-            "translations/en.js",
-            "translations/eo.js",
-            "translations/es.js",
-            "translations/fr.js",
-            "translations/hu.js",
-            "translations/it.js",
-            "translations/nl.js",
-            "translations/pt.js",
-            "translations/ru.js",
-            "translations/sk.js",
-            "translations/sv.js",
-
             "translations.js",
-            "monitor.js",
-            "menu_monitor.js",
             "enhanced.js"
         ]
     }],
@@ -63,25 +44,7 @@
     },
     "web_accessible_resources": [{
         "resources": [
-            "injected/stream_info.js",
-            "injected/set_resolution.js",
-            "injected/log_translations.js",
-            "injected/debug_enhanced.js",
-
-            "translations/ca.js",
-            "translations/da.js",
-            "translations/de.js",
-            "translations/en.js",
-            "translations/eo.js",
-            "translations/es.js",
-            "translations/fr.js",
-            "translations/hu.js",
-            "translations/it.js",
-            "translations/nl.js",
-            "translations/pt.js",
-            "translations/ru.js",
-            "translations/sk.js",
-            "translations/sv.js",
+            "injected.js",
 
             "media/included/hunters_logo.png",
             "media/included/hunters_banner.png"

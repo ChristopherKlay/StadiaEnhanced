@@ -1,5 +1,9 @@
-// Version Info
+// Extension Info
+var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_manifest = chrome.runtime.getManifest()
+
+// Inject Scripts
+enhanced_inject('injected.js')
 
 // Start Up
 var enhanced_timerLoadStart = window.performance.now();
@@ -13,8 +17,6 @@ if (enhanced_AccountInfo) {
 } else {
     throw new Error("No logged in user detected.");
 }
-
-var enhanced_extId = 'ldeakaihfnkjmelifgmbmjlphdfncbfg'
 var enhanced_lang = loadTranslations(enhanced_local)
 
 // Load existing settings
@@ -52,6 +54,7 @@ var enhanced_settings = {
     enableStadiaHunters: 0,
     updateNotifications: 0,
     streamMode: 0,
+    forceFocus: 0,
     wishlist: "",
     gameFilter: "",
     favoriteList: "",
@@ -218,107 +221,108 @@ enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { backgr
 enhanced_CSS += '@media screen and (min-width: 1080px) { .ZjQyU { display: flex !important; } .uSz8se { display: none !important; } }' // Searchbar displayed at >1080px
 
 // CSS Changes
-enhanced_CSS += `@media screen and (max-width: 639px) {
-                    #enhanced_letterBox { display: none; }
-                }
-                .enhanced_btnDisabled {
-                    color: grey;
-                    text-decoration: line-through;
-                }`
+enhanced_CSS += `
+    @media screen and (max-width: 639px) {
+        #enhanced_letterBox { display: none; }
+    }
+    .enhanced_btnDisabled {
+        color: grey;
+        text-decoration: line-through;
+    }`
 
 // Stream Monitor
 var enhanced_streamMonitorStyle = `
-                #enhanced_streamMonitor {
-                    color: rgba(255,255,255,0.9);
-                    cursor: pointer;
-                    font-family: "Roboto", sans-serif;
-                    font-size: 0.6875rem;
-                    position: fixed;
-                    text-shadow: 1px 1px rgba(0,0,0,0.5);
-                    width: fit-content;
-                    z-index: 1000;
-                }
-                #enhanced_streamMonitor section {
-                    background: rgba(32,33,36,0.8);
-                    border-radius: 0.5rem 0.5rem;
-                    margin-bottom: 0.4rem;
-                    padding: 0 0 0.4rem 0;
-                }
-                #enhanced_streamMonitor section:last-of-type {
-                    margin-bottom: 0;
-                }
-                #enhanced_streamMonitor section:only-child {
-                    padding: 0 0 0.3rem 0;
-                }
-                #enhanced_streamMonitor .grid {
-                    display: grid;
-                    grid-gap: 0.2rem 0.4rem;
-                    grid-template-columns: auto auto 0.8rem;
-                    grid-template-rows: auto;
-                    padding: 0 0.4rem 0 0.6rem;
-                }
-                #enhanced_streamMonitor .grid > span:nth-child(2n) {
-                    text-align: end;
-                }
-                #enhanced_streamMonitor .connection {
-                    position: relative;
-                    text-align: center;
-                    top: -2px;
-                }
-                #enhanced_streamMonitor .border {
-                    border-top: 1px solid rgba(172,13,87,0.2);
-                    grid-column: 1 / 4;
-                }
-                #enhanced_streamMonitor .split {
-                    color: rgba(255,255,255,0.3);
-                    display: inline-block;
-                    padding: 0 0.2rem;
-                }
-                #enhanced_streamMonitor .tag {
-                    border-radius: 0.5rem 0.5rem 0 0;  
-                    background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
-                    color: white;
-                    font-size: 0.75rem;
-                    font-weight: 900;
-                    margin: 0 0 0.4rem 0;
-                    padding: 0.2rem 0.4rem;
-                    text-align: start;
-                    text-shadow: none;
-                }`
+    #enhanced_streamMonitor {
+        color: rgba(255,255,255,0.9);
+        cursor: pointer;
+        font-family: "Roboto", sans-serif;
+        font-size: 0.6875rem;
+        position: fixed;
+        text-shadow: 1px 1px rgba(0,0,0,0.5);
+        width: fit-content;
+        z-index: 1000;
+    }
+    #enhanced_streamMonitor section {
+        background: rgba(32,33,36,0.8);
+        border-radius: 0.5rem 0.5rem;
+        margin-bottom: 0.4rem;
+        padding: 0 0 0.4rem 0;
+    }
+    #enhanced_streamMonitor section:last-of-type {
+        margin-bottom: 0;
+    }
+    #enhanced_streamMonitor section:only-child {
+        padding: 0 0 0.3rem 0;
+    }
+    #enhanced_streamMonitor .grid {
+        display: grid;
+        grid-gap: 0.2rem 0.4rem;
+        grid-template-columns: auto auto 0.8rem;
+        grid-template-rows: auto;
+        padding: 0 0.4rem 0 0.6rem;
+    }
+    #enhanced_streamMonitor .grid > span:nth-child(2n) {
+        text-align: end;
+    }
+    #enhanced_streamMonitor .connection {
+        position: relative;
+        text-align: center;
+        top: -2px;
+    }
+    #enhanced_streamMonitor .border {
+        border-top: 1px solid rgba(172,13,87,0.2);
+        grid-column: 1 / 4;
+    }
+    #enhanced_streamMonitor .split {
+        color: rgba(255,255,255,0.3);
+        display: inline-block;
+        padding: 0 0.2rem;
+    }
+    #enhanced_streamMonitor .tag {
+        border-radius: 0.5rem 0.5rem 0 0;  
+        background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 900;
+        margin: 0 0 0.4rem 0;
+        padding: 0.2rem 0.4rem;
+        text-align: start;
+        text-shadow: none;
+    }`
 
 // Filter Overlay
 var enhanced_filterOverlayStyle = `
-                #enhanced_filterUI {
-                    color: rgba(255,255,255,0.9);
-                    background: rgba(32,33,36,0.8);
-                    font-family: "Roboto", sans-serif;
-                    font-size: 0.6875rem;
-                    position: fixed;
-                    margin-bottom: 0.4rem;
-                    padding: 0 0 0.3rem 0;
-                    border-radius: 0.5rem 0.5rem;
-                    text-shadow: 1px 1px rgba(0,0,0,0.5);
-                    width: fit-content;
-                    z-index: 1000;
-                }
-                #enhanced_filterUI .grid {
-                    display: grid;
-                    grid-gap: 0.2rem 0.4rem;
-                    grid-template-columns: auto auto;
-                    grid-template-rows: auto;
-                    padding: 0 0.4rem 0 0.6rem;
-                }
-                #enhanced_filterUI .tag {
-                    border-radius: 0.5rem 0.5rem 0 0;  
-                    background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
-                    color: white;
-                    font-size: 0.75rem;
-                    font-weight: 900;
-                    margin: 0 0 0.4rem 0;
-                    padding: 0.2rem 0.4rem;
-                    text-align: start;
-                    text-shadow: none;
-                }`
+    #enhanced_filterUI {
+        color: rgba(255,255,255,0.9);
+        background: rgba(32,33,36,0.8);
+        font-family: "Roboto", sans-serif;
+        font-size: 0.6875rem;
+        position: fixed;
+        margin-bottom: 0.4rem;
+        padding: 0 0 0.3rem 0;
+        border-radius: 0.5rem 0.5rem;
+        text-shadow: 1px 1px rgba(0,0,0,0.5);
+        width: fit-content;
+        z-index: 1000;
+    }
+    #enhanced_filterUI .grid {
+        display: grid;
+        grid-gap: 0.2rem 0.4rem;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto;
+        padding: 0 0.4rem 0 0.6rem;
+    }
+    #enhanced_filterUI .tag {
+        border-radius: 0.5rem 0.5rem 0 0;  
+        background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 900;
+        margin: 0 0 0.4rem 0;
+        padding: 0.2rem 0.4rem;
+        text-align: start;
+        text-shadow: none;
+    }`
 
 // Inject CSS
 enhanced_injectStyle(enhanced_CSS, 'enhanced_styleGeneral')
@@ -397,34 +401,35 @@ var enhanced_database = []
 chrome.runtime.sendMessage({
     action: 'extdatabase'
 }, function (response) {
-    var data = csvToArray(response)
+    var data = enhanced_csvToArray(response)
     for (var i = 1; i < data.length; i++) {
         var json = {
-            name: data[i][0],
-            maxRes: data[i][1]
+            name: data[i][data[0].indexOf('Title')],
+            maxRes: data[i][data[0].indexOf('SE-Resolution')]
                 .replaceAll(' | ', ', ')
                 .replace('Unsure', '')
                 .replace('Not Compatible With 4K Mode', enhanced_lang.noteFive),
-            fps: data[i][2]
+            fps: data[i][data[0].indexOf('SE-Framerate')]
                 .replaceAll(' | ', ', ')
                 .replace('30FPS', '30 FPS')
                 .replace('60FPS', '60 FPS')
                 .replace('60FPS in 1080p Mode', enhanced_lang.noteThree)
                 .replace('30FPS in 1080p Mode', enhanced_lang.noteFour)
                 .replace('30/60FPS Toggle', enhanced_lang.noteFive),
-            proFeat: data[i][3]
+            proFeat: data[i][data[0].indexOf('SE-Pro-Features')]
                 .replaceAll(' | ', ', ')
                 .replace('4K Mode', enhanced_lang.noteOne),
-            stadiaFeat: data[i][4]
+            stadiaFeat: data[i][data[0].indexOf('SE-SEFS')]
                 .replaceAll(' | ', ', ')
                 .replace('None', enhanced_lang.unsupported),
-            crossplay: data[i][5]
+            crossplay: data[i][data[0].indexOf('SE-Crossplay')]
                 .replaceAll(' | ', ', ')
-                .replace('None', enhanced_lang.unsupported)
+                .replace('Unsupported', enhanced_lang.unsupported)
                 .replace('No Cross-platform Buddy System', enhanced_lang.crossfriends),
-            id: data[i][6],
-            tested: data[i][7],
-            contact: data[i][8]
+            id: data[i][data[0].indexOf('SE-ID')],
+            gamemodes: data[i][data[0].indexOf('SE-Gamemodes')],
+            tested: data[i][data[0].indexOf('Not Tested')],
+            contact: data[i][data[0].indexOf('SE-Support')]
         }
         enhanced_database.push(json)
     }
@@ -453,11 +458,12 @@ enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
 var enhanced_reportBug = document.createElement('div')
 enhanced_reportBug.className = 'VCcUVc'
 enhanced_reportBug.style.paddingTop = '0'
-enhanced_reportBug.innerHTML = `<div role="button" tabindex="0" class="CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b h3mOBd rpgZzc RkyH1e">
-					                <div class="Pyflbb">
-						                <div class="tYJnXb">` + enhanced_lang.reportbug + `</div>
-					                </div>
-				                </div>`
+enhanced_reportBug.innerHTML = `
+    <div role="button" tabindex="0" class="CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b h3mOBd rpgZzc RkyH1e">
+        <div class="Pyflbb">
+            <div class="tYJnXb">` + enhanced_lang.reportbug + `</div>
+        </div>
+    </div>`
 enhanced_reportBug.addEventListener('click', function () {
     if (enhanced_reportBug.id.includes('https')) {
         //Link
@@ -494,75 +500,433 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
     sendResponse(enhanced_discordPresence)
 })
 
-var enhanced_monitorState = 0
+/**
+ * Stream Monitor
+ * 
+ * Credits to the base by AquaRegia
+ * Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
+ */
+var enhanced_streamMonitor = document.createElement('div')
+enhanced_streamMonitor.id = 'enhanced_streamMonitor'
+enhanced_streamMonitor.layoutApplied = false
 
-const monitor = new StreamMonitor(enhanced_lang, enhanced_settings.monitorPosition)
+// Monitor Mode: Full
+enhanced_streamMonitor.layoutFull = document.createElement('div')
+enhanced_streamMonitor.layoutFull.innerHTML = `
+    <section>           
+        <!-- Session Header -->    
+        <div class="tag">` + enhanced_lang.session + `</div>
 
-const enhanced_streamMonitor = monitor.getElement();
+        <div class="grid">
+            <!-- Date -->
+            <span>` + enhanced_lang.date + `</span>
+            <span id="date"></span>
+            <span></span>
 
+            <div class="border"></div> 
+            
+            <!-- Time -->                   
+            <span>` + enhanced_lang.time + `</span>
+            <span id="time"></span>
+            <span></span>
+
+            <div class="border"></div>
+
+            <!-- Session time -->
+            <span>` + enhanced_lang.sessiontime + `</span>
+            <span id="sessiontime"></span>
+            <span></span>
+        </div>
+    </section>
+
+    <section>
+        <!-- Stream Header -->
+        <div class="tag">` + enhanced_lang.stream + `</div>
+        
+        <div class="grid">
+            <!-- Codec -->
+            <span>` + enhanced_lang.codec + `</span>
+            <span id="codec"></span>
+            <span></span>
+
+            <div class="border"></div>
+            
+            <!-- Resolution -->
+            <span>` + enhanced_lang.resolution + `</span>
+            <span id="resolution"></span>
+            <span></span>
+
+            <div class="border"></div>
+            
+            <!-- FPS -->
+            <span>FPS</span>
+            <span id="fps"></span>
+            <span></span>
+            
+            <div class="border"></div>
+
+            <!-- Compression (if VP9 ) -->
+            <span>` + enhanced_lang.compression + `</span>
+            <span id="compression"></span>
+            <span></span>
+
+            <div class="border"></div>
+
+            <!-- Decode -->
+            <span>` + enhanced_lang.decodetime + `</span>
+            <span id="decode"></span>
+            <span>⬤</span>
+
+            <div class="border"></div>
+            
+            <!-- Framedrop -->
+            <span>` + enhanced_lang.framedrop + `</span>
+            <span id="framedrop"></span>
+            <span>⬤</span>
+        </div>
+    </section>
+
+    <section>
+        <!-- Network Header -->
+        <div class="tag">` + enhanced_lang.network + `</div>
+
+        <div class="grid">
+            <!-- Session Traffic -->
+            <span>` + enhanced_lang.trafficsession + `</span>
+            <span id="trafficsession"></span>
+            <span></span>
+
+            <div class="border"></div>
+            
+            <!-- Current Traffic -->
+            <span>` + enhanced_lang.trafficcurrent + `</span>
+            <span id="trafficcurrent"></span>
+            <span></span>
+
+            <div class="border"></div>
+            
+            <!-- Avg Traffic -->
+            <span>` + enhanced_lang.trafficaverage + `</span>
+            <span id="trafficaverage"></span>
+            <span></span>
+
+            <div class="border"></div>
+            
+            <!-- Packetloss -->
+            <span>` + enhanced_lang.packetloss + `</span>
+            <span id="packetloss"></span>
+            <span></span>
+
+            <div class="border"></div>
+            
+            <!-- Latency -->
+            <span>` + enhanced_lang.latency + `</span>
+            <span id="latency"></span>
+            <span>⬤</span>
+
+            <div class="border"></div>
+            
+            <!-- Jitter -->
+            <span>` + enhanced_lang.jitter + `</span>
+            <span id="jitter"></span>
+            <span></span>
+        </div>
+    </section>`
+
+// Monitor Mode: Compact
+enhanced_streamMonitor.layoutMin = document.createElement('div')
+enhanced_streamMonitor.layoutMin.innerHTML = `
+    <section id="monitor_simple">
+        <div class="grid">
+            <span style="grid-column: 1 / 4;">
+            
+                <!-- Codec -->
+                <span id="codec"></span>
+                <div class="split">|</div>
+
+                <!-- Resolution -->
+                <span id="resolution"></span>
+                <div class="split">|</div>
+
+                <!-- FPS -->                        
+                <span id="fps"></span>
+                <div class="split">|</div>
+
+                <!-- Latency -->
+                <span id="latency"></span>
+                <div class="split">|</div>
+
+                <!-- Decoding time -->                        
+                <span id="decode"></span>
+                <div class="split">|</div>
+
+                <!-- Connection -->
+                <span id="connection">⬤</span>
+            </span>
+        </div>
+    </section>`
+
+enhanced_streamMonitor.style.position = 'fixed'
+enhanced_streamMonitor.style.top = enhanced_settings.monitorPosition.split("|")[0]
+enhanced_streamMonitor.style.left = enhanced_settings.monitorPosition.split("|")[1]
+enhanced_streamMonitor.style.display = 'none'
 enhanced_streamMonitor.addEventListener('dblclick', function () {
-    monitor.toggleMode()
-
-    // Save monitor mode
+    // Switch between monitor modes
     enhanced_settings.monitorMode = (enhanced_settings.monitorMode + 1) % 2
+    setMonitorLayout(enhanced_settings.monitorMode)
+    setMonitorStatus()
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
 
 document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
+var enhanced_monitorActive = false
 
-const menuMonitor = new MenuStreamMonitor(enhanced_lang)
+function enhanced_showMonitor(opt) {
+    if (opt) {
+        setMonitorLayout(enhanced_settings.monitorMode)
+        enhanced_streamMonitor.style.top = enhanced_settings.monitorPosition.split('|')[0]
+        enhanced_streamMonitor.style.left = enhanced_settings.monitorPosition.split('|')[1]
+        enhanced_streamMonitor.style.right = ''
+        enhanced_streamMonitor.style.bottom = ''
+        enhanced_streamMonitor.style.display = 'block'
+        enhanced_monitorActive = true
+    } else {
+        enhanced_streamMonitor.style.display = 'none'
+        enhanced_monitorActive = false
+    }
+}
 
+function setMonitorLayout(opt) {
+    // Clear monitor
+    enhanced_streamMonitor.layoutApplied = false
+    while (enhanced_streamMonitor.firstChild) {
+        enhanced_streamMonitor.firstChild.remove()
+    }
+
+    // Apply layout
+    switch (opt) {
+        case 0:
+            enhanced_streamMonitor.append(enhanced_streamMonitor.layoutFull)
+            break
+        case 1:
+            enhanced_streamMonitor.append(enhanced_streamMonitor.layoutMin)
+            break
+    }
+    enhanced_streamMonitor.layoutApplied = true
+}
+
+// Menu Monitor
+var enhanced_menuMonitor = document.createElement('div')
+enhanced_menuMonitor.innerHTML = `
+    <div class="HPX1od">
+        <div class="Qg73if">
+            <span class="zsXqkb">` + enhanced_lang.sessiontime + `</span>
+            <span id="sessiontime" class="Ce1Y1c qFZbbe"></span>
+        </div>
+    </div>
+
+    <div class="HPX1od">
+        <div class="Qg73if">
+            <span class="zsXqkb">` + enhanced_lang.codec + `</span>
+            <span id="codec" class="Ce1Y1c qFZbbe"></span>
+        </div>
+    </div>
+
+    <div class="HPX1od">
+        <div class="Qg73if">
+            <span class="zsXqkb">` + enhanced_lang.resolution + `</span>
+            <span id="resolution" class="Ce1Y1c qFZbbe"></span>
+        </div>
+    </div>
+
+    <div class="HPX1od">
+        <div class="Qg73if">
+            <span class="zsXqkb">` + enhanced_lang.latency + ` | FPS</span>
+            <span id="latency" class="Ce1Y1c qFZbbe"></span>
+        </div>
+    </div>
+
+    <div class="HPX1od">
+        <div class="Qg73if">
+            <span class="zsXqkb">` + enhanced_lang.framedrop + `</span>
+            <span id="framedrop" class="Ce1Y1c qFZbbe"></span>
+        </div>
+    </div>
+
+    <div class="HPX1od">
+        <div class="Qg73if">
+            <span class="zsXqkb">` + enhanced_lang.decodetime + `</span>
+            <span id="decode" class="Ce1Y1c qFZbbe"></span>
+        </div>
+    </div>`
+
+enhanced_menuMonitor.style.whiteSpace = 'nowrap'
 
 // Update Stream Elements
 setInterval(function () {
-    if (!isLocation('ingame')) {
-        menuMonitor.reset()
-        monitor.reset()
-        return
+    if (document.location.href.indexOf('/player/') != -1) {
+
+        // Get local stream data
+        enhanced_streamData = localStorage.getItem('enhanced_streamData')
+        if (enhanced_streamData != null) {
+            enhanced_streamData = JSON.parse(enhanced_streamData)
+
+            // Enable stream monitor
+            enhanced_Monitor.style.opacity = '1'
+            enhanced_Monitor.disabled = false
+
+            // Reset outside of viewport
+            var enhanced_boundingBox = enhanced_streamMonitor.getBoundingClientRect()
+            if (enhanced_boundingBox.top <= 0 && enhanced_boundingBox.left <= 0 && enhanced_boundingBox.bottom >= window.availHeight && enhanced_boundingBox.right >= window.availWidth) {
+                enhanced_streamMonitor.style.top = '1rem'
+                enhanced_streamMonitor.style.left = '1rem'
+            }
+
+            // Update Position
+            enhanced_newMonitorPos = enhanced_streamMonitor.style.top + '|' + enhanced_streamMonitor.style.left
+            if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
+                enhanced_settings.monitorPosition = enhanced_newMonitorPos
+                localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+            }
+
+            // Menu Monitor
+            enhanced_menuMonitor.querySelector('#sessiontime').textContent = enhanced_streamData.sessiontime
+            enhanced_menuMonitor.querySelector('#codec').textContent = enhanced_streamData.codec
+            enhanced_menuMonitor.querySelector('#resolution').textContent = enhanced_streamData.resolution
+            enhanced_menuMonitor.querySelector('#latency').textContent = enhanced_streamData.latency + 'ms | ' + enhanced_streamData.fps
+            enhanced_menuMonitor.querySelector('#framedrop').textContent = enhanced_streamData.framedrop
+            enhanced_menuMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
+
+            // Translation
+            enhanced_streamData.codec = enhanced_streamData.codec
+                .replace('Hardware', enhanced_lang.hardware)
+                .replace('Software', enhanced_lang.software)
+
+            // Main Monitor
+            if (enhanced_streamMonitor.layoutApplied) {
+                switch (enhanced_settings.monitorMode) {
+                    case 0:
+                        // Session
+                        enhanced_streamMonitor.querySelector('#date').textContent = enhanced_streamData.date
+                        enhanced_streamMonitor.querySelector('#time').textContent = enhanced_streamData.time
+                        enhanced_streamMonitor.querySelector('#sessiontime').textContent = enhanced_streamData.sessiontime
+
+                        // Stream
+                        enhanced_streamMonitor.querySelector('#codec').textContent = enhanced_streamData.codec
+                        enhanced_streamMonitor.querySelector('#resolution').textContent = enhanced_streamData.resolution
+                        enhanced_streamMonitor.querySelector('#fps').textContent = enhanced_streamData.fps
+                        enhanced_streamMonitor.querySelector('#compression').textContent = enhanced_streamData.compression
+                        enhanced_streamMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
+                        enhanced_streamMonitor.querySelector('#framedrop').textContent = enhanced_streamData.framedrop
+
+                        // Network
+                        enhanced_streamMonitor.querySelector('#trafficsession').textContent = enhanced_streamData.sessionTraffic
+                        enhanced_streamMonitor.querySelector('#trafficcurrent').textContent = enhanced_streamData.currentTraffic
+                        enhanced_streamMonitor.querySelector('#trafficaverage').textContent = enhanced_streamData.averageTraffic
+                        enhanced_streamMonitor.querySelector('#packetloss').textContent = enhanced_streamData.packetloss
+                        enhanced_streamMonitor.querySelector('#latency').textContent = enhanced_streamData.latency + 'ms'
+                        enhanced_streamMonitor.querySelector('#jitter').textContent = enhanced_streamData.jitter
+
+                        // Connection Status - Decoding
+                        if (enhanced_streamData.decode > 12) {
+                            enhanced_streamMonitor.querySelector('#decode').nextElementSibling.style.color = '#FF7070'
+                        } else if (enhanced_streamData.decode > 10) {
+                            enhanced_streamMonitor.querySelector('#decode').nextElementSibling.style.color = '##FFB83D'
+                        } else if (enhanced_streamData.decode > 8.33) {
+                            enhanced_streamMonitor.querySelector('#decode').nextElementSibling.style.color = '#00E0BA'
+                        } else {
+                            enhanced_streamMonitor.querySelector('#decode').nextElementSibling.style.color = '#44BBD8'
+                        }
+
+                        // Connection Status - Framedrop
+                        if (enhanced_streamData.framedropPerc > 1) {
+                            enhanced_streamMonitor.querySelector('#framedrop').nextElementSibling.style.color = '#FF7070'
+                        } else if (enhanced_streamData.framedropPerc > 0.5) {
+                            enhanced_streamMonitor.querySelector('#framedrop').nextElementSibling.style.color = '#FFB83D'
+                        } else if (enhanced_streamData.framedropPerc > 0.2) {
+                            enhanced_streamMonitor.querySelector('#framedrop').nextElementSibling.style.color = '#00E0BA'
+                        } else {
+                            enhanced_streamMonitor.querySelector('#framedrop').nextElementSibling.style.color = '#44BBD8'
+                        }
+
+                        // Connection Status - Latency
+                        if (enhanced_streamData.latency > 100) {
+                            enhanced_streamMonitor.querySelector('#latency').nextElementSibling.style.color = '#FF7070'
+                        } else if (enhanced_streamData.latency > 75) {
+                            enhanced_streamMonitor.querySelector('#latency').nextElementSibling.style.color = '#FFB83D'
+                        } else if (enhanced_streamData.latency > 40) {
+                            enhanced_streamMonitor.querySelector('#latency').nextElementSibling.style.color = '#00E0BA'
+                        } else {
+                            enhanced_streamMonitor.querySelector('#latency').nextElementSibling.style.color = '#44BBD8'
+                        }
+                        break
+                    case 1:
+                        // Compact Mode
+                        enhanced_streamMonitor.querySelector('#codec').textContent = enhanced_streamData.codec
+                        enhanced_streamMonitor.querySelector('#resolution').textContent = enhanced_streamData.resolution
+                        enhanced_streamMonitor.querySelector('#fps').textContent = enhanced_streamData.fps
+                        enhanced_streamMonitor.querySelector('#latency').textContent = enhanced_streamData.latency + 'ms'
+                        enhanced_streamMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
+
+                        // Connection Check
+                        if (parseInt(enhanced_streamData.fps) < 1) {
+                            enhanced_streamMonitor.querySelector('#connection').style.color = 'white'
+                        } else if (enhanced_streamData.decode > 12 || enhanced_streamData.framedropPerc > 1 || enhanced_streamData.latency > 100) {
+                            enhanced_streamMonitor.querySelector('#connection').style.color = '#FF7070' // Red
+                        } else if (enhanced_streamData.decode > 10 || enhanced_streamData.framedropPerc > 0.5 || enhanced_streamData.latency > 75) {
+                            enhanced_streamMonitor.querySelector('#connection').style.color = '#FFB83D' // Yellow
+                        } else if (enhanced_streamData.decode > 8.33 || enhanced_streamData.framedropPerc > 0.2 || enhanced_streamData.latency > 40) {
+                            enhanced_streamMonitor.querySelector('#connection').style.color = '#00E0BA' // Green
+                        } else {
+                            enhanced_streamMonitor.querySelector('#connection').style.color = '#44BBD8' // Blue
+                        }
+                        break
+                }
+            }
+        } else {
+            enhanced_Monitor.style.opacity = '0.3'
+            enhanced_Monitor.disabled = true
+        }
     }
-
-    // Get local stream data
-    var enhanced_streamData = localStorage.getItem('enhanced_streamData');
-    if (enhanced_streamData == null) {
-        return;
-    }
-    const data = JSON.parse(enhanced_streamData)
-
-    if (enhanced_newMonitorPos != enhanced_settings.monitorPosition) {
-        var enhanced_newMonitorPos = enhanced_settings.monitorPosition
-        localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-    }
-
-    menuMonitor.updateContent(
-        data.codec,
-        data.resolution,
-        data.latency + " ms",
-        data.fps,
-        data.framedrop,
-        data.decode + " ms"
-    )
-
-    let fullMode = enhanced_settings.monitorMode === 0;
-    monitor.refreshContent(fullMode)
 }, 1000)
 
-// Streaming Monitor (Menu Icon)
+// Streaming Monitor
 var enhanced_Monitor = document.createElement('div')
 enhanced_Monitor.className = 'R2s0be'
 enhanced_Monitor.id = 'enhanced_Monitor'
-enhanced_Monitor.innerHTML = '<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX"><span class="X5peoe" jsname="pYFhU"><i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i></span><span class="caSJV" jsname="V67aGc">' + enhanced_lang.streammon + '</span></div>'
+enhanced_Monitor.innerHTML = `
+    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
+        <span class="X5peoe" jsname="pYFhU">
+            <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">analytics</i>
+        </span>
+        <span class="caSJV" jsname="V67aGc">` + enhanced_lang.streammon + `</span>
+        <span class="dgrMg" style="font-size: 0.75rem;"></span>
+    </div>`
 enhanced_Monitor.style.cursor = 'pointer'
 enhanced_Monitor.style.userSelect = 'none'
+enhanced_Monitor.style.opacity = '0.3'
 enhanced_Monitor.tabIndex = '0'
+setMonitorStatus()
+enhanced_Monitor.disabled = true
+enhanced_Monitor.addEventListener('click', function () {
+    // Disabled status
+    if (this.disabled) {
+        return
+    }
 
-// click on menu item "stream monitor"
-enhanced_Monitor.addEventListener('click', () => {
-    monitor.toggle(enhanced_settings.monitorPosition)
+    // Toggle monitor
+    if (enhanced_monitorActive) {
+        enhanced_showMonitor(false)
+    } else {
+        enhanced_showMonitor(true)
+    }
 });
-
-// double-click on menu item "stream monitor"
 enhanced_Monitor.addEventListener('dblclick', function () {
+    // Disabled status
+    if (this.disabled) {
+        return
+    }
 
     // Generate new Window
     var enhanced_popMonitor = window.open('', '_blank', 'width=280,height=500,toolbar=0')
@@ -573,17 +937,28 @@ enhanced_Monitor.addEventListener('dblclick', function () {
     // Copy styles
     var el = document.createElement('style')
     enhanced_popMonitor.document.head.appendChild(el)
-    el.innerHTML = enhanced_streamMonitorStyle + '#enhanced_streamMonitor { display: block !important; }'
+    el.innerHTML = enhanced_monitorStyle + '#enhanced_streamMonitor { display: block !important; }'
 
     // Update
     enhanced_upPop = setInterval(function () {
         if (enhanced_popMonitor.closed) {
             clearInterval(enhanced_upPop)
         } else {
-            enhanced_popMonitor.document.body.innerHTML = monitor.getElement().outerHTML
+            enhanced_popMonitor.document.body.innerHTML = enhanced_streamMonitor.outerHTML
         }
     }, 1000)
 })
+
+function setMonitorStatus() {
+    switch (enhanced_settings.monitorMode) {
+        case 0:
+            enhanced_Monitor.querySelector('.dgrMg').textContent = enhanced_lang.detailed
+            break
+        case 1:
+            enhanced_Monitor.querySelector('.dgrMg').textContent = enhanced_lang.compact
+            break
+    }
+}
 
 // Filter UI
 var enhanced_filterUI = {
@@ -621,13 +996,14 @@ enhanced_filterUI.main.frame.style.display = 'none'
 
 // Filter UI - Toggle
 enhanced_filterUI.main.toggle.className = 'R2s0be'
-enhanced_filterUI.main.toggle.innerHTML = `<div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
-                                                <span class="X5peoe" jsname="pYFhU">
-                                                    <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i>
-                                                </span>
-                                                <span class="caSJV" jsname="V67aGc">` + enhanced_lang.filtersettings + `</span>
-                                                <span class="dgrMg" style="font-size: 0.75rem;"></span>
-                                            </div>`
+enhanced_filterUI.main.toggle.innerHTML = `
+    <div role="button" class="CTvDXd QAAyWd Pjpac zcMYd CPNFX">
+        <span class="X5peoe" jsname="pYFhU">
+            <i class="material-icons-extended" style="font-size: 2rem !important" aria-hidden="true">movie_filter</i>
+        </span>
+        <span class="caSJV" jsname="V67aGc">` + enhanced_lang.filtersettings + `</span>
+        <span class="dgrMg" style="font-size: 0.75rem;"></span>
+    </div>`
 enhanced_filterUI.main.toggle.style.cursor = 'pointer'
 enhanced_filterUI.main.toggle.style.userSelect = 'none'
 enhanced_filterUI.main.toggle.tabIndex = '0'
@@ -710,7 +1086,7 @@ enhanced_filterUI.sharpen.slider.onchange = function () {
 
 // Filter UI - Update Settings
 function enhanced_updateFilters(setup = false) {
-    if (isLocation('ingame')) {
+    if (enhanced_isLocation('ingame')) {
         // Get Current Game
         var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
         var enhanced_currentStream = document.getElementsByClassName('vvjGmc')[document.getElementsByClassName('vvjGmc').length - 1]
@@ -977,7 +1353,7 @@ enhanced_ProGames.appendChild(enhanced_ProGamesLink)
 enhanced_ProGamesLink.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_ProGamesLink.textContent = 'Pro'
 enhanced_ProGamesLink.addEventListener('click', function () {
-    openStadia('store/list/2001')
+    enhanced_openStadia('store/list/2001')
 })
 if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
     document.getElementsByClassName('ZECEje')[0].append(enhanced_ProGames)
@@ -1043,7 +1419,7 @@ enhanced_OnSale.style.userSelect = 'none'
 enhanced_OnSale.style.paddingRight = '2rem'
 enhanced_OnSale.tabIndex = '0'
 enhanced_OnSale.addEventListener('click', function () {
-    openStadia('store/list/14')
+    enhanced_openStadia('store/list/14')
 });
 enhanced_StoreDropContent.append(enhanced_OnSale)
 
@@ -1057,7 +1433,7 @@ enhanced_ProDeals.style.userSelect = 'none'
 enhanced_ProDeals.style.paddingRight = '2rem'
 enhanced_ProDeals.tabIndex = '0'
 enhanced_ProDeals.addEventListener('click', function () {
-    openStadia('store/list/45')
+    enhanced_openStadia('store/list/45')
 })
 enhanced_StoreDropContent.append(enhanced_ProDeals)
 
@@ -1071,7 +1447,7 @@ enhanced_leavePro.style.userSelect = 'none'
 enhanced_leavePro.style.paddingRight = '2rem'
 enhanced_leavePro.tabIndex = '0'
 enhanced_leavePro.addEventListener('click', function () {
-    openStadia('store/list/36')
+    enhanced_openStadia('store/list/36')
 })
 enhanced_StoreDropContent.append(enhanced_leavePro)
 
@@ -1085,7 +1461,7 @@ enhanced_ubiPlus.style.userSelect = 'none'
 enhanced_ubiPlus.style.paddingRight = '2rem'
 enhanced_ubiPlus.tabIndex = '0'
 enhanced_ubiPlus.addEventListener('click', function () {
-    openStadia('store/list/2002')
+    enhanced_openStadia('store/list/2002')
 })
 enhanced_StoreDropContent.append(enhanced_ubiPlus)
 
@@ -1099,7 +1475,7 @@ enhanced_AllGames.style.userSelect = 'none'
 enhanced_AllGames.style.paddingRight = '2rem'
 enhanced_AllGames.tabIndex = '0'
 enhanced_AllGames.addEventListener('click', function () {
-    openStadia('store/list/3')
+    enhanced_openStadia('store/list/3')
 })
 enhanced_StoreDropContent.append(enhanced_AllGames)
 
@@ -1158,7 +1534,7 @@ enhanced_langDefault.addEventListener('click', function () {
     enhanced_urlBase = new URL(window.location.href)
     enhanced_urlBase.searchParams.delete('hl')
     history.replaceState(null, null, '?' + enhanced_urlBase.searchParams);
-    openStadia(enhanced_urlGoal)
+    enhanced_openStadia(enhanced_urlGoal)
 });
 enhanced_langDropContent.append(enhanced_langDefault)
 
@@ -1194,13 +1570,13 @@ for (const [key, value] of Object.entries(enhanced_langCodes)) {
             enhanced_urlBase = new URL(window.location.href)
             enhanced_urlBase.searchParams.set('hl', value)
             history.replaceState(null, null, '?' + enhanced_urlBase.searchParams);
-            openStadia(enhanced_urlGoal)
+            enhanced_openStadia(enhanced_urlGoal)
         });
         enhanced_langDropContent.append(enhanced_langOption);
     }
 }
 
-secureInsert(enhanced_langContainer, 'ZECEje', 1)
+enhanced_secureInsert(enhanced_langContainer, 'ZECEje', 1)
 
 enhanced_langDropdown.addEventListener('keyup', function (e) {
     if (e.keyCode === 13) {
@@ -1231,8 +1607,8 @@ enhanced_SettingsDropdown.style.padding = '0'
 enhanced_SettingsDropdown.style.userSelect = 'none'
 enhanced_SettingsDropdown.tabIndex = '0'
 enhanced_SettingsDropdown.addEventListener('click', function (e) {
-    if (document.querySelector('.X1asv.ahEBEd.LJni0').style.opacity == '1') {
-        document.querySelector('.hBNsYe.QAAyWd.wJYinb.YySNWc').click()
+    if (enhanced_isLocation('stadiamenu')) {
+        document.getElementsByClassName('VhNwIc')[0].click()
     }
     if (e.path.indexOf(enhanced_settingsFrame) == -1) {
         if (enhanced_settingsFrame.style.display === 'none') {
@@ -1297,7 +1673,7 @@ enhanced_settingsContent.style.borderRadius = '0'
 enhanced_settingsFrame.append(enhanced_settingsContent)
 
 enhanced_SettingsDropdown.append(enhanced_settingsFrame)
-secureInsert(enhanced_SettingsContainer, 'ZECEje', 1)
+enhanced_secureInsert(enhanced_SettingsContainer, 'ZECEje', 1)
 
 // Settings - Groups
 var enhanced_settingsShortcut = document.createElement('div')
@@ -1414,7 +1790,7 @@ enhanced_UserProfile.style.userSelect = 'none'
 enhanced_UserProfile.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserProfile.tabIndex = '0'
 enhanced_UserProfile.addEventListener('click', function () {
-    openStadia('profile/' + enhanced_AccountInfo[2])
+    enhanced_openStadia('profile/' + enhanced_AccountInfo[2])
 })
 enhanced_settingsShortcut.append(enhanced_UserProfile)
 
@@ -1428,7 +1804,7 @@ enhanced_UserMedia.style.userSelect = 'none'
 enhanced_UserMedia.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
 enhanced_UserMedia.addEventListener('click', function () {
-    openStadia('captures')
+    enhanced_openStadia('captures')
 })
 enhanced_settingsShortcut.append(enhanced_UserMedia)
 
@@ -1941,6 +2317,20 @@ enhanced_streamMode.addEventListener('click', function () {
 })
 enhanced_settingsGeneral.append(enhanced_streamMode)
 
+// Force Focus
+var enhanced_forceFocus = document.createElement('div')
+enhanced_forceFocus.className = 'pBvcyf QAAyWd'
+enhanced_forceFocus.id = 'enhanced_forceFocus'
+enhanced_forceFocus.style.cursor = 'pointer'
+enhanced_forceFocus.style.userSelect = 'none'
+enhanced_forceFocus.tabIndex = '0'
+enhanced_forceFocus.addEventListener('click', function () {
+    enhanced_settings.forceFocus = (enhanced_settings.forceFocus + 1) % 2
+    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
+    enhanced_applySettings('forcefocus', enhanced_settings.forceFocus)
+})
+enhanced_settingsStream.append(enhanced_forceFocus)
+
 // Avatar - Allows the user to set a custom avatar
 var enhanced_customAvatar = document.createElement('div')
 enhanced_customAvatar.className = 'CTvDXd QAAyWd Pjpac GShPJb edaWcd'
@@ -2055,7 +2445,7 @@ window.addEventListener('click', function (e) {
     }
 })
 
-secureInsert(enhanced_huntersContainer, 'ZECEje', 1)
+enhanced_secureInsert(enhanced_huntersContainer, 'ZECEje', 1)
 
 // Store Container - Container to display store buttons
 var enhanced_StoreContainer = document.createElement('div')
@@ -2554,13 +2944,13 @@ var enhanced_wrappers = []
 // Main Loop
 setInterval(function () {
     // Location - Home & Library
-    if (isLocation('home') || isLocation('library')) {
+    if (enhanced_isLocation('home') || enhanced_isLocation('library')) {
 
         // Game List
         var enhanced_gameList = document.getElementsByClassName('GqLi4d')
 
         // Resolution change on pop-ups
-        secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
+        enhanced_secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
 
         // Shortcuts
         if (enhanced_settings.enableShortcuts == 1) {
@@ -2574,7 +2964,7 @@ setInterval(function () {
                     enhanced_installShortcut.gameID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
                     enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
                 }
-                secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+                enhanced_secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
             }
 
             // Popup - Stadia Hunters
@@ -2585,7 +2975,7 @@ setInterval(function () {
                     enhanced_stadiaHuntersShortcut.gameID = enhanced_popupID
                     enhanced_stadiaHuntersShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_installShortcut.gameName + ' ' + enhanced_lang.stadiahunterstitle + '</div>'
                 }
-                secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+                enhanced_secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
             }
 
             // Last Played
@@ -2605,7 +2995,7 @@ setInterval(function () {
     }
 
     // Location - Home
-    if (isLocation('home')) {
+    if (enhanced_isLocation('home')) {
         // Remove filter elements
         for (var i = 0; i < enhanced_gameList.length; i++) {
             if (enhanced_gameList[i].style.display = 'none') {
@@ -2622,7 +3012,7 @@ setInterval(function () {
     }
 
     // Location - Library
-    if (isLocation('library')) {
+    if (enhanced_isLocation('library')) {
 
         // Enable grid size option
         enhanced_Grid.style.display = 'block'
@@ -2630,18 +3020,22 @@ setInterval(function () {
         // Game Count
         var enhanced_homescreenGrids = document.getElementsByClassName('lEPylf KnM5Wc')
         if (enhanced_homescreenGrids.length > 0) {
-            enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.GqLi4d').length
+            if (enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.h6J22d.URhE4b.QAAyWd').length == 0) {
+                enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.GqLi4d').length
+            } else {
+                enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.h6J22d.URhE4b.QAAyWd').length
+            }
             enhanced_gameCounter.textContent = ' ' + enhanced_homescreenGrids
-            secureInsert(enhanced_gameCounter, 'div[jsname="HXYfLc"] .HZ5mJ', 0)
+            enhanced_secureInsert(enhanced_gameCounter, 'div[jsname="HXYfLc"] .HZ5mJ', 0)
         }
 
         // Letter Box
         if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
-            secureInsert(enhanced_letterBox, 'w83WBe URhE4b', 1)
+            enhanced_secureInsert(enhanced_letterBox, 'w83WBe URhE4b', 1)
         }
 
         // Add Show-All Button
-        secureInsert(enhanced_showAll, 'w83WBe URhE4b', 0)
+        enhanced_secureInsert(enhanced_showAll, 'w83WBe URhE4b', 0)
         if (enhanced_settings.filter == 0) {
             enhanced_showAll.style.display = 'none'
             enhanced_showState = false
@@ -2663,7 +3057,7 @@ setInterval(function () {
                     enhanced_favorite.style.color = ''
                 }
             }
-            secureInsert(enhanced_favorite, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+            enhanced_secureInsert(enhanced_favorite, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
         }
 
         // Show/Hide Filter - Last Played
@@ -2684,7 +3078,7 @@ setInterval(function () {
                     enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>'
                 }
             }
-            secureInsert(enhanced_visibility, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+            enhanced_secureInsert(enhanced_visibility, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
         }
 
         // Loop through game tiles
@@ -2759,7 +3153,7 @@ setInterval(function () {
     }
 
     // Location - In-Game
-    if (isLocation('ingame')) {
+    if (enhanced_isLocation('ingame')) {
 
         // Currrent Game Info
         var enhanced_currentID = document.location.href.split('/player/')[1].split('?')[0]
@@ -2767,9 +3161,9 @@ setInterval(function () {
 
         enhanced_Windowed.style.display = 'flex'
         enhanced_Monitor.style.display = 'flex'
-        secureInsert(enhanced_Windowed, 'E0Zk9b', 0)
-        secureInsert(enhanced_Monitor, 'E0Zk9b', 0)
-        secureInsert(enhanced_filterUI.main.toggle, 'E0Zk9b', 0)
+        enhanced_secureInsert(enhanced_Windowed, 'E0Zk9b', 0)
+        enhanced_secureInsert(enhanced_Monitor, 'E0Zk9b', 0)
+        enhanced_secureInsert(enhanced_filterUI.main.toggle, 'E0Zk9b', 0)
 
         // Filter Setup
         if (enhanced_currentStream && enhanced_currentStream.style.filter == 'url("#")') {
@@ -2782,17 +3176,19 @@ setInterval(function () {
 
         // Clock
         if (enhanced_settings.clockOption == 2 || enhanced_settings.clockOption == 3) {
-            secureInsert(enhanced_ClockOverlay, 'bYYDgf', 0)
+            enhanced_secureInsert(enhanced_ClockOverlay, 'bYYDgf', 0)
             enhanced_ClockOverlay.style.display = 'flex'
         }
 
-        // Stream Monitor
-        if (enhanced_settings.monitorAutostart == 1 && enhanced_monitorStarted == false) {
+        // Stream Monitor Autostart
+        if (enhanced_settings.monitorAutostart == 1 && enhanced_monitorStarted == false && enhanced_Monitor.disabled == false) {
             enhanced_monitorStarted = true
-            enhanced_monitorState = 1
-
-            monitor.show(enhanced_settings.monitorPosition)
+            enhanced_monitorActive = true
+            enhanced_showMonitor(true)
         }
+
+        // Menu Monitor
+        enhanced_secureInsert(enhanced_menuMonitor, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
 
         // Stadia Database - Report a bug
         if (enhanced_settings.enableStadiaDatabase) {
@@ -2808,7 +3204,7 @@ setInterval(function () {
 
             if (enhanced_reportBug.contact != undefined) {
                 enhanced_reportBug.style.display = 'flex'
-                secureInsert(enhanced_reportBug, 'VCcUVc', 2)
+                enhanced_secureInsert(enhanced_reportBug, 'VCcUVc', 2)
             }
         } else {
             enhanced_reportBug.style.display = 'none'
@@ -2820,8 +3216,6 @@ setInterval(function () {
         } else {
             var enhanced_sessionDur = Date.now()
             enhanced_sessionDur = enhanced_formatTime((enhanced_sessionDur - enhanced_sessionStart) / 1000)
-
-            menuMonitor.updateSessionTime(enhanced_sessionDur)
         }
 
         // Discord Presence
@@ -2848,13 +3242,9 @@ setInterval(function () {
                 }
             }
         }
-
-        // Menu Monitor
-        secureInsert(menuMonitor.getElement(), '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
     } else {
         enhanced_discordPresence = {}
         enhanced_Windowed.style.display = 'none'
-        enhanced_Monitor.style.display = 'none'
         enhanced_ClockOverlay.style.display = 'none'
 
         if (enhanced_filterUI.main.frame.style.display == 'block') {
@@ -2862,37 +3252,32 @@ setInterval(function () {
             enhanced_injectStyle('', 'enhanced_styleDimOverlayTemp')
         }
 
+        enhanced_showMonitor(false)
         enhanced_filterApplied = false
         enhanced_monitorStarted = false
-        enhanced_monitorState = 0
         enhanced_sessionStart = 0
-
         enhanced_reportBug.contact = undefined
-
-        enhanced_monitorState === 0 ?
-            monitor.hide() :
-            monitor.show(enhanced_settings.monitorPosition)
     }
 
     // Location - Captures
-    if (isLocation('captures')) {
+    if (enhanced_isLocation('captures')) {
         // Captures Filter
-        secureInsert(enhanced_captureFilters, 'dwGRGd', 0)
+        enhanced_secureInsert(enhanced_captureFilters, 'dwGRGd', 0)
     }
 
     // Location - Profile Details
-    if (isLocation('profiledetails')) {
+    if (enhanced_isLocation('profiledetails')) {
         // Stadia Hunters - Logo Link
         if (enhanced_settings.enableStadiaHunters) {
             enhanced_huntersLink.gameID = document.location.href.split('/detail/')[1].split('?')[0]
-            secureInsert(enhanced_huntersLinkContainer, 'dwGRGd', 3)
+            enhanced_secureInsert(enhanced_huntersLinkContainer, 'dwGRGd', 3)
         }
 
-        secureInsert(enhanced_achievementsFilter, 'dwGRGd', 2)
+        enhanced_secureInsert(enhanced_achievementsFilter, 'dwGRGd', 2)
     }
 
     // Location - Store Details
-    if (isLocation('storedetails')) {
+    if (enhanced_isLocation('storedetails')) {
 
         // Database Infos
         if (enhanced_database && enhanced_settings.enableStadiaDatabase == 1) {
@@ -2947,14 +3332,14 @@ setInterval(function () {
                             enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
                         }
 
-                        secureInsert(enhanced_extendedDetails, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+                        enhanced_secureInsert(enhanced_extendedDetails, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
 
                         // Disclaimers
                         if (enhanced_database[i].tested != '') {
-                            secureInsert(enhanced_untestedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+                            enhanced_secureInsert(enhanced_untestedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
                         }
 
-                        secureInsert(enhanced_extendedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+                        enhanced_secureInsert(enhanced_extendedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
 
                     }
                 }
@@ -2974,7 +3359,7 @@ setInterval(function () {
             enhanced_wishlistContainer.style.display = 'inline-block'
         }
 
-        secureInsert(enhanced_StoreContainer, 'WjVJKd', 0)
+        enhanced_secureInsert(enhanced_StoreContainer, 'WjVJKd', 0)
     } else {
         // Reset extended game info
         enhanced_extendedDetails.innerHTML = ''
@@ -2985,7 +3370,7 @@ setInterval(function () {
     }
 
     // Location - Store List
-    if (isLocation('storelist')) {
+    if (enhanced_isLocation('storelist')) {
         // Add class for page segements in split view
         if (enhanced_settings.splitStore != 0) {
             enhanced_loadedLists = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].querySelectorAll('div:not(.pW7Dlc) > streamable')
@@ -3040,14 +3425,14 @@ setInterval(function () {
 
         // List Filters
         if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
-            secureInsert(enhanced_listFilter, 'B22Hnf', 3)
+            enhanced_secureInsert(enhanced_listFilter, 'B22Hnf', 3)
         }
     } else if (enhanced_activeListFilter != 0) {
         enhanced_switchListFilter(enhanced_activeListFilter)
     }
 
     // Location - Pro Games
-    if (isLocation('progames')) {
+    if (enhanced_isLocation('progames')) {
         // Display filter
         enhanced_listFilterPro.style.display = 'flex'
 
@@ -3070,20 +3455,20 @@ setInterval(function () {
     }
 
     // Location - Personal Profile
-    if (isLocation('profile')) {
+    if (enhanced_isLocation('profile')) {
 
         // Add avatar option on own profile
-        secureInsert(enhanced_customAvatar, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
+        enhanced_secureInsert(enhanced_customAvatar, '.R1HPhd.bYsRUc.bqgeJc.wGziQb .hX4jqb', 0)
     }
 
     // Location - Player Statistics
-    if (isLocation('playerstats')) {
+    if (enhanced_isLocation('playerstats')) {
 
         // Game Statistics
         if (document.querySelector('.MDSsFe') !== null) {
 
             // Gamelist Filter
-            secureInsert(enhanced_gamelistFilter, 'dwGRGd', 2)
+            enhanced_secureInsert(enhanced_gamelistFilter, 'dwGRGd', 2)
 
             var enhanced_gameListBaseQuery = document.querySelectorAll('div[jsname="jlb53b"]')[document.querySelectorAll('div[jsname="jlb53b"]').length - 1]
             var enhanced_gameListRatioQuery = enhanced_gameListBaseQuery.querySelectorAll('.kPtFV')
@@ -3123,7 +3508,7 @@ setInterval(function () {
             }
 
             // Container
-            secureInsert(enhanced_statOverview, 'dkZt0b qRvogc', 2)
+            enhanced_secureInsert(enhanced_statOverview, 'dkZt0b qRvogc', 2)
 
             // Statistics
             var enhanced_loadStats
@@ -3248,7 +3633,7 @@ setInterval(function () {
     }
 
     // Location - Stadia Menu
-    if (isLocation('stadiamenu')) {
+    if (enhanced_isLocation('stadiamenu')) {
 
         // Offline Users
         var enhanced_statusList = document.querySelectorAll('.eXdFqc .rtsndf.WTetv .DfyMcd');
@@ -3281,7 +3666,7 @@ setInterval(function () {
             }
 
             enhanced_friendCount.textContent = ', ' + i + ' ' + enhanced_lang.total.toLowerCase() + ')'
-            secureInsert(enhanced_friendCount, 'VE7aje', 2)
+            enhanced_secureInsert(enhanced_friendCount, 'VE7aje', 2)
         }
 
         // Links 2 Images
@@ -3310,15 +3695,15 @@ setInterval(function () {
         }
 
         // Emoji Picker
-        secureInsert(enhanced_emojiswitch, 'IRyDt', 0)
-        secureInsert(enhanced_emojiPicker, 'pwUBOe t7snHe', 2)
+        enhanced_secureInsert(enhanced_emojiswitch, 'IRyDt', 0)
+        enhanced_secureInsert(enhanced_emojiPicker, 'pwUBOe t7snHe', 2)
 
         // Clock
-        secureInsert(enhanced_ClockFriends, 'hxhAyf OzUE7e XY6ZL', 0)
+        enhanced_secureInsert(enhanced_ClockFriends, 'hxhAyf OzUE7e XY6ZL', 0)
     }
 
     // Location - Settings
-    if (isLocation('settings')) {
+    if (enhanced_isLocation('settings')) {
 
         // Resolution - Enable 'Up to 4K' option
         var enhanced_selector = document.getElementsByClassName('sx2eZe QAAyWd aKIhz OWB6Me')
@@ -3350,20 +3735,17 @@ setInterval(function () {
                 enhanced_paytotal = enhanced_lang.total + ' ' + enhanced_currency.replace('CUR', enhanced_paytotal)
 
                 enhanced_allpayments.textContent = enhanced_paytotal
-                secureInsert(enhanced_allpayments, 'Ca4K1', 0)
+                enhanced_secureInsert(enhanced_allpayments, 'Ca4K1', 0)
             }
         }
     }
 
     // Location - Always active
 
-    // Update monitor position
-    enhanced_settings.monitorPosition = monitor.getCurrentPosition()
-
     // Codec - Set codec preference
     switch (enhanced_settings.codec) {
         case 0:
-            if (isLocation('home')) {
+            if (enhanced_isLocation('home')) {
                 localStorage.removeItem('video_codec_implementation_by_codec_key')
             }
             break
@@ -3808,6 +4190,23 @@ function enhanced_applySettings(set, opt) {
             }
             enhanced_injectStyle(enhanced_CSS, 'enhanced_styleStreamMode')
             break
+        case 'forcefocus':
+            switch (opt) {
+                case 0:
+                    enhanced_CSS = ''
+                    enhanced_forceFocus.style.color = ''
+                    enhanced_forceFocus.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">highlight_alt</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.forcefocus + ': ' + enhanced_lang.disabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.forcefocusdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Force Focus: Set to "Disabled".', enhanced_consoleEnhanced, '')
+                    break
+                case 1:
+                    enhanced_CSS = '.o1WPqd { display: none !important; }'
+                    enhanced_forceFocus.style.color = '#00e0ba'
+                    enhanced_forceFocus.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">highlight_alt</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.forcefocus + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.forcefocusdesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
+                    console.log('%cStadia Enhanced' + '%c ⚙️ - Force Focus: Set to "Enabled".', enhanced_consoleEnhanced, '')
+                    break
+            }
+            enhanced_injectStyle(enhanced_CSS, 'enhanced_styleForceFocus')
+            break
         case 'letterbox':
             var opt = opt.split(',')
             for (var i = 0; i < enhanced_letters.length; i++) {
@@ -3853,7 +4252,6 @@ function enhanced_applySettings(set, opt) {
             location.reload()
             break
         case 'updateall':
-            monitor.hide()
             enhanced_applySettings('gridsize', enhanced_settings.gridSize)
             enhanced_applySettings('clock', enhanced_settings.clockOption)
             enhanced_applySettings('filter', enhanced_settings.filter)
@@ -3867,6 +4265,7 @@ function enhanced_applySettings(set, opt) {
             enhanced_applySettings('invisibleusers', enhanced_settings.hideInvisibleUsers)
             enhanced_applySettings('usermedia', enhanced_settings.hideUserMedia)
             enhanced_applySettings('streammode', enhanced_settings.streamMode)
+            enhanced_applySettings('forcefocus', enhanced_settings.forceFocus)
             enhanced_applySettings('categorypreview', enhanced_settings.hideCategories)
             enhanced_applySettings('monitorautostart', enhanced_settings.monitorAutostart)
             enhanced_applySettings('storelist', enhanced_settings.splitStore)
@@ -3905,7 +4304,7 @@ function enhanced_injectStyle(content, id) {
     }
 }
 
-function openStadia(url) {
+function enhanced_openStadia(url) {
     // Keep hl parameter
     enhanced_urlBase = document.querySelector('head > base').getAttribute('href')
     enhanced_urlHL = new URL(window.location.href).searchParams.get('hl')
@@ -3919,7 +4318,7 @@ function openStadia(url) {
 }
 
 // Insert elements
-function secureInsert(el, sel, opt = 0) {
+function enhanced_secureInsert(el, sel, opt = 0) {
     if (/^[a-z 0-9]+$/i.test(sel)) {
         var selector = document.getElementsByClassName(sel)
     } else {
@@ -4080,7 +4479,7 @@ function enhanced_downloadFile(filename, type, text) {
 
 // CSV2Array
 // https://stackoverflow.com/questions/8493195/
-function csvToArray(text) {
+function enhanced_csvToArray(text) {
     let p = '',
         row = [''],
         ret = [row],
@@ -4101,6 +4500,16 @@ function csvToArray(text) {
         p = l
     }
     return ret
+}
+
+// Inject Scripts
+function enhanced_inject(filename) {
+    var s = document.createElement('script');
+    s.src = chrome.runtime.getURL(filename);
+    s.onload = function () {
+        this.remove();
+    };
+    (document.head || document.documentElement).appendChild(s);
 }
 
 // Dragable Objects
@@ -4150,7 +4559,7 @@ function enhanced_updateSettings(obj) {
 }
 
 // Get active content
-function isLocation(loc) {
+function enhanced_isLocation(loc) {
     switch (loc) {
         case 'home':
             return document.location.href.indexOf('/home') != -1
@@ -4173,7 +4582,7 @@ function isLocation(loc) {
         case 'playerstats':
             return document.location.href.indexOf('/gameactivities/all') != -1
         case 'stadiamenu':
-            return document.querySelector('.X1asv.ahEBEd.LJni0').style.opacity != '0'
+            return document.querySelector('.X1asv.ahEBEd').style.opacity != '0'
         case 'settings':
             return document.location.href.indexOf('/settings') != -1
     }
