@@ -1,10 +1,21 @@
 # Changelog
 
+## Version 1.20
+
+### 1.20.0
+* Added a list of missing keys to the console output for translations
+* Added a full/detailed status to be displayed on the monitor toggle
+* Added an option to force focus, allowing you to tab out of games (including in windowed mode) without automatically pausing them
+* Changed multiple parts of the project's code structure for easier maintenance
+* Changed how data for the Stadia Database is imported for faster update times and less possible issues between patches
+* Fixed issues with UI elements being targeted incorrectly after changes on Stadia's side [[#224]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/224)
+* Fixed the game counter not working correctly in list view [[#225]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/225)
+
 ## Version 1.19
 
 ### 1.19.3
 * Added a "Report a bug" option via the Stadia Database community feature
-* Added a enabled/disabled status message to the filter settings option
+* Added an enabled/disabled status to be displayed on the filter settings toggle
 
 ### 1.19.2
 * Added Romanian to the list of language-supported features
