@@ -84,7 +84,8 @@ var translation = {
     jitter: 'Jitter Buffer',
     decodetime: 'Decoding Time',
     compression: 'Compression',
-    bitrate: 'Bitrate',
+    detailed: 'Detailed',
+    compact: 'Compact',
     streammon: 'Stream Monitor',
     stream: 'Stream',
     network: 'Network',
@@ -94,9 +95,9 @@ var translation = {
     fps: 'Framerate',
     testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
     datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
-        On games with a resolution/framerate toggle, resolution was picked. \
-        This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-        and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+                On games with a resolution/framerate toggle, resolution was picked. \
+                This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
     noteOne: '4K Mode',
     noteTwo: '30/60 FPS Toggle',
     noteThree: '60 FPS in 1080p mode',
@@ -159,6 +160,8 @@ var translation = {
     notificationdesc: 'Display a notification when Stadia Enhanced updated to a new version ("Auto" hides after 5 seconds, "Manual" stays until user interaction).',
     streammode: 'Streaming Mode',
     streammodedesc: 'Enable to make certain elements (i.e. the friends list) unreadable while streaming (via tools like OBS / Discord).',
+    forcefocus: 'Force Focus',
+    forcefocusdesc: 'Enable to stop games from pausing automatically when not focused.',
     catprev: 'Category Preview',
     catprevdesc: 'Hides the category tags when hovering over a game.',
     streammondesc: 'Activate to start the monitor whenever a game starts.',
