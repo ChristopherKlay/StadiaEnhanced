@@ -764,7 +764,9 @@ enhanced_menuMonitor.innerHTML = `
 enhanced_menuMonitor.style.whiteSpace = 'nowrap'
 
 // Update Stream Elements
-setInterval(function () {
+setInterval(enhanced_updateStream, 1000)
+
+function enhanced_updateStream() {
     if (document.location.href.indexOf('/player/') != -1) {
 
         // Get local stream data
@@ -889,7 +891,7 @@ setInterval(function () {
             enhanced_Monitor.disabled = true
         }
     }
-}, 1000)
+}
 
 // Streaming Monitor
 var enhanced_Monitor = document.createElement('div')
@@ -2731,6 +2733,27 @@ enhanced_stadiaHuntersShortcut.addEventListener('click', function () {
     window.open('https://stadiahunters.com/games/' + enhanced_stadiaHuntersShortcut.gameID, '_blank')
 })
 
+// Shortcut - Direct Achievements
+var enhanced_directAchievements = document.createElement('div')
+enhanced_directAchievements.id = 'enhanced_directAchievements'
+enhanced_directAchievements.innerHTML = `
+    <div role="button" tabindex="0" class="CTvDXd QAAyWd Fjy05d ivWUhc wJYinb x8t73b ZULyab rpgZzc RkyH1e">
+        <div class="Pyflbb">
+            <div class="tYJnXb">
+                <span class="aAdmbc ZULyab">
+                    <i class="google-material-icons xIgipb" aria-hidden="true">trophy</i>
+                </span>
+                <span class="V0Ny2c">` + enhanced_lang.achievements + `</span>
+            </div>
+        </div>
+    </div>`
+enhanced_directAchievements.tabIndex = '0'
+enhanced_directAchievements.style.marginRight = '0.5rem'
+enhanced_directAchievements.style.marginLeft = 'auto'
+enhanced_directAchievements.addEventListener('click', function () {
+    window.open('https://stadia.google.com/profile/' + enhanced_AccountInfo[2] + '/detail/' + enhanced_directAchievements.gameID, '_self')
+})
+
 // Shortcut - Last Played
 var enhanced_shortcutLastPlayed = document.createElement('div')
 enhanced_shortcutLastPlayed.id = 'enhanced_shortcutLastPlayed'
@@ -2942,48 +2965,64 @@ var enhanced_sessionStart = 0
 var enhanced_wrappers = []
 
 // Main Loop
-setInterval(function () {
+setInterval(enhanced_main, 200)
+
+function enhanced_main() {
     // Location - Home & Library
     if (enhanced_isLocation('home') || enhanced_isLocation('library')) {
 
-        // Game List
-        var enhanced_gameList = document.getElementsByClassName('GqLi4d')
+        // Pop-up available
+        if (document.getElementsByClassName('llhEMd iWO5td').length > 0) {
 
-        // Resolution change on pop-ups
-        enhanced_secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
+            // Get game info
+            if (document.getElementsByClassName('n4qZSd').length > 0 && document.getElementsByClassName('Wq73hb').length > 0) {
+                var enhanced_popupID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
+                var enhanced_popupName = document.getElementsByClassName('Wq73hb')[0].textContent
+            }
 
-        // Shortcuts
-        if (enhanced_settings.enableShortcuts == 1) {
+            // Resolution changer
+            enhanced_secureInsert(enhanced_resolutionPopup, 'EcfBLd', 3)
+
+            if (enhanced_popupID && enhanced_popupName) {
+                // Direct link to achievements
+                if (enhanced_directAchievements.gameID != enhanced_popupID) {
+                    enhanced_directAchievements.gameID = enhanced_popupID
+                }
+                enhanced_secureInsert(enhanced_directAchievements, '.PyvEBf div[jsaction="rcuQ6b:npT2md"]', 3)
+
+                // Stadia Icons Shortcut
+                if (enhanced_settings.enableShortcuts) {
+                    if (enhanced_installShortcut.gameName != enhanced_popupName) {
+                        enhanced_installShortcut.gameName = enhanced_popupName
+                        enhanced_installShortcut.gameID = enhanced_popupID
+                        enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
+                    }
+                    enhanced_secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+                }
+
+                // Popup - Stadia Hunters
+                if (enhanced_settings.enableStadiaHunters) {
+                    if (enhanced_stadiaHuntersShortcut.gameID != enhanced_popupID) {
+                        enhanced_stadiaHuntersShortcut.gameName = enhanced_popupName
+                        enhanced_stadiaHuntersShortcut.gameID = enhanced_popupID
+                        enhanced_stadiaHuntersShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_installShortcut.gameName + ' ' + enhanced_lang.stadiahunterstitle + '</div>'
+                    }
+                    enhanced_secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+                }
+            }
+        }
+
+        // Stadia Shortcuts
+        if (enhanced_settings.enableShortcuts) {
             enhanced_installShortcut.style.display = 'inline-flex'
             enhanced_shortcutLastPlayed.style.display = 'flex'
-
-            // Popup - Stadia Icons
-            if (document.getElementById(enhanced_installShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
-                if (enhanced_installShortcut.gameName != document.querySelector('.Wq73hb').textContent) {
-                    enhanced_installShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_installShortcut.gameID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
-                    enhanced_installShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_lang.shortcuttitle + ' ' + enhanced_installShortcut.gameName + '</div>'
-                }
-                enhanced_secureInsert(enhanced_installShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
-            }
-
-            // Popup - Stadia Hunters
-            if (enhanced_settings.enableStadiaHunters && document.getElementById(enhanced_stadiaHuntersShortcut) === null && document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
-                var enhanced_popupID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
-                if (enhanced_stadiaHuntersShortcut.gameID != enhanced_popupID) {
-                    enhanced_stadiaHuntersShortcut.gameName = document.querySelector('.Wq73hb').textContent
-                    enhanced_stadiaHuntersShortcut.gameID = enhanced_popupID
-                    enhanced_stadiaHuntersShortcut.innerHTML = '<div class="tYJnXb">' + enhanced_installShortcut.gameName + ' ' + enhanced_lang.stadiahunterstitle + '</div>'
-                }
-                enhanced_secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
-            }
 
             // Last Played
             var enhanced_selector = document.getElementsByClassName('mGdxHb ltdNmc')
             if (enhanced_selector[enhanced_selector.length - 1] !== undefined) {
                 if (enhanced_selector[enhanced_selector.length - 1].contains(enhanced_shortcutLastPlayed) === false) {
                     enhanced_shortcutLastPlayed.gameName = enhanced_selector[enhanced_selector.length - 1].getAttribute('aria-label').split(': ')[1]
-                    enhanced_shortcutLastPlayed.gameID = document.querySelector('.UiBYIe > c-wiz').getAttribute('data-app-id')
+                    enhanced_shortcutLastPlayed.gameID = document.getElementsByClassName('UiBYIe')[document.getElementsByClassName('UiBYIe').length - 1].querySelector('c-wiz').getAttribute('data-app-id')
                     enhanced_shortcutLastPlayed.title = enhanced_lang.shortcuttitle + ' ' + enhanced_shortcutLastPlayed.gameName
                     enhanced_selector[enhanced_selector.length - 1].append(enhanced_shortcutLastPlayed)
                 }
@@ -2991,23 +3030,6 @@ setInterval(function () {
         } else {
             enhanced_installShortcut.style.display = 'none'
             enhanced_shortcutLastPlayed.style.display = 'none'
-        }
-    }
-
-    // Location - Home
-    if (enhanced_isLocation('home')) {
-        // Remove filter elements
-        for (var i = 0; i < enhanced_gameList.length; i++) {
-            if (enhanced_gameList[i].style.display = 'none') {
-                enhanced_gameList[i].style.display = ''
-            }
-            if (enhanced_gameList[i].style.order = '-1') {
-                enhanced_gameList[i].style.order = ''
-            }
-            var enhanced_hasEmbed = enhanced_gameList[i].getElementsByClassName('enhanced_favIcon')
-            if (enhanced_hasEmbed.length != 0) {
-                enhanced_hasEmbed[0].remove()
-            }
         }
     }
 
@@ -3020,10 +3042,10 @@ setInterval(function () {
         // Game Count
         var enhanced_homescreenGrids = document.getElementsByClassName('lEPylf KnM5Wc')
         if (enhanced_homescreenGrids.length > 0) {
-            if (enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.h6J22d.URhE4b.QAAyWd').length == 0) {
-                enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.GqLi4d').length
+            if (enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].getElementsByClassName('h6J22d URhE4b QAAyWd').length == 0) {
+                enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].getElementsByClassName('GqLi4d').length
             } else {
-                enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].querySelectorAll('.h6J22d.URhE4b.QAAyWd').length
+                enhanced_homescreenGrids = enhanced_homescreenGrids[enhanced_homescreenGrids.length - 1].getElementsByClassName('h6J22d URhE4b QAAyWd').length
             }
             enhanced_gameCounter.textContent = ' ' + enhanced_homescreenGrids
             enhanced_secureInsert(enhanced_gameCounter, 'div[jsname="HXYfLc"] .HZ5mJ', 0)
@@ -3043,109 +3065,76 @@ setInterval(function () {
             enhanced_showAll.style.display = 'inline-block'
         }
 
-        // Favorite - Last Played
-        if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc')) {
-            if (enhanced_favorite.name != document.querySelector('.Wq73hb').textContent) {
-                enhanced_favorite.name = document.querySelector('.Wq73hb').textContent
-                enhanced_favorite.sku = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-sku-id')
+        //Get game list
+        if (document.getElementsByClassName('lEPylf KnM5Wc').length > 0) {
+            var enhanced_gameList = document.getElementsByClassName('lEPylf KnM5Wc')[document.getElementsByClassName('lEPylf KnM5Wc').length - 1].getElementsByClassName('GqLi4d')
 
-                if (enhanced_settings.favoriteList.includes(enhanced_favorite.sku)) {
-                    enhanced_favorite.active = true
-                    enhanced_favorite.style.color = '#00e0ba'
-                } else {
-                    enhanced_favorite.active = false
-                    enhanced_favorite.style.color = ''
-                }
-            }
-            enhanced_secureInsert(enhanced_favorite, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
-        }
+            // Loop through game tiles
+            for (var i = 0; i < enhanced_gameList.length; i++) {
 
-        // Show/Hide Filter - Last Played
-        if (document.querySelector('.CTvDXd.QAAyWd.Fjy05d.ivWUhc.wJYinb.x8t73b.tlZCoe.rpgZzc') && enhanced_settings.filter == 1) {
-            var enhanced_launchSKU = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-sku-id')
+                // Favorite - Order
+                var enhanced_hasEmbed = enhanced_gameList[i].getElementsByClassName('enhanced_favIcon')
+                if (enhanced_settings.favoriteList.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1])) {
+                    enhanced_gameList[i].style.order = '-1';
 
-            if (enhanced_visibility.sku != enhanced_launchSKU) {
-                enhanced_visibility.sku = enhanced_launchSKU
-                enhanced_visibility.name = document.querySelector('.Wq73hb').textContent
-
-                if (enhanced_settings.gameFilter.includes(enhanced_visibility.sku)) {
-                    enhanced_visibility.active = true
-                    enhanced_visibility.style.color = '#FF7070'
-                    enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>'
-                } else {
-                    enhanced_visibility.active = false
-                    enhanced_visibility.style.color = ''
-                    enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>'
-                }
-            }
-            enhanced_secureInsert(enhanced_visibility, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
-        }
-
-        // Loop through game tiles
-        for (var i = 0; i < enhanced_gameList.length; i++) {
-
-            // Favorite - Order
-            var enhanced_hasEmbed = enhanced_gameList[i].getElementsByClassName('enhanced_favIcon')
-            if (enhanced_settings.favoriteList.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1])) {
-                enhanced_gameList[i].style.order = '-1';
-
-                if (enhanced_hasEmbed.length == 0) {
-                    var enhanced_favIcon = document.createElement('div')
-                    enhanced_favIcon.className = 'enhanced_favIcon'
-                    enhanced_favIcon.innerHTML = '<i class="google-material-icons" style="transform: scale(.7); vertical-align: middle; color: #202124;" aria-hidden="true">star</i>'
-                    enhanced_favIcon.style.display = 'inline-flex'
-                    enhanced_favIcon.style.position = 'absolute'
-                    enhanced_favIcon.style.width = '1.125rem'
-                    enhanced_favIcon.style.height = '1.125rem'
-                    enhanced_favIcon.style.top = '0.5rem'
-                    enhanced_favIcon.style.backgroundColor = 'rgba(255,255,255,.9)'
-                    enhanced_favIcon.style.right = '0.5rem'
-                    enhanced_favIcon.style.border = '0.125rem solid rgba(255,255,255,.9)'
-                    enhanced_favIcon.style.borderRadius = '50%'
-                    enhanced_favIcon.style.boxShadow = '0 0.125rem 0.75rem rgb(0 0 0 / 32%), 0 0.0625rem 0.375rem rgb(0 0 0 / 18%)'
-                    enhanced_favIcon.style.alignItems = 'center'
-                    enhanced_favIcon.style.justifyContent = 'center'
-                    enhanced_gameList[i].append(enhanced_favIcon)
-                }
-            } else {
-                enhanced_gameList[i].style.order = '';
-                if (enhanced_hasEmbed.length != 0) {
-                    enhanced_hasEmbed[0].remove()
-                }
-            }
-
-            // Filter order/visibility
-            if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_showState === false && enhanced_settings.filter == 1) {
-                enhanced_gameList[i].style.display = 'none';
-            } else {
-                // Letterbox [Language Supported]
-                if (enhanced_activeLetter) {
-                    enhanced_ariaLabel = enhanced_gameList[i].getAttribute('aria-label')
-                    if ('en|sv|fr|it|es|da|ca|pt|no|fi'.includes(enhanced_local)) {
-                        enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[1].charAt(0).toUpperCase()
-                    } else if ('pl|cs'.includes(enhanced_local)) {
-                        enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[2].charAt(0).toUpperCase()
-                    } else if ('sk'.includes(enhanced_local)) {
-                        enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[3].charAt(0).toUpperCase()
-                    } else if ('de|hu|nl'.includes(enhanced_local)) {
-                        enhanced_ariaLetter = enhanced_ariaLabel.charAt(0).toUpperCase()
+                    if (enhanced_hasEmbed.length == 0) {
+                        var enhanced_favIcon = document.createElement('div')
+                        enhanced_favIcon.className = 'enhanced_favIcon'
+                        enhanced_favIcon.innerHTML = '<i class="google-material-icons" style="transform: scale(.7); vertical-align: middle; color: #202124;" aria-hidden="true">star</i>'
+                        enhanced_favIcon.style.display = 'inline-flex'
+                        enhanced_favIcon.style.position = 'absolute'
+                        enhanced_favIcon.style.width = '1.125rem'
+                        enhanced_favIcon.style.height = '1.125rem'
+                        enhanced_favIcon.style.top = '0.5rem'
+                        enhanced_favIcon.style.backgroundColor = 'rgba(255,255,255,.9)'
+                        enhanced_favIcon.style.right = '0.5rem'
+                        enhanced_favIcon.style.border = '0.125rem solid rgba(255,255,255,.9)'
+                        enhanced_favIcon.style.borderRadius = '50%'
+                        enhanced_favIcon.style.boxShadow = '0 0.125rem 0.75rem rgb(0 0 0 / 32%), 0 0.0625rem 0.375rem rgb(0 0 0 / 18%)'
+                        enhanced_favIcon.style.alignItems = 'center'
+                        enhanced_favIcon.style.justifyContent = 'center'
+                        enhanced_gameList[i].append(enhanced_favIcon)
                     }
+                } else {
+                    enhanced_gameList[i].style.order = '';
+                    if (enhanced_hasEmbed.length != 0) {
+                        enhanced_hasEmbed[0].remove()
+                    }
+                }
 
-                    if (enhanced_ariaLetter == String.fromCharCode(65 + parseInt(enhanced_activeLetter)).toUpperCase()) {
-                        enhanced_gameList[i].style.display = ''
+                // Filter order/visibility
+                if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_showState === false && enhanced_settings.filter == 1) {
+                    enhanced_gameList[i].style.display = 'none';
+                } else {
+                    // Letterbox [Language Supported]
+                    if (enhanced_activeLetter) {
+                        enhanced_ariaLabel = enhanced_gameList[i].getAttribute('aria-label')
+                        if ('en|sv|fr|it|es|da|ca|pt|no|fi'.includes(enhanced_local)) {
+                            enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[1].charAt(0).toUpperCase()
+                        } else if ('pl|cs'.includes(enhanced_local)) {
+                            enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[2].charAt(0).toUpperCase()
+                        } else if ('sk'.includes(enhanced_local)) {
+                            enhanced_ariaLetter = enhanced_ariaLabel.split(' ')[3].charAt(0).toUpperCase()
+                        } else if ('de|hu|nl'.includes(enhanced_local)) {
+                            enhanced_ariaLetter = enhanced_ariaLabel.charAt(0).toUpperCase()
+                        }
+
+                        if (enhanced_ariaLetter == String.fromCharCode(65 + parseInt(enhanced_activeLetter)).toUpperCase()) {
+                            enhanced_gameList[i].style.display = ''
+                        } else {
+                            enhanced_gameList[i].style.display = 'none'
+                        }
                     } else {
-                        enhanced_gameList[i].style.display = 'none'
+                        enhanced_gameList[i].style.display = ''
                     }
-                } else {
-                    enhanced_gameList[i].style.display = ''
                 }
-            }
 
-            // Set brightness of filtered items
-            if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_settings.filter == 1) {
-                enhanced_gameList[i].style.filter = 'brightness(40%) grayscale(100%)'
-            } else {
-                enhanced_gameList[i].style.filter = 'none'
+                // Set brightness of filtered items
+                if (enhanced_settings.gameFilter.includes(enhanced_gameList[i].getAttribute('jsdata').split(';')[1]) && enhanced_settings.filter == 1) {
+                    enhanced_gameList[i].style.filter = 'brightness(40%) grayscale(100%)'
+                } else {
+                    enhanced_gameList[i].style.filter = 'none'
+                }
             }
         }
     } else {
@@ -3220,6 +3209,8 @@ setInterval(function () {
 
         // Discord Presence
         var enhanced_currentStatus = document.querySelectorAll('.hxhAyf.OzUE7e.XY6ZL .TZ0BN .HDKZKb.LiQ6Hb')[0]
+
+        // Presence Icon
         if (document.getElementsByClassName('Vvs9Me').length > 0) {
             var enhanced_currentBackdrop = document.getElementsByClassName('Vvs9Me')[document.getElementsByClassName('Vvs9Me').length - 1].getAttribute('src') || undefined
         }
@@ -3775,7 +3766,9 @@ setInterval(function () {
         enhanced_ClockFriends.innerHTML = '<i class="material-icons-extended" aria-hidden="true" style="margin-right: 0.5rem;">schedule</i>' + enhanced_CurrentTime
         enhanced_ClockOverlay.innerHTML = enhanced_CurrentTime
     }
-}, 200)
+}
+
+
 
 function enhanced_applySettings(set, opt) {
     switch (set) {
