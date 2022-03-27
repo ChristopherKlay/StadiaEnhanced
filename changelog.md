@@ -2,6 +2,10 @@
 
 ## Version 1.20
 
+### 1.20.1
+* Added an achievements shortcut to pop-up windows for games
+* General code cleanup for optimization, removing older/unused parts of the project
+
 ### 1.20.0
 * Added a list of missing keys to the console output for translations
 * Added a full/detailed status to be displayed on the monitor toggle
