@@ -2,6 +2,11 @@
 
 ## Version 1.20
 
+### 1.20.2
+* Changed the text format to display total playtime
+* Fixed the stream monitor not resetting correctly between session
+* Fixed the stream monitor not displaying hardware decoding when certain frameworks are being used (i.e. VDA)
+
 ### 1.20.1
 * Added an achievements shortcut to pop-up windows for games
 * General code cleanup for optimization, removing older/unused parts of the project
