@@ -114,7 +114,7 @@ function enhanced_collectStreamInfo() {
     var enhanced_sessionActive = false
 
     setInterval(function () {
-        if (notInGame = document.location.href.indexOf('/player/') === -1) {
+        if (document.location.href.indexOf('/player') == -1) {
             peerConnections = []
             enhanced_lastBytes = 0
             enhanced_lastFrames = 0
@@ -182,7 +182,7 @@ function enhanced_collectStreamInfo() {
                             }
                         }
                         var decodingTime = (tmp1.totalDecodeTime / tmp2.framesDecoded) * 1000
-                        if (tmp3.stat('codecImplementationName') == 'ExternalDecoder') {
+                        if (tmp3.stat('codecImplementationName').includes('ExternalDecoder')) {
                             decodingType = 'Hardware'
                         } else {
                             decodingType = 'Software'

@@ -1,87 +1,95 @@
 <!doctype html>
 <html>
-   <head>
-      <title>Stadia Enhanced</title>
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-   </head>
-   <style type="text/css">
-      body {
-        width: 200px;
-        font-family: 'Roboto', sans-serif;
-        display: grid;
-        row-gap: 7px;
-        background: #202124;
-      }
-      a {
-         text-decoration: none;
-         cursor: pointer;
-      }
-      article {
-        display: grid;
-        grid-template-columns: 1fr 4fr;
-        align-items: center;
-        padding: 10px 30px 10px 10px;
-        border-radius: 0.5rem;
-        transition: transform 0.25s cubic-bezier(0.7, 0.98, 0.86, 0.98);
-        background: rgba(255,255,255,.06);
-      }
-      article.stadia {
-        background: linear-gradient(-35deg, rgba(172,13,87,0.7) 0%, rgba(252,74,31,.7) 100%);
-      }
-      article:hover {
-        transform: scale(1.06);
-        background-color: rgba(255,255,255,.12);
-      }
-      article img {
-        width: 28px;
-        height: 28px;
-        filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .5));
-      }
-      article span {
-        color: rgba(255,255,255,0.9);
-        font-size: 0.8rem;
-        font-weight: 500;
-        letter-spacing: 0.64px;
-        margin-left: 12px;
-      }
-   </style>
 
-   <body>
-        <a href="https://stadia.google.com/home" target="_blank">
-          <article class="stadia">
-            <img src="/media/svg/stadia.svg">
-            <span>Play Stadia</span>
-          </article>
-        </a>
+<head>
+  <title>Stadia Enhanced</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+</head>
+<style type="text/css">
+  body {
+    width: 200px;
+    font-family: 'Roboto', sans-serif;
+    display: grid;
+    row-gap: 7px;
+    background: #202124;
+  }
 
-        <a href="https://github.com/ChristopherKlay/StadiaEnhanced" target="_blank">
-          <article>
-            <img src="/media/svg/github.svg">
-            <span>Open GitHub</span>
-          </article>
-        </a>
-        
-        <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/changelog.md" target="_blank">
-          <article>
-            <img src="/media/svg/github.svg">
-            <span>Open Changelog</span>
-          </article>
-        </a>
+  a {
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-        <a href="https://www.reddit.com/r/Stadia/" target="_blank">
-          <article>
-            <img src="/media/svg/reddit.svg">
-            <span>View r/Stadia</span>
-          </article>
-        </a>
+  article {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    align-items: center;
+    padding: 10px 30px 10px 10px;
+    border-radius: 0.5rem;
+    transition: transform 0.25s cubic-bezier(0.7, 0.98, 0.86, 0.98);
+    background: rgba(255, 255, 255, .06);
+  }
 
-        <a href="https://www.buymeacoffee.com/christopherklay" target="_blank">
-          <article>
-            <img src="/media/svg/coffee.svg">
-            <span>Donate</span>
-          </article>
-        </a>
-   </body>
+  article.stadia {
+    background: linear-gradient(-35deg, rgba(172, 13, 87, 0.7) 0%, rgba(252, 74, 31, .7) 100%);
+  }
+
+  article:hover {
+    transform: scale(1.06);
+    background-color: rgba(255, 255, 255, .12);
+  }
+
+  article img {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, .5));
+  }
+
+  article span {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.64px;
+    margin-left: 12px;
+  }
+</style>
+
+<body>
+  <a href="https://stadia.google.com/home" target="_blank">
+    <article class="stadia">
+      <img src="/media/svg/stadia.svg">
+      <span>Play Stadia</span>
+    </article>
+  </a>
+
+  <a href="https://github.com/ChristopherKlay/StadiaEnhanced" target="_blank">
+    <article>
+      <img src="/media/svg/github.svg">
+      <span>Open GitHub</span>
+    </article>
+  </a>
+
+  <a href="https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/changelog.md" target="_blank">
+    <article>
+      <img src="/media/svg/github.svg">
+      <span>Open Changelog</span>
+    </article>
+  </a>
+
+  <a href="https://www.reddit.com/r/Stadia/" target="_blank">
+    <article>
+      <img src="/media/svg/reddit.svg">
+      <span>View r/Stadia</span>
+    </article>
+  </a>
+
+  <a href="https://www.buymeacoffee.com/christopherklay" target="_blank">
+    <article>
+      <img src="/media/svg/coffee.svg">
+      <span>Donate</span>
+    </article>
+  </a>
+</body>
+
 </html>

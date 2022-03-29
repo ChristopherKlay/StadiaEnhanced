@@ -520,21 +520,21 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
         <div class="grid">
             <!-- Date -->
             <span>` + enhanced_lang.date + `</span>
-            <span id="date"></span>
+            <span id="date" class="montext">-</span>
             <span></span>
 
             <div class="border"></div> 
             
             <!-- Time -->                   
             <span>` + enhanced_lang.time + `</span>
-            <span id="time"></span>
+            <span id="time" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
 
             <!-- Session time -->
             <span>` + enhanced_lang.sessiontime + `</span>
-            <span id="sessiontime"></span>
+            <span id="sessiontime" class="montext">-</span>
             <span></span>
         </div>
     </section>
@@ -546,43 +546,43 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
         <div class="grid">
             <!-- Codec -->
             <span>` + enhanced_lang.codec + `</span>
-            <span id="codec"></span>
+            <span id="codec" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
             
             <!-- Resolution -->
             <span>` + enhanced_lang.resolution + `</span>
-            <span id="resolution"></span>
+            <span id="resolution" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
             
             <!-- FPS -->
             <span>FPS</span>
-            <span id="fps"></span>
+            <span id="fps" class="montext">-</span>
             <span></span>
             
             <div class="border"></div>
 
             <!-- Compression (if VP9 ) -->
             <span>` + enhanced_lang.compression + `</span>
-            <span id="compression"></span>
+            <span id="compression" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
 
             <!-- Decode -->
             <span>` + enhanced_lang.decodetime + `</span>
-            <span id="decode"></span>
-            <span>⬤</span>
+            <span id="decode" class="montext">-</span>
+            <span class="moncon">⬤</span>
 
             <div class="border"></div>
             
             <!-- Framedrop -->
             <span>` + enhanced_lang.framedrop + `</span>
-            <span id="framedrop"></span>
-            <span>⬤</span>
+            <span id="framedrop" class="montext">-</span>
+            <span class="moncon">⬤</span>
         </div>
     </section>
 
@@ -593,42 +593,42 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
         <div class="grid">
             <!-- Session Traffic -->
             <span>` + enhanced_lang.trafficsession + `</span>
-            <span id="trafficsession"></span>
+            <span id="trafficsession" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
             
             <!-- Current Traffic -->
             <span>` + enhanced_lang.trafficcurrent + `</span>
-            <span id="trafficcurrent"></span>
+            <span id="trafficcurrent" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
             
             <!-- Avg Traffic -->
             <span>` + enhanced_lang.trafficaverage + `</span>
-            <span id="trafficaverage"></span>
+            <span id="trafficaverage" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
             
             <!-- Packetloss -->
             <span>` + enhanced_lang.packetloss + `</span>
-            <span id="packetloss"></span>
+            <span id="packetloss" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
             
             <!-- Latency -->
             <span>` + enhanced_lang.latency + `</span>
-            <span id="latency"></span>
-            <span>⬤</span>
+            <span id="latency" class="montext">-</span>
+            <span class="moncon">⬤</span>
 
             <div class="border"></div>
             
             <!-- Jitter -->
             <span>` + enhanced_lang.jitter + `</span>
-            <span id="jitter"></span>
+            <span id="jitter" class="montext">-</span>
             <span></span>
         </div>
     </section>`
@@ -641,27 +641,27 @@ enhanced_streamMonitor.layoutMin.innerHTML = `
             <span style="grid-column: 1 / 4;">
             
                 <!-- Codec -->
-                <span id="codec"></span>
+                <span id="codec" class="montext">-</span>
                 <div class="split">|</div>
 
                 <!-- Resolution -->
-                <span id="resolution"></span>
+                <span id="resolution" class="montext">-</span>
                 <div class="split">|</div>
 
                 <!-- FPS -->                        
-                <span id="fps"></span>
+                <span id="fps" class="montext">-</span>
                 <div class="split">|</div>
 
                 <!-- Latency -->
-                <span id="latency"></span>
+                <span id="latency" class="montext">-</span>
                 <div class="split">|</div>
 
                 <!-- Decoding time -->                        
-                <span id="decode"></span>
+                <span id="decode" class="montext">-</span>
                 <div class="split">|</div>
 
                 <!-- Connection -->
-                <span id="connection">⬤</span>
+                <span id="connection" class="moncon">⬤</span>
             </span>
         </div>
     </section>`
@@ -722,42 +722,42 @@ enhanced_menuMonitor.innerHTML = `
     <div class="HPX1od">
         <div class="Qg73if">
             <span class="zsXqkb">` + enhanced_lang.sessiontime + `</span>
-            <span id="sessiontime" class="Ce1Y1c qFZbbe"></span>
+            <span id="sessiontime" class="Ce1Y1c qFZbbe montext">-</span>
         </div>
     </div>
 
     <div class="HPX1od">
         <div class="Qg73if">
             <span class="zsXqkb">` + enhanced_lang.codec + `</span>
-            <span id="codec" class="Ce1Y1c qFZbbe"></span>
+            <span id="codec" class="Ce1Y1c qFZbbe montext">-</span>
         </div>
     </div>
 
     <div class="HPX1od">
         <div class="Qg73if">
             <span class="zsXqkb">` + enhanced_lang.resolution + `</span>
-            <span id="resolution" class="Ce1Y1c qFZbbe"></span>
+            <span id="resolution" class="Ce1Y1c qFZbbe montext">-</span>
         </div>
     </div>
 
     <div class="HPX1od">
         <div class="Qg73if">
             <span class="zsXqkb">` + enhanced_lang.latency + ` | FPS</span>
-            <span id="latency" class="Ce1Y1c qFZbbe"></span>
+            <span id="latency" class="Ce1Y1c qFZbbe montext">-</span>
         </div>
     </div>
 
     <div class="HPX1od">
         <div class="Qg73if">
             <span class="zsXqkb">` + enhanced_lang.framedrop + `</span>
-            <span id="framedrop" class="Ce1Y1c qFZbbe"></span>
+            <span id="framedrop" class="Ce1Y1c qFZbbe montext">-</span>
         </div>
     </div>
 
     <div class="HPX1od">
         <div class="Qg73if">
             <span class="zsXqkb">` + enhanced_lang.decodetime + `</span>
-            <span id="decode" class="Ce1Y1c qFZbbe"></span>
+            <span id="decode" class="Ce1Y1c qFZbbe montext">-</span>
         </div>
     </div>`
 
@@ -767,7 +767,7 @@ enhanced_menuMonitor.style.whiteSpace = 'nowrap'
 setInterval(enhanced_updateStream, 1000)
 
 function enhanced_updateStream() {
-    if (document.location.href.indexOf('/player/') != -1) {
+    if (enhanced_isLocation('ingame')) {
 
         // Get local stream data
         enhanced_streamData = localStorage.getItem('enhanced_streamData')
@@ -889,6 +889,18 @@ function enhanced_updateStream() {
         } else {
             enhanced_Monitor.style.opacity = '0.3'
             enhanced_Monitor.disabled = true
+
+            // Reset Text Display
+            var enhanced_resetElements = document.getElementsByClassName('montext')
+            for (var i = 0; i < enhanced_resetElements.length; i++) {
+                enhanced_resetElements[i].textContent = '-'
+            }
+
+            // Reset Connection Status
+            var enhanced_resetElements = document.getElementsByClassName('moncon')
+            for (var i = 0; i < enhanced_resetElements.length; i++) {
+                enhanced_resetElements[i].style.color = 'white'
+            }
         }
     }
 }
@@ -2364,7 +2376,7 @@ enhanced_huntersContainer.appendChild(enhanced_huntersDropdown)
 enhanced_huntersDropdown.className = 'ROpnrd QAAyWd wJYinb'
 enhanced_huntersDropdown.id = 'enhanced_huntersDropdown'
 enhanced_huntersDropdown.innerHTML = `
-    <div class="yNQThc">
+    <div class="yNQThc" style="margin-right: 0.2rem;">
         <span class="jtYd1">
             <img class="xduoyf" src="` + chrome.runtime.getURL('/media/included/hunters_logo.png') + `" style="width: 24px; height: 24px; border-radius: 50%;" >
         </span>
@@ -3548,7 +3560,7 @@ function enhanced_main() {
                             <i class="google-material-icons QxsLuc" aria-hidden="true">schedule</i>
                             <div class="kPtFV">
                                 <span class="bn3lwc">` + enhanced_statsPlaytime[0] + ' ' + enhanced_hoursLabel + `</span>
-                                <span class="IBMKhc">/` + enhanced_statsPlaytime[1] + ' ' + enhanced_minutesLabel + ' ' + enhanced_lang.totalPlayTime + `</span>
+                                <span class="IBMKhc">` + enhanced_statsPlaytime[1] + ' ' + enhanced_minutesLabel + ' ' + enhanced_lang.totalPlayTime + `</span>
                             </div>
                         </div>
                     </div>`
