@@ -2,6 +2,11 @@
 
 ## Version 1.20
 
+### 1.20.3
+* Added a direct link to trials in the shortcut dropdown
+* Fixed menu monitor position issues when using a controller
+* Fixed filter/favorite icons not being added to game popups
+
 ### 1.20.2
 * Changed the text format to display total playtime
 * Fixed the stream monitor not resetting correctly between session
