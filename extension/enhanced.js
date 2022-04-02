@@ -1465,6 +1465,20 @@ enhanced_leavePro.addEventListener('click', function () {
 })
 enhanced_StoreDropContent.append(enhanced_leavePro)
 
+// Trials
+var enhanced_gameTrials = document.createElement('div')
+enhanced_gameTrials.className = 'pBvcyf QAAyWd'
+enhanced_gameTrials.id = 'enhanced_gameTrials'
+enhanced_gameTrials.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">lock_clock</i><span class="mJVLwb">' + enhanced_lang.trials + '</span>'
+enhanced_gameTrials.style.cursor = 'pointer'
+enhanced_gameTrials.style.userSelect = 'none'
+enhanced_gameTrials.style.paddingRight = '2rem'
+enhanced_gameTrials.tabIndex = '0'
+enhanced_gameTrials.addEventListener('click', function () {
+    enhanced_openStadia('store/list/47')
+})
+enhanced_StoreDropContent.append(enhanced_gameTrials)
+
 // Ubisoft+
 var enhanced_ubiPlus = document.createElement('div')
 enhanced_ubiPlus.className = 'pBvcyf QAAyWd'
@@ -2989,6 +3003,7 @@ function enhanced_main() {
             // Get game info
             if (document.getElementsByClassName('n4qZSd').length > 0 && document.getElementsByClassName('Wq73hb').length > 0) {
                 var enhanced_popupID = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-app-id')
+                var enhanced_popupSKU = document.getElementsByClassName('n4qZSd')[document.getElementsByClassName('n4qZSd').length - 1].getAttribute('data-sku-id')
                 var enhanced_popupName = document.getElementsByClassName('Wq73hb')[0].textContent
             }
 
@@ -3021,6 +3036,38 @@ function enhanced_main() {
                     }
                     enhanced_secureInsert(enhanced_stadiaHuntersShortcut, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
                 }
+
+                // Favorite
+                if (enhanced_favorite.name != enhanced_popupName) {
+                    enhanced_favorite.name = enhanced_popupName
+                    enhanced_favorite.sku = enhanced_popupSKU
+
+                    if (enhanced_settings.favoriteList.includes(enhanced_favorite.sku)) {
+                        enhanced_favorite.active = true
+                        enhanced_favorite.style.color = '#00e0ba'
+                    } else {
+                        enhanced_favorite.active = false
+                        enhanced_favorite.style.color = ''
+                    }
+                }
+                enhanced_secureInsert(enhanced_favorite, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
+
+                // Show/Hide Filter
+                if (enhanced_visibility.sku != enhanced_popupSKU) {
+                    enhanced_visibility.sku = enhanced_popupSKU
+                    enhanced_visibility.name = enhanced_popupName
+
+                    if (enhanced_settings.gameFilter.includes(enhanced_visibility.sku)) {
+                        enhanced_visibility.active = true
+                        enhanced_visibility.style.color = '#FF7070'
+                        enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility_off</i>'
+                    } else {
+                        enhanced_visibility.active = false
+                        enhanced_visibility.style.color = ''
+                        enhanced_visibility.innerHTML = '<i class="material-icons-extended" aria-hidden="true">visibility</i>'
+                    }
+                }
+                enhanced_secureInsert(enhanced_visibility, 'div[jsaction="JIbuQc:qgRaKd;"]', 0)
             }
         }
 
@@ -3189,7 +3236,12 @@ function enhanced_main() {
         }
 
         // Menu Monitor
-        enhanced_secureInsert(enhanced_menuMonitor, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
+        if (document.querySelector('div[jsname="HHRCrc"]').offsetParent != null) {
+            document.querySelector('div[jsname="HHRCrc"]').getElementsByClassName('OWVtN')[0].append(enhanced_menuMonitor)
+        } else {
+            document.querySelector('div[jsname="Y15OGf"]').getElementsByClassName('OWVtN')[0].append(enhanced_menuMonitor)
+        }
+        // -> enhanced_secureInsert(enhanced_menuMonitor, '.FTrnxe:not(.qRvogc) > .OWVtN:not(.YgM2X)', 0)
 
         // Stadia Database - Report a bug
         if (enhanced_settings.enableStadiaDatabase) {

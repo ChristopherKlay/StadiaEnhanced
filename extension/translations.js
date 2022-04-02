@@ -31,6 +31,7 @@ var enhanced_translation = {
         fullscreen: 'Pantalla completa',
         onsale: 'En venda',
         prodeals: 'Ofertes Pro',
+        trials: undefined,
         userprofile: 'El meu perfil',
         usermedia: 'Captures i vídeos',
         searchbtnbase: 'Cerca a',
@@ -62,9 +63,9 @@ var enhanced_translation = {
         fps: 'Fotogrames per segon',
         testdiscl: undefined,
         datadiscl: 'Aquest és el màxim de fotogrames per segon aconseguit quan es juga un joc en mode 4K (cal ser subscriptor Pro).\
-                            En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
-                            Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                            i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
+                    En els jocs amb l\'opció de seleccionar entre resolució / velocitat de fotogrames, es va triar la resolució. \
+                    Aquestes dades les proporciona <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    i es pot trobar la base de dades completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
         noteOne: undefined,
         noteTwo: undefined,
         noteThree: '60FPS en mode 1080p',
@@ -180,6 +181,7 @@ var enhanced_translation = {
         fullscreen: 'Fuld skærm',
         onsale: 'På Udsalg',
         prodeals: 'Pro Tilbud',
+        trials: undefined,
         userprofile: undefined,
         usermedia: 'Skærmbilleder og videoer',
         searchbtnbase: 'Søg videre',
@@ -326,6 +328,7 @@ var enhanced_translation = {
         fullscreen: 'Vollbild',
         onsale: 'Im Angebot',
         prodeals: 'Pro Angebote',
+        trials: 'Testversionen',
         userprofile: 'Mein Profil',
         usermedia: 'Aufnahmen und Spielstatus',
         searchbtnbase: 'Suche auf',
@@ -357,9 +360,9 @@ var enhanced_translation = {
         fps: 'Framerate',
         testdiscl: '<b>Vorwarnung:</b> Dieses Spiel muss noch getestet werden.',
         datadiscl: 'Dies ist die im 4K Modus (Stadia Pro benötigt) maximal erreichbare Framerate.\
-                            In Spielen mit Qualität/Performance Option, wurde Qualität gewählt. \
-                            Diese Daten werden durch <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> bereitgestellt, \
-                            die vollständige Ansicht befindet sich <a href="https://linktr.ee/StadiaDatabase" target="_blank">hier</a>.',
+                    In Spielen mit Qualität/Performance Option, wurde Qualität gewählt. \
+                    Diese Daten werden durch <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> bereitgestellt, \
+                    die vollständige Ansicht befindet sich <a href="https://linktr.ee/StadiaDatabase" target="_blank">hier</a>.',
         noteOne: '4K Modus',
         noteTwo: '30/60 FPS Umschaltbar',
         noteThree: '60 FPS im 1080p Modus',
@@ -475,6 +478,7 @@ var enhanced_translation = {
         fullscreen: 'Fullscreen',
         onsale: 'On Sale',
         prodeals: 'Pro Deals',
+        trials: 'Trials',
         userprofile: 'My Profile',
         usermedia: 'Captures & game states',
         searchbtnbase: 'Search on',
@@ -506,9 +510,9 @@ var enhanced_translation = {
         fps: 'Framerate',
         testdiscl: '<b>Disclaimer:</b> This game has yet to be tested.',
         datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
-        On games with a resolution/framerate toggle, resolution was picked. \
-        This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-        and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+                    On games with a resolution/framerate toggle, resolution was picked. \
+                    This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
         noteOne: '4K Mode',
         noteTwo: '30/60 FPS Toggle',
         noteThree: '60 FPS in 1080p mode',
@@ -624,6 +628,7 @@ var enhanced_translation = {
         fullscreen: 'Plenekrana',
         onsale: 'Rabatoj',
         prodeals: 'Rabatoj de Stadia Pro',
+        trials: undefined,
         userprofile: 'Mia profilo',
         usermedia: 'Captures & game states',
         searchbtnbase: 'Serĉi en',
@@ -655,9 +660,9 @@ var enhanced_translation = {
         fps: 'Framerate',
         testdiscl: 'Disclaimer: This game has yet to be tested.',
         datadiscl: 'This is the maximum framerate achieved when playing a game in 4K mode (requires Stadia Pro).\
-                            On games with a resolution/framerate toggle, resolution was picked.\
-                            This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
-                            and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
+                    On games with a resolution/framerate toggle, resolution was picked.\
+                    This data is provided by <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                    and the full database can be found <a href="https://linktr.ee/StadiaDatabase" target="_blank">here</a>.',
         noteOne: '4K Mode',
         noteTwo: '30/60 FPS Toggle',
         noteThree: '60 FPS in 1080p mode',
@@ -773,6 +778,7 @@ var enhanced_translation = {
         fullscreen: 'Pantalla completa',
         onsale: 'En oferta',
         prodeals: 'En oferta Pro',
+        trials: undefined,
         userprofile: 'Mi perfil',
         usermedia: 'Capturas de pantalla y vídeos',
         searchbtnbase: 'Buscar en',
@@ -804,9 +810,9 @@ var enhanced_translation = {
         fps: 'FPS',
         testdiscl: '<b>Aviso:</b> Este juego aún no se ha probado.',
         datadiscl: 'Esta es la velocidad máxima de fotogramas que se logra al jugar en modo 4K (requiere Stadia Pro). \
-                En los juegos con interruptor "resolución/rendimiento", se eligió resolución. \
-                Estos datos son proporcionados por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                y se puede encontrar la base de datos completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
+                    En los juegos con interruptor "resolución/rendimiento", se eligió resolución. \
+                    Estos datos son proporcionados por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    y se puede encontrar la base de datos completa <a href="https://linktr.ee/StadiaDatabase" target="_blank">aquí</a>.',
         noteOne: 'Modo 4K',
         noteTwo: 'Interruptor 30/60 FPS',
         noteThree: '60 FPS en modo 1080p',
@@ -922,6 +928,7 @@ var enhanced_translation = {
         fullscreen: 'Plein Écran',
         onsale: 'En Promotion',
         prodeals: 'Offres Stadia Pro',
+        trials: undefined,
         userprofile: 'Mon Profil',
         usermedia: 'Captures & Vidéos',
         searchbtnbase: 'Rechercher sur',
@@ -953,9 +960,9 @@ var enhanced_translation = {
         fps: 'Framerate',
         testdiscl: '<b>Avertissement:</b> Ce jeu n\'a pas encore été testé.',
         datadiscl: 'Ceci correspond au taux de rafraîchissement (framerate) maximum atteint lorsque le jeu est en mode 4K (nécessite un abonnement Pro).\
-                            Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
-                            Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                            et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
+                    Si le jeu permet de choisir entre résolution et framerate, la résolution est favorisée. \
+                    Ces données sont fournies par <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    et la base de données complète est disponible sur <a href="https://linktr.ee/StadiaDatabase" target="_blank">ici</a>.',
         noteOne: 'Mode 4K',
         noteTwo: 'Option 30/60 FPS',
         noteThree: '60FPS en mode 1080p',
@@ -1072,6 +1079,7 @@ var enhanced_translation = {
         fullscreen: 'Teljes képernyő',
         onsale: 'Akciók',
         prodeals: 'Pro Ajánlatok',
+        trials: undefined,
         userprofile: 'Saját fiók',
         usermedia: 'Képernyőképek és Videók',
         searchbtnbase: 'Keresés',
@@ -1103,9 +1111,9 @@ var enhanced_translation = {
         fps: 'Képkocka',
         testdiscl: undefined,
         datadiscl: 'Ez a maximum elérhető képkockaszám 4K módban játszva (Pro előfizetés szükséges),\
-                            azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
-                            Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                            a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
+                    azoknál a játékoknál akol a 4K lehetséges és kiválasztásra is került. \
+                    Az információ forrása: <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    a teljes adatbázis elérhető <a href="https://linktr.ee/StadiaDatabase" target="_blank">itt</a>.',
         noteOne: undefined,
         noteTwo: undefined,
         noteThree: '60FPS 1080p módban',
@@ -1222,6 +1230,7 @@ var enhanced_translation = {
         fullscreen: 'Schermo Intero',
         onsale: 'In Offerta',
         prodeals: 'Offerte del Pro',
+        trials: undefined,
         userprofile: 'Profilo',
         usermedia: 'Screenshot & Video',
         searchbtnbase: 'Cerca su',
@@ -1253,9 +1262,9 @@ var enhanced_translation = {
         fps: 'Framerate',
         testdiscl: '<b>Nota bene:</b> Questo gioco deve ancora essere testato.',
         datadiscl: 'Questo è il framerate massimo ottenuto mentre si gioca in modalità 4k (devi essere un membro abbonato Pro).\
-                            Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
-                            Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                            e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
+                    Tra i giochi dove è possibile selezionare la modalità risoluzione/framerate, è stata scelta la modalità risoluzione.  \
+                    Questi dati sono forniti da  <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    e l\'intero database potete trovarlo <a href="https://linktr.ee/StadiaDatabase" target="_blank">qui</a>.',
         noteOne: 'Modalità 4K',
         noteTwo: 'Cambio 30/60 FPS',
         noteThree: '60 FPS in modalità 1080p',
@@ -1371,6 +1380,7 @@ var enhanced_translation = {
         fullscreen: 'Volledig Scherm',
         onsale: 'In de Uitverkoop',
         prodeals: 'Pro Deals',
+        trials: undefined,
         userprofile: 'Mijn Profiel',
         usermedia: 'Screenshots & Videos',
         searchbtnbase: 'Zoek verder',
@@ -1517,6 +1527,7 @@ var enhanced_translation = {
         fullscreen: 'Ecrã Completo',
         onsale: 'Em Promoção',
         prodeals: 'Promoções PRO',
+        trials: undefined,
         userprofile: 'Meu Perfil',
         usermedia: 'Capturas e Vídeos',
         searchbtnbase: 'Pesquisar em',
@@ -1548,9 +1559,9 @@ var enhanced_translation = {
         fps: 'Fotogramas',
         testdiscl: undefined,
         datadiscl: 'Esta é a taxa máxima de fotogramas alcançada ao jogar um jogo em modo 4K (deve ser um subscritor PRO). \
-                            Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
-                            Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
-                            e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
+                    Nos jogos com opções de resolução/taxa de fotogramas, a resolução foi escolhida. \
+                    Estes dados são fornecidos por <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a> \
+                    e a base de dados completa pode ser encontrada <a href="https://linktr.ee/StadiaDatabase" target="_blank">aqui</a>.',
         noteOne: undefined,
         noteTwo: undefined,
         noteThree: '60FPS em 1080P',
@@ -1666,6 +1677,7 @@ var enhanced_translation = {
         fullscreen: 'Полноэкранный режим',
         onsale: 'На распродаже',
         prodeals: 'Эксклюзивные скидки',
+        trials: undefined,
         userprofile: 'Мой профиль',
         usermedia: 'Скриншоты и Видео',
         searchbtnbase: 'Найти на',
@@ -1812,6 +1824,7 @@ var enhanced_translation = {
         fullscreen: 'Na celú obrazovku',
         onsale: 'V akcii',
         prodeals: 'Výhodné ponuky Pro',
+        trials: undefined,
         userprofile: 'Môj profil',
         usermedia: 'Zábery a herné situácie',
         searchbtnbase: 'Vyhľadaj',
@@ -1843,10 +1856,10 @@ var enhanced_translation = {
         fps: 'Framerate',
         testdiscl: undefined,
         datadiscl: 'Toto je maximálny framerate počas hrania v 4K móde (vyžaduje Pro odber).\
-                            Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
-                            je uprednostnené rozlíšenie.\
-                            Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
-                            a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
+                    Pri hrách ktoré majú rozlíšenie / framerate možnosť,\
+                    je uprednostnené rozlíšenie.\
+                    Tieto údaje sú poskytnuté od <a href="https://twitter.com/OriginaIPenguin" target="_blank">@OriginaIPenguin</a>\
+                    a <a href="https://linktr.ee/StadiaDatabase" target="_blank">kompletná databáza</a> sa nachádza tu.',
         noteOne: undefined,
         noteTwo: undefined,
         noteThree: '60FPS pri 1080p móde',
@@ -1962,6 +1975,7 @@ var enhanced_translation = {
         fullscreen: 'Fullskärmsläge',
         onsale: 'På Rea',
         prodeals: 'Pro Deals',
+        trials: undefined,
         userprofile: undefined,
         usermedia: 'Skärmdumpar & Filmer',
         searchbtnbase: 'Sök på',
