@@ -2,11 +2,9 @@
 
 ## Version 1.20
 
-### 1.20.5
-* Fixed store page related features (extended details, youtube/metacritic links and more) not working with the new layout
-
 ### 1.20.4
 * Fixed spacing issues on store list filter elements
+* Fixed store page related features (extended details, youtube/metacritic links and more) not working with the new layout
 
 ### 1.20.3
 * Added a direct link to trials in the shortcut dropdown
