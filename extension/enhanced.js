@@ -445,14 +445,30 @@ enhanced_extendedDetails.className = 'b2MCG'
 // Untested Disclaimer
 var enhanced_untestedDisclaimer = document.createElement('div')
 enhanced_untestedDisclaimer.className = 'uM5FUc'
+enhanced_untestedDisclaimer.style.marginTop = '1.5rem'
 enhanced_untestedDisclaimer.style.marginBottom = '1.5rem'
-enhanced_untestedDisclaimer.innerHTML = enhanced_lang.testdiscl
+enhanced_untestedDisclaimer.innerHTML = `
+<div class="HJ5QZ MZ4wg">
+    <span>
+        <span class="oInudb ">
+            ` + enhanced_lang.testdiscl + `
+        </span>
+    </span>
+</div>`
 
 // Data Disclaimer
 var enhanced_extendedDisclaimer = document.createElement('div')
 enhanced_extendedDisclaimer.className = 'uM5FUc'
 enhanced_extendedDisclaimer.style.marginTop = '1.5rem'
-enhanced_extendedDisclaimer.innerHTML = enhanced_lang.datadiscl
+enhanced_extendedDisclaimer.style.marginBottom = '1.5rem'
+enhanced_extendedDisclaimer.innerHTML = `
+    <div class="HJ5QZ MZ4wg">
+        <span>
+            <span class="oInudb ">
+                ` + enhanced_lang.datadiscl + `
+            </span>
+        </span>
+    </div>`
 
 // Report a bug
 var enhanced_reportBug = document.createElement('div')
@@ -2494,7 +2510,7 @@ enhanced_YouTube.style.backgroundColor = '#c00'
 enhanced_YouTube.style.color = 'white'
 enhanced_YouTube.style.marginTop = '1.5rem'
 enhanced_YouTube.addEventListener('click', function () {
-    enhanced_GameTitle = document.querySelectorAll('.UG7HXc')[document.querySelectorAll('.UG7HXc').length - 1].textContent
+    enhanced_GameTitle = document.getElementsByClassName('uJClu')[document.getElementsByClassName('uJClu').length - 1].textContent
     window.open('https://www.youtube.com/results?search_query=' + enhanced_GameTitle, '_blank')
 })
 enhanced_StoreContainer.append(enhanced_YouTube)
@@ -2511,44 +2527,10 @@ enhanced_Metacritic.style.backgroundColor = '#131416'
 enhanced_Metacritic.style.color = 'white'
 enhanced_Metacritic.style.marginTop = '1.5rem'
 enhanced_Metacritic.addEventListener('click', function () {
-    enhanced_GameTitle = document.querySelectorAll('.UG7HXc')[document.querySelectorAll('.UG7HXc').length - 1].textContent;
+    enhanced_GameTitle = document.getElementsByClassName('uJClu')[document.getElementsByClassName('uJClu').length - 1].textContent
     window.open('https://www.metacritic.com/search/game/' + enhanced_GameTitle + '/results', '_blank')
 })
 enhanced_StoreContainer.append(enhanced_Metacritic)
-
-// Wishlisting
-var enhanced_wishlistContainer = document.createElement('li')
-enhanced_wishlistContainer.className = 'OfFb0b tj2D'
-enhanced_wishlistContainer.id = 'enhanced_wishlistContainer'
-enhanced_wishlistContainer.style.display = 'none'
-var enhanced_wishlistHeart = document.createElement('div')
-enhanced_wishlistContainer.appendChild(enhanced_wishlistHeart)
-enhanced_wishlistHeart.className = 'ROpnrd QAAyWd wJYinb'
-enhanced_wishlistHeart.id = 'enhanced_WishlistHeart'
-enhanced_wishlistHeart.innerHTML = ''
-enhanced_wishlistHeart.style.width = '2.5rem'
-enhanced_wishlistHeart.style.padding = '0'
-enhanced_wishlistHeart.style.cursor = 'pointer'
-enhanced_wishlistHeart.style.userSelect = 'none'
-enhanced_wishlistHeart.tabIndex = '0'
-enhanced_wishlistHeart.addEventListener('click', function () {
-    var enhanced_currentSKU = document.location.href.split('sku/')[1].split('?')[0]
-
-    if (enhanced_settings.wishlist.includes(enhanced_currentSKU)) {
-        enhanced_settings.wishlist = enhanced_settings.wishlist.replace('(' + enhanced_currentSKU + ')', '')
-        enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite_border</i>'
-        enhanced_wishlistHeart.style.color = ''
-    } else {
-        enhanced_settings.wishlist += '(' + enhanced_currentSKU + ')'
-        enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>'
-        enhanced_wishlistHeart.style.color = '#ff773d'
-    }
-    localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
-})
-if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
-    // Currently deactivated, due to store changes
-    // document.getElementsByClassName('ZECEje')[0].append(enhanced_wishlistContainer)
-}
 
 // Account Menu - Changes to the account menu behaviour
 enhanced_AccountMenu = document.querySelector('.Zxyh9c')
@@ -2586,6 +2568,7 @@ enhanced_showAll.addEventListener('click', function () {
 enhanced_activeListFilter = 0
 enhanced_listFilter = document.createElement('div')
 enhanced_listFilter.style.display = 'flex'
+enhanced_listFilter.style.marginRight = '0.75rem'
 
 enhanced_listFilterGames = document.createElement('div')
 if (enhanced_languageSupport.supportedCodes.includes(enhanced_local)) {
@@ -3332,53 +3315,53 @@ function enhanced_main() {
     }
 
     // Location - Store Details
-    if (enhanced_isLocation('storedetails')) {
+    if (enhanced_isLocation('storepage')) {
 
         // Database Infos
         if (enhanced_database && enhanced_settings.enableStadiaDatabase == 1) {
             for (var i = 0; i < enhanced_database.length; i++) {
-                if (enhanced_database[i].id == document.location.href.split('details/')[1].split('/')[0]) {
+                if (enhanced_database[i].id == document.getElementsByClassName('xPDr9b Tykkac')[document.getElementsByClassName('xPDr9b Tykkac').length - 1].querySelector('div[jscontroller="XE8B8e"]').getAttribute('jsdata').split(';')[1].split(':')[2]) {
 
                     // Check for empty entry
                     var enhanced_fullEntry = enhanced_database[i].maxRes + enhanced_database[i].fps + enhanced_database[i].proFeat + enhanced_database[i].crossplay
                     if (enhanced_fullEntry != '') {
 
                         // Section Header
-                        var enhanced_databaseDetails = '<div class="CVVXfc"><h2 class="HZ5mJ">' + enhanced_lang.extdetail + '</h2></div>'
+                        var enhanced_databaseDetails = '<h4 class="he842c n3017e">' + enhanced_lang.extdetail + '</h4>'
 
                         // Entry - Resolution
                         if (enhanced_database[i].maxRes != '') {
-                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.maxresolution + '</div><div class="tM4Phe">' + enhanced_database[i].maxRes + '</div></div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.maxresolution + '</span></span></div>' + enhanced_database[i].maxRes + '</div>'
                         }
 
                         // Entry - Framerate
                         if (enhanced_database[i].fps != '') {
-                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.fps + '</div><div class="tM4Phe">' + enhanced_database[i].fps + '</div></div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.fps + '</span></span></div>' + enhanced_database[i].fps + '</div>'
                         }
 
                         // Entry - Pro Features
                         if (enhanced_database[i].proFeat != '') {
-                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Pro Features</div><div class="tM4Phe">' + enhanced_database[i].proFeat + '</div></div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">Pro Features</span></span></div>' + enhanced_database[i].proFeat + '</div>'
                         }
 
                         // Entry - Stadia Features
                         if (enhanced_database[i].stadiaFeat != '') {
-                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Stadia Features</div><div class="tM4Phe">' + enhanced_database[i].stadiaFeat + '</div></div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">Stadia Features</span></span></div>' + enhanced_database[i].stadiaFeat + '</div>'
                         }
 
                         // Entry - Crossplay
                         if (enhanced_database[i].crossplay != '') {
-                            enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">Crossplay</div><div class="tM4Phe">' + enhanced_database[i].crossplay + '</div></div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">Crossplay</span></span></div>' + enhanced_database[i].crossplay + '</div>'
                         }
 
                         // Entry - Contact
                         if (enhanced_database[i].contact != '') {
                             if (enhanced_database[i].contact.includes('https')) {
                                 // Link
-                                enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.reportbug + '</div><div class="tM4Phe"><a href="' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div></div>'
+                                enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.reportbug + '</span></span></div><a href="' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div>'
                             } else {
                                 //Mail
-                                enhanced_databaseDetails += '<div class="gERVd"><div class="BKyVrb">' + enhanced_lang.reportbug + '</div><div class="tM4Phe"><a href="mailto:' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div></div>'
+                                enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.reportbug + '</span></span></div><a href="mailto:' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div>'
                             }
                         }
 
@@ -3387,41 +3370,24 @@ function enhanced_main() {
                             enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
                         }
 
-                        enhanced_secureInsert(enhanced_extendedDetails, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+                        enhanced_secureInsert(enhanced_extendedDetails, 'xPDr9b Tykkac', 0)
 
                         // Disclaimers
                         if (enhanced_database[i].tested != '') {
-                            enhanced_secureInsert(enhanced_untestedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+                            enhanced_secureInsert(enhanced_untestedDisclaimer, 'xPDr9b Tykkac', 0)
                         }
 
-                        enhanced_secureInsert(enhanced_extendedDisclaimer, 'Dbr3vb URhE4b bqgeJc wGziQb', 0)
+                        enhanced_secureInsert(enhanced_extendedDisclaimer, 'xPDr9b Tykkac', 0)
 
                     }
                 }
             }
         }
 
-        // Wishlist Startup
-        if (enhanced_wishlistHeart.innerHTML == '') {
-            var enhanced_currentSKU = document.location.href.split('sku/')[1].split('?')[0]
-            if (enhanced_settings.wishlist.includes(enhanced_currentSKU)) {
-                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite</i>'
-                enhanced_wishlistHeart.style.color = '#ff773d'
-            } else {
-                enhanced_wishlistHeart.innerHTML = '<i class="material-icons-extended" aria-hidden="true">favorite_border</i>'
-                enhanced_wishlistHeart.style.color = ''
-            }
-            enhanced_wishlistContainer.style.display = 'inline-block'
-        }
-
-        enhanced_secureInsert(enhanced_StoreContainer, 'WjVJKd', 0)
+        enhanced_secureInsert(enhanced_StoreContainer, 'BLA2uf n3017e', 0)
     } else {
         // Reset extended game info
         enhanced_extendedDetails.innerHTML = ''
-
-        // Wishlist Startup
-        enhanced_wishlistContainer.style.display = 'none'
-        enhanced_wishlistHeart.innerHTML = ''
     }
 
     // Location - Store List
@@ -4628,8 +4594,8 @@ function enhanced_isLocation(loc) {
             return document.location.href.indexOf('/captures') != -1
         case 'profiledetails':
             return document.location.href.match('profile.[0-9]+.detail') != null
-        case 'storedetails':
-            return document.location.href.indexOf('/store/details/') != -1
+        case 'storepage':
+            return document.location.href.indexOf('/game/') != -1
         case 'storelist':
             return document.location.href.indexOf('/list') != -1
         case 'progames':
