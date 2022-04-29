@@ -1,7 +1,7 @@
 {
     "name": "Stadia Enhanced",
     "description": "Various new features for Google Stadia.",
-    "version": "1.20.4",
+    "version": "1.20.5",
     "manifest_version": 3,
     "author": "Christopher Klay",
     "homepage_url": "https://github.com/ChristopherKlay/StadiaEnhanced",
@@ -13,7 +13,7 @@
     },
     "action": {
         "default_popup": "popup.html",
-        "default_title": "Stadia Enhanced v1.20.4",
+        "default_title": "Stadia Enhanced v1.20.5",
         "default_icon": {
             "16": "media/logo/16.png",
             "32": "media/logo/32.png",
@@ -32,7 +32,8 @@
             "*://stadia.google.com/profile*",
             "*://stadia.google.com/settings*",
             "*://stadia.google.com/captures*",
-            "*://stadia.google.com/library*"
+            "*://stadia.google.com/library*",
+            "*://stadia.google.com/game/*"
         ],
         "js": [
             "translations.js",
