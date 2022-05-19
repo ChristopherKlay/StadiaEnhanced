@@ -2,6 +2,11 @@
 
 ## Version 1.20
 
+### 1.20.6
+* Changed the "Pro" shortcut to be displayed in the drop down menu instead
+* Fixed store list filters not working after changes on Stadia's side
+* Fixed playtime calculations in languages with a `,` number separator
+
 ### 1.20.5
 * Fixed the extension not loading when directly accessing store pages
 
