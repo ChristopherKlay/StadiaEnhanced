@@ -127,7 +127,7 @@ var enhanced_languageSupport = {
         en: {
             game: 'Game',
             bundle: 'Bundle',
-            addon: 'Add-On',
+            addon: 'Add-on',
             free: 'Free'
         },
         es: {
@@ -1374,21 +1374,6 @@ enhanced_ClockOverlay.addEventListener('click', function () {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
 
-// Pro Games - Adds a quick access to the current list of 'Pro' titles on Stadia
-var enhanced_ProGames = document.createElement('li')
-enhanced_ProGames.className = 'OfFb0b R22fdd'
-enhanced_ProGames.id = 'enhanced_ProGames'
-var enhanced_ProGamesLink = document.createElement('a')
-enhanced_ProGames.appendChild(enhanced_ProGamesLink)
-enhanced_ProGamesLink.className = 'ROpnrd QAAyWd wJYinb'
-enhanced_ProGamesLink.textContent = 'Pro'
-enhanced_ProGamesLink.addEventListener('click', function () {
-    enhanced_openStadia('store/list/2001')
-})
-if (document.getElementsByClassName('ZECEje')[0] !== undefined) {
-    document.getElementsByClassName('ZECEje')[0].append(enhanced_ProGames)
-}
-
 // Store Dropdown - Adds a dropdown menu for quick access
 var enhanced_StoreContainer = document.createElement('li')
 enhanced_StoreContainer.className = 'OfFb0b R22fdd'
@@ -1522,6 +1507,20 @@ enhanced_AllGames.addEventListener('click', function () {
     enhanced_openStadia('store/list/3')
 })
 enhanced_StoreDropContent.append(enhanced_AllGames)
+
+// Pro Games - Quick access to the current list of 'Pro' titles on Stadia
+var enhanced_ProGames = document.createElement('div')
+enhanced_ProGames.className = 'pBvcyf QAAyWd'
+enhanced_ProGames.id = 'enhanced_ProGames'
+enhanced_ProGames.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">list</i><span class="mJVLwb">' + enhanced_lang.progames + '</span>'
+enhanced_ProGames.style.cursor = 'pointer'
+enhanced_ProGames.style.userSelect = 'none'
+enhanced_ProGames.style.paddingRight = '2rem'
+enhanced_ProGames.tabIndex = '0'
+enhanced_ProGames.addEventListener('click', function () {
+    enhanced_openStadia('store/list/2001')
+});
+enhanced_StoreDropContent.append(enhanced_ProGames)
 
 // Language Dropdown - Adds a dropdown menu for language switching
 var enhanced_langContainer = document.createElement('li')
@@ -3423,7 +3422,7 @@ function enhanced_main() {
         if (enhanced_activeListFilter != 0) {
             if (enhanced_activeListFilter < 4) {
                 for (var i = 0; i < enhanced_listElements.length; i++) {
-                    if (enhanced_listElements[i].querySelector('.gDRPLd').lastChild.textContent != enhanced_storeFilterOption) {
+                    if (enhanced_listElements[i].getElementsByClassName('BLncmc')[0].textContent != enhanced_storeFilterOption) {
                         enhanced_listElements[i].parentNode.style.display = 'none'
                     } else {
                         enhanced_listElements[i].parentNode.style.display = 'block'
@@ -3456,23 +3455,8 @@ function enhanced_main() {
     if (enhanced_isLocation('progames')) {
         // Display filter
         enhanced_listFilterPro.style.display = 'flex'
-
-        // UI changes and count of currently unclaimed games
-        document.querySelector('.ZECEje > li:nth-child(3) > a').classList.remove('YySNWc')
-        enhanced_ProGamesLink.classList.add('YySNWc')
-        if (document.querySelector('.alEDLe') !== null) {
-            count = document.querySelector('.alEDLe').querySelectorAll('.X5624d').length
-            if (count != 0 && enhanced_ProGames.innerHTML.indexOf(count) == -1) {
-                enhanced_ProGamesLink.textContent = 'Pro (' + count + ')'
-            }
-        }
     } else {
         enhanced_listFilterPro.style.display = 'none'
-
-        enhanced_ProGamesLink.classList.remove('YySNWc')
-        if (enhanced_ProGamesLink.textContentL != 'Pro') {
-            enhanced_ProGamesLink.textContent = 'Pro'
-        }
     }
 
     // Location - Personal Profile
@@ -3552,7 +3536,7 @@ function enhanced_main() {
 
             if (enhanced_timesAvailable) {
                 for (var i = 0; i < enhanced_timeQuery.length; i++) {
-                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.replace('.', '').split(/[\s]/)
+                    var enhanced_titlePlaytime = enhanced_timeQuery[i].textContent.replace('.', '').replace(',', '').split(/[\s]/)
 
                     switch (enhanced_titlePlaytime.length) {
                         case 2:
