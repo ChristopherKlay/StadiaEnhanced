@@ -1653,7 +1653,7 @@ enhanced_SettingsDropdown.addEventListener('click', function (e) {
     if (enhanced_isLocation('stadiamenu')) {
         document.getElementsByClassName('VhNwIc')[0].click()
     }
-    if (e.path.indexOf(enhanced_settingsFrame) == -1) {
+    if (e.composedPath().indexOf(enhanced_settingsFrame) == -1) {
         if (enhanced_settingsFrame.style.display === 'none') {
             enhanced_settingsFrame.style.display = 'flex'
             enhanced_SettingsDropdown.firstElementChild.style.color = '#ff773d'
@@ -1671,7 +1671,7 @@ enhanced_SettingsDropdown.addEventListener('keyup', function (e) {
 })
 
 window.addEventListener('click', function (e) {
-    if (e.path.indexOf(enhanced_SettingsDropdown) == -1) {
+    if (e.composedPath().indexOf(enhanced_SettingsDropdown) == -1) {
         enhanced_settingsFrame.style.display = 'none'
         enhanced_SettingsDropdown.firstElementChild.style.color = ''
     }
