@@ -4459,7 +4459,7 @@ function enhanced_pushNotification(content, image, dura) {
         }, (dura * 1000) + 1000)
     } else {
         window.addEventListener('click', function (e) {
-            if (e.path.indexOf(this.notification) == -1 && this.active) {
+            if (e.composedPath().indexOf(this.notification) == -1 && this.active) {
                 // State - Hide
                 this.notification.className = 'OFe4V'
                 this.notification.style.opacity = 0
