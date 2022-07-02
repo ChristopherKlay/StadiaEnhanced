@@ -2,6 +2,9 @@
 
 ## Version 1.20
 
+### 1.20.7
+* Changed event triggers due to the removal of `event.path` in Chrome 105 [[#240]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/240)
+
 ### 1.20.6
 * Changed the "Pro" shortcut to be displayed in the drop down menu instead
 * Fixed store list filters not working after changes on Stadia's side
