@@ -62,6 +62,7 @@ var translation = {
     responsive: 'Responsive',
     windowed: 'Windowed Mode',
     fullscreen: 'Fullscreen',
+    progames: 'Pro Games',
     onsale: 'On Sale',
     prodeals: 'Pro Deals',
     trials: 'Trials',

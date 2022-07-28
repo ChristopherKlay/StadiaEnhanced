@@ -2,6 +2,9 @@
 
 ## Version 1.20
 
+### 1.20.8
+Updated Slovak and Spanish translations
+
 ### 1.20.7
 * Changed event triggers due to the removal of `event.path` in Chrome 105 [[#240]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/240)
 
