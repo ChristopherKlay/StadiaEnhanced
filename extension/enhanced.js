@@ -218,6 +218,7 @@ enhanced_CSS += '#enhanced_showAll div { margin-left: 0 !important; }' // Fix sh
 enhanced_CSS += '.mGdxHb.ltdNmc:hover #enhanced_shortcutLastPlayed { opacity: 1 !important; }' // Show last-played shortcut on hover only
 enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar { width: 1rem; }' // Settings menu scrollbar width
 enhanced_CSS += '#enhanced_SettingsDropContent::-webkit-scrollbar-thumb { background-color: #202124; border-radius: 1rem; border: 3px solid #2d2e30; }' // Settings menu scrollbar style
+enhanced_CSS += '#enhanced_SettingsDropdown .pBvcyf.QAAyWd:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,.06); }' // Menu item bottom border
 enhanced_CSS += '@media screen and (min-width: 1080px) { .ZjQyU { display: flex !important; } .uSz8se { display: none !important; } }' // Searchbar displayed at >1080px
 
 // CSS Changes
@@ -1679,28 +1680,29 @@ window.addEventListener('click', function (e) {
 
 // Settings - Frame
 var enhanced_settingsFrame = document.createElement('div')
+enhanced_settingsFrame.className = 'MmEIfc'
 enhanced_settingsFrame.style.display = 'none'
 enhanced_settingsFrame.style.position = 'fixed'
 enhanced_settingsFrame.style.top = '4rem'
 enhanced_settingsFrame.style.right = '1.5rem'
 enhanced_settingsFrame.style.width = '40rem'
+enhanced_settingsFrame.style.margin = '0'
 enhanced_settingsFrame.style.maxWidth = 'calc(100% - 3rem)'
 enhanced_settingsFrame.style.height = '19.8rem'
 enhanced_settingsFrame.style.color = 'rgba(255,255,255,.9)'
 enhanced_settingsFrame.style.borderRadius = '0.5rem'
 enhanced_settingsFrame.style.overflow = 'hidden'
-enhanced_settingsFrame.style.boxShadow = '0 0.125rem 0.75rem rgb(0 0 0 / 32%), 0 0.0625rem 0.375rem rgb(0 0 0 / 18%)'
 
 // Settings - Navigation
 var enhanced_settingsNav = document.createElement('div')
-enhanced_settingsNav.className = 'us22N';
+enhanced_settingsNav.className = 'us22N'
 enhanced_settingsNav.style.display = 'flex'
 enhanced_settingsNav.style.width = '12rem'
 enhanced_settingsNav.style.flexDirection = 'column'
 enhanced_settingsNav.style.alignItems = 'stretch'
 enhanced_settingsNav.style.flexWrap = 'nowrap'
 enhanced_settingsNav.style.borderRadius = '0'
-enhanced_settingsNav.style.background = '#212224'
+enhanced_settingsNav.style.background = 'rgba(232,234,237,0.059)'
 enhanced_settingsNav.style.borderRight = '1px solid rgba(255, 255, 255, 0.06)'
 enhanced_settingsFrame.append(enhanced_settingsNav)
 
@@ -1711,7 +1713,6 @@ enhanced_settingsContent.style.width = '100%'
 enhanced_settingsContent.style.cursor = 'default'
 enhanced_settingsContent.style.overflowY = 'auto'
 enhanced_settingsContent.style.overflowX = 'hidden'
-enhanced_settingsContent.style.background = '#2d2e30'
 enhanced_settingsContent.style.borderRadius = '0'
 enhanced_settingsFrame.append(enhanced_settingsContent)
 
@@ -1830,7 +1831,6 @@ enhanced_UserProfile.id = 'enhanced_UserProfile'
 enhanced_UserProfile.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person</i><span class="mJVLwb">' + enhanced_lang.userprofile + '</span>'
 enhanced_UserProfile.style.cursor = 'pointer'
 enhanced_UserProfile.style.userSelect = 'none'
-enhanced_UserProfile.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserProfile.tabIndex = '0'
 enhanced_UserProfile.addEventListener('click', function () {
     enhanced_openStadia('profile/' + enhanced_AccountInfo[2])
@@ -1844,7 +1844,6 @@ enhanced_UserMedia.id = 'enhanced_UserMedia'
 enhanced_UserMedia.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">camera_alt</i><span class="mJVLwb">' + enhanced_lang.usermedia + '</span>'
 enhanced_UserMedia.style.cursor = 'pointer'
 enhanced_UserMedia.style.userSelect = 'none'
-enhanced_UserMedia.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
 enhanced_UserMedia.addEventListener('click', function () {
     enhanced_openStadia('captures')
@@ -1858,7 +1857,6 @@ enhanced_speedTest.id = 'enhanced_speedTest'
 enhanced_speedTest.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">speed</i><span class="mJVLwb">' + enhanced_lang.speedtest + '</span>'
 enhanced_speedTest.style.cursor = 'pointer'
 enhanced_speedTest.style.userSelect = 'none'
-enhanced_speedTest.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_speedTest.tabIndex = '0'
 enhanced_speedTest.addEventListener('click', function () {
     window.open('https://projectstream.google.com/speedtest', '_blank')
@@ -1872,7 +1870,6 @@ enhanced_communityPage.id = 'enhanced_communityPage'
 enhanced_communityPage.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">forum</i><span class="mJVLwb">' + enhanced_lang.community + '</span>'
 enhanced_communityPage.style.cursor = 'pointer'
 enhanced_communityPage.style.userSelect = 'none'
-enhanced_communityPage.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_communityPage.tabIndex = '0'
 enhanced_communityPage.addEventListener('click', function () {
     window.open('https://community.stadia.com/', '_blank')
@@ -1886,7 +1883,6 @@ enhanced_GitHubLink.id = 'enhanced_GitHubLink'
 enhanced_GitHubLink.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">code</i><span class="mJVLwb">GitHub</span>'
 enhanced_GitHubLink.style.cursor = 'pointer'
 enhanced_GitHubLink.style.userSelect = 'none'
-enhanced_GitHubLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_GitHubLink.tabIndex = '0'
 enhanced_GitHubLink.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced', '_blank')
@@ -1900,7 +1896,6 @@ enhanced_ChangelogLink.id = 'enhanced_ChangelogLink'
 enhanced_ChangelogLink.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">description</i><span class="mJVLwb">Changelog</span>'
 enhanced_ChangelogLink.style.cursor = 'pointer'
 enhanced_ChangelogLink.style.userSelect = 'none'
-enhanced_ChangelogLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ChangelogLink.tabIndex = '0'
 enhanced_ChangelogLink.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/changelog.md', '_blank')
@@ -1914,7 +1909,6 @@ enhanced_ReportIssue.id = 'enhanced_ReportIssue'
 enhanced_ReportIssue.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">bug_report</i><span class="mJVLwb">' + enhanced_lang.reportbug + '</span>'
 enhanced_ReportIssue.style.cursor = 'pointer'
 enhanced_ReportIssue.style.userSelect = 'none'
-enhanced_ReportIssue.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_ReportIssue.tabIndex = '0'
 enhanced_ReportIssue.addEventListener('click', function () {
     window.open('https://github.com/ChristopherKlay/StadiaEnhanced/issues', '_blank')
@@ -1928,7 +1922,6 @@ enhanced_CoffeeLink.id = 'enhanced_ChangelogLink'
 enhanced_CoffeeLink.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">coffee</i><span class="mJVLwb">' + enhanced_lang.donations + '</span>'
 enhanced_CoffeeLink.style.cursor = 'pointer'
 enhanced_CoffeeLink.style.userSelect = 'none'
-enhanced_CoffeeLink.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_CoffeeLink.tabIndex = '0'
 enhanced_CoffeeLink.addEventListener('click', function () {
     window.open('https://ko-fi.com/christopherklay', '_blank')
@@ -1941,7 +1934,6 @@ enhanced_Codec.className = 'pBvcyf QAAyWd'
 enhanced_Codec.id = 'enhanced_Codec'
 enhanced_Codec.style.cursor = 'pointer'
 enhanced_Codec.style.userSelect = 'none'
-enhanced_Codec.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Codec.tabIndex = '0'
 enhanced_Codec.addEventListener('click', function () {
     enhanced_settings.codec = (enhanced_settings.codec + 1) % 3
@@ -1956,7 +1948,6 @@ enhanced_Resolution.className = 'pBvcyf QAAyWd'
 enhanced_Resolution.id = 'enhanced_Resolution'
 enhanced_Resolution.style.cursor = 'pointer'
 enhanced_Resolution.style.userSelect = 'none'
-enhanced_Resolution.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_UserMedia.tabIndex = '0'
 enhanced_Resolution.addEventListener('click', function () {
     enhanced_settings.resolution = (enhanced_settings.resolution + 1) % 3
@@ -1996,7 +1987,6 @@ enhanced_Grid.className = 'pBvcyf QAAyWd'
 enhanced_Grid.id = 'enhanced_Grid'
 enhanced_Grid.style.cursor = 'pointer'
 enhanced_Grid.style.userSelect = 'none'
-enhanced_Grid.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Grid.tabIndex = '0'
 enhanced_Grid.addEventListener('click', function () {
     enhanced_settings.gridSize = (enhanced_settings.gridSize + 1) % 6
@@ -2011,7 +2001,6 @@ enhanced_Clock.className = 'pBvcyf QAAyWd'
 enhanced_Clock.id = 'enhanced_Clock'
 enhanced_Clock.style.cursor = 'pointer'
 enhanced_Clock.style.userSelect = 'none'
-enhanced_Clock.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Clock.tabIndex = '0'
 enhanced_Clock.addEventListener('click', function () {
     enhanced_settings.clockOption = (enhanced_settings.clockOption + 1) % 4
@@ -2026,7 +2015,6 @@ enhanced_useFilter.className = 'pBvcyf QAAyWd'
 enhanced_useFilter.id = 'enhanced_useFilter'
 enhanced_useFilter.style.cursor = 'pointer'
 enhanced_useFilter.style.userSelect = 'none'
-enhanced_useFilter.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_useFilter.tabIndex = '0'
 enhanced_useFilter.addEventListener('click', function () {
     enhanced_settings.filter = (enhanced_settings.filter + 1) % 2
@@ -2043,7 +2031,6 @@ enhanced_Invite.id = 'enhanced_Invite'
 enhanced_Invite.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">person_add</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.invitebase + '</span>'
 enhanced_Invite.style.cursor = 'pointer'
 enhanced_Invite.style.userSelect = 'none'
-enhanced_Invite.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_Invite.tabIndex = '0'
 enhanced_Invite.addEventListener('click', function () {
     navigator.clipboard.writeText(enhanced_InviteURL)
@@ -2128,7 +2115,6 @@ enhanced_hidePreview.className = 'pBvcyf QAAyWd'
 enhanced_hidePreview.id = 'enhanced_hidePreview'
 enhanced_hidePreview.style.cursor = 'pointer'
 enhanced_hidePreview.style.userSelect = 'none'
-enhanced_hidePreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_hidePreview.tabIndex = '0'
 enhanced_hidePreview.addEventListener('click', function () {
     enhanced_settings.hideMessagePreview = (enhanced_settings.hideMessagePreview + 1) % 2
@@ -2143,7 +2129,6 @@ enhanced_quickReply.className = 'pBvcyf QAAyWd'
 enhanced_quickReply.id = 'enhanced_quickReply'
 enhanced_quickReply.style.cursor = 'pointer'
 enhanced_quickReply.style.userSelect = 'none'
-enhanced_quickReply.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_quickReply.tabIndex = '0'
 enhanced_quickReply.addEventListener('click', function () {
     enhanced_settings.hideQuickReply = (enhanced_settings.hideQuickReply + 1) % 2
@@ -2158,7 +2143,6 @@ enhanced_inlineConvert.className = 'pBvcyf QAAyWd'
 enhanced_inlineConvert.id = 'enhanced_inlineConvert'
 enhanced_inlineConvert.style.cursor = 'pointer'
 enhanced_inlineConvert.style.userSelect = 'none'
-enhanced_inlineConvert.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_inlineConvert.tabIndex = '0'
 enhanced_inlineConvert.addEventListener('click', function () {
     enhanced_settings.hideInlinePreview = (enhanced_settings.hideInlinePreview + 1) % 2
@@ -2173,7 +2157,6 @@ enhanced_offlineUser.className = 'pBvcyf QAAyWd'
 enhanced_offlineUser.id = 'enhanced_lastMessage'
 enhanced_offlineUser.style.cursor = 'pointer'
 enhanced_offlineUser.style.userSelect = 'none'
-enhanced_offlineUser.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_offlineUser.tabIndex = '0'
 enhanced_offlineUser.addEventListener('click', function () {
     enhanced_settings.hideOfflineUsers = (enhanced_settings.hideOfflineUsers + 1) % 2
@@ -2202,7 +2185,6 @@ enhanced_gameLabel.className = 'pBvcyf QAAyWd'
 enhanced_gameLabel.id = 'enhanced_gameLabel'
 enhanced_gameLabel.style.cursor = 'pointer'
 enhanced_gameLabel.style.userSelect = 'none'
-enhanced_gameLabel.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_gameLabel.tabIndex = '0'
 enhanced_gameLabel.addEventListener('click', function () {
     enhanced_settings.hideLabels = (enhanced_settings.hideLabels + 1) % 2
@@ -2217,7 +2199,6 @@ enhanced_dimOverlay.className = 'pBvcyf QAAyWd'
 enhanced_dimOverlay.id = 'enhanced_dimOverlay'
 enhanced_dimOverlay.style.cursor = 'pointer'
 enhanced_dimOverlay.style.userSelect = 'none'
-enhanced_dimOverlay.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_dimOverlay.tabIndex = '0'
 enhanced_dimOverlay.addEventListener('click', function () {
     enhanced_settings.dimOverlay = (enhanced_settings.dimOverlay + 1) % 2
@@ -2232,7 +2213,6 @@ enhanced_mediaPreview.className = 'pBvcyf QAAyWd'
 enhanced_mediaPreview.id = 'enhanced_mediaPreview'
 enhanced_mediaPreview.style.cursor = 'pointer'
 enhanced_mediaPreview.style.userSelect = 'none'
-enhanced_mediaPreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_mediaPreview.tabIndex = '0'
 enhanced_mediaPreview.addEventListener('click', function () {
     enhanced_settings.hideUserMedia = (enhanced_settings.hideUserMedia + 1) % 2
@@ -2247,7 +2227,6 @@ enhanced_categoryPreview.className = 'pBvcyf QAAyWd'
 enhanced_categoryPreview.id = 'enhanced_categoryPreview'
 enhanced_categoryPreview.style.cursor = 'pointer'
 enhanced_categoryPreview.style.userSelect = 'none'
-enhanced_categoryPreview.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_categoryPreview.tabIndex = '0'
 enhanced_categoryPreview.addEventListener('click', function () {
     enhanced_settings.hideCategories = (enhanced_settings.hideCategories + 1) % 2
@@ -2262,7 +2241,6 @@ enhanced_storeList.className = 'pBvcyf QAAyWd'
 enhanced_storeList.id = 'enhanced_storeList'
 enhanced_storeList.style.cursor = 'pointer'
 enhanced_storeList.style.userSelect = 'none'
-enhanced_storeList.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_storeList.tabIndex = '0'
 enhanced_storeList.addEventListener('click', function () {
     enhanced_settings.splitStore = (enhanced_settings.splitStore + 1) % 2
@@ -2277,7 +2255,6 @@ enhanced_hideFamilyElements.className = 'pBvcyf QAAyWd'
 enhanced_hideFamilyElements.id = 'enhanced_storeList'
 enhanced_hideFamilyElements.style.cursor = 'pointer'
 enhanced_hideFamilyElements.style.userSelect = 'none'
-enhanced_hideFamilyElements.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_hideFamilyElements.tabIndex = '0'
 enhanced_hideFamilyElements.addEventListener('click', function () {
     enhanced_settings.hideFamilySharing = (enhanced_settings.hideFamilySharing + 1) % 2
@@ -2286,13 +2263,12 @@ enhanced_hideFamilyElements.addEventListener('click', function () {
 })
 enhanced_settingsGeneral.append(enhanced_hideFamilyElements)
 
-// Shortcuts
+// Stadia Icons - Shortcuts
 var enhanced_showShortcut = document.createElement('div')
 enhanced_showShortcut.className = 'pBvcyf QAAyWd'
 enhanced_showShortcut.id = 'enhanced_showShortcut'
 enhanced_showShortcut.style.cursor = 'pointer'
 enhanced_showShortcut.style.userSelect = 'none'
-enhanced_showShortcut.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_showShortcut.tabIndex = '0'
 enhanced_showShortcut.addEventListener('click', function () {
     enhanced_settings.enableShortcuts = (enhanced_settings.enableShortcuts + 1) % 2
@@ -2337,7 +2313,6 @@ enhanced_setNotification.className = 'pBvcyf QAAyWd'
 enhanced_setNotification.id = 'enhanced_setNotification'
 enhanced_setNotification.style.cursor = 'pointer'
 enhanced_setNotification.style.userSelect = 'none'
-enhanced_setNotification.style.borderBottom = '1px solid rgba(255,255,255,.06)'
 enhanced_setNotification.tabIndex = '0'
 enhanced_setNotification.addEventListener('click', function () {
     enhanced_settings.updateNotifications = (enhanced_settings.updateNotifications + 1) % 3
@@ -3391,14 +3366,6 @@ function enhanced_main() {
 
     // Location - Store List
     if (enhanced_isLocation('storelist')) {
-        // Add class for page segements in split view
-        if (enhanced_settings.splitStore != 0) {
-            enhanced_loadedLists = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].querySelectorAll('div:not(.pW7Dlc) > streamable')
-            for (var i = 0; i < enhanced_loadedLists.length; i++) {
-                enhanced_loadedLists[i].parentNode.classList.add("splitstorefull")
-            }
-        }
-
         // Filter by Store tags
 
         // Set label
@@ -3418,7 +3385,7 @@ function enhanced_main() {
         }
 
         // Filter items
-        var enhanced_listElements = document.getElementsByClassName('xPDr9b')[document.getElementsByClassName('xPDr9b').length - 1].getElementsByClassName('pW7Dlc')
+        var enhanced_listElements = document.querySelectorAll('div[jsname="azRXlc"] .pW7Dlc')
         if (enhanced_activeListFilter != 0) {
             if (enhanced_activeListFilter < 4) {
                 for (var i = 0; i < enhanced_listElements.length; i++) {
@@ -3877,23 +3844,23 @@ function enhanced_applySettings(set, opt) {
                     break;
                 case 1:
                     enhanced_Grid.style.color = '#00e0ba'
-                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(15,minmax(auto,7.8125rem)) !important; }'
+                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(15,minmax(auto,7.8125rem)) !important; padding: 0 1rem;}'
                     break;
                 case 2:
                     enhanced_Grid.style.color = '#00e0ba'
-                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; }'
+                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; padding: 0 1rem;}'
                     break;
                 case 3:
                     enhanced_Grid.style.color = '#00e0ba'
-                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(21,minmax(auto,7.8125rem)) !important; }'
+                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(21,minmax(auto,7.8125rem)) !important; padding: 0 1rem;}'
                     break;
                 case 4:
                     enhanced_Grid.style.color = '#00e0ba'
-                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; }'
+                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(24,minmax(auto,7.8125rem)) !important; padding: 0 1rem;}'
                     break;
                 case 5:
                     enhanced_Grid.style.color = '#00e0ba'
-                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; }'
+                    enhanced_CSS = '.lEPylf.KnM5Wc { grid-template-columns: repeat(12,minmax(auto,7.8125rem)) !important; padding: 0 1rem;}'
                     enhanced_CSS += '@media (min-width: 1280px) { .lEPylf.KnM5Wc { grid-template-columns: repeat(15,minmax(auto,7.8125rem)) !important; } }'
                     enhanced_CSS += '@media (min-width: 1920px) { .lEPylf.KnM5Wc { grid-template-columns: repeat(18,minmax(auto,7.8125rem)) !important; } }'
                     enhanced_CSS += '@media (min-width: 2560px) { .lEPylf.KnM5Wc { grid-template-columns: repeat(21,minmax(auto,7.8125rem)) !important; } }'
@@ -4107,7 +4074,7 @@ function enhanced_applySettings(set, opt) {
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Disabled".', enhanced_consoleEnhanced, '')
                     break
                 case 1:
-                    enhanced_CSS = '@media screen and (min-width: 1080px) { .splitstorefull { grid-column: 1 / -1; } .xPDr9b .OTiBA { margin-top: 0; padding-top: 1rem; border-top: 2px solid rgba(255,255,255,.06); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 0 1rem; } .Md1Yte.URhE4b .xPDr9b[jsname="azRXlc"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-height: auto; grid-gap: 0 1rem; }'
+                    enhanced_CSS = '@media screen and (min-width: 1080px) { .Md1Yte.URhE4b div[jsname="azRXlc"] { margin-top: 0; padding-top: 1rem; border-top: 2px solid rgba(255,255,255,.06); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 0 1rem; } .Md1Yte.URhE4b .OTiBA { margin-top: 0; padding-top: 1rem; border-top: 2px solid rgba(255,255,255,.06); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 0 1rem; } .Md1Yte.URhE4b div[jsname="azRXlc"] div:nth-child(51) { grid-column: 1/-1; } }'
                     enhanced_storeList.style.color = '#00e0ba'
                     enhanced_storeList.innerHTML = '<i class="material-icons-extended STPv1" aria-hidden="true">view_column</i><span class="mJVLwb" style="width: calc(90% - 3rem); white-space: normal;">' + enhanced_lang.splitstore + ': ' + enhanced_lang.enabled + '<br><span style="color: #fff;font-size: 0.7rem;">' + enhanced_lang.splitstoredesc + '</span><br><span style="color: rgba(255,255,255,.4);font-size: 0.7rem;">' + enhanced_lang.default+': ' + enhanced_lang.disabled + '</span></span>'
                     console.log('%cStadia Enhanced' + '%c ⚙️ - Split Store Lists: Set to "Enabled".', enhanced_consoleEnhanced, '')
