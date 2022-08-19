@@ -2,8 +2,16 @@
 
 ## Version 1.20
 
+### 1.20.9
+* Added Polish translation
+* Updated Spanish translation
+* Updated the settings menu styling
+* Fixed Stadia Database loading incorrect table
+* Fixed the store split view not working after changes on Stadia's side
+* Fixed spacing issues in the library grid using custom columns
+
 ### 1.20.8
-Updated Slovak and Spanish translations
+* Updated Slovak and Spanish translations
 
 ### 1.20.7
 * Changed event triggers due to the removal of `event.path` in Chrome 105 [[#240]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/240)
