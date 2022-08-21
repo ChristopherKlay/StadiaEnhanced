@@ -828,15 +828,15 @@ enhanced_streamMonitor.graphs.style.right = '1rem'
 enhanced_streamMonitor.graphs.innerHTML = `
     <section>
         <div>
-            <span class="tag">` + enhanced_lang.latency + `</span>
-            <div>
-                <canvas id="latency-graph"></canvas>
-            </div>
-        </div>
-        <div>
             <span class="tag">FPS</span>
             <div>
                 <canvas id="fps-graph"></canvas>
+            </div>
+        </div>
+        <div>
+            <span class="tag">` + enhanced_lang.latency + ` (ms)</span>
+            <div>
+                <canvas id="latency-graph"></canvas>
             </div>
         </div>
         <div>
@@ -893,6 +893,9 @@ function enhanced_createChartJSInstances() {
                 },
                 title: {
                     display: false
+                },
+                tooltip: {
+                    enabled:false
                 }
             },
             responsive: false,
@@ -989,8 +992,8 @@ function enhanced_updateGraphData(streamData) {
     set(traffic, bytesReceivedPerSecond)
 
     fpsGraph.data.labels = Array(fps.length).fill('FPS')
-    latencyGraph.data.labels = Array(latency.length).fill('Latency')
-    trafficGraph.data.labels = Array(traffic.length).fill('Traffic Mbps')
+    latencyGraph.data.labels = Array(latency.length).fill(enhanced_lang.latency)
+    trafficGraph.data.labels = Array(traffic.length).fill(enhanced_lang.network + " (Mbps)")
 
     const defaultDataSet = {
         backgroundColor: 'rgba(172,13,87,0.8)',
