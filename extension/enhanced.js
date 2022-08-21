@@ -801,16 +801,7 @@ enhanced_streamMonitor.addEventListener('click', function (evt) {
         return
     }
 
-    enhanced_graphsActive = !enhanced_graphsActive
-
-    const active = enhanced_graphsActive
-    const classList = enhanced_streamMonitor.graphs.classList
-
-    if(active) {
-        classList.add('active')
-    } else {
-        classList.remove('active')
-    }
+    enhanced_showGraphs(!enhanced_graphsActive)
 })
 
 document.body.appendChild(enhanced_streamMonitor)
@@ -1068,6 +1059,7 @@ function enhanced_showMonitor(opt) {
     } else {
         enhanced_streamMonitor.style.display = 'none'
         enhanced_monitorActive = false
+        enhanced_showGraphs(false)
     }
 }
 
@@ -1085,9 +1077,19 @@ function setMonitorLayout(opt) {
             break
         case 1:
             enhanced_streamMonitor.append(enhanced_streamMonitor.layoutMin)
+            enhanced_showGraphs(false)
             break
     }
     enhanced_streamMonitor.layoutApplied = true
+}
+
+function enhanced_showGraphs(opt) {
+    enhanced_graphsActive = opt
+    if(enhanced_graphsActive) {
+        enhanced_streamMonitor.graphs.style.display = 'block'
+    } else {
+        enhanced_streamMonitor.graphs.style.display = 'none'
+    }
 }
 
 // Menu Monitor
