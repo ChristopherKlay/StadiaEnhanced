@@ -36,6 +36,7 @@
             "*://stadia.google.com/game/*"
         ],
         "js": [
+            "library/chart.min.js",
             "translations.js",
             "enhanced.js"
         ]

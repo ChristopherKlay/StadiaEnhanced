@@ -249,6 +249,11 @@ var enhanced_streamMonitorStyle = `
         margin-bottom: 0.4rem;
         padding: 0 0 0.4rem 0;
     }
+    #enhanced_streamMonitor section.extras {
+        width:min-content;
+        margin-right:auto;
+        padding: 0.4rem;
+    }
     #enhanced_streamMonitor section:last-of-type {
         margin-bottom: 0;
     }
@@ -289,6 +294,87 @@ var enhanced_streamMonitorStyle = `
         padding: 0.2rem 0.4rem;
         text-align: start;
         text-shadow: none;
+    }
+    
+    #enhanced_streamMonitor  .float-right {
+        float: right;
+    }
+    #enhanced_streamMonitor button.enhanced_button {
+        display:inline-block;
+        appearance: none;
+        outline: none;
+        border: none;
+        background: none;
+        color: inherit;
+        border-radius: 0.5rem;
+        margin-top: -1px;
+    }
+    #enhanced_streamMonitor button.enhanced_button:hover {
+        background-color: rgba(255, 255, 255, 0.12);
+    }
+    #enhanced_streamMonitor button.enhanced_button svg {
+        margin-top: -2px;
+    }
+    #enhanced_streamMonitor button.enhanced_button * {
+        pointer-events: none;
+    }
+
+    @supports(backdrop-filter: blur(9px)) {
+        #enhanced_streamMonitor section {
+            backdrop-filter: blur(9px);
+        }
+
+        #enhanced_streamMonitor_graphs > section {
+            backdrop-filter: blur(9px);
+        }
+    }
+    
+    #enhanced_streamMonitor_graphs {
+        color: rgba(255,255,255,0.9);
+        cursor: pointer;
+        font-family: "Roboto", sans-serif;
+        font-size: 0.6875rem;
+        position: fixed;
+        text-shadow: 1px 1px rgba(0,0,0,0.5);
+        width: fit-content;
+        z-index: 1000;
+    }
+    #enhanced_streamMonitor_graphs.active {
+        display: block !important;
+    }
+    #enhanced_streamMonitor_graphs .tag {
+        // border-radius: 0.5rem 0.5rem 0 0;  
+        background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 900;
+        padding: 0.2rem 0.4rem;
+        text-align: start;
+        text-shadow: none;
+    }
+    #enhanced_streamMonitor_graphs > section {
+        display: grid;
+        grid-auto-rows: min-content;
+        
+        border-radius: 0.5rem;
+        background: rgba(32,33,36,0.8);
+        overflow: hidden;
+    }
+    #enhanced_streamMonitor_graphs > section > div {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: min-content auto;
+    }
+    #enhanced_streamMonitor_graphs > section > div > span {
+        display: block;
+    }
+    #enhanced_streamMonitor_graphs > section > div > div {
+        padding: 0.2rem 0.4rem;
+    }
+    #enhanced_streamMonitor_graphs > section > div > div > canvas {
+        display: block;
+        width: 192px;
+        height: 96px;
     }`
 
 // Filter Overlay
@@ -532,7 +618,15 @@ enhanced_streamMonitor.layoutFull = document.createElement('div')
 enhanced_streamMonitor.layoutFull.innerHTML = `
     <section>           
         <!-- Session Header -->    
-        <div class="tag">` + enhanced_lang.session + `</div>
+        <div class="tag">` + enhanced_lang.session + `
+            <div class="float-right">
+                <button id="enhanced_toggleGraphsBtn" class="enhanced_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1">
+                        <path d="M85.333333 170.666667h227.555556v768H85.333333zM398.222222 312.888889h227.555556v625.777778h-227.555556zM711.111111 426.666667h227.555556v512h-227.555556z" fill=""/>
+                    </svg>
+                </button>
+            </div>
+        </div>
 
         <div class="grid">
             <!-- Date -->
@@ -695,9 +789,269 @@ enhanced_streamMonitor.addEventListener('dblclick', function () {
     localStorage.setItem('enhanced_' + enhanced_settings.user, JSON.stringify(enhanced_settings))
 })
 
+enhanced_streamMonitor.addEventListener('click', function (evt) {
+    const { target } = evt
+    if (target === undefined) {
+        return
+    }
+
+    const { id } = target
+    console.log(id)
+    if (id !== 'enhanced_toggleGraphsBtn') {
+        return
+    }
+
+    enhanced_graphsActive = !enhanced_graphsActive
+
+    const active = enhanced_graphsActive
+    const classList = enhanced_streamMonitor.graphs.classList
+
+    if(active) {
+        classList.add('active')
+    } else {
+        classList.remove('active')
+    }
+})
+
 document.body.appendChild(enhanced_streamMonitor)
 enhanced_dragElement(enhanced_streamMonitor)
 var enhanced_monitorActive = false
+var enhanced_graphsActive = false
+
+enhanced_streamMonitor.graphs = document.createElement('div')
+enhanced_streamMonitor.graphs.id = 'enhanced_streamMonitor_graphs'
+enhanced_streamMonitor.graphs.style.display = 'none'
+enhanced_streamMonitor.graphs.style.position = 'fixed'
+enhanced_streamMonitor.graphs.style.bottom = '1rem'
+enhanced_streamMonitor.graphs.style.right = '1rem'
+
+enhanced_streamMonitor.graphs.innerHTML = `
+    <section>
+        <div>
+            <span class="tag">` + enhanced_lang.latency + `</span>
+            <div>
+                <canvas id="latency-graph"></canvas>
+            </div>
+        </div>
+        <div>
+            <span class="tag">FPS</span>
+            <div>
+                <canvas id="fps-graph"></canvas>
+            </div>
+        </div>
+        <div>
+            <span class="tag">` + enhanced_lang.trafficcurrent + ` (Mbps)</span>
+            <div>
+                <canvas id="traffic-graph"></canvas>
+            </div>
+        </div>
+    </section>`
+
+document.body.appendChild(enhanced_streamMonitor.graphs)
+enhanced_dragElement(enhanced_streamMonitor.graphs)
+
+var enhanced_createdChartJSInstances = false
+function enhanced_createChartJSInstances() {
+    if (enhanced_createdChartJSInstances) return
+    enhanced_createdChartJSInstances = true
+
+    const defaultData = {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
+        },
+        options: {
+            animation:0,
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    display: true,
+                    title: {
+                        color: 'rgba(172,13,87,0.8)'
+                    },
+                    grid: {
+                        display: false,
+                        borderColor: 'rgba(172,13,87,0.2)'
+                    },
+                    ticks: {
+                        display: true,
+                        stepSize:1,
+                        padding: 0,
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: false
+                }
+            },
+            responsive: false,
+            maintainAspectRatio: true
+        }
+    }
+
+    const graphs = enhanced_streamMonitor.graphs
+
+    function create(id) {
+        const graphEl = graphs.querySelector(id)
+
+        const c2d = graphEl.getContext('2d')
+        const gradient = c2d.createLinearGradient(0, 0, 196, 0)
+
+        gradient.addColorStop(0, 'rgba(252,74,31,0.8)')
+        gradient.addColorStop(1, 'rgba(172,13,87,0.8)')
+
+        const data = {
+            ...defaultData,
+            ...{
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            backgroundColor: 'rgba(172,13,87,0.8)',
+                            label: '',
+                            data: [],
+                            fill: false,
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            tension: 0.1
+                        }
+                    ]
+                }
+            }
+        }
+
+        const chart = new Chart(c2d, data)
+        chart.enhanced_gradient = gradient
+
+        return chart
+    }
+
+    graphs.latency = create('#latency-graph')
+    graphs.fps = create('#fps-graph')
+    graphs.traffic = create('#traffic-graph')
+}
+
+function enhanced_updateGraphData(streamData) {
+    if (!enhanced_graphsActive) return
+
+    const {
+        fps: fpsGraph,
+        latency: latencyGraph,
+        traffic: trafficGraph,
+        data: graphData
+    } = enhanced_streamMonitor.graphs
+
+    if (fpsGraph === undefined || latencyGraph === undefined || trafficGraph === undefined) {
+        return
+    }
+
+    if (graphData === undefined) {
+        enhanced_streamMonitor.graphs.data = {
+            latency: [],
+            fps: [],
+            traffic: []
+        }
+    }
+
+    const {
+        latency,
+        fps,
+        traffic
+    } = graphData
+
+    function set(data, v) {
+        if (data.length >= 10) {
+            data.shift()
+        }
+
+        data.push(v)
+    }
+
+    const {
+        fps: streamFPS,
+        latency: streamLatency,
+        currentTrafficMbps: bytesReceivedPerSecond
+    } = streamData
+
+    set(fps, streamFPS)
+    set(latency, streamLatency)
+    set(traffic, bytesReceivedPerSecond)
+
+    fpsGraph.data.labels = Array(fps.length).fill('FPS')
+    latencyGraph.data.labels = Array(latency.length).fill('Latency')
+    trafficGraph.data.labels = Array(traffic.length).fill('Traffic Mbps')
+
+    const defaultDataSet = {
+        backgroundColor: 'rgba(172,13,87,0.8)',
+        label: '',
+        data: [],
+        fill: false,
+        borderWidth: 2,
+        pointRadius: 2,
+        tension: 0.1
+    }
+
+    const fpsGradient = fpsGraph.enhanced_gradient
+    fpsGraph.data.datasets[0] = {
+        ...defaultDataSet,
+        ...{
+            data: fps,
+            color: fpsGradient,
+            borderColor: fpsGradient,
+            pointBorderColor: fpsGradient,
+            pointBackgroundColor: fpsGradient,
+            pointHoverBackgroundColor: fpsGradient,
+            pointHoverBorderColor: fpsGradient
+        }
+    }
+
+
+    const latencyGradient = latencyGraph.enhanced_gradient
+    latencyGraph.data.datasets[0] = {
+        ...defaultDataSet,
+        ...{
+            data: latency,
+            color: latencyGradient,
+            borderColor: latencyGradient,
+            pointBorderColor: latencyGradient,
+            pointBackgroundColor: latencyGradient,
+            pointHoverBackgroundColor: latencyGradient,
+            pointHoverBorderColor: latencyGradient
+        }
+    }
+
+
+    const trafficGradient = trafficGraph.enhanced_gradient
+    trafficGraph.data.datasets[0] = {
+        ...defaultDataSet,
+        ...{
+            data: traffic,
+            color: trafficGradient,
+            borderColor: trafficGradient,
+            pointBorderColor: trafficGradient,
+            pointBackgroundColor: trafficGradient,
+            pointHoverBackgroundColor: trafficGradient,
+            pointHoverBorderColor: trafficGradient
+        }
+    }
+
+    fpsGraph.update()
+    latencyGraph.update()
+    trafficGraph.update()
+}
+
+enhanced_createChartJSInstances()
 
 function enhanced_showMonitor(opt) {
     if (opt) {
@@ -879,6 +1233,10 @@ function enhanced_updateStream() {
                         } else {
                             enhanced_streamMonitor.querySelector('#latency').nextElementSibling.style.color = '#44BBD8'
                         }
+                        
+                        try {
+                            enhanced_updateGraphData(enhanced_streamData)
+                        } catch(ignore) { }
                         break
                     case 1:
                         // Compact Mode
