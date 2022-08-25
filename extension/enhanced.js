@@ -188,7 +188,7 @@ var enhanced_languageSupport = {
             game: 'Hra',
             bundle: 'Balíček',
             addon: 'Doplnok',
-            free: 'Za 0'
+            free: 'Za 0'
         },
         sv: {
             game: 'Spel',
@@ -441,7 +441,7 @@ chrome.runtime.sendMessage({
 
 // Extended Details
 var enhanced_extendedDetails = document.createElement('div')
-enhanced_extendedDetails.className = 'b2MCG'
+enhanced_extendedDetails.className = 'BLA2uf n3017e'
 
 // Untested Disclaimer
 var enhanced_untestedDisclaimer = document.createElement('div')
@@ -2468,6 +2468,7 @@ enhanced_secureInsert(enhanced_huntersContainer, 'ZECEje', 1)
 // Store Container - Container to display store buttons
 var enhanced_StoreContainer = document.createElement('div')
 enhanced_StoreContainer.id = 'enhanced_ButtonBox'
+enhanced_StoreContainer.className = 'n3017e'
 enhanced_StoreContainer.style.display = 'flex'
 enhanced_StoreContainer.style.justifyContent = 'space-around'
 enhanced_StoreContainer.style.gap = '1.5rem'
@@ -3294,48 +3295,48 @@ function enhanced_main() {
         // Database Infos
         if (enhanced_database && enhanced_settings.enableStadiaDatabase == 1) {
             for (var i = 0; i < enhanced_database.length; i++) {
-                if (enhanced_database[i].id == document.getElementsByClassName('xPDr9b Tykkac')[document.getElementsByClassName('xPDr9b Tykkac').length - 1].querySelector('div[jscontroller="XE8B8e"]').getAttribute('jsdata').split(';')[1].split(':')[2]) {
+                if (enhanced_database[i].id == document.querySelectorAll('div[jscontroller="XE8B8e"]')[document.querySelectorAll('div[jscontroller="XE8B8e"]').length - 1].getAttribute('jsdata').split(';')[1].split(':')[2]) {
 
                     // Check for empty entry
                     var enhanced_fullEntry = enhanced_database[i].maxRes + enhanced_database[i].fps + enhanced_database[i].proFeat + enhanced_database[i].crossplay
                     if (enhanced_fullEntry != '') {
 
                         // Section Header
-                        var enhanced_databaseDetails = '<h4 class="he842c n3017e">' + enhanced_lang.extdetail + '</h4>'
+                        var enhanced_databaseDetails = '<h2 class="he842c n3017e">' + enhanced_lang.extdetail + '</h2>'
 
                         // Entry - Resolution
                         if (enhanced_database[i].maxRes != '') {
-                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.maxresolution + '</span></span></div>' + enhanced_database[i].maxRes + '</div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.maxresolution + '</span></span></div>' + enhanced_database[i].maxRes + '</div>'
                         }
 
                         // Entry - Framerate
                         if (enhanced_database[i].fps != '') {
-                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.fps + '</span></span></div>' + enhanced_database[i].fps + '</div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.fps + '</span></span></div>' + enhanced_database[i].fps + '</div>'
                         }
 
                         // Entry - Pro Features
                         if (enhanced_database[i].proFeat != '') {
-                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">Pro Features</span></span></div>' + enhanced_database[i].proFeat + '</div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">Pro Features</span></span></div>' + enhanced_database[i].proFeat + '</div>'
                         }
 
                         // Entry - Stadia Features
                         if (enhanced_database[i].stadiaFeat != '') {
-                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">Stadia Features</span></span></div>' + enhanced_database[i].stadiaFeat + '</div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">Stadia Features</span></span></div>' + enhanced_database[i].stadiaFeat + '</div>'
                         }
 
                         // Entry - Crossplay
                         if (enhanced_database[i].crossplay != '') {
-                            enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">Crossplay</span></span></div>' + enhanced_database[i].crossplay + '</div>'
+                            enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">Crossplay</span></span></div>' + enhanced_database[i].crossplay + '</div>'
                         }
 
                         // Entry - Contact
                         if (enhanced_database[i].contact != '') {
                             if (enhanced_database[i].contact.includes('https')) {
                                 // Link
-                                enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.reportbug + '</span></span></div><a href="' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div>'
+                                enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.reportbug + '</span></span></div><a href="' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div>'
                             } else {
                                 //Mail
-                                enhanced_databaseDetails += '<div class="UyhU4c n3017e"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.reportbug + '</span></span></div><a href="mailto:' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div>'
+                                enhanced_databaseDetails += '<div class="UyhU4c"><div class="j35Pic"><span><span class="oInudb ">' + enhanced_lang.reportbug + '</span></span></div><a href="mailto:' + enhanced_database[i].contact + '" target="_blank">' + enhanced_lang.contactdev + '</a></div>'
                             }
                         }
 
@@ -3344,21 +3345,20 @@ function enhanced_main() {
                             enhanced_extendedDetails.innerHTML = enhanced_databaseDetails
                         }
 
-                        enhanced_secureInsert(enhanced_extendedDetails, 'xPDr9b Tykkac', 0)
+                        enhanced_secureInsert(enhanced_extendedDetails, 'HJ5QZ MZ4wg', 3)
 
                         // Disclaimers
                         if (enhanced_database[i].tested != '') {
-                            enhanced_secureInsert(enhanced_untestedDisclaimer, 'xPDr9b Tykkac', 0)
+                            enhanced_secureInsert(enhanced_untestedDisclaimer, 'HJ5QZ MZ4wg', 3)
                         }
 
-                        enhanced_secureInsert(enhanced_extendedDisclaimer, 'xPDr9b Tykkac', 0)
-
+                        enhanced_secureInsert(enhanced_extendedDisclaimer, 'HJ5QZ MZ4wg', 3)
                     }
                 }
             }
         }
 
-        enhanced_secureInsert(enhanced_StoreContainer, 'BLA2uf n3017e', 0)
+        enhanced_secureInsert(enhanced_StoreContainer, 'HJ5QZ MZ4wg', 3)
     } else {
         // Reset extended game info
         enhanced_extendedDetails.innerHTML = ''
