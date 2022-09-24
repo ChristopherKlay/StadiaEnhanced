@@ -1859,7 +1859,7 @@ enhanced_speedTest.style.cursor = 'pointer'
 enhanced_speedTest.style.userSelect = 'none'
 enhanced_speedTest.tabIndex = '0'
 enhanced_speedTest.addEventListener('click', function () {
-    window.open('https://projectstream.google.com/speedtest', '_blank')
+    window.open('https://stadia.google.com/speedtest', '_blank')
 })
 enhanced_settingsShortcut.append(enhanced_speedTest)
 
