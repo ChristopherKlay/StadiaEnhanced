@@ -2,6 +2,9 @@
 
 ## Version 1.20
 
+### 1.20.11
+* Fixed the speedtest option using a outdated URL [[#252]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/252)
+
 ### 1.20.10
 * Updated Polish translation [[#246]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/246)
 * Fixed "Extended Details" section not being displayed after changes on Stadia's side
