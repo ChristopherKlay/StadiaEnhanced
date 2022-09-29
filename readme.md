@@ -10,6 +10,12 @@
 ![](https://img.shields.io/chrome-web-store/rating/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
 ![](https://img.shields.io/chrome-web-store/rating-count/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&label=REVIEWS&style=for-the-badge)
 
+## Shutdown Notice
+
+Google officially shuts down Stadia [January 18 2023](https://blog.google/products/stadia/message-on-stadia-streaming-strategy/).
+
+Stadia Enhanced will continue to receive updates/hotfixes to stay functional until the service goes down. The extension will be made private on the Google Chrome Store once Stadia as a service stops working and this repository will work as an archive for the project. More details on the shutdown of the service and important infos can be found [here](https://community.stadia.com/t5/Stadia-Community-Blog/What-today-s-message-about-Stadia-means-for-players/ba-p/83295).
+
 ## Features
 
 - [x] Set VP9 or H264 as the preferred codec
