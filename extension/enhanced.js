@@ -93,7 +93,7 @@ window.addEventListener('load', function () {
 
 /**
  *   Language Support
- * 
+ *
  *   Adds support for features not possible via DOM filtering, by using language based comparisons.
  *   Example: The "Game", or "Bundle" label in store lists.
  */
@@ -201,10 +201,9 @@ var enhanced_languageSupport = {
 
 /**
  * CSS Changes
- * 
+ *
  * Global style changes and overwrites, as well as fixes for specific issues.
  */
-var enhanced_discordActive = false
 var enhanced_CSS = '.lTHVjf { padding: 0rem 1.5rem 0 1.5rem !important; }' // Remove padding above avatar
 enhanced_CSS += '.VfPpkd-fmcmS-wGMbrd { text-overflow: ellipsis; }' // Fix searchbar text cutoff
 enhanced_CSS += '.qE7X4e { margin-right: 0.625rem; }' // Fix searchbar margin
@@ -280,7 +279,7 @@ var enhanced_streamMonitorStyle = `
         padding: 0 0.2rem;
     }
     #enhanced_streamMonitor .tag {
-        border-radius: 0.5rem 0.5rem 0 0;  
+        border-radius: 0.5rem 0.5rem 0 0;
         background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
         color: white;
         font-size: 0.75rem;
@@ -314,7 +313,7 @@ var enhanced_filterOverlayStyle = `
         padding: 0 0.4rem 0 0.6rem;
     }
     #enhanced_filterUI .tag {
-        border-radius: 0.5rem 0.5rem 0 0;  
+        border-radius: 0.5rem 0.5rem 0 0;
         background: linear-gradient(-35deg, rgba(172,13,87,0.5) 0%, rgba(252,74,31,0.5) 100%);
         color: white;
         font-size: 0.75rem;
@@ -394,7 +393,7 @@ function loadStadiaHunters(id) {
 
 /**
  * Stadia Public Database
- * 
+ *
  * Author: OriginalPenguin
  * Source: https://linktr.ee/StadiaDatabase
  */
@@ -493,7 +492,7 @@ enhanced_reportBug.addEventListener('click', function () {
 
 /**
  * Discord Presence
- * 
+ *
  * Support for Discord's "Rich Presence" feature.
  * Via DiscordRPC - https://github.com/lolamtisch/Discord-RPC-Extension/
  */
@@ -519,7 +518,7 @@ chrome.runtime.onMessage.addListener(function (info, sender, sendResponse) {
 
 /**
  * Stream Monitor
- * 
+ *
  * Credits to the base by AquaRegia
  * Source: https://www.reddit.com/r/Stadia/comments/eimw7m/tampermonkey_monitor_your_stream/
  */
@@ -530,8 +529,8 @@ enhanced_streamMonitor.layoutApplied = false
 // Monitor Mode: Full
 enhanced_streamMonitor.layoutFull = document.createElement('div')
 enhanced_streamMonitor.layoutFull.innerHTML = `
-    <section>           
-        <!-- Session Header -->    
+    <section>
+        <!-- Session Header -->
         <div class="tag">` + enhanced_lang.session + `</div>
 
         <div class="grid">
@@ -540,9 +539,9 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
             <span id="date" class="montext">-</span>
             <span></span>
 
-            <div class="border"></div> 
-            
-            <!-- Time -->                   
+            <div class="border"></div>
+
+            <!-- Time -->
             <span>` + enhanced_lang.time + `</span>
             <span id="time" class="montext">-</span>
             <span></span>
@@ -559,7 +558,7 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
     <section>
         <!-- Stream Header -->
         <div class="tag">` + enhanced_lang.stream + `</div>
-        
+
         <div class="grid">
             <!-- Codec -->
             <span>` + enhanced_lang.codec + `</span>
@@ -567,19 +566,19 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
             <span></span>
 
             <div class="border"></div>
-            
+
             <!-- Resolution -->
             <span>` + enhanced_lang.resolution + `</span>
             <span id="resolution" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
-            
+
             <!-- FPS -->
             <span>FPS</span>
             <span id="fps" class="montext">-</span>
             <span></span>
-            
+
             <div class="border"></div>
 
             <!-- Compression (if VP9 ) -->
@@ -595,7 +594,7 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
             <span class="moncon">⬤</span>
 
             <div class="border"></div>
-            
+
             <!-- Framedrop -->
             <span>` + enhanced_lang.framedrop + `</span>
             <span id="framedrop" class="montext">-</span>
@@ -614,35 +613,35 @@ enhanced_streamMonitor.layoutFull.innerHTML = `
             <span></span>
 
             <div class="border"></div>
-            
+
             <!-- Current Traffic -->
             <span>` + enhanced_lang.trafficcurrent + `</span>
             <span id="trafficcurrent" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
-            
+
             <!-- Avg Traffic -->
             <span>` + enhanced_lang.trafficaverage + `</span>
             <span id="trafficaverage" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
-            
+
             <!-- Packetloss -->
             <span>` + enhanced_lang.packetloss + `</span>
             <span id="packetloss" class="montext">-</span>
             <span></span>
 
             <div class="border"></div>
-            
+
             <!-- Latency -->
             <span>` + enhanced_lang.latency + `</span>
             <span id="latency" class="montext">-</span>
             <span class="moncon">⬤</span>
 
             <div class="border"></div>
-            
+
             <!-- Jitter -->
             <span>` + enhanced_lang.jitter + `</span>
             <span id="jitter" class="montext">-</span>
@@ -656,7 +655,7 @@ enhanced_streamMonitor.layoutMin.innerHTML = `
     <section id="monitor_simple">
         <div class="grid">
             <span style="grid-column: 1 / 4;">
-            
+
                 <!-- Codec -->
                 <span id="codec" class="montext">-</span>
                 <div class="split">|</div>
@@ -665,7 +664,7 @@ enhanced_streamMonitor.layoutMin.innerHTML = `
                 <span id="resolution" class="montext">-</span>
                 <div class="split">|</div>
 
-                <!-- FPS -->                        
+                <!-- FPS -->
                 <span id="fps" class="montext">-</span>
                 <div class="split">|</div>
 
@@ -673,7 +672,7 @@ enhanced_streamMonitor.layoutMin.innerHTML = `
                 <span id="latency" class="montext">-</span>
                 <div class="split">|</div>
 
-                <!-- Decoding time -->                        
+                <!-- Decoding time -->
                 <span id="decode" class="montext">-</span>
                 <div class="split">|</div>
 
@@ -815,7 +814,7 @@ function enhanced_updateStream() {
             enhanced_menuMonitor.querySelector('#resolution').textContent = enhanced_streamData.resolution
             enhanced_menuMonitor.querySelector('#latency').textContent = enhanced_streamData.latency + 'ms | ' + enhanced_streamData.fps
             enhanced_menuMonitor.querySelector('#framedrop').textContent = enhanced_streamData.framedrop
-            enhanced_menuMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
+            // enhanced_menuMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
 
             // Translation
             enhanced_streamData.codec = enhanced_streamData.codec
@@ -836,18 +835,19 @@ function enhanced_updateStream() {
                         enhanced_streamMonitor.querySelector('#resolution').textContent = enhanced_streamData.resolution
                         enhanced_streamMonitor.querySelector('#fps').textContent = enhanced_streamData.fps
                         enhanced_streamMonitor.querySelector('#compression').textContent = enhanced_streamData.compression
-                        enhanced_streamMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
+                        //enhanced_streamMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
                         enhanced_streamMonitor.querySelector('#framedrop').textContent = enhanced_streamData.framedrop
 
                         // Network
                         enhanced_streamMonitor.querySelector('#trafficsession').textContent = enhanced_streamData.sessionTraffic
                         enhanced_streamMonitor.querySelector('#trafficcurrent').textContent = enhanced_streamData.currentTraffic
                         enhanced_streamMonitor.querySelector('#trafficaverage').textContent = enhanced_streamData.averageTraffic
-                        enhanced_streamMonitor.querySelector('#packetloss').textContent = enhanced_streamData.packetloss
+                        //enhanced_streamMonitor.querySelector('#packetloss').textContent = enhanced_streamData.packetloss
                         enhanced_streamMonitor.querySelector('#latency').textContent = enhanced_streamData.latency + 'ms'
                         enhanced_streamMonitor.querySelector('#jitter').textContent = enhanced_streamData.jitter
 
                         // Connection Status - Decoding
+                        /*
                         if (enhanced_streamData.decode > 12) {
                             enhanced_streamMonitor.querySelector('#decode').nextElementSibling.style.color = '#FF7070'
                         } else if (enhanced_streamData.decode > 10) {
@@ -857,6 +857,7 @@ function enhanced_updateStream() {
                         } else {
                             enhanced_streamMonitor.querySelector('#decode').nextElementSibling.style.color = '#44BBD8'
                         }
+                        */
 
                         // Connection Status - Framedrop
                         if (enhanced_streamData.framedropPerc > 1) {
@@ -886,16 +887,16 @@ function enhanced_updateStream() {
                         enhanced_streamMonitor.querySelector('#resolution').textContent = enhanced_streamData.resolution
                         enhanced_streamMonitor.querySelector('#fps').textContent = enhanced_streamData.fps
                         enhanced_streamMonitor.querySelector('#latency').textContent = enhanced_streamData.latency + 'ms'
-                        enhanced_streamMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
+                        //enhanced_streamMonitor.querySelector('#decode').textContent = enhanced_streamData.decode + 'ms'
 
                         // Connection Check
                         if (parseInt(enhanced_streamData.fps) < 1) {
                             enhanced_streamMonitor.querySelector('#connection').style.color = 'white'
-                        } else if (enhanced_streamData.decode > 12 || enhanced_streamData.framedropPerc > 1 || enhanced_streamData.latency > 100) {
+                        } else if (enhanced_streamData.framedropPerc > 1 || enhanced_streamData.latency > 100) {
                             enhanced_streamMonitor.querySelector('#connection').style.color = '#FF7070' // Red
-                        } else if (enhanced_streamData.decode > 10 || enhanced_streamData.framedropPerc > 0.5 || enhanced_streamData.latency > 75) {
+                        } else if (enhanced_streamData.framedropPerc > 0.5 || enhanced_streamData.latency > 75) {
                             enhanced_streamMonitor.querySelector('#connection').style.color = '#FFB83D' // Yellow
-                        } else if (enhanced_streamData.decode > 8.33 || enhanced_streamData.framedropPerc > 0.2 || enhanced_streamData.latency > 40) {
+                        } else if (enhanced_streamData.framedropPerc > 0.2 || enhanced_streamData.latency > 40) {
                             enhanced_streamMonitor.querySelector('#connection').style.color = '#00E0BA' // Green
                         } else {
                             enhanced_streamMonitor.querySelector('#connection').style.color = '#44BBD8' // Blue
@@ -1238,7 +1239,7 @@ document.body.appendChild(enhanced_svg)
 
 /**
  * Windowed Mode
- * 
+ *
  * Source: Mafrans - https://github.com/Mafrans/StadiaPlus
  */
 var enhanced_BlockFullscreen = false

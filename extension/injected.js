@@ -136,88 +136,93 @@ function enhanced_collectStreamInfo() {
 
             for (var key of stats.keys()) {
 
-                if (key.indexOf('RTCIceCandidatePair') != -1) {
+                if (key.indexOf('CP') != -1) {
                     var tmp4 = stats.get(key)
                 }
-                if (key.indexOf('RTCInboundRTPVideoStream') != -1) {
+                if (key.indexOf('DEPRECATED_TI') != -1) {
                     var tmp1 = stats.get(key)
-                    var tmp2 = stats.get(tmp1.trackId)
 
-                    openConnections[1].getStats(function (stats) {
+                    if (tmp1.trackIdentifier == 'video_label') {
 
-                        var tmp3 = stats.result().find(function (f) {
-                            return 'ssrc' == f.type && f.id.endsWith('recv') && f.names().includes('mediaType') && 'video' == f.stat('mediaType')
-                        });
+                        openConnections[1].getStats(function (stats) {
 
-                        // Stream Data
-                        var time = new Date()
-                        var timeSinceUpdate = (time - enhanced_lastTime) / 1000
-                        enhanced_lastTime = time
-                        var sessionDuration = (time - enhanced_sessionStart) / 1000
-                        time = new Date(time - time.getTimezoneOffset() * 60 * 1000).toISOString().replace("T", " ").split(".")[0]
-                        var resolution = tmp2.frameWidth + 'x' + tmp2.frameHeight
-                        var framesReceived = tmp2.framesReceived
-                        var framesReceivedPerSecond = (framesReceived - enhanced_lastFrames) / timeSinceUpdate
-                        var framesDecoded = tmp2.framesDecoded
-                        var codec = tmp3.stat('googCodecName')
-                        var bytesReceived = tmp4.bytesReceived
-                        var bytesReceivedPerSecond = (bytesReceived - enhanced_lastBytes) / timeSinceUpdate
-                        var averageData = ((((bytesReceived / sessionDuration) * 3600) / 1024) / 1024) / 1024
-                        var packetsLost = tmp1.packetsLost
-                        var packetsReceived = tmp1.packetsReceived
-                        var framesDropped = tmp2.framesDropped
-                        var framesDroppedPerc = ((framesDropped / framesReceived) * 100).toFixed(3)
-                        var latency = tmp4.currentRoundTripTime * 1000
-                        if (isNaN(latency)) {
-                            latency = '0'
-                        }
-                        var jitterBufferDelay = tmp2.jitterBufferDelay * 1000
-                        var jitterBufferEmittedCount = tmp2.jitterBufferEmittedCount
-                        var jitterBuffer = jitterBufferDelay / jitterBufferEmittedCount
-                        if (codec == 'VP9') {
-                            var compression = (tmp1.qpSum - enhanced_lastQpSum) / (framesDecoded - enhanced_lastFramesDecoded)
-                            compression = compression.toFixed(1)
-                            if (isNaN(compression)) {
-                                compression = '-'
-                            }
-                        }
-                        var decodingTime = (tmp1.totalDecodeTime / tmp2.framesDecoded) * 1000
-                        if (tmp3.stat('codecImplementationName').includes('ExternalDecoder')) {
-                            decodingType = 'Hardware'
-                        } else {
-                            decodingType = 'Software'
-                        }
+                            var tmp3 = stats.result().find(function (f) {
+                                return 'ssrc' == f.type && f.id.endsWith('recv') && f.names().includes('mediaType') && 'video' == f.stat('mediaType')
+                            });
 
-                        enhanced_lastFrames = framesReceived
-                        enhanced_lastFramesDecoded = framesDecoded
-                        enhanced_lastBytes = bytesReceived
-                        enhanced_lastQpSum = tmp1.qpSum
-
-                        if (framesReceived > 0) {
-
-                            // Store stream data
-                            const enhanced_streamData = {
-                                date: time.split(' ')[0],
-                                time: time.split(' ')[1],
-                                sessiontime: enhanced_formatTime(sessionDuration),
-                                codec: decodingType + ' ' + codec,
-                                resolution: resolution,
-                                fps: framesReceivedPerSecond.toFixed(1),
-                                compression: compression,
-                                decode: decodingTime.toFixed(2),
-                                framedrop: framesDropped + ' (' + framesDroppedPerc + '%)',
-                                framedropPerc: framesDroppedPerc,
-                                sessionTraffic: enhanced_formatBytes(bytesReceived, 2),
-                                currentTraffic: enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + 'b',
-                                averageTraffic: averageData.toFixed(2) + ' GB/h',
-                                packetloss: packetsLost + ' (' + ((packetsLost / packetsReceived) * 100).toFixed(3) + '%)',
-                                latency: latency,
-                                jitter: jitterBuffer.toPrecision(4) + ' ms'
+                            // Stream Data
+                            var time = new Date()
+                            var timeSinceUpdate = (time - enhanced_lastTime) / 1000
+                            enhanced_lastTime = time
+                            var sessionDuration = (time - enhanced_sessionStart) / 1000
+                            time = new Date(time - time.getTimezoneOffset() * 60 * 1000).toISOString().replace("T", " ").split(".")[0]
+                            var resolution = tmp1.frameWidth + 'x' + tmp1.frameHeight
+                            var framesReceived = tmp1.framesReceived
+                            var framesReceivedPerSecond = (framesReceived - enhanced_lastFrames) / timeSinceUpdate
+                            var framesDecoded = tmp1.framesDecoded
+                            var codec = tmp3.stat('googCodecName')
+                            var bytesReceived = tmp4.bytesReceived
+                            var bytesReceivedPerSecond = (bytesReceived - enhanced_lastBytes) / timeSinceUpdate
+                            var averageData = ((((bytesReceived / sessionDuration) * 3600) / 1024) / 1024) / 1024
+                            var packetsLost = tmp1.packetsLost
+                            var packetsReceived = tmp1.packetsReceived
+                            var framesDropped = tmp1.framesDropped
+                            var framesDroppedPerc = ((framesDropped / framesReceived) * 100).toFixed(3)
+                            var latency = tmp4.currentRoundTripTime * 1000
+                            if (isNaN(latency)) {
+                                latency = '0'
                             }
 
-                            localStorage.setItem('enhanced_streamData', JSON.stringify(enhanced_streamData))
-                        }
-                    })
+                            var jitterBufferDelay = tmp1.jitterBufferDelay * 1000
+                            var jitterBufferEmittedCount = tmp1.jitterBufferEmittedCount
+                            var jitterBuffer = jitterBufferDelay / jitterBufferEmittedCount
+                            if (codec == 'VP9') {
+                                var compression = (tmp1.qpSum - enhanced_lastQpSum) / (framesDecoded - enhanced_lastFramesDecoded)
+                                compression = compression.toFixed(1)
+                                if (isNaN(compression)) {
+                                    compression = '-'
+                                }
+                            }
+
+                            var decodingTime = (tmp1.totalDecodeTime / tmp1.framesDecoded) * 1000
+                            if (tmp3.stat('codecImplementationName').includes('ExternalDecoder')) {
+                                decodingType = 'Hardware'
+                            } else {
+                                decodingType = 'Software'
+                            }
+
+                            enhanced_lastFrames = framesReceived
+                            enhanced_lastFramesDecoded = framesDecoded
+                            enhanced_lastBytes = bytesReceived
+                            enhanced_lastQpSum = tmp1.qpSum
+
+                            if (framesReceived > 0) {
+
+                                // Store stream data
+                                const enhanced_streamData = {
+                                    date: time.split(' ')[0],
+                                    time: time.split(' ')[1],
+                                    sessiontime: enhanced_formatTime(sessionDuration),
+                                    codec: decodingType + ' ' + codec,
+                                    resolution: resolution,
+                                    fps: framesReceivedPerSecond.toFixed(1),
+                                    compression: compression,
+                                    decode: decodingTime.toFixed(2),
+                                    framedrop: framesDropped + ' (' + framesDroppedPerc + '%)',
+                                    framedropPerc: framesDroppedPerc,
+                                    sessionTraffic: enhanced_formatBytes(bytesReceived, 2),
+                                    currentTraffic: enhanced_formatBytes(bytesReceivedPerSecond * 8, 2).slice(0, -1) + 'b',
+                                    currentTrafficMbps: (bytesReceivedPerSecond * 8 / 1024 / 1024).toFixed(2),
+                                    averageTraffic: averageData.toFixed(2) + ' GB/h',
+                                    packetloss: packetsLost + ' (' + ((packetsLost / packetsReceived) * 100).toFixed(3) + '%)',
+                                    latency: latency,
+                                    jitter: jitterBuffer.toPrecision(4) + ' ms'
+                                }
+
+                                localStorage.setItem('enhanced_streamData', JSON.stringify(enhanced_streamData))
+                            }
+                        })
+                    }
                 }
             }
         })
