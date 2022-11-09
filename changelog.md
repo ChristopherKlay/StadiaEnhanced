@@ -2,6 +2,9 @@
 
 ## Version 1.20
 
+### 1.20.12
+* Fixed the stream monitor not being able to load stream stats anymore after changes on Stadia's side, package loss and decoding time are now unsupported due to missing data
+
 ### 1.20.11
 * Fixed the speedtest option using a outdated URL [[#252]](https://github.com/ChristopherKlay/StadiaEnhanced/issues/252)
 
