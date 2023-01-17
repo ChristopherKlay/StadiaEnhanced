@@ -16,6 +16,15 @@ Google officially shuts down Stadia [January 18 2023](https://blog.google/produc
 
 Stadia Enhanced will continue to receive updates/hotfixes to stay as functional as possible until the service goes down. The extension will be made private on the Google Chrome Store once Stadia as a service stops working and this repository will work as an archive for the project. More details on the shutdown of the service and important infos can be found [here](https://community.stadia.com/t5/Stadia-Community-Blog/What-today-s-message-about-Stadia-means-for-players/ba-p/83295).
 
+### Controller Firmware
+
+Google released a [web tool](https://stadia.google.com/controller/index_de.html) to switch the controller from the normal wifi mode to using Bluetooth LE.
+
+For conservation the latest firmware versions can be found below.
+
+* WiFi: [ota.282115.stable-channel.gotham-pvt-a.214f6fe20f7b993046c77a9245c5805b056882dc.bin](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/firmware/ota.282115.stable-channel.gotham-pvt-a.214f6fe20f7b993046c77a9245c5805b056882dc.bin)
+* Bluetooth: [bruce_pvt_a_prod_signed.bin](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/firmware/bruce_pvt_a_prod_signed.bin)
+
 ## Features
 
 - [x] Set VP9 or H264 as the preferred codec
