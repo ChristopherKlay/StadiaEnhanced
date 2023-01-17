@@ -1,0 +1,11 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_18D1&PID_9400\Axes]
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_18D1&PID_9400\Axes\6]
+
+"Attributes"=hex:00,00,00,00,02,00,c4,00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_18D1&PID_9400\Axes\7]
+
+"Attributes"=hex:00,00,00,00,02,00,c5,00
