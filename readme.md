@@ -12,9 +12,9 @@
 
 ## Shutdown Notice
 
-Google officially shuts down Stadia [January 18 2023](https://blog.google/products/stadia/message-on-stadia-streaming-strategy/).
+![](https://i.imgur.com/cz3wXIB.pnghttps://i.imgur.com/cz3wXIB.png)
 
-Stadia Enhanced will continue to receive updates/hotfixes to stay as functional as possible until the service goes down. The extension will be made private on the Google Chrome Store once Stadia as a service stops working and this repository will work as an archive for the project. More details on the shutdown of the service and important infos can be found [here](https://community.stadia.com/t5/Stadia-Community-Blog/What-today-s-message-about-Stadia-means-for-players/ba-p/83295).
+Stadia has officially been shut down on January 18, 2023.
 
 ### Controller Firmware
 
@@ -27,6 +27,8 @@ For conservation the latest firmware versions and a backup of the web tool can b
 * Web Tool: [Backup](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/Webtool%20Backup.zip)
 * WiFi Firmware: [ota.282115.stable-channel.gotham-pvt-a.214f6fe20f7b993046c77a9245c5805b056882dc.bin](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/ota.282115.stable-channel.gotham-pvt-a.214f6fe20f7b993046c77a9245c5805b056882dc.bin)
 * Bluetooth Firmware: [bruce_pvt_a_prod_signed.bin](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/bruce_pvt_a_prod_signed.bin)
+
+# ReadMe [Archived]
 
 ## Features
 
