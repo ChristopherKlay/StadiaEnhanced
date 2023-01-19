@@ -14,7 +14,7 @@
 
 ![](https://i.imgur.com/cz3wXIB.pnghttps://i.imgur.com/cz3wXIB.png)
 
-Stadia has officially been shut down on January 18, 2023.
+Stadia has [officially been shut down](https://stadia.google.com/gg/) on January 18, 2023.
 
 ### Controller Firmware
 
