@@ -5,10 +5,6 @@
 </p>
 
 ![](https://img.shields.io/badge/GitHub-1.20.12-green?style=for-the-badge)
-![](https://img.shields.io/chrome-web-store/v/ldeakaihfnkjmelifgmbmjlphdfncbfg?style=for-the-badge)
-![](https://img.shields.io/chrome-web-store/users/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
-![](https://img.shields.io/chrome-web-store/rating/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&style=for-the-badge)
-![](https://img.shields.io/chrome-web-store/rating-count/ldeakaihfnkjmelifgmbmjlphdfncbfg?color=blue&label=REVIEWS&style=for-the-badge)
 
 ## Shutdown Notice
 
