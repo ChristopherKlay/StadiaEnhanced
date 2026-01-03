@@ -20,7 +20,7 @@ If you have issues with the controllers triggers being registered as non-analog 
 
 For conservation the latest firmware versions and a backup of the web tool can be found below.
 
-* Web Tool: [Backup](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/Webtool%20Backup.zip)
+* Web Tool: [Backup (Download)](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/Webtool%20Backup.zip) - [Backup (Live)](https://christopherklay.github.io/stadiacontroller/)
 * WiFi Firmware: [ota.282115.stable-channel.gotham-pvt-a.214f6fe20f7b993046c77a9245c5805b056882dc.bin](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/ota.282115.stable-channel.gotham-pvt-a.214f6fe20f7b993046c77a9245c5805b056882dc.bin)
 * Bluetooth Firmware: [bruce_pvt_a_prod_signed.bin](https://github.com/ChristopherKlay/StadiaEnhanced/blob/main/controller/bruce_pvt_a_prod_signed.bin)
 
